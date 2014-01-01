@@ -1,57 +1,6 @@
 #-*- coding: utf-8 -*-
 
-###########################################################################
-##                                                                       ##
-## Copyrights Etienne Chové <chove@crans.org> 2009-2010                  ##
-##                                                                       ##
-## This program is free software: you can redistribute it and/or modify  ##
-## it under the terms of the GNU General Public License as published by  ##
-## the Free Software Foundation, either version 3 of the License, or     ##
-## (at your option) any later version.                                   ##
-##                                                                       ##
-## This program is distributed in the hope that it will be useful,       ##
-## but WITHOUT ANY WARRANTY; without even the implied warranty of        ##
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         ##
-## GNU General Public License for more details.                          ##
-##                                                                       ##
-## You should have received a copy of the GNU General Public License     ##
-## along with this program.  If not, see <http://www.gnu.org/licenses/>. ##
-##                                                                       ##
-###########################################################################
-
-## HomePage : http://wiki.openstreetmap.org/wiki/PythonOsmApi
-
-###########################################################################
-## History                                                               ##
-###########################################################################
-## 0.2.19  2010-05-24 Add debug message on ApiError                      ##
-## 0.2.18  2010-04-20 Fix ChangesetClose and _http_request               ##
-## 0.2.17  2010-01-02 Capabilities implementation                        ##
-## 0.2.16  2010-01-02 ChangesetsGet by Alexander Rampp                   ##
-## 0.2.15  2009-12-16 xml encoding error for < and >                     ##
-## 0.2.14  2009-11-20 changesetautomulti parameter                       ##
-## 0.2.13  2009-11-16 modify instead update for osc                      ##
-## 0.2.12  2009-11-14 raise ApiError on 4xx errors -- Xoff               ##
-## 0.2.11  2009-10-14 unicode error on ChangesetUpload                   ##
-## 0.2.10  2009-10-14 RelationFullRecur definition                       ##
-## 0.2.9   2009-10-13 automatic changeset management                     ##
-##                    ChangesetUpload implementation                     ##
-## 0.2.8   2009-10-13 *(Create|Update|Delete) use not unique _do method  ##
-## 0.2.7   2009-10-09 implement all missing fonctions except             ##
-##                    ChangesetsGet and GetCapabilities                  ##
-## 0.2.6   2009-10-09 encoding clean-up                                  ##
-## 0.2.5   2009-10-09 implements NodesGet, WaysGet, RelationsGet         ##
-##                               ParseOsm, ParseOsc                      ##
-## 0.2.4   2009-10-06 clean-up                                           ##
-## 0.2.3   2009-09-09 keep http connection alive for multiple request    ##
-##                    (Node|Way|Relation)Get return None when object     ##
-##                    have been deleted (raising error before)           ##
-## 0.2.2   2009-07-13 can identify applications built on top of the lib  ##
-## 0.2.1   2009-05-05 some changes in constructor -- chove@crans.org     ##
-## 0.2     2009-05-01 initial import                                     ##
-###########################################################################
-
-__version__ = '0.2.19'
+__version__ = '0.2.20'
 
 import httplib, base64, xml.dom.minidom, time, sys, urllib
 

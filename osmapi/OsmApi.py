@@ -15,7 +15,6 @@ class ApiError(Exception):
     def __init__(self, status, reason, payload):
         self.status = status
         self.reason = reason
-        self.payload = payload
 
     def __str__(self):
         return (
@@ -102,9 +101,7 @@ class OsmApi:
     #######################################################################
 
     def Capabilities(self):
-        """
-        Returns ApiCapabilities.
-        """
+        """ Returns ApiCapabilities. """
         uri = "/api/capabilities"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -193,9 +190,7 @@ class OsmApi:
         return result
 
     def NodeRelations(self, NodeId):
-        """
-        Returns [RelationData, ... ] containing node #NodeId.
-        """
+        """ Returns [RelationData, ... ] containing node #NodeId. """
         uri = "/api/0.6/node/%d/relations" % NodeId
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -207,9 +202,7 @@ class OsmApi:
         return result
 
     def NodesGet(self, NodeIdList):
-        """
-        Returns dict(NodeId: NodeData) for each node in NodeIdList
-        """
+        """ Returns dict(NodeId: NodeData) for each node in NodeIdList """
         uri = "/api/0.6/nodes?nodes=" + ",".join([str(x) for x in NodeIdList])
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -261,9 +254,7 @@ class OsmApi:
         return self._do("delete", "way", WayData)
 
     def WayHistory(self, WayId):
-        """
-        Returns dict(WayVerrsion: WayData).
-        """
+        """ Returns dict(WayVerrsion: WayData). """
         uri = "/api/0.6/way/"+str(WayId)+"/history"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -275,9 +266,7 @@ class OsmApi:
         return result
 
     def WayRelations(self, WayId):
-        """
-        Returns [RelationData, ...] containing way #WayId.
-        """
+        """ Returns [RelationData, ...] containing way #WayId. """
         uri = "/api/0.6/way/%d/relations" % WayId
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -298,9 +287,7 @@ class OsmApi:
         return self.ParseOsm(data)
 
     def WaysGet(self, WayIdList):
-        """
-        Returns dict(WayId: WayData) for each way in WayIdList
-        """
+        """ Returns dict(WayId: WayData) for each way in WayIdList """
         uri = "/api/0.6/ways?ways=" + ",".join([str(x) for x in WayIdList])
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
@@ -430,9 +417,7 @@ class OsmApi:
     #######################################################################
 
     def ChangesetGet(self, ChangesetId):
-        """
-        Returns ChangesetData for changeset #ChangesetId.
-        """
+        """ Returns ChangesetData for changeset #ChangesetId. """
         data = self._get("/api/0.6/changeset/"+str(ChangesetId))
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
@@ -440,9 +425,7 @@ class OsmApi:
         return self._DomParseChangeset(data)
 
     def ChangesetUpdate(self, ChangesetTags={}):
-        """
-        Updates current changeset with ChangesetTags.
-        """
+        """ Updates current changeset with ChangesetTags. """
         if self._CurrentChangesetId == -1:
             raise Exception("No changeset currently opened")
         if u"created_by" not in ChangesetTags:
@@ -454,9 +437,7 @@ class OsmApi:
         return self._CurrentChangesetId
 
     def ChangesetCreate(self, ChangesetTags={}):
-        """
-        Opens a changeset. Returns #ChangesetId.
-        """
+        """ Opens a changeset. Returns #ChangesetId. """
         if self._CurrentChangesetId:
             raise Exception("Changeset alreadey opened")
         if u"created_by" not in ChangesetTags:
@@ -469,9 +450,7 @@ class OsmApi:
         return self._CurrentChangesetId
 
     def ChangesetClose(self):
-        """
-        Closes current changeset. Returns #ChangesetId.
-        """
+        """ Closes current changeset. Returns #ChangesetId. """
         if not self._CurrentChangesetId:
             raise Exception("No changeset currently opened")
         self._put(
@@ -756,7 +735,7 @@ class OsmApi:
             self._changesetautocpt = 0
         return None
 
-    def _http_request(self, cmd, path, auth, send):
+    def _http_request(self, cmd, path, auth, send):  # noqa
         if self._debug:
             path2 = path
             if len(path2) > 50:
@@ -795,7 +774,7 @@ class OsmApi:
             print >>sys.stderr, error_msg
         return response.read()
 
-    def _http(self, cmd, path, auth, send):
+    def _http(self, cmd, path, auth, send):  # noqa
         i = 0
         while True:
             i += 1
@@ -858,9 +837,7 @@ class OsmApi:
         return result
 
     def _DomGetTag(self, DomElement):
-        """
-        Returns the dictionnary of tags of a DomElement.
-        """
+        """ Returns the dictionnary of tags of a DomElement. """
         result = {}
         for t in DomElement.getElementsByTagName("tag"):
             k = t.attributes["k"].value
@@ -869,53 +846,41 @@ class OsmApi:
         return result
 
     def _DomGetNd(self, DomElement):
-        """
-        Returns the list of nodes of a DomElement.
-        """
+        """ Returns the list of nodes of a DomElement. """
         result = []
         for t in DomElement.getElementsByTagName("nd"):
             result.append(int(int(t.attributes["ref"].value)))
         return result
 
     def _DomGetMember(self, DomElement):
-        """
-        Returns a list of relation members.
-        """
+        """ Returns a list of relation members. """
         result = []
         for m in DomElement.getElementsByTagName("member"):
             result.append(self._DomGetAttributes(m))
         return result
 
     def _DomParseNode(self, DomElement):
-        """
-        Returns NodeData for the node.
-        """
+        """ Returns NodeData for the node. """
         result = self._DomGetAttributes(DomElement)
         result[u"tag"] = self._DomGetTag(DomElement)
         return result
 
     def _DomParseWay(self, DomElement):
-        """
-        Returns WayData for the way.
-        """
+        """ Returns WayData for the way. """
         result = self._DomGetAttributes(DomElement)
         result[u"tag"] = self._DomGetTag(DomElement)
         result[u"nd"] = self._DomGetNd(DomElement)
         return result
 
     def _DomParseRelation(self, DomElement):
-        """
-        Returns RelationData for the relation.
-        """
+        """ Returns RelationData for the relation. """
         result = self._DomGetAttributes(DomElement)
         result[u"tag"] = self._DomGetTag(DomElement)
         result[u"member"] = self._DomGetMember(DomElement)
         return result
 
     def _DomParseChangeset(self, DomElement):
-        """
-        Returns ChangesetData for the changeset.
-        """
+        """ Returns ChangesetData for the changeset. """
         result = self._DomGetAttributes(DomElement)
         result[u"tag"] = self._DomGetTag(DomElement)
         return result
@@ -924,7 +889,7 @@ class OsmApi:
     # Internal xml builder                                                #
     #######################################################################
 
-    def _XmlBuild(self, ElementType, ElementData, WithHeaders=True):
+    def _XmlBuild(self, ElementType, ElementData, WithHeaders=True):  # noqa
 
         xml = u""
         if WithHeaders:

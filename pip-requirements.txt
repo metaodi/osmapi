@@ -1,0 +1,3 @@
+# This file lists the dependencies of this extension.
+# Install with a command like: pip install -r pip-requirements.txt
+flake8==2.1.0

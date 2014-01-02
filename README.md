@@ -9,6 +9,16 @@ Install `osmapi` simply by using pip:
 
     pip install osmapi
 
+### Development
+
+If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
+
+    pip install -r pip-requirements.txt
+
+After that, it is recommended to install the `flake8` pre-commit-hook:
+
+    flake8 --install-hook
+
 ## Note
 
 Scripted imports and automated edits should only be carried out by those with experience and understanding of the way the OpenStreetMap community creates maps, and only with careful **planning** and **consultation** with the local community.

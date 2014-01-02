@@ -30,7 +30,7 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 ### Read from OpenStreetMap
 
 ```python
-import OsmApi
+import osmapi.OsmApi
 MyApi = OsmApi.OsmApi()
 print MyApi.NodeGet(123)
 # {u'changeset': 532907, u'uid': 14298,
@@ -43,7 +43,7 @@ print MyApi.NodeGet(123)
 ### Constructor
 
 ```python
-import OsmApi
+import osmapi.OsmApi
 MyApi = OsmApi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
 MyApi = OsmApi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
 MyApi = OsmApi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
@@ -54,7 +54,7 @@ Note: The password file should have the format _user:password_
 ### Write to OpenStreetMap
 
 ```python
-import OsmApi
+import osmapi.OsmApi
 MyApi = OsmApi.OsmApi(username = u"metaodi", password = u"*******")
 MyApi.ChangesetCreate({u"comment": u"My first test"})
 print MyApi.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})

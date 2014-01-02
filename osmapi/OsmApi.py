@@ -35,7 +35,7 @@ class OsmApi:
             password=None,
             passwordfile=None,
             appid="",
-            created_by="PythonOsmApi/"+__version__,
+            created_by="osmapi/"+__version__,
             api="www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},

@@ -1,6 +1,7 @@
 osmapi
 ======
 
+[![Build Status](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
 [![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
 [![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
@@ -17,7 +18,7 @@ Install `osmapi` simply by using pip:
 
 If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
 
-    pip install -r pip-requirements.txt
+    pip install -r requirements.txt
 
 After that, it is recommended to install the `flake8` pre-commit-hook:
 

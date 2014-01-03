@@ -4,14 +4,14 @@ import codecs
 
 version = __import__('osmapi').__version__
 
-description = codecs.open('README.md', encoding='utf-8').read()
 try:
     import pypandoc
     from unidecode import unidecode
+    description = codecs.open('README.md', encoding='utf-8').read()
     description = unidecode(description)
     description = pypandoc.convert(description, 'rst', format='md')
 except (IOError, ImportError):
-    pass
+    description = 'Python wrapper for the OSM API'
 
 from distutils.core import setup
 setup(

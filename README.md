@@ -30,9 +30,9 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 ### Read from OpenStreetMap
 
 ```python
-import osmapi.OsmApi
-MyApi = OsmApi.OsmApi()
-print MyApi.NodeGet(123)
+import osmapi
+api = osmapi.OsmApi()
+print api.NodeGet(123)
 # {u'changeset': 532907, u'uid': 14298,
 # u'timestamp': u'2007-09-29T09:19:17Z',
 # u'lon': 10.790009299999999, u'visible': True,
@@ -43,10 +43,10 @@ print MyApi.NodeGet(123)
 ### Constructor
 
 ```python
-import osmapi.OsmApi
-MyApi = OsmApi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
-MyApi = OsmApi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
-MyApi = OsmApi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
+import osmapi
+api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
+api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
+api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
 ```
 
 Note: The password file should have the format _user:password_
@@ -54,12 +54,12 @@ Note: The password file should have the format _user:password_
 ### Write to OpenStreetMap
 
 ```python
-import osmapi.OsmApi
-MyApi = OsmApi.OsmApi(username = u"metaodi", password = u"*******")
-MyApi.ChangesetCreate({u"comment": u"My first test"})
-print MyApi.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+import osmapi
+api = osmapi.OsmApi(username = u"metaodi", password = u"*******")
+api.ChangesetCreate({u"comment": u"My first test"})
+print api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
 # {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
-MyApi.ChangesetClose()
+api.ChangesetClose()
 ```
 
 ## Attribution

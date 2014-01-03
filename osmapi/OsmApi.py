@@ -782,7 +782,7 @@ class OsmApi:
         if send:
             self._conn.send(send)
         response = self._conn.getresponse()
-        if response.status == 200:
+        if response.status != 200:
             payload = response.read().strip()
             if response.status == 410:
                 return None

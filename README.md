@@ -1,6 +1,10 @@
 osmapi
 ======
 
+[![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
+[![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
+[![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
+
 Python wrapper for the OSM API
 
 ## Installation

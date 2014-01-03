@@ -12,4 +12,4 @@ def teardown():
 
 def test_constructor():
     api = osmapi.OsmApi()
-    assert_is_instance(api, osmapi.OsmApi)
+    assert_true(isinstance(api, osmapi.OsmApi))

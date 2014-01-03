@@ -12,4 +12,5 @@ deploy:
   on:
     tags: true
     branch: master
+    python: 2.7
     repo: metaodi/osmapi

@@ -1,19 +1,17 @@
 #-*- coding: utf-8 -*-
 
-import os
+import codecs
 
 version = __import__('osmapi').__version__
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__))
-)
 
+description = codecs.open('README.md', encoding='utf-8').read()
 try:
     import pypandoc
-    description = pypandoc.convert(
-        os.path.join(__location__, 'README.md'), 'rst'
-    )
+    from unidecode import unidecode
+    description = unidecode(description)
+    description = pypandoc.convert(description, 'rst', format='md')
 except (IOError, ImportError):
-    description = 'Python wrapper for the OSM API'
+    pass
 
 from distutils.core import setup
 setup(

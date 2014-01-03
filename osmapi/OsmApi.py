@@ -1,13 +1,13 @@
 #-*- coding: utf-8 -*-
 
-__version__ = '0.2.20'
-
 import httplib
 import base64
 import xml.dom.minidom
 import time
 import sys
 import urllib
+
+from . import __version__
 
 
 class ApiError(Exception):

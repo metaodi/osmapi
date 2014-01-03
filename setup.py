@@ -4,7 +4,7 @@ version = __import__('osmapi').__version__
 
 try:
     import pypandoc
-    description = pypandoc.convert('README.md', 'rst')
+    description = pypandoc.convert('./README.md', 'rst')
 except (IOError, ImportError):
     description = 'Python wrapper for the OSM API'
 

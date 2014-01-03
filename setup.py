@@ -1,10 +1,17 @@
 #-*- coding: utf-8 -*-
 
+import os
+
 version = __import__('osmapi').__version__
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__))
+)
 
 try:
     import pypandoc
-    description = pypandoc.convert('./README.md', 'rst')
+    description = pypandoc.convert(
+        os.path.join(__location__, 'README.md'), 'rst'
+    )
 except (IOError, ImportError):
     description = 'Python wrapper for the OSM API'
 

@@ -5,4 +5,4 @@ python:
   - "3.2"
   - "3.3"
 install: "pip install -r pip-requirements.txt"
-script: build.sh
+script: ./build.sh

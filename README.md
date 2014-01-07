@@ -1,7 +1,7 @@
 osmapi
 ======
 
-[![Build Status](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
+[![Build](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
 [![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
 [![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)

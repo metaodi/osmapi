@@ -1,7 +1,7 @@
 osmapi
 ======
 
-[![Build Status](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
+[![Build](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
 [![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
 [![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
@@ -72,4 +72,4 @@ api.ChangesetClose()
 This project was orginally developed by Etienne Chové.
 This repository is a copy of the original code from SVN (http://svn.openstreetmap.org/applications/utils/python_lib/OsmApi/OsmApi.py), with the goal to enable easy contribution via GitHub and release of this package via [PyPI](https://pypi.python.org/pypi/osmapi).
 
-See also the OSM wiki: http://wiki.openstreetmap.org/wiki/PythonOsmApi
+See also the OSM wiki: http://wiki.openstreetmap.org/wiki/Osmapi

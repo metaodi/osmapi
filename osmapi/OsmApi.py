@@ -23,12 +23,8 @@ class ApiError(Exception):
             % (str(self.status), self.reason, self.payload)
         )
 
-###########################################################################
-## Main class                                                            ##
-
 
 class OsmApi:
-
     def __init__(
             self,
             username=None,
@@ -97,9 +93,9 @@ class OsmApi:
             self._changesetautoflush(True)
         return None
 
-    #######################################################################
-    # Capabilities                                                        #
-    #######################################################################
+    ##################################################
+    # Capabilities                                   #
+    ##################################################
 
     def Capabilities(self):
         """
@@ -108,7 +104,6 @@ class OsmApi:
         uri = "/api/capabilities"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
-        print data.getElementsByTagName("osm")
         data = data.getElementsByTagName("osm")[0]
         data = data.getElementsByTagName("api")[0]
         result = {}
@@ -116,7 +111,6 @@ class OsmApi:
             if elem.nodeType != elem.ELEMENT_NODE:
                 continue
             result[elem.nodeName] = {}
-            print elem.nodeName
             for k, v in elem.attributes.items():
                 try:
                     result[elem.nodeName][k] = float(v)
@@ -124,9 +118,9 @@ class OsmApi:
                     result[elem.nodeName][k] = v
         return result
 
-    #######################################################################
-    # Node                                                                #
-    #######################################################################
+    ##################################################
+    # Node                                           #
+    ##################################################
 
     def NodeGet(self, NodeId, NodeVersion=-1):
         """
@@ -220,9 +214,9 @@ class OsmApi:
             result[data[u"id"]] = data
         return result
 
-    #######################################################################
-    # Way                                                                 #
-    #######################################################################
+    ##################################################
+    # Way                                            #
+    ##############################@###################
 
     def WayGet(self, WayId, WayVersion=-1):
         """
@@ -311,9 +305,9 @@ class OsmApi:
             result[data[u"id"]] = data
         return result
 
-    #######################################################################
-    # Relation                                                            #
-    #######################################################################
+    ##################################################
+    # Relation                                       #
+    ##################################################
 
     def RelationGet(self, RelationId, RelationVersion=-1):
         """
@@ -425,9 +419,9 @@ class OsmApi:
             result[data[u"id"]] = data
         return result
 
-    #######################################################################
-    # Changeset                                                           #
-    #######################################################################
+    ##################################################
+    # Changeset                                      #
+    ##################################################
 
     def ChangesetGet(self, ChangesetId):
         """
@@ -593,9 +587,9 @@ class OsmApi:
             result[tmpCS["id"]] = tmpCS
         return result
 
-    #######################################################################
-    # Other                                                               #
-    #######################################################################
+    ##################################################
+    # Other                                          #
+    ##################################################
 
     def Map(self, min_lon, min_lat, max_lon, max_lat):
         """
@@ -613,9 +607,9 @@ class OsmApi:
         data = self._get(uri)
         return self.ParseOsm(data)
 
-    #######################################################################
-    # Data parser                                                         #
-    #######################################################################
+    ##################################################
+    # Data parser                                    #
+    ##################################################
 
     def ParseOsm(self, data):
         """
@@ -684,9 +678,9 @@ class OsmApi:
                     })
         return result
 
-    #######################################################################
-    # Internal http function                                              #
-    #######################################################################
+    ##################################################
+    # Internal http function                         #
+    ##################################################
 
     def _do(self, action, OsmType, OsmData):
         if self._changesetauto:
@@ -826,9 +820,9 @@ class OsmApi:
     def _delete(self, path, data):
         return self._http('DELETE', path, True, data)
 
-    #######################################################################
-    # Internal dom function                                               #
-    #######################################################################
+    ##################################################
+    # Internal dom function                          #
+    ##################################################
 
     def _DomGetAttributes(self, DomElement):  # noqa
         """
@@ -920,9 +914,9 @@ class OsmApi:
         result[u"tag"] = self._DomGetTag(DomElement)
         return result
 
-    #######################################################################
-    # Internal xml builder                                                #
-    #######################################################################
+    ##################################################
+    # Internal xml builder                           #
+    ##################################################
 
     def _XmlBuild(self, ElementType, ElementData, WithHeaders=True):  # noqa
 
@@ -980,6 +974,3 @@ class OsmApi:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
         )
-
-## End of main class                                                     ##
-###########################################################################

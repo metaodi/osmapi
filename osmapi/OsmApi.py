@@ -498,14 +498,14 @@ class OsmApi:
         data += u"<osmChange version=\"0.6\" generator=\""
         data += self._created_by + "\">\n"
         for change in ChangesData:
-            data += u"<"+change["action"]+">\n"
+            data += u"<"+change["data"]["action"]+">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
             data += self._XmlBuild(
                 change["type"],
                 change["data"],
                 False
             ).decode("utf-8")
-            data += u"</"+change["action"]+">\n"
+            data += u"</"+change["data"]["action"]+">\n"
         data += u"</osmChange>"
         data = self._http(
             "POST",
@@ -517,7 +517,7 @@ class OsmApi:
         data = data.getElementsByTagName("diffResult")[0]
         data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
         for i in range(len(ChangesData)):
-            if ChangesData[i]["action"] == "delete":
+            if ChangesData[i]["data"]["action"] == "delete":
                 ChangesData[i]["data"].pop("version")
             else:
                 new_id = int(data[i].getAttribute("new_id"))
@@ -738,7 +738,7 @@ class OsmApi:
         return self._changesetautoflush(True)
 
     def _changesetautoflush(self, force=False):
-        autosize = self._chnagesetautosize
+        autosize = self._changesetautosize
         while ((len(self._changesetautodata) >= autosize) or
                 (force and self._changesetautodata)):
             if self._changesetautocpt == 0:

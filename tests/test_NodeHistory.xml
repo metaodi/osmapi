@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <node id="123" changeset="25" timestamp="2009-09-04T14:59:31Z" version="1" visible="true" user="randomjunk" uid="3" lat="51.8750241" lon="-1.4852244"/>
+  <node id="123" changeset="26" timestamp="2009-09-04T15:20:41Z" version="2" visible="true" user="randomjunk" uid="3" lat="51.8750241" lon="-1.4852244"/>
+  <node id="123" changeset="7283" timestamp="2010-09-01T18:31:11Z" version="3" visible="true" user="gravitystorm" uid="17" lat="51.8753146" lon="-1.4857118">
+    <tag k="foo" v="bar"/>
+  </node>
+  <node id="123" changeset="13688" timestamp="2012-02-16T10:45:01Z" version="4" visible="true" user="schmerzbereiter" uid="152" lat="51.8753146" lon="-1.4857118">
+    <tag k="empty" v=""/>
+    <tag k="foo" v="bar"/>
+  </node>
+  <node id="123" changeset="13688" timestamp="2012-02-16T10:47:38Z" version="5" visible="true" user="schmerzbereiter" uid="152" lat="51.8753146" lon="-1.4857118">
+    <tag k="foo" v="bar"/>
+  </node>
+  <node id="123" changeset="15219" timestamp="2012-04-13T12:16:20Z" version="6" visible="true" user="freundchen" uid="605" lat="51.8753146" lon="-1.4857118">
+    <tag k="foo" v="bar"/>
+    <tag k="name" v="murx"/>
+  </node>
+  <node id="123" changeset="15220" timestamp="2012-04-13T12:39:08Z" version="7" visible="true" user="freundchen" uid="605" lat="51.8753146" lon="-1.4857118">
+    <tag k="foo" v="bar"/>
+    <tag k="name" v="blblbbl"/>
+  </node>
+  <node id="123" changeset="15293" timestamp="2012-04-18T11:14:26Z" version="8" visible="true" user="freundchen" uid="605" lat="51.8753146" lon="-1.4857118">
+    <tag k="amenity" v="school"/>
+    <tag k="foo" v="bar"/>
+    <tag k="name" v="Berolina &amp; Schule"/>
+    <tag k="wheelchair" v="unknown"/>
+  </node>
+</osm>

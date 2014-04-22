@@ -18,7 +18,7 @@ class TestOsmApi(unittest.TestCase):
             api="api06.dev.openstreetmap.org"
         )
 
-    def _http_mock(self, filename=None):
+    def _http_mock(self, filename=None, destructor=True):
         if filename is None:
             filename = os.path.join(
                 __location__,
@@ -31,6 +31,14 @@ class TestOsmApi(unittest.TestCase):
                 )
         except:
             pass
+
+        if not destructor:
+            self.disable_destructor()
+
+    def disable_destructor(self):
+        self.api.__del__ = mock.Mock(
+            return_value=None
+        )
 
     def teardown(self):
         pass

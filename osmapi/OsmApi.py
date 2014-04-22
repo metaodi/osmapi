@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import httplib
 import base64
@@ -58,7 +58,7 @@ class OsmApi:
                 if l[0] == self._username:
                     self._password = l[1]
 
-        ## Changest informations
+        # Changest informations
         # auto create and close changesets
         self._changesetauto = changesetauto
         # tags for automatic created changesets
@@ -216,7 +216,7 @@ class OsmApi:
 
     ##################################################
     # Way                                            #
-    ##############################@###################
+    ##################################################
 
     def WayGet(self, WayId, WayVersion=-1):
         """
@@ -732,7 +732,7 @@ class OsmApi:
         return self._changesetautoflush(True)
 
     def _changesetautoflush(self, force=False):
-        autosize = self._chnagesetautosize
+        autosize = self._changesetautosize
         while ((len(self._changesetautodata) >= autosize) or
                 (force and self._changesetautodata)):
             if self._changesetautocpt == 0:

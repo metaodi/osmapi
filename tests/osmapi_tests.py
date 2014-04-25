@@ -1,3 +1,4 @@
+from nose.tools import *  # noqa
 import mock
 import osmapi
 import os
@@ -7,7 +8,6 @@ if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-from nose.tools import *  # noqa
 
 __location__ = os.path.realpath(
     os.path.join(

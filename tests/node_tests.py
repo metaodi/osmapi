@@ -11,10 +11,10 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodeGet(123)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/node/123')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/node/123')
 
-        assert_equals(result, {
+        self.assertEquals(result, {
             u'id': 123,
             u'changeset': 15293,
             u'uid': 605,
@@ -37,10 +37,10 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodeGet(123, NodeVersion=2)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/node/123/2')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/node/123/2')
 
-        assert_equals(result, {
+        self.assertEquals(result, {
             u'id': 123,
             u'changeset': 4152,
             u'uid': 605,
@@ -86,7 +86,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         }
 
-        assert_true(self.api.NodeCreate(test_node) is None)
+        self.assertIsNone(self.api.NodeCreate(test_node))
 
     def test_NodeCreate(self):
         self._http_mock()
@@ -109,17 +109,17 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test dataset'
         })
-        assert_equals(cs, 1111)
+        self.assertEquals(cs, 1111)
         result = self.api.NodeCreate(test_node)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'PUT')
-        assert_equals(args[1], '/api/0.6/node/create')
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], '/api/0.6/node/create')
 
-        assert_equals(result['id'], 9876)
-        assert_equals(result['lat'], test_node['lat'])
-        assert_equals(result['lon'], test_node['lon'])
-        assert_equals(result['tag'], test_node['tag'])
+        self.assertEquals(result['id'], 9876)
+        self.assertEquals(result['lat'], test_node['lat'])
+        self.assertEquals(result['lon'], test_node['lon'])
+        self.assertEquals(result['tag'], test_node['tag'])
 
     def test_NodeUpdate(self):
         self._http_mock()
@@ -143,17 +143,17 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test dataset'
         })
-        assert_equals(cs, 1111)
+        self.assertEquals(cs, 1111)
         result = self.api.NodeUpdate(test_node)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'PUT')
-        assert_equals(args[1], '/api/0.6/node/7676')
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], '/api/0.6/node/7676')
 
-        assert_equals(result['id'], 7676)
-        assert_equals(result['lat'], test_node['lat'])
-        assert_equals(result['lon'], test_node['lon'])
-        assert_equals(result['tag'], test_node['tag'])
+        self.assertEquals(result['id'], 7676)
+        self.assertEquals(result['lat'], test_node['lat'])
+        self.assertEquals(result['lon'], test_node['lon'])
+        self.assertEquals(result['tag'], test_node['tag'])
 
     def test_NodeDelete(self):
         self._http_mock()
@@ -171,14 +171,14 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test dataset'
         })
-        assert_equals(cs, 1111)
+        self.assertEquals(cs, 1111)
 
         result = self.api.NodeDelete(test_node)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'DELETE')
-        assert_equals(args[1], '/api/0.6/node/7676')
-        assert_equals(result['id'], 7676)
+        self.assertEquals(args[0], 'DELETE')
+        self.assertEquals(args[1], '/api/0.6/node/7676')
+        self.assertEquals(result['id'], 7676)
 
     def test_NodeHistory(self):
         self._http_mock()
@@ -186,15 +186,15 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodeHistory(123)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/node/123/history')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/node/123/history')
 
-        assert_equals(len(result), 8)
-        assert_equals(result[4]['id'], 123)
-        assert_equals(result[4]['version'], 4)
-        assert_equals(result[4]['lat'], 51.8753146)
-        assert_equals(result[4]['lon'], -1.4857118)
-        assert_equals(
+        self.assertEquals(len(result), 8)
+        self.assertEquals(result[4]['id'], 123)
+        self.assertEquals(result[4]['version'], 4)
+        self.assertEquals(result[4]['lat'], 51.8753146)
+        self.assertEquals(result[4]['lon'], -1.4857118)
+        self.assertEquals(
             result[4]['tag'], {
                 'empty': '',
                 'foo': 'bar',
@@ -207,13 +207,13 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodeWays(234)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/node/234/ways')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/node/234/ways')
 
-        assert_equals(len(result), 1)
-        assert_equals(result[0]['id'], 60)
-        assert_equals(result[0]['changeset'], 61)
-        assert_equals(
+        self.assertEquals(len(result), 1)
+        self.assertEquals(result[0]['id'], 60)
+        self.assertEquals(result[0]['changeset'], 61)
+        self.assertEquals(
             result[0]['tag'],
             {
                 'highway': 'path',
@@ -227,13 +227,13 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodeRelations(4295668179)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/node/4295668179/relations')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/node/4295668179/relations')
 
-        assert_equals(len(result), 1)
-        assert_equals(result[0]['id'], 4294968148)
-        assert_equals(result[0]['changeset'], 23123)
-        assert_equals(
+        self.assertEquals(len(result), 1)
+        self.assertEquals(result[0]['id'], 4294968148)
+        self.assertEquals(result[0]['changeset'], 23123)
+        self.assertEquals(
             result[0]['member'][1],
             {
                 'role': 'point',
@@ -241,7 +241,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
                 'type': 'node',
             }
         )
-        assert_equals(
+        self.assertEquals(
             result[0]['tag'],
             {
                 'type': 'fancy',
@@ -254,11 +254,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         result = self.api.NodesGet([123, 345])
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/nodes?nodes=123,345')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/nodes?nodes=123,345')
 
-        assert_equals(len(result), 2)
-        assert_equals(result[123], {
+        self.assertEquals(len(result), 2)
+        self.assertEquals(result[123], {
             u'id': 123,
             u'changeset': 15293,
             u'uid': 605,
@@ -274,7 +274,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
                 u'name': u'Berolina & Schule'
             },
         })
-        assert_equals(result[345], {
+        self.assertEquals(result[345], {
             u'id': 345,
             u'changeset': 244,
             u'timestamp': u'2009-09-12T03:22:59Z',

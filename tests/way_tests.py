@@ -10,10 +10,10 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayGet(321)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/321')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/321')
 
-        assert_equals(result, {
+        self.assertEquals(result, {
             u'id': 321,
             u'changeset': 298,
             u'uid': 12,
@@ -52,12 +52,12 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayGet(4294967296, 2)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/4294967296/2')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/4294967296/2')
 
-        assert_equals(result['id'], 4294967296)
-        assert_equals(result['changeset'], 41303)
-        assert_equals(result['user'], 'metaodi')
+        self.assertEquals(result['id'], 4294967296)
+        self.assertEquals(result['changeset'], 41303)
+        self.assertEquals(result['user'], 'metaodi')
 
     def test_WayGet_nodata(self):
         self._http_mock()
@@ -65,10 +65,10 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayGet(321)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/321')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/321')
 
-        assert_equals(result, '')
+        self.assertEquals(result, '')
 
     def test_WayCreate(self):
         self._http_mock()
@@ -90,17 +90,17 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way'
         })
-        assert_equals(cs, 2222)
+        self.assertEquals(cs, 2222)
 
         result = self.api.WayCreate(test_way)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'PUT')
-        assert_equals(args[1], '/api/0.6/way/create')
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], '/api/0.6/way/create')
 
-        assert_equals(result['id'], 5454)
-        assert_equals(result['nd'], test_way['nd'])
-        assert_equals(result['tag'], test_way['tag'])
+        self.assertEquals(result['id'], 5454)
+        self.assertEquals(result['nd'], test_way['nd'])
+        self.assertEquals(result['tag'], test_way['tag'])
 
     def test_WayUpdate(self):
         self._http_mock()
@@ -123,17 +123,17 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way'
         })
-        assert_equals(cs, 2222)
+        self.assertEquals(cs, 2222)
 
         result = self.api.WayUpdate(test_way)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'PUT')
-        assert_equals(args[1], '/api/0.6/way/876')
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], '/api/0.6/way/876')
 
-        assert_equals(result['id'], 876)
-        assert_equals(result['nd'], test_way['nd'])
-        assert_equals(result['tag'], test_way['tag'])
+        self.assertEquals(result['id'], 876)
+        self.assertEquals(result['nd'], test_way['nd'])
+        self.assertEquals(result['tag'], test_way['tag'])
 
     def test_WayDelete(self):
         self._http_mock()
@@ -151,14 +151,14 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way delete'
         })
-        assert_equals(cs, 2222)
+        self.assertEquals(cs, 2222)
 
         result = self.api.WayDelete(test_way)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'DELETE')
-        assert_equals(args[1], '/api/0.6/way/876')
-        assert_equals(result['id'], 876)
+        self.assertEquals(args[0], 'DELETE')
+        self.assertEquals(args[1], '/api/0.6/way/876')
+        self.assertEquals(result['id'], 876)
 
     def test_WayHistory(self):
         self._http_mock()
@@ -166,13 +166,13 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayHistory(4294967296)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/4294967296/history')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/4294967296/history')
 
-        assert_equals(len(result), 2)
-        assert_equals(result[1]['id'], 4294967296)
-        assert_equals(result[1]['version'], 1)
-        assert_equals(
+        self.assertEquals(len(result), 2)
+        self.assertEquals(result[1]['id'], 4294967296)
+        self.assertEquals(result[1]['version'], 1)
+        self.assertEquals(
             result[1]['tag'], {
                 'highway': 'unclassified',
                 'name': 'Stansted Road',
@@ -185,13 +185,13 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayRelations(4295032193)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/4295032193/relations')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/4295032193/relations')
 
-        assert_equals(len(result), 1)
-        assert_equals(result[0]['id'], 4294968148)
-        assert_equals(result[0]['changeset'], 23123)
-        assert_equals(
+        self.assertEquals(len(result), 1)
+        self.assertEquals(result[0]['id'], 4294968148)
+        self.assertEquals(result[0]['changeset'], 23123)
+        self.assertEquals(
             result[0]['member'][4],
             {
                 'role': '',
@@ -199,7 +199,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
                 'type': 'way',
             }
         )
-        assert_equals(
+        self.assertEquals(
             result[0]['tag'],
             {
                 'type': 'fancy',
@@ -212,16 +212,16 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayFull(321)
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/way/321/full')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/way/321/full')
 
-        assert_equals(len(result), 17)
-        assert_equals(result[0]['data']['id'], 11949)
-        assert_equals(result[0]['data']['changeset'], 298)
-        assert_equals(result[0]['type'], 'node')
-        assert_equals(result[16]['data']['id'], 321)
-        assert_equals(result[16]['data']['changeset'], 298)
-        assert_equals(result[16]['type'], 'way')
+        self.assertEquals(len(result), 17)
+        self.assertEquals(result[0]['data']['id'], 11949)
+        self.assertEquals(result[0]['data']['changeset'], 298)
+        self.assertEquals(result[0]['type'], 'node')
+        self.assertEquals(result[16]['data']['id'], 321)
+        self.assertEquals(result[16]['data']['changeset'], 298)
+        self.assertEquals(result[16]['type'], 'way')
 
     def test_WaysGet(self):
         self._http_mock()
@@ -229,11 +229,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WaysGet([456, 678])
 
         args, kwargs = self.api._http_request.call_args
-        assert_equals(args[0], 'GET')
-        assert_equals(args[1], '/api/0.6/ways?ways=456,678')
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], '/api/0.6/ways?ways=456,678')
 
-        assert_equals(len(result), 2)
-        assert_is(type(result[456]), dict)
-        assert_is(type(result[678]), dict)
+        self.assertEquals(len(result), 2)
+        self.assertIs(type(result[456]), dict)
+        self.assertIs(type(result[678]), dict)
         with self.assertRaises(KeyError):
-            assert_is(type(result[123]), dict)
+            self.assertIs(type(result[123]), dict)

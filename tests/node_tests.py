@@ -65,21 +65,10 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         }
 
-        try:
-            with self.assertRaisesRegexp(
-                    Exception,
-                    'need to open a changeset'):
-                self.api.NodeCreate(test_node)
-        except AttributeError:  # block for Python 2.6
-            try:
-                self.api.NodeCreate(test_node)
-            except Exception, message:
-                self.failUnlessEqual(
-                    message.args[0],
-                    'You need to open a changeset before uploading data'
-                )
-            else:
-                self.fail('Excpetion for missing changeset not raised')
+        with self.assertRaisesRegexp(
+                Exception,
+                'need to open a changeset'):
+            self.api.NodeCreate(test_node)
 
     def test_NodeCreate_changesetauto(self):
         self.api = osmapi.OsmApi(

@@ -61,7 +61,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'lon': 8.765,
             'tag': {
                 'amenity': 'place_of_worship',
-                'name': 'pastafarian'
+                'religion': 'pastafarian'
             }
         }
 
@@ -93,7 +93,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'lon': 8.555,
             'tag': {
                 'amenity': 'place_of_worship',
-                'name': 'pastafarian'
+                'religion': 'pastafarian'
             }
         }
 
@@ -113,7 +113,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'lon': 8.765,
             'tag': {
                 'amenity': 'place_of_worship',
-                'name': 'pastafarian'
+                'religion': 'pastafarian'
             }
         }
 

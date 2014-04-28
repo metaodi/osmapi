@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <relation id="2470397" changeset="13458460" timestamp="2012-10-11T19:13:34Z" version="1" visible="true" user="Davio" uid="217070">
+    <member type="way" ref="22908055" role="from"/>
+    <member type="way" ref="22908029" role="to"/>
+    <member type="node" ref="101142274" role="via"/>
+    <tag k="restriction" v="only_straight_on"/>
+    <tag k="type" v="restriction"/>
+  </relation>
+  <relation id="2470397" changeset="13819914" timestamp="2012-11-10T12:15:40Z" version="2" visible="true" user="Davio" uid="217070">
+    <member type="way" ref="22908029" role="to"/>
+    <member type="node" ref="101142274" role="via"/>
+    <member type="way" ref="190022934" role="from"/>
+    <tag k="restriction" v="only_straight_on"/>
+    <tag k="type" v="restriction"/>
+  </relation>
+</osm>

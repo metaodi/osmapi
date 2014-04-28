@@ -151,6 +151,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/node/7676')
 
         self.assertEquals(result['id'], 7676)
+        self.assertEquals(result['version'], 3)
         self.assertEquals(result['lat'], test_node['lat'])
         self.assertEquals(result['lon'], test_node['lon'])
         self.assertEquals(result['tag'], test_node['tag'])
@@ -179,6 +180,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/node/7676')
         self.assertEquals(result['id'], 7676)
+        self.assertEquals(result['version'], 4)
 
     def test_NodeHistory(self):
         self._http_mock()

@@ -132,6 +132,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/way/876')
 
         self.assertEquals(result['id'], 876)
+        self.assertEquals(result['version'], 7)
         self.assertEquals(result['nd'], test_way['nd'])
         self.assertEquals(result['tag'], test_way['tag'])
 
@@ -159,6 +160,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/way/876')
         self.assertEquals(result['id'], 876)
+        self.assertEquals(result['version'], 8)
 
     def test_WayHistory(self):
         self._http_mock()

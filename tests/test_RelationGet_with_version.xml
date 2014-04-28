@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <relation id="765" changeset="41378" timestamp="2014-04-26T08:19:23Z" version="2" visible="true" user="metaodi" uid="1841">
+    <member type="way" ref="9902" role="outer"/>
+    <member type="way" ref="9903" role="outer"/>
+    <member type="way" ref="8428" role="outer"/>
+    <member type="way" ref="9904" role="outer"/>
+    <member type="way" ref="8440" role="outer"/>
+    <member type="way" ref="8362" role="outer"/>
+    <member type="way" ref="8455" role="outer"/>
+    <member type="way" ref="8460" role="outer"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="alt_name" v="M\xf5ksi"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="EHAK:code" v="5141"/>
+    <tag k="EHAK:countycode" v="0086"/>
+    <tag k="EHAK:parishcode" v="0918"/>
+    <tag k="is_in" v="V\xf5ru vald"/>
+    <tag k="name" v="M\xf5ksi k\xfcla"/>
+    <tag k="source" v="test"/>
+    <tag k="type" v="multipolygon"/>
+  </relation>
+</osm>

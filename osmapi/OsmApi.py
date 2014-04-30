@@ -515,7 +515,9 @@ class OsmApi:
                 ChangesData[i]["data"].pop("version")
             else:
                 new_id = int(data[i].getAttribute("new_id"))
-                ChangesData[i]["data"]["version"] = new_id
+                ChangesData[i]["data"]["id"] = new_id
+                new_version = int(data[i].getAttribute("new_version"))
+                ChangesData[i]["data"]["version"] = new_version
         return ChangesData
 
     def ChangesetDownload(self, ChangesetId):

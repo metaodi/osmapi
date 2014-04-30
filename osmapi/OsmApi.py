@@ -452,7 +452,7 @@ class OsmApi:
         Opens a changeset. Returns #ChangesetId.
         """
         if self._CurrentChangesetId:
-            raise Exception("Changeset alreadey opened")
+            raise Exception("Changeset already opened")
         if u"created_by" not in ChangesetTags:
             ChangesetTags[u"created_by"] = self._created_by
         result = self._put(

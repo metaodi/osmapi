@@ -437,7 +437,7 @@ class OsmApi:
         """
         Updates current changeset with ChangesetTags.
         """
-        if self._CurrentChangesetId == -1:
+        if not self._CurrentChangesetId:
             raise Exception("No changeset currently opened")
         if u"created_by" not in ChangesetTags:
             ChangesetTags[u"created_by"] = self._created_by

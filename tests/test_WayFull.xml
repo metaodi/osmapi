@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <node id="11949" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.415759" lon="23.0982328"/>
+  <node id="11950" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4156975" lon="23.0984681"/>
+  <node id="11951" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4156196" lon="23.0987147"/>
+  <node id="11952" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4154641" lon="23.0988164"/>
+  <node id="11953" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4153527" lon="23.0988175"/>
+  <node id="11954" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4152182" lon="23.0988145"/>
+  <node id="11955" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4151147" lon="23.0987825"/>
+  <node id="11956" changeset="298" timestamp="2009-09-14T23:23:17Z" version="1" visible="true" user="green525" uid="12" lat="58.4150599" lon="23.0987376"/>
+  <node id="11957" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4151643" lon="23.0986577"/>
+  <node id="11958" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4153457" lon="23.098516"/>
+  <node id="11959" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.415344" lon="23.0983088"/>
+  <node id="11960" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4153569" lon="23.0980949"/>
+  <node id="11961" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4153767" lon="23.0980277"/>
+  <node id="11962" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4154623" lon="23.0980434"/>
+  <node id="11963" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4155678" lon="23.0980445"/>
+  <node id="11964" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12" lat="58.4156796" lon="23.098086"/>
+  <way id="321" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12">
+    <nd ref="11949"/>
+    <nd ref="11950"/>
+    <nd ref="11951"/>
+    <nd ref="11952"/>
+    <nd ref="11953"/>
+    <nd ref="11954"/>
+    <nd ref="11955"/>
+    <nd ref="11956"/>
+    <nd ref="11957"/>
+    <nd ref="11958"/>
+    <nd ref="11959"/>
+    <nd ref="11960"/>
+    <nd ref="11961"/>
+    <nd ref="11962"/>
+    <nd ref="11963"/>
+    <nd ref="11964"/>
+    <nd ref="11949"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="source" v="Maa-amet 01.06.2009"/>
+  </way>
+</osm>

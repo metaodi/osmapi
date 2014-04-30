@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.3.3 (5414 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <node id="101142276" visible="true" version="8" changeset="762788" timestamp="2009-03-07T22:31:37Z" user="Giorgio Vaccari" uid="92934" lat="41.8825289" lon="12.4904718"/>
+ <node id="101142277" visible="true" version="8" changeset="762788" timestamp="2009-03-07T22:31:37Z" user="Giorgio Vaccari" uid="92934" lat="41.8821839" lon="12.4903002"/>
+ <node id="101142279" visible="true" version="8" changeset="762788" timestamp="2009-03-07T22:31:37Z" user="Giorgio Vaccari" uid="92934" lat="41.8816279" lon="12.4901028"/>
+ <node id="101142360" visible="true" version="8" changeset="762788" timestamp="2009-03-07T22:31:37Z" user="Giorgio Vaccari" uid="92934" lat="41.8818835" lon="12.4901800"/>
+ <node id="255024104" visible="true" version="4" changeset="8698607" timestamp="2011-07-11T22:58:13Z" user="Giardia" uid="113909" lat="41.8828686" lon="12.4903969"/>
+ <node id="246638798" visible="true" version="8" changeset="7531303" timestamp="2011-03-12T09:58:57Z" user="Davio" uid="217070" lat="41.8813915" lon="12.4900957"/>
+ <node id="1198115045" visible="true" version="1" changeset="7531506" timestamp="2011-03-12T10:25:03Z" user="Davio" uid="217070" lat="41.8827424" lon="12.4904489"/>
+ <node id="101142274" visible="true" version="10" changeset="7531506" timestamp="2011-03-12T10:25:28Z" user="Davio" uid="217070" lat="41.8825952" lon="12.4904869"/>
+ <way id="22908029" visible="true" version="17" changeset="14780762" timestamp="2013-01-25T13:35:59Z" user="Davio" uid="217070">
+  <nd ref="101142274"/>
+  <nd ref="101142276"/>
+  <nd ref="101142277"/>
+  <nd ref="101142360"/>
+  <nd ref="101142279"/>
+  <nd ref="246638798"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="lanes" v="2"/>
+  <tag k="lit" v="yes"/>
+  <tag k="maxspeed" v="50"/>
+  <tag k="name" v="Viale Guido Baccelli"/>
+  <tag k="source:maxspeed" v="IT:urban"/>
+ </way>
+ <way id="190022934" visible="true" version="2" changeset="14780762" timestamp="2013-01-25T13:36:04Z" user="Davio" uid="217070">
+  <nd ref="255024104"/>
+  <nd ref="1198115045"/>
+  <nd ref="101142274"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="lanes" v="2"/>
+  <tag k="lit" v="yes"/>
+  <tag k="maxspeed" v="50"/>
+  <tag k="oneway" v="yes"/>
+  <tag k="source:maxspeed" v="IT:urban"/>
+ </way>
+ <relation id="2470397" visible="true" version="2" changeset="13819914" timestamp="2012-11-10T12:15:40Z" user="Davio" uid="217070">
+  <member type="way" ref="22908029" role="to"/>
+  <member type="node" ref="101142274" role="via"/>
+  <member type="way" ref="190022934" role="from"/>
+  <tag k="restriction" v="only_straight_on"/>
+  <tag k="type" v="restriction"/>
+ </relation>
+</osm>

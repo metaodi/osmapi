@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <relation id="321" changeset="434" timestamp="2009-09-15T22:24:25Z" version="1" visible="true" user="green525" uid="12">
+    <member type="way" ref="6908" role="outer"/>
+    <member type="way" ref="6352" role="outer"/>
+    <member type="way" ref="5669" role="outer"/>
+    <member type="way" ref="5682" role="outer"/>
+    <member type="way" ref="6909" role="outer"/>
+    <member type="way" ref="6355" role="outer"/>
+    <member type="way" ref="6910" role="outer"/>
+    <member type="way" ref="6911" role="outer"/>
+    <member type="way" ref="6912" role="outer"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="type" v="multipolygon"/>
+  </relation>
+</osm>

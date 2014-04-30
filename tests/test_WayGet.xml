@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <way id="321" changeset="298" timestamp="2009-09-14T23:23:18Z" version="1" visible="true" user="green525" uid="12">
+    <nd ref="11949"/>
+    <nd ref="11950"/>
+    <nd ref="11951"/>
+    <nd ref="11952"/>
+    <nd ref="11953"/>
+    <nd ref="11954"/>
+    <nd ref="11955"/>
+    <nd ref="11956"/>
+    <nd ref="11957"/>
+    <nd ref="11958"/>
+    <nd ref="11959"/>
+    <nd ref="11960"/>
+    <nd ref="11961"/>
+    <nd ref="11962"/>
+    <nd ref="11963"/>
+    <nd ref="11964"/>
+    <nd ref="11949"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="boundary" v="administrative"/>
+  </way>
+</osm>

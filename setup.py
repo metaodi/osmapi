@@ -34,5 +34,8 @@ setup(
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Software Development :: Libraries',
         'Development Status :: 4 - Beta',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
     ],
 )

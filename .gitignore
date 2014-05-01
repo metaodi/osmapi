@@ -2,3 +2,4 @@ dist/
 MANIFEST
 *.pyc
 .coverage
+.tox

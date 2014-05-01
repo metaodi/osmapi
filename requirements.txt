@@ -2,6 +2,6 @@
 # Install with a command like: pip install -r pip-requirements.txt
 flake8==2.1.0
 coveralls==0.4.1
-unittest2==0.5.1
+mock==1.0.1
 pypandoc==0.7.0
 Unidecode==0.04.14

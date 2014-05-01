@@ -28,6 +28,7 @@ class TestOsmApi(unittest.TestCase):
         if filename is None:
             filename = os.path.join(
                 __location__,
+                'fixtures',
                 self._testMethodName + ".xml"
             )
         try:

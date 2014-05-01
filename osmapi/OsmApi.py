@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+from __future__ import (absolute_import, print_function, unicode_literals)
 import httplib
 import base64
 import xml.dom.minidom
@@ -762,7 +762,7 @@ class OsmApi:
                 "%s %s %s"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
             )
-            print >>sys.stderr, error_msg
+            print(error_msg, file=sys.stderr)
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
@@ -789,7 +789,7 @@ class OsmApi:
                 "%s %s %s"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
             )
-            print >>sys.stderr, error_msg
+            print(error_msg, file=sys.stderr)
         return response.read()
 
     def _http(self, cmd, path, auth, send):  # noqa

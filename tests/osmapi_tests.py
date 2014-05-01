@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from nose.tools import *  # noqa
+from osmapi import OsmApi
 import mock
-import osmapi
 import os
 import sys
 
@@ -20,7 +20,7 @@ __location__ = os.path.realpath(
 
 class TestOsmApi(unittest.TestCase):
     def setUp(self):
-        self.api = osmapi.OsmApi(
+        self.api = OsmApi(
             api="api06.dev.openstreetmap.org"
         )
 
@@ -51,4 +51,4 @@ class TestOsmApi(unittest.TestCase):
         pass
 
     def test_constructor(self):
-        assert_true(isinstance(self.api, osmapi.OsmApi))
+        assert_true(isinstance(self.api, OsmApi))

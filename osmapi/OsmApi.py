@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import (absolute_import, print_function, unicode_literals)
-import httplib
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 import base64
 import xml.dom.minidom
 import time

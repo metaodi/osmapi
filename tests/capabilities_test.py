@@ -1,6 +1,6 @@
-from __future__ import unicode_literals
+from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
-import osmapi_tests
+from . import osmapi_tests
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):

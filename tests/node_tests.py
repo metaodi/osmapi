@@ -1,8 +1,8 @@
-from __future__ import unicode_literals
+from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
-import osmapi_tests
+from . import osmapi_tests
+from osmapi import OsmApi
 import mock
-import osmapi
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
@@ -72,7 +72,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             self.api.NodeCreate(test_node)
 
     def test_NodeCreate_changesetauto(self):
-        self.api = osmapi.OsmApi(
+        self.api = OsmApi(
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )

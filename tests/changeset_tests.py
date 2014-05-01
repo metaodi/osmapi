@@ -1,4 +1,4 @@
-
+from __future__ import unicode_literals
 from nose.tools import *  # noqa
 import osmapi_tests
 import mock
@@ -22,19 +22,19 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertFalse(args[2])
 
         self.assertEquals(result, {
-            u'id': 123,
-            u'closed_at': u'2009-09-07T22:57:37Z',
-            u'created_at': u'2009-09-07T21:57:36Z',
-            u'max_lat': u'52.4710193',
-            u'max_lon': u'-1.4831815',
-            u'min_lat': u'45.9667901',
-            u'min_lon': u'-1.4998534',
-            u'open': False,
-            u'user': u'randomjunk',
-            u'uid': 3,
-            u'tag': {
-                u'comment': u'correct node bug',
-                u'created_by': u'Potlatch 1.2a',
+            'id': 123,
+            'closed_at': '2009-09-07T22:57:37Z',
+            'created_at': '2009-09-07T21:57:36Z',
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
             },
         })
 

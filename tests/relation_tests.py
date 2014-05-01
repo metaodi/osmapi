@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from nose.tools import *  # noqa
 import osmapi_tests
 import mock
@@ -20,63 +21,63 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/relation/321')
 
         self.assertEquals(result, {
-            u'id': 321,
-            u'changeset': 434,
-            u'uid': 12,
-            u'timestamp': u'2009-09-15T22:24:25Z',
-            u'visible': True,
-            u'version': 1,
-            u'user': u'green525',
-            u'tag': {
-                u'admin_level': u'9',
-                u'boundary': u'administrative',
-                u'type': u'multipolygon',
+            'id': 321,
+            'changeset': 434,
+            'uid': 12,
+            'timestamp': '2009-09-15T22:24:25Z',
+            'visible': True,
+            'version': 1,
+            'user': 'green525',
+            'tag': {
+                'admin_level': '9',
+                'boundary': 'administrative',
+                'type': 'multipolygon',
             },
-            u'member': [
+            'member': [
                 {
-                    u'ref': 6908,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6908,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6352,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6352,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 5669,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 5669,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 5682,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 5682,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6909,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6909,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6355,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6355,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6910,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6910,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6911,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6911,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6912,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6912,
+                    'role': 'outer',
+                    'type': 'way'
                 }
             ]
         })
@@ -105,19 +106,19 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.api._CurrentChangesetId = 3333
 
         test_relation = {
-            u'tag': {
-                u'type': u'test',
+            'tag': {
+                'type': 'test',
             },
-            u'member': [
+            'member': [
                 {
-                    u'ref': 6908,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6908,
+                    'role': 'outer',
+                    'type': 'way'
                 },
                 {
-                    u'ref': 6352,
-                    u'role': u'point',
-                    u'type': u'node'
+                    'ref': 6352,
+                    'role': 'point',
+                    'type': 'node'
                 },
             ]
         }
@@ -148,15 +149,15 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.api._CurrentChangesetId = 3333
 
         test_relation = {
-            u'id': 8989,
-            u'tag': {
-                u'type': u'test update',
+            'id': 8989,
+            'tag': {
+                'type': 'test update',
             },
-            u'member': [
+            'member': [
                 {
-                    u'ref': 6908,
-                    u'role': u'outer',
-                    u'type': u'way'
+                    'ref': 6908,
+                    'role': 'outer',
+                    'type': 'way'
                 }
             ]
         }
@@ -187,7 +188,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.api._CurrentChangesetId = 3333
 
         test_relation = {
-            u'id': 8989
+            'id': 8989
         }
 
         cs = self.api.ChangesetCreate({

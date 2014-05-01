@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from nose.tools import *  # noqa
 import mock
 import osmapi

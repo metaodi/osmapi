@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from nose.tools import *  # noqa
 import osmapi_tests
 
@@ -8,15 +9,15 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.Capabilities()
         assert_equals(result, {
-            u'area': {u'maximum': 0.25},
-            u'changesets': {u'maximum_elements': 50000.0},
-            u'status': {
-                u'api': u'mocked',
-                u'database': u'online',
-                u'gpx': u'online'
+            'area': {'maximum': 0.25},
+            'changesets': {'maximum_elements': 50000.0},
+            'status': {
+                'api': 'mocked',
+                'database': 'online',
+                'gpx': 'online'
             },
-            u'timeout': {u'seconds': 300.0},
-            u'tracepoints': {u'per_page': 5000.0},
-            u'version': {u'maximum': 0.6, u'minimum': 0.6},
-            u'waynodes': {u'maximum': 2000.0}
+            'timeout': {'seconds': 300.0},
+            'tracepoints': {'per_page': 5000.0},
+            'version': {'maximum': 0.6, 'minimum': 0.6},
+            'waynodes': {'maximum': 2000.0}
         })

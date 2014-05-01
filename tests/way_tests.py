@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from nose.tools import *  # noqa
 import osmapi_tests
 import mock
@@ -14,18 +15,18 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/way/321')
 
         self.assertEquals(result, {
-            u'id': 321,
-            u'changeset': 298,
-            u'uid': 12,
-            u'timestamp': u'2009-09-14T23:23:18Z',
-            u'visible': True,
-            u'version': 1,
-            u'user': u'green525',
-            u'tag': {
-                u'admin_level': u'9',
-                u'boundary': u'administrative',
+            'id': 321,
+            'changeset': 298,
+            'uid': 12,
+            'timestamp': '2009-09-14T23:23:18Z',
+            'visible': True,
+            'version': 1,
+            'user': 'green525',
+            'tag': {
+                'admin_level': '9',
+                'boundary': 'administrative',
             },
-            u'nd': [
+            'nd': [
                 11949,
                 11950,
                 11951,

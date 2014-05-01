@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
 import codecs
 
 version = __import__('osmapi').__version__
@@ -20,7 +21,7 @@ setup(
     version=version,
     description='Python wrapper for the OSM API',
     long_description=description,
-    author=u'Etienne Chové',
+    author='Etienne Chové',
     author_email='chove@crans.org',
     maintainer='Stefan Oderbolz',
     maintainer_email='odi@readmore.ch',

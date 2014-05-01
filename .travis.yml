@@ -12,6 +12,8 @@ install: pip install -r requirements.txt
 
 script: ./build.sh
 
+after_success: coveralls
+
 deploy:
   provider: pypi
   user: odi

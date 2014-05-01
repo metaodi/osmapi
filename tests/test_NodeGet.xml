@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <node id="123" changeset="15293" timestamp="2012-04-18T11:14:26Z" version="8" visible="true" user="freundchen" uid="605" lat="51.8753146" lon="-1.4857118">
+    <tag k="amenity" v="school"/>
+    <tag k="foo" v="bar"/>
+    <tag k="name" v="Berolina &amp; Schule"/>
+  </node>
+</osm>

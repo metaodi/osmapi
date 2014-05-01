@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <way id="60" changeset="61" timestamp="2009-09-05T21:30:21Z" version="1" visible="true" user="costello" uid="8">
+    <nd ref="232"/>
+    <nd ref="233"/>
+    <nd ref="234"/>
+    <nd ref="235"/>
+    <nd ref="236"/>
+    <nd ref="237"/>
+    <tag k="highway" v="path"/>
+    <tag k="name" v="Dog walking path"/>
+  </way>
+</osm>

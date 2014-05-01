@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <way id="4294967296" changeset="16947" timestamp="2012-12-30T18:45:12Z" version="1" visible="true" user="TomH" uid="15">
+    <nd ref="4294967304"/>
+    <nd ref="4294967303"/>
+    <nd ref="4294967300"/>
+    <nd ref="4608751"/>
+    <nd ref="4294967305"/>
+    <nd ref="4294967302"/>
+    <nd ref="8548430"/>
+    <nd ref="4294967296"/>
+    <nd ref="4294967301"/>
+    <nd ref="4294967298"/>
+    <nd ref="4294967306"/>
+    <nd ref="7855737"/>
+    <nd ref="4294967297"/>
+    <nd ref="4294967299"/>
+    <tag k="highway" v="unclassified"/>
+    <tag k="name" v="Stansted Road"/>
+  </way>
+  <way id="4294967296" changeset="41303" timestamp="2014-04-23T15:02:04Z" version="2" visible="true" user="metaodi" uid="1841">
+    <nd ref="4295832773"/>
+    <nd ref="4294967304"/>
+    <nd ref="4294967303"/>
+    <nd ref="4294967300"/>
+    <nd ref="4608751"/>
+    <nd ref="4294967305"/>
+    <nd ref="4294967302"/>
+    <nd ref="8548430"/>
+    <nd ref="4294967296"/>
+    <nd ref="4294967301"/>
+    <nd ref="4294967298"/>
+    <nd ref="4294967306"/>
+    <nd ref="7855737"/>
+    <nd ref="4294967297"/>
+    <nd ref="4294967299"/>
+    <tag k="highway" v="unclassified"/>
+    <tag k="name" v="Stansted Road"/>
+  </way>
+</osm>

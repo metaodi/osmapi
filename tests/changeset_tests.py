@@ -61,10 +61,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.25">\n'
+                '<osm version="0.6" generator="osmapi/0.2.26">\n'
                 '  <changeset visible="true">\n'
                 '    <tag k="test" v="foobar"/>\n'
-                '    <tag k="created_by" v="osmapi/0.2.25"/>\n'
+                '    <tag k="created_by" v="osmapi/0.2.26"/>\n'
                 '  </changeset>\n'
                 '</osm>\n'
             )
@@ -95,7 +95,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.25">\n'
+                '<osm version="0.6" generator="osmapi/0.2.26">\n'
                 '  <changeset visible="true">\n'
                 '    <tag k="test" v="foobar"/>\n'
                 '    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -134,10 +134,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.25">\n'
+                '<osm version="0.6" generator="osmapi/0.2.26">\n'
                 '  <changeset visible="true">\n'
                 '    <tag k="foobar" v="A new test changeset"/>\n'
-                '    <tag k="created_by" v="osmapi/0.2.25"/>\n'
+                '    <tag k="created_by" v="osmapi/0.2.26"/>\n'
                 '  </changeset>\n'
                 '</osm>\n'
             )
@@ -162,7 +162,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.25">\n'
+                '<osm version="0.6" generator="osmapi/0.2.26">\n'
                 '  <changeset visible="true">\n'
                 '    <tag k="foobar" v="A new test changeset"/>\n'
                 '    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -248,7 +248,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.25">\n'
+                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 '<create>\n'
                 '  <node lat="47.123" lon="8.555" visible="true" '
                 'changeset="4444">\n'
@@ -322,7 +322,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.25">\n'
+                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 '<modify>\n'
                 '  <way id="4294967296" version="2" visible="true" '
                 'changeset="4444">\n'
@@ -406,7 +406,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             args[3],
             (
                 '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.25">\n'
+                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 '<delete>\n'
                 '  <relation id="676" version="2" visible="true" '
                 'changeset="4444">\n'

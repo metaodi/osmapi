@@ -2,7 +2,7 @@ osmapi
 ======
 
 [![Build](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
-[![Coverage Status](https://coveralls.io/repos/metaodi/osmapi/badge.png?branch=develop)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
+[![Coverage](https://coveralls.io/repos/metaodi/osmapi/badge.png?branch=develop)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
 [![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)

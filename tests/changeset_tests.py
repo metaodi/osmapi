@@ -60,13 +60,13 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.26">\n'
-                '  <changeset visible="true">\n'
-                '    <tag k="test" v="foobar"/>\n'
-                '    <tag k="created_by" v="osmapi/0.2.26"/>\n'
-                '  </changeset>\n'
-                '</osm>\n'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osm version="0.6" generator="osmapi/0.2.26">\n'
+                b'  <changeset visible="true">\n'
+                b'    <tag k="test" v="foobar"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.2.26"/>\n'
+                b'  </changeset>\n'
+                b'</osm>\n'
             )
         )
         self.assertEquals(result, 4444)
@@ -94,13 +94,13 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.26">\n'
-                '  <changeset visible="true">\n'
-                '    <tag k="test" v="foobar"/>\n'
-                '    <tag k="created_by" v="MyTestOSMApp"/>\n'
-                '  </changeset>\n'
-                '</osm>\n'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osm version="0.6" generator="osmapi/0.2.26">\n'
+                b'  <changeset visible="true">\n'
+                b'    <tag k="test" v="foobar"/>\n'
+                b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
+                b'  </changeset>\n'
+                b'</osm>\n'
             )
         )
         self.assertEquals(result, 4444)
@@ -133,13 +133,13 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.26">\n'
-                '  <changeset visible="true">\n'
-                '    <tag k="foobar" v="A new test changeset"/>\n'
-                '    <tag k="created_by" v="osmapi/0.2.26"/>\n'
-                '  </changeset>\n'
-                '</osm>\n'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osm version="0.6" generator="osmapi/0.2.26">\n'
+                b'  <changeset visible="true">\n'
+                b'    <tag k="foobar" v="A new test changeset"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.2.26"/>\n'
+                b'  </changeset>\n'
+                b'</osm>\n'
             )
         )
         self.assertEquals(result, 4321)
@@ -161,13 +161,13 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osm version="0.6" generator="osmapi/0.2.26">\n'
-                '  <changeset visible="true">\n'
-                '    <tag k="foobar" v="A new test changeset"/>\n'
-                '    <tag k="created_by" v="CoolTestApp"/>\n'
-                '  </changeset>\n'
-                '</osm>\n'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osm version="0.6" generator="osmapi/0.2.26">\n'
+                b'  <changeset visible="true">\n'
+                b'    <tag k="foobar" v="A new test changeset"/>\n'
+                b'    <tag k="created_by" v="CoolTestApp"/>\n'
+                b'  </changeset>\n'
+                b'</osm>\n'
             )
         )
         self.assertEquals(result, 1234)
@@ -247,16 +247,16 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
-                '<create>\n'
-                '  <node lat="47.123" lon="8.555" visible="true" '
-                'changeset="4444">\n'
-                '    <tag k="religion" v="pastafarian"/>\n'
-                '    <tag k="amenity" v="place_of_worship"/>\n'
-                '  </node>\n'
-                '</create>\n'
-                '</osmChange>'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
+                b'<create>\n'
+                b'  <node lat="47.123" lon="8.555" visible="true" '
+                b'changeset="4444">\n'
+                b'    <tag k="religion" v="pastafarian"/>\n'
+                b'    <tag k="amenity" v="place_of_worship"/>\n'
+                b'  </node>\n'
+                b'</create>\n'
+                b'</osmChange>'
             )
         )
 
@@ -321,32 +321,32 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
-                '<modify>\n'
-                '  <way id="4294967296" version="2" visible="true" '
-                'changeset="4444">\n'
-                '    <tag k="name" v="Stansted Road"/>\n'
-                '    <tag k="highway" v="secondary"/>\n'
-                '    <nd ref="4295832773"/>\n'
-                '    <nd ref="4295832773"/>\n'
-                '    <nd ref="4294967304"/>\n'
-                '    <nd ref="4294967303"/>\n'
-                '    <nd ref="4294967300"/>\n'
-                '    <nd ref="4608751"/>\n'
-                '    <nd ref="4294967305"/>\n'
-                '    <nd ref="4294967302"/>\n'
-                '    <nd ref="8548430"/>\n'
-                '    <nd ref="4294967296"/>\n'
-                '    <nd ref="4294967301"/>\n'
-                '    <nd ref="4294967298"/>\n'
-                '    <nd ref="4294967306"/>\n'
-                '    <nd ref="7855737"/>\n'
-                '    <nd ref="4294967297"/>\n'
-                '    <nd ref="4294967299"/>\n'
-                '  </way>\n'
-                '</modify>\n'
-                '</osmChange>'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
+                b'<modify>\n'
+                b'  <way id="4294967296" version="2" visible="true" '
+                b'changeset="4444">\n'
+                b'    <tag k="name" v="Stansted Road"/>\n'
+                b'    <tag k="highway" v="secondary"/>\n'
+                b'    <nd ref="4295832773"/>\n'
+                b'    <nd ref="4295832773"/>\n'
+                b'    <nd ref="4294967304"/>\n'
+                b'    <nd ref="4294967303"/>\n'
+                b'    <nd ref="4294967300"/>\n'
+                b'    <nd ref="4608751"/>\n'
+                b'    <nd ref="4294967305"/>\n'
+                b'    <nd ref="4294967302"/>\n'
+                b'    <nd ref="8548430"/>\n'
+                b'    <nd ref="4294967296"/>\n'
+                b'    <nd ref="4294967301"/>\n'
+                b'    <nd ref="4294967298"/>\n'
+                b'    <nd ref="4294967306"/>\n'
+                b'    <nd ref="7855737"/>\n'
+                b'    <nd ref="4294967297"/>\n'
+                b'    <nd ref="4294967299"/>\n'
+                b'  </way>\n'
+                b'</modify>\n'
+                b'</osmChange>'
             )
         )
 
@@ -405,19 +405,19 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(
             args[3],
             (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                '<osmChange version="0.6" generator="osmapi/0.2.26">\n'
-                '<delete>\n'
-                '  <relation id="676" version="2" visible="true" '
-                'changeset="4444">\n'
-                '    <tag k="admin_level" v="9"/>\n'
-                '    <tag k="boundary" v="administrative"/>\n'
-                '    <tag k="type" v="multipolygon"/>\n'
-                '    <member type="way" ref="4799" role="outer"/>\n'
-                '    <member type="way" ref="9391" role="outer"/>\n'
-                '  </relation>\n'
-                '</delete>\n'
-                '</osmChange>'
+                b'<?xml version="1.0" encoding="UTF-8"?>\n'
+                b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
+                b'<delete>\n'
+                b'  <relation id="676" version="2" visible="true" '
+                b'changeset="4444">\n'
+                b'    <tag k="admin_level" v="9"/>\n'
+                b'    <tag k="boundary" v="administrative"/>\n'
+                b'    <tag k="type" v="multipolygon"/>\n'
+                b'    <member type="way" ref="4799" role="outer"/>\n'
+                b'    <member type="way" ref="9391" role="outer"/>\n'
+                b'  </relation>\n'
+                b'</delete>\n'
+                b'</osmChange>'
             )
         )
 

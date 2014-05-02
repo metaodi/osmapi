@@ -11,6 +11,10 @@ import time
 import sys
 import urllib
 
+# Python 3.x
+if getattr(urllib, 'urlencode', None) is None:
+    urllib.urlencode = urllib.parse.urlencode
+
 from . import __version__
 
 

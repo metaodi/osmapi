@@ -2,6 +2,16 @@ from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
 import mock
+import xmltodict
+try:
+    import urlparse
+except:
+    import urllib
+    urlparse = urllib.parse
+
+
+def xmltoregulardict(xml):
+    return sorted(xmltodict.parse(xml, dict_constructor=dict))
 
 
 def debug(result):
@@ -58,8 +68,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/4444')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osm version="0.6" generator="osmapi/0.2.26">\n'
                 b'  <changeset visible="true">\n'
@@ -92,8 +102,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/4444')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osm version="0.6" generator="osmapi/0.2.26">\n'
                 b'  <changeset visible="true">\n'
@@ -131,8 +141,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/create')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osm version="0.6" generator="osmapi/0.2.26">\n'
                 b'  <changeset visible="true">\n'
@@ -159,8 +169,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/create')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osm version="0.6" generator="osmapi/0.2.26">\n'
                 b'  <changeset visible="true">\n'
@@ -245,8 +255,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 b'<create>\n'
@@ -319,8 +329,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 b'<modify>\n'
@@ -403,8 +413,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
         self.assertTrue(args[2])
         self.assertEquals(
-            args[3],
-            (
+            xmltoregulardict(args[3]),
+            xmltoregulardict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
                 b'<osmChange version="0.6" generator="osmapi/0.2.26">\n'
                 b'<delete>\n'
@@ -474,8 +484,11 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         args, kwargs = self.api._http_request.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(
-            args[1],
-            '/api/0.6/changesets?display_name=metaodi&closed=1'
+            dict(urlparse.parse_qsl(urlparse.urlparse(args[1])[4])),
+            {
+                'display_name': 'metaodi',
+                'closed': '1'
+            }
         )
         self.assertFalse(args[2])
 

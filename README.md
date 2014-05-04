@@ -20,10 +20,21 @@ Install `osmapi` simply by using pip:
 If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
 
     pip install -r requirements.txt
+    pip install -r test-requirements.txt
 
 After that, it is recommended to install the `flake8` pre-commit-hook:
 
     flake8 --install-hook
+
+### Tests
+
+To run the tests use the following command:
+
+    nosetests --verbose
+
+By using tox you can even run the tests against different versions of python (2.6, 2.7, 3.2 and 3.3):
+
+    tox
 
 ## Note
 

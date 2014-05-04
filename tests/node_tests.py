@@ -72,11 +72,16 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             self.api.NodeCreate(test_node)
 
     def test_NodeCreate_changesetauto(self):
+        # setup mock
         self.api = OsmApi(
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
-        self._http_mock(destructor=False)
+        self._http_mock(filenames=[
+            'test_NodeCreate_changesetauto.xml',
+            'test_ChangesetUpload_create_node.xml',
+            'test_ChangesetClose.xml',
+        ])
 
         test_node = {
             'lat': 47.123,

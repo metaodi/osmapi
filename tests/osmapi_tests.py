@@ -23,29 +23,27 @@ class TestOsmApi(unittest.TestCase):
         self.api = OsmApi(
             api="api06.dev.openstreetmap.org"
         )
+        self.maxDiff = None
 
-    def _http_mock(self, filename=None, destructor=True):
-        if filename is None:
-            filename = os.path.join(
+    def _http_mock(self, filenames=None):
+        if filenames is None:
+            filenames = [self._testMethodName + ".xml"]
+
+        return_values = []
+        for filename in filenames:
+            path = os.path.join(
                 __location__,
                 'fixtures',
-                self._testMethodName + ".xml"
+                filename
             )
-        try:
-            with open(filename) as file:
-                self.api._http_request = mock.Mock(
-                    return_value=file.read()
-                )
-        except:
-            pass
+            try:
+                with open(path) as file:
+                    return_values.append(file.read())
+            except:
+                pass
 
-        if not destructor:
-            self.disable_destructor()
-
-    def disable_destructor(self):
-        self.api.__del__ = mock.Mock(
-            return_value=None
-        )
+        self.api._http_request = mock.Mock()
+        self.api._http_request.side_effect = return_values
 
     def teardown(self):
         pass

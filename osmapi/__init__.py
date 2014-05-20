@@ -1,3 +1,5 @@
-__version__ = '0.2.26'
+from __future__ import (absolute_import, print_function, unicode_literals)
 
-from OsmApi import *  # noqa
+__version__ = '0.3.0'
+
+from .OsmApi import *  # noqa

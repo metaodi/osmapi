@@ -1,7 +1,8 @@
+from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
-import osmapi_tests
+from . import osmapi_tests
+from osmapi import OsmApi
 import mock
-import osmapi
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
@@ -15,19 +16,19 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/node/123')
 
         self.assertEquals(result, {
-            u'id': 123,
-            u'changeset': 15293,
-            u'uid': 605,
-            u'timestamp': u'2012-04-18T11:14:26Z',
-            u'lat': 51.8753146,
-            u'lon': -1.4857118,
-            u'visible': True,
-            u'version': 8,
-            u'user': u'freundchen',
-            u'tag': {
-                u'amenity': u'school',
-                u'foo': u'bar',
-                u'name': u'Berolina & Schule'
+            'id': 123,
+            'changeset': 15293,
+            'uid': 605,
+            'timestamp': '2012-04-18T11:14:26Z',
+            'lat': 51.8753146,
+            'lon': -1.4857118,
+            'visible': True,
+            'version': 8,
+            'user': 'freundchen',
+            'tag': {
+                'amenity': 'school',
+                'foo': 'bar',
+                'name': 'Berolina & Schule'
             },
         })
 
@@ -41,17 +42,17 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(args[1], '/api/0.6/node/123/2')
 
         self.assertEquals(result, {
-            u'id': 123,
-            u'changeset': 4152,
-            u'uid': 605,
-            u'timestamp': u'2011-04-18T11:14:26Z',
-            u'lat': 51.8753146,
-            u'lon': -1.4857118,
-            u'visible': True,
-            u'version': 2,
-            u'user': u'freundchen',
-            u'tag': {
-                u'amenity': u'school',
+            'id': 123,
+            'changeset': 4152,
+            'uid': 605,
+            'timestamp': '2011-04-18T11:14:26Z',
+            'lat': 51.8753146,
+            'lon': -1.4857118,
+            'visible': True,
+            'version': 2,
+            'user': 'freundchen',
+            'tag': {
+                'amenity': 'school',
             },
         })
 
@@ -71,11 +72,16 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             self.api.NodeCreate(test_node)
 
     def test_NodeCreate_changesetauto(self):
-        self.api = osmapi.OsmApi(
+        # setup mock
+        self.api = OsmApi(
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
-        self._http_mock(destructor=False)
+        self._http_mock(filenames=[
+            'test_NodeCreate_changesetauto.xml',
+            'test_ChangesetUpload_create_node.xml',
+            'test_ChangesetClose.xml',
+        ])
 
         test_node = {
             'lat': 47.123,
@@ -261,28 +267,28 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         self.assertEquals(len(result), 2)
         self.assertEquals(result[123], {
-            u'id': 123,
-            u'changeset': 15293,
-            u'uid': 605,
-            u'timestamp': u'2012-04-18T11:14:26Z',
-            u'lat': 51.8753146,
-            u'lon': -1.4857118,
-            u'visible': True,
-            u'version': 8,
-            u'user': u'freundchen',
-            u'tag': {
-                u'amenity': u'school',
-                u'foo': u'bar',
-                u'name': u'Berolina & Schule'
+            'id': 123,
+            'changeset': 15293,
+            'uid': 605,
+            'timestamp': '2012-04-18T11:14:26Z',
+            'lat': 51.8753146,
+            'lon': -1.4857118,
+            'visible': True,
+            'version': 8,
+            'user': 'freundchen',
+            'tag': {
+                'amenity': 'school',
+                'foo': 'bar',
+                'name': 'Berolina & Schule'
             },
         })
         self.assertEquals(result[345], {
-            u'id': 345,
-            u'changeset': 244,
-            u'timestamp': u'2009-09-12T03:22:59Z',
-            u'uid': 1,
-            u'visible': False,
-            u'version': 2,
-            u'user': u'guggis',
-            u'tag': {},
+            'id': 345,
+            'changeset': 244,
+            'timestamp': '2009-09-12T03:22:59Z',
+            'uid': 1,
+            'visible': False,
+            'version': 2,
+            'user': 'guggis',
+            'tag': {},
         })

@@ -10,8 +10,35 @@ except:
     urlparse = urllib.parse
 
 
-def xmltoregulardict(xml):
-    return sorted(xmltodict.parse(xml, dict_constructor=dict))
+def recursive_sort(col):  # noqa
+    """
+    Function to recursive sort a collection
+    that might contain lists, dicts etc.
+    In Python 3.x a list of dicts is sorted by it's hash
+    """
+    if hasattr(col, '__iter__'):
+        if isinstance(col, list):
+            try:
+                col = sorted(col)
+            except TypeError:  # in Python 3.x: lists of dicts are not sortable
+                col = sorted(col, key=lambda k: hash(frozenset(k.items())))
+            except:
+                pass
+
+            for idx, elem in enumerate(col):
+                col[idx] = recursive_sort(elem)
+        elif isinstance(col, dict):
+            for elem in col:
+                try:
+                    col[elem] = recursive_sort(col[elem])
+                except IndexError:
+                    pass
+    return col
+
+
+def xmltosorteddict(xml):
+    xml_dict = xmltodict.parse(xml, dict_constructor=dict)
+    return recursive_sort(xml_dict)
 
 
 def debug(result):

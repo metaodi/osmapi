@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import httplib
+from __future__ import (absolute_import, print_function, unicode_literals)
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 import base64
 import xml.dom.minidom
 import time
 import sys
 import urllib
+
+# Python 3.x
+if getattr(urllib, 'urlencode', None) is None:
+    urllib.urlencode = urllib.parse.urlencode
 
 from . import __version__
 
@@ -169,7 +177,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("node"):
             data = self._DomParseNode(data)
-            result[data[u"version"]] = data
+            result[data["version"]] = data
         return result
 
     def NodeWays(self, NodeId):
@@ -211,7 +219,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("node"):
             data = self._DomParseNode(data)
-            result[data[u"id"]] = data
+            result[data["id"]] = data
         return result
 
     ##################################################
@@ -265,7 +273,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("way"):
             data = self._DomParseWay(data)
-            result[data[u"version"]] = data
+            result[data["version"]] = data
         return result
 
     def WayRelations(self, WayId):
@@ -302,7 +310,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("way"):
             data = self._DomParseWay(data)
-            result[data[u"id"]] = data
+            result[data["id"]] = data
         return result
 
     ##################################################
@@ -356,7 +364,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("relation"):
             data = self._DomParseRelation(data)
-            result[data[u"version"]] = data
+            result[data["version"]] = data
         return result
 
     def RelationRelations(self, RelationId):
@@ -416,7 +424,7 @@ class OsmApi:
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("relation"):
             data = self._DomParseRelation(data)
-            result[data[u"id"]] = data
+            result[data["id"]] = data
         return result
 
     ##################################################
@@ -439,11 +447,11 @@ class OsmApi:
         """
         if not self._CurrentChangesetId:
             raise Exception("No changeset currently opened")
-        if u"created_by" not in ChangesetTags:
-            ChangesetTags[u"created_by"] = self._created_by
+        if "created_by" not in ChangesetTags:
+            ChangesetTags["created_by"] = self._created_by
         self._put(
             "/api/0.6/changeset/" + str(self._CurrentChangesetId),
-            self._XmlBuild("changeset", {u"tag": ChangesetTags})
+            self._XmlBuild("changeset", {"tag": ChangesetTags})
         )
         return self._CurrentChangesetId
 
@@ -453,11 +461,11 @@ class OsmApi:
         """
         if self._CurrentChangesetId:
             raise Exception("Changeset already opened")
-        if u"created_by" not in ChangesetTags:
-            ChangesetTags[u"created_by"] = self._created_by
+        if "created_by" not in ChangesetTags:
+            ChangesetTags["created_by"] = self._created_by
         result = self._put(
             "/api/0.6/changeset/create",
-            self._XmlBuild("changeset", {u"tag": ChangesetTags})
+            self._XmlBuild("changeset", {"tag": ChangesetTags})
         )
         self._CurrentChangesetId = int(result)
         return self._CurrentChangesetId
@@ -470,7 +478,7 @@ class OsmApi:
             raise Exception("No changeset currently opened")
         self._put(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close",
-            u""
+            ""
         )
         CurrentChangesetId = self._CurrentChangesetId
         self._CurrentChangesetId = 0
@@ -488,19 +496,19 @@ class OsmApi:
         Returns list with updated ids.
         """
         data = ""
-        data += u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        data += u"<osmChange version=\"0.6\" generator=\""
+        data += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        data += "<osmChange version=\"0.6\" generator=\""
         data += self._created_by + "\">\n"
         for change in ChangesData:
-            data += u"<"+change["action"]+">\n"
+            data += "<"+change["action"]+">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
             data += self._XmlBuild(
                 change["type"],
                 change["data"],
                 False
             ).decode("utf-8")
-            data += u"</"+change["action"]+">\n"
-        data += u"</osmChange>"
+            data += "</"+change["action"]+">\n"
+        data += "</osmChange>"
         data = self._http(
             "POST",
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload",
@@ -626,20 +634,20 @@ class OsmApi:
         data = data.getElementsByTagName("osm")[0]
         result = []
         for elem in data.childNodes:
-            if elem.nodeName == u"node":
+            if elem.nodeName == "node":
                 result.append({
-                    u"type": elem.nodeName,
-                    u"data": self._DomParseNode(elem)
+                    "type": elem.nodeName,
+                    "data": self._DomParseNode(elem)
                 })
-            elif elem.nodeName == u"way":
+            elif elem.nodeName == "way":
                 result.append({
-                    u"type": elem.nodeName,
-                    u"data": self._DomParseWay(elem)
+                    "type": elem.nodeName,
+                    "data": self._DomParseWay(elem)
                 })
-            elif elem.nodeName == u"relation":
+            elif elem.nodeName == "relation":
                 result.append({
-                    u"type": elem.nodeName,
-                    u"data": self._DomParseRelation(elem)
+                    "type": elem.nodeName,
+                    "data": self._DomParseRelation(elem)
                 })
         return result
 
@@ -657,26 +665,26 @@ class OsmApi:
         data = data.getElementsByTagName("osmChange")[0]
         result = []
         for action in data.childNodes:
-            if action.nodeName == u"#text":
+            if action.nodeName == "#text":
                 continue
             for elem in action.childNodes:
-                if elem.nodeName == u"node":
+                if elem.nodeName == "node":
                     result.append({
-                        u"action": action.nodeName,
-                        u"type": elem.nodeName,
-                        u"data": self._DomParseNode(elem)
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": self._DomParseNode(elem)
                     })
-                elif elem.nodeName == u"way":
+                elif elem.nodeName == "way":
                     result.append({
-                        u"action": action.nodeName,
-                        u"type": elem.nodeName,
-                        u"data": self._DomParseWay(elem)
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": self._DomParseWay(elem)
                     })
-                elif elem.nodeName == u"relation":
+                elif elem.nodeName == "relation":
                     result.append({
-                        u"action": action.nodeName,
-                        u"type": elem.nodeName,
-                        u"data": self._DomParseRelation(elem)
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": self._DomParseRelation(elem)
                     })
         return result
 
@@ -701,33 +709,33 @@ class OsmApi:
             raise Exception(
                 "You need to open a changeset before uploading data"
             )
-        if u"timestamp" in OsmData:
-            OsmData.pop(u"timestamp")
-        OsmData[u"changeset"] = self._CurrentChangesetId
+        if "timestamp" in OsmData:
+            OsmData.pop("timestamp")
+        OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
-            if OsmData.get(u"id", -1) > 0:
+            if OsmData.get("id", -1) > 0:
                 raise Exception("This "+OsmType+" already exists")
             result = self._put(
                 "/api/0.6/" + OsmType + "/create",
                 self._XmlBuild(OsmType, OsmData)
             )
-            OsmData[u"id"] = int(result.strip())
-            OsmData[u"version"] = 1
+            OsmData["id"] = int(result.strip())
+            OsmData["version"] = 1
             return OsmData
         elif action == "modify":
             result = self._put(
-                "/api/0.6/" + OsmType + "/" + str(OsmData[u"id"]),
+                "/api/0.6/" + OsmType + "/" + str(OsmData["id"]),
                 self._XmlBuild(OsmType, OsmData)
             )
-            OsmData[u"version"] = int(result.strip())
+            OsmData["version"] = int(result.strip())
             return OsmData
         elif action == "delete":
             result = self._delete(
-                "/api/0.6/" + OsmType + "/" + str(OsmData[u"id"]),
+                "/api/0.6/" + OsmType + "/" + str(OsmData["id"]),
                 self._XmlBuild(OsmType, OsmData)
             )
-            OsmData[u"version"] = int(result.strip())
-            OsmData[u"visible"] = False
+            OsmData["version"] = int(result.strip())
+            OsmData["visible"] = False
             return OsmData
 
     def flush(self):
@@ -761,7 +769,7 @@ class OsmApi:
                 "%s %s %s"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
             )
-            print >>sys.stderr, error_msg
+            print(error_msg, file=sys.stderr)
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
@@ -788,7 +796,7 @@ class OsmApi:
                 "%s %s %s"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
             )
-            print >>sys.stderr, error_msg
+            print(error_msg, file=sys.stderr)
         return response.read()
 
     def _http(self, cmd, path, auth, send):  # noqa
@@ -797,7 +805,7 @@ class OsmApi:
             i += 1
             try:
                 return self._http_request(cmd, path, auth, send)
-            except ApiError, e:
+            except ApiError as e:
                 if e.status >= 500:
                     if i == 5:
                         raise
@@ -832,23 +840,23 @@ class OsmApi:
         """
         result = {}
         for k, v in DomElement.attributes.items():
-            if k == u"uid":
+            if k == "uid":
                 v = int(v)
-            elif k == u"changeset":
+            elif k == "changeset":
                 v = int(v)
-            elif k == u"version":
+            elif k == "version":
                 v = int(v)
-            elif k == u"id":
+            elif k == "id":
                 v = int(v)
-            elif k == u"lat":
+            elif k == "lat":
                 v = float(v)
-            elif k == u"lon":
+            elif k == "lon":
                 v = float(v)
-            elif k == u"open":
+            elif k == "open":
                 v = (v == "true")
-            elif k == u"visible":
+            elif k == "visible":
                 v = (v == "true")
-            elif k == u"ref":
+            elif k == "ref":
                 v = int(v)
             result[k] = v
         return result
@@ -887,7 +895,7 @@ class OsmApi:
         Returns NodeData for the node.
         """
         result = self._DomGetAttributes(DomElement)
-        result[u"tag"] = self._DomGetTag(DomElement)
+        result["tag"] = self._DomGetTag(DomElement)
         return result
 
     def _DomParseWay(self, DomElement):
@@ -895,8 +903,8 @@ class OsmApi:
         Returns WayData for the way.
         """
         result = self._DomGetAttributes(DomElement)
-        result[u"tag"] = self._DomGetTag(DomElement)
-        result[u"nd"] = self._DomGetNd(DomElement)
+        result["tag"] = self._DomGetTag(DomElement)
+        result["nd"] = self._DomGetNd(DomElement)
         return result
 
     def _DomParseRelation(self, DomElement):
@@ -904,8 +912,8 @@ class OsmApi:
         Returns RelationData for the relation.
         """
         result = self._DomGetAttributes(DomElement)
-        result[u"tag"] = self._DomGetTag(DomElement)
-        result[u"member"] = self._DomGetMember(DomElement)
+        result["tag"] = self._DomGetTag(DomElement)
+        result["member"] = self._DomGetMember(DomElement)
         return result
 
     def _DomParseChangeset(self, DomElement):
@@ -913,7 +921,7 @@ class OsmApi:
         Returns ChangesetData for the changeset.
         """
         result = self._DomGetAttributes(DomElement)
-        result[u"tag"] = self._DomGetTag(DomElement)
+        result["tag"] = self._DomGetTag(DomElement)
         return result
 
     ##################################################
@@ -922,49 +930,49 @@ class OsmApi:
 
     def _XmlBuild(self, ElementType, ElementData, WithHeaders=True):  # noqa
 
-        xml = u""
+        xml = ""
         if WithHeaders:
-            xml += u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            xml += u"<osm version=\"0.6\" generator=\""
+            xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            xml += "<osm version=\"0.6\" generator=\""
             xml += self._created_by + "\">\n"
 
         # <element attr="val">
-        xml += u"  <" + ElementType
-        if u"id" in ElementData:
-            xml += u" id=\"" + str(ElementData[u"id"]) + u"\""
-        if u"lat" in ElementData:
-            xml += u" lat=\"" + str(ElementData[u"lat"]) + u"\""
-        if u"lon" in ElementData:
-            xml += u" lon=\"" + str(ElementData[u"lon"]) + u"\""
-        if u"version" in ElementData:
-            xml += u" version=\"" + str(ElementData[u"version"]) + u"\""
-        visible_str = str(ElementData.get(u"visible", True)).lower()
-        xml += u" visible=\"" + visible_str + u"\""
-        if ElementType in [u"node", u"way", u"relation"]:
-            xml += u" changeset=\"" + str(self._CurrentChangesetId) + u"\""
-        xml += u">\n"
+        xml += "  <" + ElementType
+        if "id" in ElementData:
+            xml += " id=\"" + str(ElementData["id"]) + "\""
+        if "lat" in ElementData:
+            xml += " lat=\"" + str(ElementData["lat"]) + "\""
+        if "lon" in ElementData:
+            xml += " lon=\"" + str(ElementData["lon"]) + "\""
+        if "version" in ElementData:
+            xml += " version=\"" + str(ElementData["version"]) + "\""
+        visible_str = str(ElementData.get("visible", True)).lower()
+        xml += " visible=\"" + visible_str + "\""
+        if ElementType in ["node", "way", "relation"]:
+            xml += " changeset=\"" + str(self._CurrentChangesetId) + "\""
+        xml += ">\n"
 
         # <tag... />
-        for k, v in ElementData.get(u"tag", {}).items():
-            xml += u"    <tag k=\"" + self._XmlEncode(k)
-            xml += u"\" v=\"" + self._XmlEncode(v)+u"\"/>\n"
+        for k, v in ElementData.get("tag", {}).items():
+            xml += "    <tag k=\"" + self._XmlEncode(k)
+            xml += "\" v=\"" + self._XmlEncode(v)+"\"/>\n"
 
         # <member... />
-        for member in ElementData.get(u"member", []):
-            xml += u"    <member type=\"" + member[u"type"]
-            xml += u"\" ref=\"" + str(member[u"ref"])
-            xml += u"\" role=\"" + self._XmlEncode(member[u"role"])
-            xml += u"\"/>\n"
+        for member in ElementData.get("member", []):
+            xml += "    <member type=\"" + member["type"]
+            xml += "\" ref=\"" + str(member["ref"])
+            xml += "\" role=\"" + self._XmlEncode(member["role"])
+            xml += "\"/>\n"
 
         # <nd... />
-        for ref in ElementData.get(u"nd", []):
-            xml += u"    <nd ref=\""+str(ref)+u"\"/>\n"
+        for ref in ElementData.get("nd", []):
+            xml += "    <nd ref=\""+str(ref)+"\"/>\n"
 
         # </element>
-        xml += u"  </" + ElementType + u">\n"
+        xml += "  </" + ElementType + ">\n"
 
         if WithHeaders:
-            xml += u"</osm>\n"
+            xml += "</osm>\n"
 
         return xml.encode("utf8")
 

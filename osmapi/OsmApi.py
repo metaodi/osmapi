@@ -93,9 +93,6 @@ class OsmApi:
         # Initialisation
         self._CurrentChangesetId = 0
 
-        # Http connection
-        self._conn = httplib.HTTPConnection(self._api, 80)
-
     def __del__(self):
         if self._changesetauto:
             self._changesetautoflush(True)
@@ -773,9 +770,23 @@ class OsmApi:
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
-            base64_user_pass = base64.encodestring(
-                self._username + ':' + self._password
-            ).strip()
+
+            user_pass = self._username + ':' + self._password
+           
+            try:
+                #Python 2
+                base64_user_pass = base64.encodestring(
+                    user_pass
+                ).strip()
+            except TypeError:
+                #Python 3
+                base64_user_pass = base64.encodestring(
+                   user_pass.encode('ascii')
+                ).strip()
+                base64_user_pass =  base64_user_pass.decode('utf-8')
+
+
+
             self._conn.putheader(
                 'Authorization',
                 'Basic ' + base64_user_pass

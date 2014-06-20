@@ -772,27 +772,23 @@ class OsmApi:
             print(error_msg, file=sys.stderr)
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
-        if auth:            
+        if auth:
             user_pass = self._username + ':' + self._password
 
             try:
-                #Python 2
-                base64_user_pass = base64.encodestring(
-                user_pass
-                ).strip()
+                # Python 2
+                base64_user_pass = base64.encodestring(user_pass).strip()
             except TypeError:
-                #Python 3
+                # Python 3
                 base64_user_pass = base64.encodestring(
-                user_pass.encode('ascii')
-                ).strip()
+                    user_pass.encode('ascii')
+                    ).strip()
+                base64_user_pass = base64_user_pass.decode('utf-8')
 
-                base64_user_pass =  base64_user_pass.decode('utf-8')
-            
             self._conn.putheader(
-            'Authorization',
-            'Basic ' + base64_user_pass
-            )
-            
+                'Authorization',
+                'Basic ' + base64_user_pass
+                )
         if send is not None:
             self._conn.putheader('Content-Length', len(send))
         self._conn.endheaders()

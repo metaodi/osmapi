@@ -1,15 +1,19 @@
-
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+import osmapi
 import mock
 
 
 class TestOsmApiHelper(osmapi_tests.TestOsmApi):
     def setUp(self):
         super(TestOsmApiHelper, self).setUp()
+        self.setupMock()
+
+    def setupMock(self, status=200):
         mock_response = mock.Mock()
-        mock_response.status = 200
+        mock_response.status = status
+        mock_response.reason = "test reason"
         mock_response.read = mock.Mock(return_value='test response')
         self.api._conn.getresponse = mock.Mock(return_value=mock_response)
         self.api._conn.putrequest = mock.Mock()
@@ -84,3 +88,30 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         header, value = args[0]
         self.assertEquals(header, 'Authorization')
         self.assertEquals(value, 'Basic dGVzdHVzZXI6dGVzdHBhc3N3b3Jk')
+
+    def test_http_request_410_response(self):
+        self.setupMock(410)
+        response = self.api._http_request(
+            'GET',
+            '/api/0.6/test410',
+            False,
+            None
+        )
+        self.api._conn.putrequest.assert_called_with(
+            'GET',
+            '/api/0.6/test410'
+        )
+        self.assertIsNone(response, "test response")
+
+    def test_http_request_500_response(self):
+        self.setupMock(500)
+        with self.assertRaises(osmapi.ApiError) as cm:
+            self.api._http_request(
+                'GET',
+                '/api/0.6/test500',
+                False,
+                None
+            )
+        self.assertEquals(cm.exception.status, 500)
+        self.assertEquals(cm.exception.reason, "test reason")
+        self.assertEquals(cm.exception.payload, "test response")

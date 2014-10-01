@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="-1.4844471" lat="52.4190649">
+  <id>231776</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/231776</url>
+  <reopen_url>http://www.openstreetmap.org/api/0.6/notes/231776/reopen</reopen_url>
+  <date_created>2014-08-28 19:27:13 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-09-27 09:27:48 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-08-28 19:27:13 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Is it Pinners or Pinner's ?</text>
+      <html>&lt;p&gt;Is it Pinners or Pinner's ?&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-26 13:10:36 UTC</date>
+      <action>commented</action>
+      <text>Royal Mail's postcode finder has PINNERS CROFT.</text>
+      <html>&lt;p&gt;Royal Mail's postcode finder has PINNERS CROFT.&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-27 09:27:48 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>closed</action>
+      <text>Pinners without apostrophe is correct, based on survey</text>
+      <html>&lt;p&gt;Pinners without apostrophe is correct, based on survey&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4950687" lat="52.420951">
+  <id>231733</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/231733</url>
+  <reopen_url>http://www.openstreetmap.org/api/0.6/notes/231733/reopen</reopen_url>
+  <date_created>2014-08-28 18:39:05 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-09-27 09:24:55 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-08-28 18:39:05 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Should be Finbarr? </text>
+      <html>&lt;p&gt;Should be Finbarr? &lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-26 13:09:14 UTC</date>
+      <action>commented</action>
+      <text>You're right. Royal Mail's postcode finder has FINBARR CLOSE.</text>
+      <html>&lt;p&gt;You're right. Royal Mail's postcode finder has FINBARR CLOSE.&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-27 09:24:55 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>closed</action>
+      <text>Finbar is name on street plate, verified by survey</text>
+      <html>&lt;p&gt;Finbar is name on street plate, verified by survey&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4929605" lat="52.4107312">
+  <id>231775</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/231775</url>
+  <reopen_url>http://www.openstreetmap.org/api/0.6/notes/231775/reopen</reopen_url>
+  <date_created>2014-08-28 19:25:37 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-09-27 09:21:41 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-08-28 19:25:37 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Is it Paynes or Payne's</text>
+      <html>&lt;p&gt;Is it Paynes or Payne's&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-26 13:05:33 UTC</date>
+      <action>commented</action>
+      <text>Royal Mail's postcode finder has PAYNES LANE</text>
+      <html>&lt;p&gt;Royal Mail's postcode finder has PAYNES LANE&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4910829" lat="52.4157048">
+  <id>231728</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/231728</url>
+  <reopen_url>http://www.openstreetmap.org/api/0.6/notes/231728/reopen</reopen_url>
+  <date_created>2014-08-28 18:29:16 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-09-27 09:15:46 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-08-28 18:29:16 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Should it be Craner's Road? </text>
+      <html>&lt;p&gt;Should it be Craner's Road? &lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-26 13:04:15 UTC</date>
+      <action>commented</action>
+      <text>Royal Mail's Postcode finder has CRANERS ROAD</text>
+      <html>&lt;p&gt;Royal Mail's Postcode finder has CRANERS ROAD&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-27 09:15:46 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>closed</action>
+      <text>Craners without apostrophe based on survey</text>
+      <html>&lt;p&gt;Craners without apostrophe based on survey&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4988345" lat="52.3875902">
+  <id>231734</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/231734</url>
+  <reopen_url>http://www.openstreetmap.org/api/0.6/notes/231734/reopen</reopen_url>
+  <date_created>2014-08-28 18:40:33 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-09-27 09:03:23 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-08-28 18:40:33 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Should be Forester's? </text>
+      <html>&lt;p&gt;Should be Forester's? &lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-26 13:21:59 UTC</date>
+      <action>commented</action>
+      <text>Royal Mail's postcode finder has FORESTERS ROAD</text>
+      <html>&lt;p&gt;Royal Mail's postcode finder has FORESTERS ROAD&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-09-27 09:03:23 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>closed</action>
+      <text>Foresters without apostrophe is correct. Verified by survey.</text>
+      <html>&lt;p&gt;Foresters without apostrophe is correct. Verified by survey.&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4912814" lat="52.4451356">
+  <id>226232</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/226232</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/226232/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/226232/close</close_url>
+  <date_created>2014-08-21 18:28:35 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-08-21 18:28:35 UTC</date>
+      <uid>1486336</uid>
+      <user>Wyken Seagrave</user>
+      <user_url>http://www.openstreetmap.org/user/Wyken%20Seagrave</user_url>
+      <action>opened</action>
+      <text>Is this really called Classic Drive? </text>
+      <html>&lt;p&gt;Is this really called Classic Drive? &lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4849514" lat="52.3966157">
+  <id>141481</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/141481</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/141481/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/141481/close</close_url>
+  <date_created>2014-03-29 00:40:00 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-03-29 00:40:00 UTC</date>
+      <action>opened</action>
+      <text>Shared use footpath(s)</text>
+      <html>&lt;p&gt;Shared use footpath(s)&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4972734" lat="52.4478233">
+  <id>104971</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/104971</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/104971/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/104971/close</close_url>
+  <date_created>2014-01-20 11:14:35 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-01-20 11:14:35 UTC</date>
+      <uid>1894030</uid>
+      <user>david halliday</user>
+      <user_url>http://www.openstreetmap.org/user/david%20halliday</user_url>
+      <action>opened</action>
+      <text>Casino. DeVere Hotel. Primary Wine Bar</text>
+      <html>&lt;p&gt;Casino. DeVere Hotel. Primary Wine Bar&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.48541" lat="52.4039375">
+  <id>98185</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/98185</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/98185/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/98185/close</close_url>
+  <date_created>2014-01-08 20:51:59 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-01-08 20:51:59 UTC</date>
+      <uid>1874292</uid>
+      <user>CarlRose</user>
+      <user_url>http://www.openstreetmap.org/user/CarlRose</user_url>
+      <action>opened</action>
+      <text>tressler
+</text>
+      <html>&lt;p&gt;tressler
+&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-01-08 20:52:05 UTC</date>
+      <uid>1874292</uid>
+      <user>CarlRose</user>
+      <user_url>http://www.openstreetmap.org/user/CarlRose</user_url>
+      <action>closed</action>
+      <text></text>
+      <html>&lt;p&gt;&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-01-08 20:52:19 UTC</date>
+      <uid>1874292</uid>
+      <user>CarlRose</user>
+      <user_url>http://www.openstreetmap.org/user/CarlRose</user_url>
+      <action>reopened</action>
+      <text></text>
+      <html>&lt;p&gt;&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.486499" lat="52.4037575">
+  <id>98183</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/98183</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/98183/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/98183/close</close_url>
+  <date_created>2014-01-08 20:46:29 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-01-08 20:46:29 UTC</date>
+      <action>opened</action>
+      <text>9 Humber Rd</text>
+      <html>&lt;p&gt;9 Humber Rd&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-01-08 20:51:13 UTC</date>
+      <uid>1874292</uid>
+      <user>CarlRose</user>
+      <user_url>http://www.openstreetmap.org/user/CarlRose</user_url>
+      <action>closed</action>
+      <text></text>
+      <html>&lt;p&gt;&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-01-08 20:51:21 UTC</date>
+      <uid>1874292</uid>
+      <user>CarlRose</user>
+      <user_url>http://www.openstreetmap.org/user/CarlRose</user_url>
+      <action>reopened</action>
+      <text></text>
+      <html>&lt;p&gt;&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4832723" lat="51.8736461">
+  <id>97502</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/97502</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/97502/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/97502/close</close_url>
+  <date_created>2014-01-07 14:02:05 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-01-07 14:02:05 UTC</date>
+      <action>opened</action>
+      <text>onosm.org submitted note from a business:
+name: Britannick Engineering
+phone: 01608 810332
+website: 
+twitter: 
+hours: 
+category: Factories
+address: Market Street, Charlbury</text>
+      <html>&lt;p&gt;onosm.org submitted note from a business:
+&lt;br /&gt;name: Britannick Engineering
+&lt;br /&gt;phone: 01608 810332
+&lt;br /&gt;website: 
+&lt;br /&gt;twitter: 
+&lt;br /&gt;hours: 
+&lt;br /&gt;category: Factories
+&lt;br /&gt;address: Market Street, Charlbury&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4880681" lat="47.9504144">
+  <id>11430</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/11430</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/11430/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/11430/close</close_url>
+  <date_created>2013-07-04 12:08:26 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2013-07-04 12:08:26 UTC</date>
+      <uid>218616</uid>
+      <user>djakk</user>
+      <user_url>http://www.openstreetmap.org/user/djakk</user_url>
+      <action>opened</action>
+      <text>l'échangeur de Janzé-est sera ouvert en septembre 2013 : un rond-point sera construit au nord de l'échangeur -&gt; à mapper</text>
+      <html>&lt;p&gt;l'échangeur de Janzé-est sera ouvert en septembre 2013 : un rond-point sera construit au nord de l'échangeur -&amp;gt; à mapper&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-11-20 09:48:18 UTC</date>
+      <uid>439947</uid>
+      <user>StephaneP</user>
+      <user_url>http://www.openstreetmap.org/user/StephaneP</user_url>
+      <action>commented</action>
+      <text>Qu'en est-il ? La note est toujours valide ou bien les modifs ont été entrées dans Osm ?</text>
+      <html>&lt;p&gt;Qu'en est-il ? La note est toujours valide ou bien les modifs ont été entrées dans Osm ?&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-11-23 11:22:18 UTC</date>
+      <uid>218616</uid>
+      <user>djakk</user>
+      <user_url>http://www.openstreetmap.org/user/djakk</user_url>
+      <action>commented</action>
+      <text>Coucou, quelqu'un d'autre que moi a mappé et ça semble correct. 
+Reste une aire de covoiturage, qui est sans doute toujours en construction. (Son ouverture n'était pas synchronisée avec celle de l'échangeur). </text>
+      <html>&lt;p&gt;Coucou, quelqu'un d'autre que moi a mappé et ça semble correct. 
+&lt;br /&gt;Reste une aire de covoiturage, qui est sans doute toujours en construction. (Son ouverture n'était pas synchronisée avec celle de l'échangeur). &lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-12-05 09:13:34 UTC</date>
+      <uid>704348</uid>
+      <user>JBacc1</user>
+      <user_url>http://www.openstreetmap.org/user/JBacc1</user_url>
+      <action>closed</action>
+      <text>Ok, alors on peut fermer.</text>
+      <html>&lt;p&gt;Ok, alors on peut fermer.&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-12-06 19:28:20 UTC</date>
+      <uid>218616</uid>
+      <user>djakk</user>
+      <user_url>http://www.openstreetmap.org/user/djakk</user_url>
+      <action>reopened</action>
+      <text></text>
+      <html>&lt;p&gt;&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-12-06 19:28:51 UTC</date>
+      <uid>218616</uid>
+      <user>djakk</user>
+      <user_url>http://www.openstreetmap.org/user/djakk</user_url>
+      <action>commented</action>
+      <text>Non, on va laisser parce qu'il reste l'aire de covoiturage à mapper ;)</text>
+      <html>&lt;p&gt;Non, on va laisser parce qu'il reste l'aire de covoiturage à mapper ;)&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4872742" lat="52.0666994">
+  <id>81429</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/81429</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/81429/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/81429/close</close_url>
+  <date_created>2013-12-01 13:02:25 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2013-12-01 13:02:25 UTC</date>
+      <action>opened</action>
+      <text>right of way around/through farm poorly marked and needs a re-survey</text>
+      <html>&lt;p&gt;right of way around/through farm poorly marked and needs a re-survey&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="-1.4978313" lat="50.8231801">
+  <id>4918</id>
+  <url>http://www.openstreetmap.org/api/0.6/notes/4918</url>
+  <comment_url>http://www.openstreetmap.org/api/0.6/notes/4918/comment</comment_url>
+  <close_url>http://www.openstreetmap.org/api/0.6/notes/4918/close</close_url>
+  <date_created>2013-05-28 20:31:36 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2013-05-28 20:31:36 UTC</date>
+      <uid>2098</uid>
+      <user>Andy Street</user>
+      <user_url>http://www.openstreetmap.org/user/Andy%20Street</user_url>
+      <action>opened</action>
+      <text>Overlapping landuse</text>
+      <html>&lt;p&gt;Overlapping landuse&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-06-05 09:24:52 UTC</date>
+      <uid>30587</uid>
+      <user>IknowJoseph</user>
+      <user_url>http://www.openstreetmap.org/user/IknowJoseph</user_url>
+      <action>commented</action>
+      <text>I've created a multipolygon that should take care of the overlapping clearings</text>
+      <html>&lt;p&gt;I've created a multipolygon that should take care of the overlapping clearings&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-06-05 09:26:30 UTC</date>
+      <uid>30587</uid>
+      <user>IknowJoseph</user>
+      <user_url>http://www.openstreetmap.org/user/IknowJoseph</user_url>
+      <action>commented</action>
+      <text>(still more to do though)</text>
+      <html>&lt;p&gt;(still more to do though)&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>
+

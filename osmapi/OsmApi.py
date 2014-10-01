@@ -598,6 +598,35 @@ class OsmApi:
         return result
 
     ##################################################
+    # Notes                                          #
+    ##################################################
+
+    def NotesGet(self, min_lon, min_lat, max_lon, max_lat,
+                 limit=100, closed=7):
+        """
+        Returns notes in the specified bounding box.
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+        """
+        uri = (
+            "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
+            % (min_lon, min_lat, max_lon, max_lat, limit, closed)
+        )
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        result = {}
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        for noteElement in osm_data.getElementsByTagName("note"):
+            note = self._DomParseNote(noteElement)
+            result[note["id"]] = note
+        return result
+
+    ##################################################
     # Other                                          #
     ##################################################
 
@@ -890,6 +919,22 @@ class OsmApi:
             result.append(int(int(t.attributes["ref"].value)))
         return result
 
+    def _DomGetComments(self, DomElement):
+        """
+        Returns the list of comments of a DomElement.
+        """
+        result = []
+        for t in DomElement.getElementsByTagName("comment"):
+            comment = {}
+            comment['date'] = self._GetXmlValue(t, "date")
+            comment['action'] = self._GetXmlValue(t, "action")
+            comment['text'] = self._GetXmlValue(t, "text")
+            comment['html'] = self._GetXmlValue(t, "html")
+            comment['uid'] = self._GetXmlValue(t, "uid")
+            comment['user'] = self._GetXmlValue(t, "user")
+            result.append(comment)
+        return result
+
     def _DomGetMember(self, DomElement):
         """
         Returns a list of relation members.
@@ -931,6 +976,20 @@ class OsmApi:
         """
         result = self._DomGetAttributes(DomElement)
         result["tag"] = self._DomGetTag(DomElement)
+        return result
+
+    def _DomParseNote(self, DomElement):
+        """
+        Returns NoteData for the note.
+        """
+        result = self._DomGetAttributes(DomElement)
+        result["id"] = self._GetXmlValue(DomElement, "id")
+        result["status"] = self._GetXmlValue(DomElement, "status")
+
+        result["date_created"] = self._GetXmlValue(DomElement, "date_created")
+        result["date_closed"] = self._GetXmlValue(DomElement, "date_closed")
+        result["comments"] = self._DomGetComments(DomElement)
+
         return result
 
     ##################################################
@@ -993,3 +1052,10 @@ class OsmApi:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
         )
+
+    def _GetXmlValue(self, DomElement, tag):
+        try:
+            elem = DomElement.getElementsByTagName(tag)[0]
+            return elem.firstChild.nodeValue
+        except:
+            return None

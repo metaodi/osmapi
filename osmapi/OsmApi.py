@@ -626,6 +626,47 @@ class OsmApi:
             result[note["id"]] = note
         return result
 
+    def NoteGet(self, id):
+        """
+        Returns a note as a list of dict:
+        {
+            id: integer,
+            action: opened|commented|closed,
+            status: open|closed
+            date_created: creation date
+            date_closed: closing data|None
+            uid: User ID|None
+            user: User name|None
+            comments: {}
+        }.
+        """
+        uri = "/api/0.6/notes/%s" % (id)
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        noteElement = osm_data.getElementsByTagName("note")[0]
+        note = self._DomParseNote(noteElement)
+        return note
+
+    def NoteCreate(self, NoteData):
+        """
+        Creates a note.
+        Returns updated NoteData (without timestamp).
+        """
+        uri = "/api/0.6/notes"
+        uri += "?" + urllib.urlencode(NoteData)
+        result = self._post(uri, None)
+
+        # parse the result
+        data = xml.dom.minidom.parseString(result)
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        noteElement = osm_data.getElementsByTagName("note")[0]
+        note = self._DomParseNote(noteElement)
+
+        return note
+
     ##################################################
     # Other                                          #
     ##################################################
@@ -864,6 +905,9 @@ class OsmApi:
 
     def _put(self, path, data):
         return self._http('PUT', path, True, data)
+
+    def _post(self, path, data):
+        return self._http('POST', path, True, data)
 
     def _delete(self, path, data):
         return self._http('DELETE', path, True, data)

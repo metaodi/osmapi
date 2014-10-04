@@ -509,8 +509,7 @@ class OsmApi:
             ).decode("utf-8")
             data += "</"+change["action"]+">\n"
         data += "</osmChange>"
-        data = self._http(
-            "POST",
+        data = self._post(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload",
             True,
             data.encode("utf-8")
@@ -907,7 +906,9 @@ class OsmApi:
         return self._http('PUT', path, True, data)
 
     def _post(self, path, data):
-        return self._http('POST', path, True, data)
+        # the Notes API allows certain POSTs by non-authenticated users
+        auth = hasattr(self, '_username')
+        return self._http('POST', path, auth, data)
 
     def _delete(self, path, data):
         return self._http('DELETE', path, True, data)

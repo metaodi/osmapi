@@ -511,7 +511,6 @@ class OsmApi:
         data += "</osmChange>"
         data = self._post(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload",
-            True,
             data.encode("utf-8")
         )
         data = xml.dom.minidom.parseString(data)
@@ -655,7 +654,27 @@ class OsmApi:
         """
         uri = "/api/0.6/notes"
         uri += "?" + urllib.urlencode(NoteData)
-        result = self._post(uri, None)
+        result = self._post(uri, None, notesApi=True)
+
+        # parse the result
+        data = xml.dom.minidom.parseString(result)
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        noteElement = osm_data.getElementsByTagName("note")[0]
+        note = self._DomParseNote(noteElement)
+
+        return note
+
+    def NoteComment(self, NoteId, comment):
+        """
+        Adds a new comment to a note.
+        Returns the updated note.
+        """
+        uri = "/api/0.6/notes/%s/comment" % NoteId
+        params = {}
+        params['text'] = comment
+        uri += "?" + urllib.urlencode(params)
+        result = self._post(uri, None, notesApi=True)
 
         # parse the result
         data = xml.dom.minidom.parseString(result)
@@ -905,9 +924,11 @@ class OsmApi:
     def _put(self, path, data):
         return self._http('PUT', path, True, data)
 
-    def _post(self, path, data):
+    def _post(self, path, data, notesApi=False):
+        auth = True
         # the Notes API allows certain POSTs by non-authenticated users
-        auth = hasattr(self, '_username')
+        if notesApi:
+            auth = hasattr(self, '_username')
         return self._http('POST', path, auth, data)
 
     def _delete(self, path, data):

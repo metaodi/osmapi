@@ -127,3 +127,42 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                 }
             ]
         })
+
+    def test_NoteComment(self):
+        self._http_mock()
+
+        result = self.api.NoteComment(812, 'This is a comment')
+
+        args, kwargs = self.api._http_request.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/notes/812/comment?text=This+is+a+comment'
+        )
+
+        self.assertEquals(result, {
+            'id': '812',
+            'lat': 47.123,
+            'lon': 8.432,
+            'date_created': '2014-10-03 15:11:05 UTC',
+            'date_closed': None,
+            'status': 'open',
+            'comments': [
+                {
+                    'date': '2014-10-03 15:11:05 UTC',
+                    'action': 'opened',
+                    'text': "This is a test",
+                    'html': "<p>This is a test</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                },
+                {
+                    'date': '2014-10-04 22:36:35 UTC',
+                    'action': 'commented',
+                    'text': "This is a comment",
+                    'html': "<p>This is a comment</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                }
+            ]
+        })

@@ -18,6 +18,10 @@ if getattr(urllib, 'urlencode', None) is None:
 from . import __version__
 
 
+class UsernamePasswordMissingError(Exception):
+    pass
+
+
 class ApiError(Exception):
 
     def __init__(self, status, reason, payload):
@@ -602,7 +606,8 @@ class OsmApi:
     def NotesGet(self, min_lon, min_lat, max_lon, max_lat,
                  limit=100, closed=7):
         """
-        Returns notes in the specified bounding box.
+        Returns a list of dicts of notes in the specified bounding box.
+
         The limit parameter defines how many results should be returned.
 
         closed specifies the number of days a bug needs to be closed
@@ -615,18 +620,11 @@ class OsmApi:
             % (min_lon, min_lat, max_lon, max_lat, limit, closed)
         )
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-
-        for noteElement in osm_data.getElementsByTagName("note"):
-            note = self._DomParseNote(noteElement)
-            result[note["id"]] = note
-        return result
+        return self.ParseNotes(data)
 
     def NoteGet(self, id):
         """
-        Returns a note as a list of dict:
+        Returns a note as dict:
         {
             id: integer,
             action: opened|commented|closed,
@@ -654,27 +652,64 @@ class OsmApi:
         """
         uri = "/api/0.6/notes"
         uri += "?" + urllib.urlencode(NoteData)
-        result = self._post(uri, None, notesApi=True)
-
-        # parse the result
-        data = xml.dom.minidom.parseString(result)
-        osm_data = data.getElementsByTagName("osm")[0]
-
-        noteElement = osm_data.getElementsByTagName("note")[0]
-        note = self._DomParseNote(noteElement)
-
-        return note
+        return self._NoteAction(uri)
 
     def NoteComment(self, NoteId, comment):
         """
         Adds a new comment to a note.
         Returns the updated note.
         """
-        uri = "/api/0.6/notes/%s/comment" % NoteId
+        path = "/api/0.6/notes/%s/comment" % NoteId
+        return self._NoteAction(path, comment)
+
+    def NoteClose(self, NoteId, comment):
+        """
+        Closes a note.
+        Returns the updated note.
+        """
+        path = "/api/0.6/notes/%s/close" % NoteId
+        return self._NoteAction(path, comment, optionalAuth=False)
+
+    def NoteReopen(self, NoteId, comment):
+        """
+        Reopens a note.
+        Returns the updated note.
+        """
+        path = "/api/0.6/notes/%s/reopen" % NoteId
+        return self._NoteAction(path, comment, optionalAuth=False)
+
+    def NotesSearch(self, query, limit=100, closed=7):
+        """
+        Returns a list of dicts of notes that match the given search query.
+
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+        """
+        uri = "/api/0.6/notes/search"
         params = {}
-        params['text'] = comment
+        params['q'] = query
+        params['limit'] = limit
+        params['closed'] = closed
         uri += "?" + urllib.urlencode(params)
-        result = self._post(uri, None, notesApi=True)
+        data = self._get(uri)
+
+        return self.ParseNotes(data)
+
+    def _NoteAction(self, path, comment=None, optionalAuth=True):
+        """
+        Performs an action on a Note with a comment
+        Return the updated note
+        """
+        uri = path
+        if comment is not None:
+            params = {}
+            params['text'] = comment
+            uri += "?" + urllib.urlencode(params)
+        result = self._post(uri, None, optionalAuth=optionalAuth)
 
         # parse the result
         data = xml.dom.minidom.parseString(result)
@@ -776,6 +811,16 @@ class OsmApi:
                     })
         return result
 
+    def ParseNotes(self, data):
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        for noteElement in osm_data.getElementsByTagName("note"):
+            note = self._DomParseNote(noteElement)
+            result.append(note)
+        return result
+
     ##################################################
     # Internal http function                         #
     ##################################################
@@ -861,7 +906,10 @@ class OsmApi:
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
-            user_pass = self._username + ':' + self._password
+            try:
+                user_pass = self._username + ':' + self._password
+            except AttributeError:
+                raise UsernamePasswordMissingError("Username/Password missing")
 
             try:
                 # Python 2
@@ -924,10 +972,10 @@ class OsmApi:
     def _put(self, path, data):
         return self._http('PUT', path, True, data)
 
-    def _post(self, path, data, notesApi=False):
+    def _post(self, path, data, optionalAuth=False):
         auth = True
         # the Notes API allows certain POSTs by non-authenticated users
-        if notesApi:
+        if optionalAuth:
             auth = hasattr(self, '_username')
         return self._http('POST', path, auth, data)
 

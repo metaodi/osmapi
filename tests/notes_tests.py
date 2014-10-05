@@ -25,7 +25,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         )
 
         self.assertEquals(len(result), 14)
-        self.assertEquals(result['231775'], {
+        self.assertEquals(result[2], {
             'id': '231775',
             'lon': -1.4929605,
             'lat': 52.4107312,
@@ -163,6 +163,124 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'html': "<p>This is a comment</p>",
                     'uid': '1841',
                     'user': 'metaodi'
+                }
+            ]
+        })
+
+    def test_NoteClose(self):
+        self._http_mock()
+
+        result = self.api.NoteClose(814, 'Close this note!')
+
+        args, kwargs = self.api._http_request.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/notes/814/close?text=Close+this+note%21'
+        )
+
+        self.assertEquals(result, {
+            'id': '815',
+            'lat': 47.123,
+            'lon': 8.432,
+            'date_created': '2014-10-03 15:20:57 UTC',
+            'date_closed': '2014-10-05 16:35:13 UTC',
+            'status': 'closed',
+            'comments': [
+                {
+                    'date': '2014-10-03 15:20:57 UTC',
+                    'action': 'opened',
+                    'text': "This is a test",
+                    'html': "<p>This is a test</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                },
+                {
+                    'date': '2014-10-05 16:35:13 UTC',
+                    'action': 'closed',
+                    'text': "Close this note!",
+                    'html': "<p>Close this note!</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                }
+            ]
+        })
+
+    def test_NoteReopen(self):
+        self._http_mock()
+
+        result = self.api.NoteReopen(815, 'Reopen this note!')
+
+        args, kwargs = self.api._http_request.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/notes/815/reopen?text=Reopen+this+note%21'
+        )
+
+        self.assertEquals(result, {
+            'id': '815',
+            'lat': 47.123,
+            'lon': 8.432,
+            'date_created': '2014-10-03 15:20:57 UTC',
+            'date_closed': None,
+            'status': 'open',
+            'comments': [
+                {
+                    'date': '2014-10-03 15:20:57 UTC',
+                    'action': 'opened',
+                    'text': "This is a test",
+                    'html': "<p>This is a test</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                },
+                {
+                    'date': '2014-10-05 16:35:13 UTC',
+                    'action': 'closed',
+                    'text': "Close this note!",
+                    'html': "<p>Close this note!</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                },
+                {
+                    'date': '2014-10-05 16:44:56 UTC',
+                    'action': 'reopened',
+                    'text': "Reopen this note!",
+                    'html': "<p>Reopen this note!</p>",
+                    'uid': '1841',
+                    'user': 'metaodi'
+                }
+            ]
+        })
+
+    def test_NotesSearch(self):
+        self._http_mock()
+
+        result = self.api.NotesSearch('street')
+
+        args, kwargs = self.api._http_request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/notes/search?q=street&limit=100&closed=7'
+        )
+
+        self.assertEquals(len(result), 3)
+        self.assertEquals(result[1], {
+            'id': '788',
+            'lon': 11.96395,
+            'lat': 57.70301,
+            'date_created': '2014-07-16 16:12:41 UTC',
+            'date_closed': None,
+            'status': 'open',
+            'comments': [
+                {
+                    'date': '2014-07-16 16:12:41 UTC',
+                    'action': 'opened',
+                    'text': "One way street:\ncomment",
+                    'html': "<p>One way street:\n<br />comment</p>",
+                    'uid': None,
+                    'user': None
                 }
             ]
         })

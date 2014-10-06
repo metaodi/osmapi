@@ -1,0 +1,7 @@
+{
+    "name": "osmapi",
+    "root": ".",
+    "routes": {
+        "**": "OsmApi.m.html"
+    }
+}

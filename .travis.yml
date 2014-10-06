@@ -15,7 +15,6 @@ install:
 script: ./build.sh
 after_success: coveralls
 deploy:
-  matrix:
   - provider: pypi
     user: odi
     password:
@@ -28,5 +27,6 @@ deploy:
     skip_cleanup: true
     on:
       all_branches: true
+      python: 2.7
     api_key:
       secure: WTpFZfmA9QOPGLp9c+yljSVLk8GijvlMT4FxPX1BlI0cdU0VHHBkKfRk+UW3n8vHBAcaH+1SlbPc+9BWw9oHirtJ5Wc57SNfWS1NHKVB/rUxVCn+GYM6RBN9wJ26St0KNG81VtvajkA41ZP5jkpWVFtbylbctcTmVNagJke7cUE=

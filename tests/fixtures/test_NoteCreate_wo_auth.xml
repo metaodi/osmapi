@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="8.432" lat="47.123">
+  <id>824</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/824</url>
+  <comment_url>http://api06.dev.openstreetmap.org/api/0.6/notes/824/comment</comment_url>
+  <close_url>http://api06.dev.openstreetmap.org/api/0.6/notes/824/close</close_url>
+  <date_created>2014-10-03 16:09:11 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-10-03 16:09:12 UTC</date>
+      <action>opened</action>
+      <text>This is an unauthenticated test</text>
+      <html>&lt;p&gt;This is an unauthenticated test&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>
+
+{u'comments': [{u'action': u'opened',
+                u'date': u'2014-10-03 16:09:12 UTC',
+                u'html': u'<p>This is an unauthenticated test</p>',
+                u'text': u'This is an unauthenticated test',
+                u'uid': None,
+                u'user': None}],
+ u'date_closed': None,
+ u'date_created': u'2014-10-03 16:09:11 UTC',
+ u'id': u'824',
+ u'lat': 47.123,
+ u'lon': 8.432,
+ u'status': u'open'}

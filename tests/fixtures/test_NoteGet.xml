@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="12.3133135" lat="37.9305489">
+  <id>1111</id>
+  <url>http://api.openstreetmap.org/api/0.6/notes/1111</url>
+  <reopen_url>http://api.openstreetmap.org/api/0.6/notes/1111/reopen</reopen_url>
+  <date_created>2013-05-01 20:58:21 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2013-08-21 16:43:26 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2013-05-01 20:58:21 UTC</date>
+      <uid>1363438</uid>
+      <user>giuseppemari</user>
+      <user_url>http://www.openstreetmap.org/user/giuseppemari</user_url>
+      <action>opened</action>
+      <text>It does not exist this path</text>
+      <html>&lt;p&gt;It does not exist this path&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2013-08-21 16:43:26 UTC</date>
+      <uid>1714220</uid>
+      <user>luschi</user>
+      <user_url>http://www.openstreetmap.org/user/luschi</user_url>
+      <action>closed</action>
+      <text>there is no path signed</text>
+      <html>&lt;p&gt;there is no path signed&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>

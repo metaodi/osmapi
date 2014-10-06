@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="8.432" lat="47.123">
+  <id>815</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/815</url>
+  <reopen_url>http://api06.dev.openstreetmap.org/api/0.6/notes/815/reopen</reopen_url>
+  <date_created>2014-10-03 15:20:57 UTC</date_created>
+  <status>closed</status>
+  <date_closed>2014-10-05 16:35:13 UTC</date_closed>
+  <comments>
+    <comment>
+      <date>2014-10-03 15:20:57 UTC</date>
+      <uid>1841</uid>
+      <user>metaodi</user>
+      <user_url>http://master.apis.dev.openstreetmap.org/user/metaodi</user_url>
+      <action>opened</action>
+      <text>This is a test</text>
+      <html>&lt;p&gt;This is a test&lt;/p&gt;</html>
+    </comment>
+    <comment>
+      <date>2014-10-05 16:35:13 UTC</date>
+      <uid>1841</uid>
+      <user>metaodi</user>
+      <user_url>http://master.apis.dev.openstreetmap.org/user/metaodi</user_url>
+      <action>closed</action>
+      <text>Close this note!</text>
+      <html>&lt;p&gt;Close this note!&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>

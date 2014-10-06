@@ -18,6 +18,10 @@ if getattr(urllib, 'urlencode', None) is None:
 from . import __version__
 
 
+class UsernamePasswordMissingError(Exception):
+    pass
+
+
 class ApiError(Exception):
 
     def __init__(self, status, reason, payload):
@@ -509,10 +513,8 @@ class OsmApi:
             ).decode("utf-8")
             data += "</"+change["action"]+">\n"
         data += "</osmChange>"
-        data = self._http(
-            "POST",
+        data = self._post(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload",
-            True,
             data.encode("utf-8")
         )
         data = xml.dom.minidom.parseString(data)
@@ -596,6 +598,127 @@ class OsmApi:
             tmpCS = self._DomParseChangeset(curChangeset)
             result[tmpCS["id"]] = tmpCS
         return result
+
+    ##################################################
+    # Notes                                          #
+    ##################################################
+
+    def NotesGet(self, min_lon, min_lat, max_lon, max_lat,
+                 limit=100, closed=7):
+        """
+        Returns a list of dicts of notes in the specified bounding box.
+
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+        """
+        uri = (
+            "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
+            % (min_lon, min_lat, max_lon, max_lat, limit, closed)
+        )
+        data = self._get(uri)
+        return self.ParseNotes(data)
+
+    def NoteGet(self, id):
+        """
+        Returns a note as dict:
+        {
+            id: integer,
+            action: opened|commented|closed,
+            status: open|closed
+            date_created: creation date
+            date_closed: closing data|None
+            uid: User ID|None
+            user: User name|None
+            comments: {}
+        }.
+        """
+        uri = "/api/0.6/notes/%s" % (id)
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        noteElement = osm_data.getElementsByTagName("note")[0]
+        note = self._DomParseNote(noteElement)
+        return note
+
+    def NoteCreate(self, NoteData):
+        """
+        Creates a note.
+        Returns updated NoteData (without timestamp).
+        """
+        uri = "/api/0.6/notes"
+        uri += "?" + urllib.urlencode(NoteData)
+        return self._NoteAction(uri)
+
+    def NoteComment(self, NoteId, comment):
+        """
+        Adds a new comment to a note.
+        Returns the updated note.
+        """
+        path = "/api/0.6/notes/%s/comment" % NoteId
+        return self._NoteAction(path, comment)
+
+    def NoteClose(self, NoteId, comment):
+        """
+        Closes a note.
+        Returns the updated note.
+        """
+        path = "/api/0.6/notes/%s/close" % NoteId
+        return self._NoteAction(path, comment, optionalAuth=False)
+
+    def NoteReopen(self, NoteId, comment):
+        """
+        Reopens a note.
+        Returns the updated note.
+        """
+        path = "/api/0.6/notes/%s/reopen" % NoteId
+        return self._NoteAction(path, comment, optionalAuth=False)
+
+    def NotesSearch(self, query, limit=100, closed=7):
+        """
+        Returns a list of dicts of notes that match the given search query.
+
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+        """
+        uri = "/api/0.6/notes/search"
+        params = {}
+        params['q'] = query
+        params['limit'] = limit
+        params['closed'] = closed
+        uri += "?" + urllib.urlencode(params)
+        data = self._get(uri)
+
+        return self.ParseNotes(data)
+
+    def _NoteAction(self, path, comment=None, optionalAuth=True):
+        """
+        Performs an action on a Note with a comment
+        Return the updated note
+        """
+        uri = path
+        if comment is not None:
+            params = {}
+            params['text'] = comment
+            uri += "?" + urllib.urlencode(params)
+        result = self._post(uri, None, optionalAuth=optionalAuth)
+
+        # parse the result
+        data = xml.dom.minidom.parseString(result)
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        noteElement = osm_data.getElementsByTagName("note")[0]
+        note = self._DomParseNote(noteElement)
+
+        return note
 
     ##################################################
     # Other                                          #
@@ -688,6 +811,16 @@ class OsmApi:
                     })
         return result
 
+    def ParseNotes(self, data):
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        osm_data = data.getElementsByTagName("osm")[0]
+
+        for noteElement in osm_data.getElementsByTagName("note"):
+            note = self._DomParseNote(noteElement)
+            result.append(note)
+        return result
+
     ##################################################
     # Internal http function                         #
     ##################################################
@@ -773,7 +906,10 @@ class OsmApi:
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
-            user_pass = self._username + ':' + self._password
+            try:
+                user_pass = self._username + ':' + self._password
+            except AttributeError:
+                raise UsernamePasswordMissingError("Username/Password missing")
 
             try:
                 # Python 2
@@ -836,6 +972,13 @@ class OsmApi:
     def _put(self, path, data):
         return self._http('PUT', path, True, data)
 
+    def _post(self, path, data, optionalAuth=False):
+        auth = True
+        # the Notes API allows certain POSTs by non-authenticated users
+        if optionalAuth:
+            auth = hasattr(self, '_username')
+        return self._http('POST', path, auth, data)
+
     def _delete(self, path, data):
         return self._http('DELETE', path, True, data)
 
@@ -890,6 +1033,22 @@ class OsmApi:
             result.append(int(int(t.attributes["ref"].value)))
         return result
 
+    def _DomGetComments(self, DomElement):
+        """
+        Returns the list of comments of a DomElement.
+        """
+        result = []
+        for t in DomElement.getElementsByTagName("comment"):
+            comment = {}
+            comment['date'] = self._GetXmlValue(t, "date")
+            comment['action'] = self._GetXmlValue(t, "action")
+            comment['text'] = self._GetXmlValue(t, "text")
+            comment['html'] = self._GetXmlValue(t, "html")
+            comment['uid'] = self._GetXmlValue(t, "uid")
+            comment['user'] = self._GetXmlValue(t, "user")
+            result.append(comment)
+        return result
+
     def _DomGetMember(self, DomElement):
         """
         Returns a list of relation members.
@@ -931,6 +1090,20 @@ class OsmApi:
         """
         result = self._DomGetAttributes(DomElement)
         result["tag"] = self._DomGetTag(DomElement)
+        return result
+
+    def _DomParseNote(self, DomElement):
+        """
+        Returns NoteData for the note.
+        """
+        result = self._DomGetAttributes(DomElement)
+        result["id"] = self._GetXmlValue(DomElement, "id")
+        result["status"] = self._GetXmlValue(DomElement, "status")
+
+        result["date_created"] = self._GetXmlValue(DomElement, "date_created")
+        result["date_closed"] = self._GetXmlValue(DomElement, "date_closed")
+        result["comments"] = self._DomGetComments(DomElement)
+
         return result
 
     ##################################################
@@ -993,3 +1166,10 @@ class OsmApi:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
         )
+
+    def _GetXmlValue(self, DomElement, tag):
+        try:
+            elem = DomElement.getElementsByTagName(tag)[0]
+            return elem.firstChild.nodeValue
+        except:
+            return None

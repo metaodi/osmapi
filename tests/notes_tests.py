@@ -2,6 +2,11 @@ from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
 
+try:
+    import urlparse
+except ImportError:
+    from urllib import parse as urlparse
+
 
 class TestOsmApiNotes(osmapi_tests.TestOsmApi):
     def test_NotesGet(self):
@@ -16,13 +21,15 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         args, kwargs = self.api._http_request.call_args
         self.assertEquals(args[0], 'GET')
+
+        urlParts = urlparse.urlparse(args[1])
+        params = urlparse.parse_qs(urlParts.query)
         self.assertEquals(
-            args[1],
-            (
-                '/api/0.6/notes?bbox=-1.499853,45.966790,-1.483181,52.471019'
-                '&limit=100&closed=7'
-            )
+            params['bbox'][0],
+            '-1.499853,45.966790,-1.483181,52.471019'
         )
+        self.assertEquals(params['limit'][0], '100')
+        self.assertEquals(params['closed'][0], '7')
 
         self.assertEquals(len(result), 14)
         self.assertEquals(result[2], {
@@ -104,10 +111,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         args, kwargs = self.api._http_request.call_args
         self.assertEquals(args[0], 'POST')
-        self.assertEquals(
-            args[1],
-            '/api/0.6/notes?lat=47.123&text=This+is+a+test&lon=8.432'
-        )
+
+        urlParts = urlparse.urlparse(args[1])
+        params = urlparse.parse_qs(urlParts.query)
+        self.assertEquals(params['lat'][0], '47.123')
+        self.assertEquals(params['lon'][0], '8.432')
+        self.assertEquals(params['text'][0], 'This is a test')
 
         self.assertEquals(result, {
             'id': '816',
@@ -260,10 +269,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         args, kwargs = self.api._http_request.call_args
         self.assertEquals(args[0], 'GET')
-        self.assertEquals(
-            args[1],
-            '/api/0.6/notes/search?q=street&limit=100&closed=7'
-        )
+
+        urlParts = urlparse.urlparse(args[1])
+        params = urlparse.parse_qs(urlParts.query)
+        self.assertEquals(params['q'][0], 'street')
+        self.assertEquals(params['limit'][0], '100')
+        self.assertEquals(params['closed'][0], '7')
 
         self.assertEquals(len(result), 3)
         self.assertEquals(result[1], {

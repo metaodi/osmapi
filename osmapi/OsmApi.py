@@ -15,7 +15,7 @@ import urllib
 if getattr(urllib, 'urlencode', None) is None:
     urllib.urlencode = urllib.parse.urlencode
 
-from . import __version__
+from osmapi import __version__
 
 
 class UsernamePasswordMissingError(Exception):
@@ -872,6 +872,9 @@ class OsmApi:
             return OsmData
 
     def flush(self):
+        """
+        Force the changes to be uploaded to OSM and the changeset to be closed
+        """
         return self._changesetautoflush(True)
 
     def _changesetautoflush(self, force=False):

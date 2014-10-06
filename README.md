@@ -42,6 +42,10 @@ Scripted imports and automated edits should only be carried out by those with ex
 
 See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines) and [Automated Edits/Code of Conduct](http://wiki.openstreetmap.org/wiki/Automated_Edits/Code_of_Conduct) for more information.
 
+## Documentation
+
+[The documentation](http://htmlpreview.github.io/?https://github.com/metaodi/osmapi/blob/generate-docs/OsmApi.m.html) is generated using `pdoc`.
+
 ## Examples
 
 ### Read from OpenStreetMap

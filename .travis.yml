@@ -1,30 +1,42 @@
 language: python
 
 python:
-  - '2.6'
-  - '2.7'
-  - '3.2'
-  - '3.3'
+- '2.6'
+- '2.7'
+- '3.2'
+- '3.3'
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq pandoc
+- sudo apt-get update -qq
+- sudo apt-get install -qq pandoc
 
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install --use-mirrors unittest2; fi
-  - pip install -r requirements.txt
-  - pip install -r test-requirements.txt
+- if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then
+     pip install --use-mirrors unittest2;
+  fi
+- pip install .
+- pip install -r requirements.txt
+- pip install -r test-requirements.txt
 
 script: ./build.sh
 
 after_success: coveralls
 
 deploy:
-  provider: pypi
-  user: odi
-  password:
-    secure: MU3ZQ4rcpsXo0xIYSWXBfaKTAPn1IrL7AEcH231sseFV1RVmdC96Sfmtc2llvD9Eoc0KJpdW0Vy50azNqAMJwXCt/q3gagfao1PTnAEbklU+g1s2PTqW401E95Qm6w192WzWk/q0dy3SJwxEQt023QR78K+nEcYaCdLWDHjR2hY=
-  on:
-    branch: master
-    python: 2.7
-    repo: metaodi/osmapi
+  - provider: pypi
+    user: odi
+    password:
+      secure: MU3ZQ4rcpsXo0xIYSWXBfaKTAPn1IrL7AEcH231sseFV1RVmdC96Sfmtc2llvD9Eoc0KJpdW0Vy50azNqAMJwXCt/q3gagfao1PTnAEbklU+g1s2PTqW401E95Qm6w192WzWk/q0dy3SJwxEQt023QR78K+nEcYaCdLWDHjR2hY=
+    on:
+      branch: master
+      python: 2.7
+      repo: metaodi/osmapi
+  - provider: divshot
+    skip_cleanup: true
+    environment:
+        develop: development
+        master: production
+    on:
+      python: 2.7
+    api_key:
+      secure: WTpFZfmA9QOPGLp9c+yljSVLk8GijvlMT4FxPX1BlI0cdU0VHHBkKfRk+UW3n8vHBAcaH+1SlbPc+9BWw9oHirtJ5Wc57SNfWS1NHKVB/rUxVCn+GYM6RBN9wJ26St0KNG81VtvajkA41ZP5jkpWVFtbylbctcTmVNagJke7cUE=

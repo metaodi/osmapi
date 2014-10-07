@@ -13,3 +13,6 @@ flake8 --show-pep8 --show-source .
 
 # run tests
 nosetests --verbose --with-coverage
+
+# generate docs
+pdoc --html --overwrite osmapi/OsmApi.py

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="11.96395" lat="57.70301">
+  <id>796</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/796</url>
+  <comment_url>http://api06.dev.openstreetmap.org/api/0.6/notes/796/comment</comment_url>
+  <close_url>http://api06.dev.openstreetmap.org/api/0.6/notes/796/close</close_url>
+  <date_created>2014-07-16 16:42:46 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-07-16 16:42:46 UTC</date>
+      <uid>2132</uid>
+      <user>kalaset</user>
+      <user_url>http://master.apis.dev.openstreetmap.org/user/kalaset</user_url>
+      <action>opened</action>
+      <text>One way street:
+jjhghkklll</text>
+      <html>&lt;p&gt;One way street:
+&lt;br /&gt;jjhghkklll&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="11.96395" lat="57.70301">
+  <id>788</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/788</url>
+  <comment_url>http://api06.dev.openstreetmap.org/api/0.6/notes/788/comment</comment_url>
+  <close_url>http://api06.dev.openstreetmap.org/api/0.6/notes/788/close</close_url>
+  <date_created>2014-07-16 16:12:41 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-07-16 16:12:41 UTC</date>
+      <action>opened</action>
+      <text>One way street:
+comment</text>
+      <html>&lt;p&gt;One way street:
+&lt;br /&gt;comment&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+<note lon="11.96395" lat="57.70301">
+  <id>738</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/738</url>
+  <comment_url>http://api06.dev.openstreetmap.org/api/0.6/notes/738/comment</comment_url>
+  <close_url>http://api06.dev.openstreetmap.org/api/0.6/notes/738/close</close_url>
+  <date_created>2014-07-03 12:09:05 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2014-07-03 12:09:05 UTC</date>
+      <uid>2132</uid>
+      <user>kalaset</user>
+      <user_url>http://master.apis.dev.openstreetmap.org/user/kalaset</user_url>
+      <action>opened</action>
+      <text>One way street tyuui</text>
+      <html>&lt;p&gt;One way street tyuui&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>

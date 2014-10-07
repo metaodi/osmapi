@@ -44,7 +44,7 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 
 ## Documentation
 
-[The documentation](http://htmlpreview.github.io/?https://github.com/metaodi/osmapi/blob/generate-docs/OsmApi.m.html) is generated using `pdoc`.
+The documentation is generated using `pdoc` and can be [viewed online](http://osmapi.divshot.io/).
 
 ## Examples
 

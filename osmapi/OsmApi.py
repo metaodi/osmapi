@@ -10,6 +10,7 @@ import xml.dom.minidom
 import time
 import sys
 import urllib
+from datetime import datetime
 
 # Python 3.x
 if getattr(urllib, 'urlencode', None) is None:
@@ -1043,7 +1044,7 @@ class OsmApi:
         result = []
         for t in DomElement.getElementsByTagName("comment"):
             comment = {}
-            comment['date'] = self._GetXmlValue(t, "date")
+            comment['date'] = self._ParseDate(self._GetXmlValue(t, "date"))
             comment['action'] = self._GetXmlValue(t, "action")
             comment['text'] = self._GetXmlValue(t, "text")
             comment['html'] = self._GetXmlValue(t, "html")
@@ -1103,11 +1104,21 @@ class OsmApi:
         result["id"] = self._GetXmlValue(DomElement, "id")
         result["status"] = self._GetXmlValue(DomElement, "status")
 
-        result["date_created"] = self._GetXmlValue(DomElement, "date_created")
-        result["date_closed"] = self._GetXmlValue(DomElement, "date_closed")
+        result["date_created"] = self._ParseDate(
+            self._GetXmlValue(DomElement, "date_created")
+        )
+        result["date_closed"] = self._ParseDate(
+            self._GetXmlValue(DomElement, "date_closed")
+        )
         result["comments"] = self._DomGetComments(DomElement)
 
         return result
+
+    def _ParseDate(self, DateString):
+        try:
+            return datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
+        except:
+            return None
 
     ##################################################
     # Internal xml builder                           #

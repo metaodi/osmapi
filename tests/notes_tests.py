@@ -1,6 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+from datetime import datetime
 
 try:
     import urlparse
@@ -36,12 +37,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '231775',
             'lon': -1.4929605,
             'lat': 52.4107312,
-            'date_created': '2014-08-28 19:25:37 UTC',
-            'date_closed': '2014-09-27 09:21:41 UTC',
+            'date_created': datetime(2014, 8, 28, 19, 25, 37),
+            'date_closed': datetime(2014, 9, 27, 9, 21, 41),
             'status': 'closed',
             'comments': [
                 {
-                    'date': '2014-08-28 19:25:37 UTC',
+                    'date': datetime(2014, 8, 28, 19, 25, 37),
                     'action': 'opened',
                     'text': "Is it Paynes or Payne's",
                     'html': "<p>Is it Paynes or Payne's</p>",
@@ -49,7 +50,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'Wyken Seagrave'
                 },
                 {
-                    'date': '2014-09-26 13:05:33 UTC',
+                    'date': datetime(2014, 9, 26, 13, 5, 33),
                     'action': 'commented',
                     'text': "Royal Mail's postcode finder has PAYNES LANE",
                     'html':
@@ -76,12 +77,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '1111',
             'lon': 12.3133135,
             'lat': 37.9305489,
-            'date_created': '2013-05-01 20:58:21 UTC',
-            'date_closed': '2013-08-21 16:43:26 UTC',
+            'date_created': datetime(2013, 5, 1, 20, 58, 21),
+            'date_closed': datetime(2013, 8, 21, 16, 43, 26),
             'status': 'closed',
             'comments': [
                 {
-                    'date': '2013-05-01 20:58:21 UTC',
+                    'date': datetime(2013, 5, 1, 20, 58, 21),
                     'action': 'opened',
                     'text': "It does not exist this path",
                     'html': "<p>It does not exist this path</p>",
@@ -89,7 +90,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'giuseppemari'
                 },
                 {
-                    'date': '2013-08-21 16:43:26 UTC',
+                    'date': datetime(2013, 8, 21, 16, 43, 26),
                     'action': 'closed',
                     'text': "there is no path signed",
                     'html': "<p>there is no path signed</p>",
@@ -122,12 +123,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '816',
             'lat': 47.123,
             'lon': 8.432,
-            'date_created': '2014-10-03 15:21:21 UTC',
+            'date_created': datetime(2014, 10, 3, 15, 21, 21),
             'date_closed': None,
             'status': 'open',
             'comments': [
                 {
-                    'date': '2014-10-03 15:21:22 UTC',
+                    'date': datetime(2014, 10, 3, 15, 21, 22),
                     'action': 'opened',
                     'text': "This is a test",
                     'html': "<p>This is a test</p>",
@@ -153,12 +154,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '812',
             'lat': 47.123,
             'lon': 8.432,
-            'date_created': '2014-10-03 15:11:05 UTC',
+            'date_created': datetime(2014, 10, 3, 15, 11, 5),
             'date_closed': None,
             'status': 'open',
             'comments': [
                 {
-                    'date': '2014-10-03 15:11:05 UTC',
+                    'date': datetime(2014, 10, 3, 15, 11, 5),
                     'action': 'opened',
                     'text': "This is a test",
                     'html': "<p>This is a test</p>",
@@ -166,7 +167,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'metaodi'
                 },
                 {
-                    'date': '2014-10-04 22:36:35 UTC',
+                    'date': datetime(2014, 10, 4, 22, 36, 35),
                     'action': 'commented',
                     'text': "This is a comment",
                     'html': "<p>This is a comment</p>",
@@ -192,12 +193,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '815',
             'lat': 47.123,
             'lon': 8.432,
-            'date_created': '2014-10-03 15:20:57 UTC',
-            'date_closed': '2014-10-05 16:35:13 UTC',
+            'date_created': datetime(2014, 10, 3, 15, 20, 57),
+            'date_closed': datetime(2014, 10, 5, 16, 35, 13),
             'status': 'closed',
             'comments': [
                 {
-                    'date': '2014-10-03 15:20:57 UTC',
+                    'date': datetime(2014, 10, 3, 15, 20, 57),
                     'action': 'opened',
                     'text': "This is a test",
                     'html': "<p>This is a test</p>",
@@ -205,7 +206,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'metaodi'
                 },
                 {
-                    'date': '2014-10-05 16:35:13 UTC',
+                    'date': datetime(2014, 10, 5, 16, 35, 13),
                     'action': 'closed',
                     'text': "Close this note!",
                     'html': "<p>Close this note!</p>",
@@ -231,12 +232,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '815',
             'lat': 47.123,
             'lon': 8.432,
-            'date_created': '2014-10-03 15:20:57 UTC',
+            'date_created': datetime(2014, 10, 3, 15, 20, 57),
             'date_closed': None,
             'status': 'open',
             'comments': [
                 {
-                    'date': '2014-10-03 15:20:57 UTC',
+                    'date': datetime(2014, 10, 3, 15, 20, 57),
                     'action': 'opened',
                     'text': "This is a test",
                     'html': "<p>This is a test</p>",
@@ -244,7 +245,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'metaodi'
                 },
                 {
-                    'date': '2014-10-05 16:35:13 UTC',
+                    'date': datetime(2014, 10, 5, 16, 35, 13),
                     'action': 'closed',
                     'text': "Close this note!",
                     'html': "<p>Close this note!</p>",
@@ -252,7 +253,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'user': 'metaodi'
                 },
                 {
-                    'date': '2014-10-05 16:44:56 UTC',
+                    'date': datetime(2014, 10, 5, 16, 44, 56),
                     'action': 'reopened',
                     'text': "Reopen this note!",
                     'html': "<p>Reopen this note!</p>",
@@ -281,12 +282,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             'id': '788',
             'lon': 11.96395,
             'lat': 57.70301,
-            'date_created': '2014-07-16 16:12:41 UTC',
+            'date_created': datetime(2014, 7, 16, 16, 12, 41),
             'date_closed': None,
             'status': 'open',
             'comments': [
                 {
-                    'date': '2014-07-16 16:12:41 UTC',
+                    'date': datetime(2014, 7, 16, 16, 12, 41),
                     'action': 'opened',
                     'text': "One way street:\ncomment",
                     'html': "<p>One way street:\n<br />comment</p>",

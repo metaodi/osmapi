@@ -27,8 +27,13 @@ class ApiError(Exception):
 
     def __init__(self, status, reason, payload):
         self.status = status
+        """HTTP error code"""
+
         self.reason = reason
+        """Error message"""
+
         self.payload = payload
+        """Payload of API when this error occured"""
 
     def __str__(self):
         return (
@@ -51,6 +56,37 @@ class OsmApi:
             changesetautosize=500,
             changesetautomulti=1,
             debug=False):
+        """
+        Initialized the OsmApi object.
+
+        There are two different ways to authenticate a user.
+        Either `username` and `password` are supplied directly or the path
+        to a `passwordfile` is given, where on the first line username
+        and password must be colon-separated (<user>:<pass>).
+
+        To credit the application that supplies changes to OSM, an `appid`
+        can be provided.  This is a string identifying the application.
+        If this is omitted "osmapi" is used.
+
+        It is possible to configure the URL to connect to using the `api`
+        parameter.  By default this is the production API of OpenStreetMap,
+        for testing purposes, one might prefer the official test instance at
+        http://api06.dev.openstreetmap.org/.
+
+        There are several options to control the changeset behaviour. By
+        default, a programmer has to take care to open and close a changeset
+        prior to make changes to OSM.
+        By setting `changesetauto` to `True`, osmapi automatically opens
+        changesets.
+        The `changesetautotags` parameter takes a `dict`, where each key/value
+        pair is applied as tags to the changeset.
+        The option `changesetautosize` defines the size of each
+        upload (default: 500) and `changesetautomulti` defines how many
+        uploads should be made before closing a changeset and opening a new
+        one (default: 1).
+
+        The `debug` parameter can be used to generate a more verbose output.
+        """
 
         # debug
         self._debug = debug

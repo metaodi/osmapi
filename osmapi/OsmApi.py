@@ -231,7 +231,7 @@ class OsmApi:
         result = []
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("way"):
-            data = self._DomParseRelation(data)
+            data = self._DomParseWay(data)
             result.append(data)
         return result
 

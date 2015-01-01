@@ -1250,20 +1250,10 @@ class OsmApi:
 
         All parameters are optional.
         """
-        params = {}
-        params["limit"] = limit
-        params["closed"] = closed
-        params["bbox"] = ",".join(
-            [
-                str(min_lon),
-                str(min_lat),
-                str(max_lon),
-                str(max_lat)
-            ]
+        uri = (
+            "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
+            % (min_lon, min_lat, max_lon, max_lat, limit, closed)
         )
-        uri = "/api/0.6/notes"
-        if params:
-            uri += "?" + urllib.urlencode(params)
         data = self._get(uri)
         return self.ParseNotes(data)
 

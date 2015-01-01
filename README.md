@@ -46,6 +46,10 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 
 The documentation is generated using `pdoc` and can be [viewed online](http://osmapi.divshot.io/).
 
+The build the documentation locally, you can use
+
+    pdoc --html osmapi.OsmApi # create HTML file
+
 ## Examples
 
 ### Read from OpenStreetMap

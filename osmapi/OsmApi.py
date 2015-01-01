@@ -8,7 +8,7 @@ As such it provides an easy access to the functionality of the API.
 
 * **dictionary keys** are _unicode_
 * **changeset** is _integer_
-* *version** is _integer_
+* **version** is _integer_
 * **tag** is a _dictionary_
 * **timestamp** is _unicode_
 * **user** is _unicode_

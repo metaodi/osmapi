@@ -1,5 +1,25 @@
 # -*- coding: utf-8 -*-
 
+"""
+The OsmApi module is a wrapper for the OpenStreetMap API.
+As such it provides an easy access to the functionality of the API.
+
+## Notes:
+
+* **dictionary keys** are _unicode_
+* **changeset** is _integer_
+* *version** is _integer_
+* **tag** is a _dictionary_
+* **timestamp** is _unicode_
+* **user** is _unicode_
+* **uid** is _integer_
+* node **lat** and **lon** are _floats_
+* way **nd** is list of _integers_
+* relation **member** is a _list of dictionaries_ like
+`{"role": "", "ref":123, "type": "node"}`
+
+"""
+
 from __future__ import (absolute_import, print_function, unicode_literals)
 try:
     import httplib
@@ -20,15 +40,26 @@ from osmapi import __version__
 
 
 class UsernamePasswordMissingError(Exception):
+    """
+    Error when username or password is missing for an authenticated request
+    """
     pass
 
 
 class ApiError(Exception):
+    """
+    Error class, is thrown when an API request fails
+    """
 
     def __init__(self, status, reason, payload):
         self.status = status
+        """HTTP error code"""
+
         self.reason = reason
+        """Error message"""
+
         self.payload = payload
+        """Payload of API when this error occured"""
 
     def __str__(self):
         return (
@@ -38,6 +69,10 @@ class ApiError(Exception):
 
 
 class OsmApi:
+    """
+    Main class of osmapi, instanciate this class to use osmapi
+    """
+
     def __init__(
             self,
             username=None,
@@ -51,6 +86,37 @@ class OsmApi:
             changesetautosize=500,
             changesetautomulti=1,
             debug=False):
+        """
+        Initialized the OsmApi object.
+
+        There are two different ways to authenticate a user.
+        Either `username` and `password` are supplied directly or the path
+        to a `passwordfile` is given, where on the first line username
+        and password must be colon-separated (<user>:<pass>).
+
+        To credit the application that supplies changes to OSM, an `appid`
+        can be provided.  This is a string identifying the application.
+        If this is omitted "osmapi" is used.
+
+        It is possible to configure the URL to connect to using the `api`
+        parameter.  By default this is the production API of OpenStreetMap,
+        for testing purposes, one might prefer the official test instance at
+        "api06.dev.openstreetmap.org".
+
+        There are several options to control the changeset behaviour. By
+        default, a programmer has to take care to open and close a changeset
+        prior to make changes to OSM.
+        By setting `changesetauto` to `True`, osmapi automatically opens
+        changesets.
+        The `changesetautotags` parameter takes a `dict`, where each key/value
+        pair is applied as tags to the changeset.
+        The option `changesetautosize` defines the size of each
+        upload (default: 500) and `changesetautomulti` defines how many
+        uploads should be made before closing a changeset and opening a new
+        one (default: 1).
+
+        The `debug` parameter can be used to generate a more verbose output.
+        """
 
         # debug
         self._debug = debug
@@ -112,7 +178,38 @@ class OsmApi:
 
     def Capabilities(self):
         """
-        Returns ApiCapabilities.
+        Returns the API capabilities as a dict:
+
+            #!python
+            {
+                'area': {
+                    'maximum': area in square degrees that can be queried,
+                },
+                'changesets': {
+                    'maximum_elements': number of elements per changeset,
+                },
+                'status': {
+                    'api': online|readonly|offline,
+                    'database': online|readonly|offline,
+                    'gpx': online|readonly|offline,
+                },
+                'timeout': {
+                    'seconds': timeout in seconds for API calls,
+                },
+                'tracepoints': {
+                    'per_page': maximum number of points in a GPX track,
+                },
+                'version': {
+                    'maximum': maximum version of API this server supports,
+                    'minimum': minimum version of API this server supports,
+                },
+                'waynodes': {
+                    'maximum': maximum number of nodes that a way may contain,
+                },
+            }
+
+        The capabilities can be used by a client to
+        gain insights of the server in use.
         """
         uri = "/api/capabilities"
         data = self._get(uri)
@@ -137,7 +234,24 @@ class OsmApi:
 
     def NodeGet(self, NodeId, NodeVersion=-1):
         """
-        Returns NodeData for node #NodeId.
+        Returns node with `NodeId` as a dict:
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': {},
+                'changeset': id of changeset of last change,
+                'version': version number of node,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'timestamp': timestamp of last change,
+                'visible': True|False
+            }
+
+        If `NodeVersion` is supplied, this specific version is returned,
+        otherwise the latest version is returned.
         """
         uri = "/api/0.6/node/"+str(NodeId)
         if NodeVersion != -1:
@@ -152,28 +266,104 @@ class OsmApi:
 
     def NodeCreate(self, NodeData):
         """
-        Creates a node.
-        Returns updated NodeData (without timestamp).
+        Creates a node based on the supplied `NodeData` dict:
+
+            #!python
+            {
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': {},
+            }
+
+        Returns updated `NodeData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of node,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("create", "node", NodeData)
 
     def NodeUpdate(self, NodeData):
         """
-        Updates node with NodeData.
-        Returns updated NodeData (without timestamp).
+        Updates node with the supplied `NodeData` dict:
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': {},
+                'version': version number of node,
+            }
+
+        Returns updated `NodeData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of node,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("modify", "node", NodeData)
 
     def NodeDelete(self, NodeData):
         """
-        Delete node with NodeData.
-        Returns updated NodeData (without timestamp).
+        Delete node with `NodeData`:
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': dict of tags,
+                'version': version number of node,
+            }
+
+        Returns updated `NodeData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'lat': latitude of node,
+                'lon': longitude of node,
+                'tag': dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of node,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("delete", "node", NodeData)
 
     def NodeHistory(self, NodeId):
         """
-        Returns dict(NodeVerrsion: NodeData).
+        Returns dict with version as key:
+
+            #!python
+            {
+                '1': dict of NodeData,
+                '2': dict of NodeData,
+                ...
+            }
+
+        `NodeId` is the unique identifier of a node.
         """
         uri = "/api/0.6/node/"+str(NodeId)+"/history"
         data = self._get(uri)
@@ -187,7 +377,26 @@ class OsmApi:
 
     def NodeWays(self, NodeId):
         """
-        Returns [WayData, ... ] containing node #NodeId.
+        Returns a list of dicts of `WayData` containing node `NodeId`:
+
+            #!python
+            [
+                {
+                    'id': id of Way,
+                    'nd': [] list of NodeIds in this way
+                    'tag': {} dict of tags,
+                    'changeset': id of changeset of last change,
+                    'version': version number of Way,
+                    'user': username of user that made the last change,
+                    'uid': id of user that made the last change,
+                    'visible': True|False
+                },
+                {
+                    ...
+                },
+            ]
+
+        The `NodeId` is a unique identifier for a node.
         """
         uri = "/api/0.6/node/%d/ways" % NodeId
         data = self._get(uri)
@@ -195,13 +404,41 @@ class OsmApi:
         result = []
         osm_data = data.getElementsByTagName("osm")[0]
         for data in osm_data.getElementsByTagName("way"):
-            data = self._DomParseRelation(data)
+            data = self._DomParseWay(data)
             result.append(data)
         return result
 
     def NodeRelations(self, NodeId):
         """
-        Returns [RelationData, ... ] containing node #NodeId.
+        Returns a list of dicts of `RelationData` containing node `NodeId`:
+
+            #!python
+            [
+                {
+                    'id': id of Relation,
+                    'member': [
+                        {
+                            'ref': ID of referenced element,
+                            'role': optional description of role in relation
+                            'type': node|way|relation
+                        },
+                        {
+                            ...
+                        }
+                    ]
+                    'tag': {},
+                    'changeset': id of changeset of last change,
+                    'version': version number of Way,
+                    'user': username of user that made the last change,
+                    'uid': id of user that made the last change,
+                    'visible': True|False
+                },
+                {
+                    ...
+                },
+            ]
+
+        The `NodeId` is a unique identifier for a node.
         """
         uri = "/api/0.6/node/%d/relations" % NodeId
         data = self._get(uri)
@@ -215,7 +452,18 @@ class OsmApi:
 
     def NodesGet(self, NodeIdList):
         """
-        Returns dict(NodeId: NodeData) for each node in NodeIdList
+        Returns dict with the id of the Node as a key
+        for each node in `NodeIdList`:
+
+            #!python
+            {
+                '1234': dict of NodeData,
+                '5678': dict of NodeData,
+                ...
+            }
+
+        `NodeIdList` is a list containing unique identifiers
+        for multiple nodes.
         """
         uri = "/api/0.6/nodes?nodes=" + ",".join([str(x) for x in NodeIdList])
         data = self._get(uri)
@@ -233,7 +481,23 @@ class OsmApi:
 
     def WayGet(self, WayId, WayVersion=-1):
         """
-        Returns WayData for way #WayId.
+        Returns way with `WayId` as a dict:
+
+            #!python
+            {
+                'id': id of way,
+                'tag': {} tags of this way,
+                'nd': [] list of nodes belonging to this way
+                'changeset': id of changeset of last change,
+                'version': version number of way,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'timestamp': timestamp of last change,
+                'visible': True|False
+            }
+
+        If `WayVersion` is supplied, this specific version is returned,
+        otherwise the latest version is returned.
         """
         uri = "/api/0.6/way/"+str(WayId)
         if WayVersion != -1:
@@ -248,28 +512,98 @@ class OsmApi:
 
     def WayCreate(self, WayData):
         """
-        Creates a way.
-        Returns updated WayData (without timestamp).
+        Creates a way based on the supplied `WayData` dict:
+
+            #!python
+            {
+                'nd': [] list of nodes,
+                'tag': {} dict of tags,
+            }
+
+        Returns updated `WayData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'nd': [] list of nodes,
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of way,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("create", "way", WayData)
 
     def WayUpdate(self, WayData):
         """
-        Updates way with WayData.
-        Returns updated WayData (without timestamp).
+        Updates way with the supplied `WayData` dict:
+
+            #!python
+            {
+                'id': id of way,
+                'nd': [] list of nodes,
+                'tag': {},
+                'version': version number of way,
+            }
+
+        Returns updated `WayData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'nd': [] list of nodes,
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of way,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("modify", "way", WayData)
 
     def WayDelete(self, WayData):
         """
-        Delete way with WayData.
-        Returns updated WayData (without timestamp).
+        Delete way with `WayData`:
+
+            #!python
+            {
+                'id': id of way,
+                'nd': [] list of nodes,
+                'tag': dict of tags,
+                'version': version number of way,
+            }
+
+        Returns updated `WayData` (without timestamp):
+
+            #!python
+            {
+                'id': id of node,
+                'nd': [] list of nodes,
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of way,
+                'user': username of last change,
+                'uid': id of user of last change,
+                'visible': True|False
+            }
         """
         return self._do("delete", "way", WayData)
 
     def WayHistory(self, WayId):
         """
-        Returns dict(WayVerrsion: WayData).
+        Returns dict with version as key:
+
+            #!python
+            {
+                '1': dict of WayData,
+                '2': dict of WayData,
+                ...
+            }
+
+        `WayId` is the unique identifier of a way.
         """
         uri = "/api/0.6/way/"+str(WayId)+"/history"
         data = self._get(uri)
@@ -283,7 +617,35 @@ class OsmApi:
 
     def WayRelations(self, WayId):
         """
-        Returns [RelationData, ...] containing way #WayId.
+        Returns a list of dicts of `RelationData` containing way `WayId`:
+
+            #!python
+            [
+                {
+                    'id': id of Relation,
+                    'member': [
+                        {
+                            'ref': ID of referenced element,
+                            'role': optional description of role in relation
+                            'type': node|way|relation
+                        },
+                        {
+                            ...
+                        }
+                    ]
+                    'tag': {} dict of tags,
+                    'changeset': id of changeset of last change,
+                    'version': version number of Way,
+                    'user': username of user that made the last change,
+                    'uid': id of user that made the last change,
+                    'visible': True|False
+                },
+                {
+                    ...
+                },
+            ]
+
+        The `WayId` is a unique identifier for a way.
         """
         uri = "/api/0.6/way/%d/relations" % WayId
         data = self._get(uri)
@@ -297,8 +659,18 @@ class OsmApi:
 
     def WayFull(self, WayId):
         """
-        Return full data for way WayId as list
-        of {type: node|way|relation, data: {}}.
+        Returns the full data for way `WayId` as list of dicts:
+
+            #!python
+            [
+                {
+                    'type': node|way|relation,
+                    'data': {} data dict for node|way|relation
+                },
+                { ... }
+            ]
+
+        The `WayId` is a unique identifier for a way.
         """
         uri = "/api/0.6/way/"+str(WayId)+"/full"
         data = self._get(uri)
@@ -306,7 +678,17 @@ class OsmApi:
 
     def WaysGet(self, WayIdList):
         """
-        Returns dict(WayId: WayData) for each way in WayIdList
+        Returns dict with the id of the way as a key for
+        each way in `WayIdList`:
+
+            #!python
+            {
+                '1234': dict of WayData,
+                '5678': dict of WayData,
+                ...
+            }
+
+        `WayIdList` is a list containing unique identifiers for multiple ways.
         """
         uri = "/api/0.6/ways?ways=" + ",".join([str(x) for x in WayIdList])
         data = self._get(uri)
@@ -324,7 +706,32 @@ class OsmApi:
 
     def RelationGet(self, RelationId, RelationVersion=-1):
         """
-        Returns RelationData for relation #RelationId.
+        Returns relation with `RelationId` as a dict:
+
+            #!python
+            {
+                'id': id of Relation,
+                'member': [
+                    {
+                        'ref': ID of referenced element,
+                        'role': optional description of role in relation
+                        'type': node|way|relation
+                    },
+                    {
+                        ...
+                    }
+                ]
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of Relation,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'timestamp': timestamp of last change,
+                'visible': True|False
+            }
+
+        If `RelationVersion` is supplied, this specific version is returned,
+        otherwise the latest version is returned.
         """
         uri = "/api/0.6/relation/"+str(RelationId)
         if RelationVersion != -1:
@@ -339,28 +746,125 @@ class OsmApi:
 
     def RelationCreate(self, RelationData):
         """
-        Creates a relation.
-        Returns updated RelationData (without timestamp).
+        Creates a relation based on the supplied `RelationData` dict:
+
+            #!python
+            {
+                'member': [] list of members,
+                'tag': {} dict of tags,
+            }
+
+        Returns updated `RelationData` (without timestamp):
+
+            #!python
+            {
+                'id': id of Relation,
+                'member': [
+                    {
+                        'ref': ID of referenced element,
+                        'role': optional description of role in relation
+                        'type': node|way|relation
+                    },
+                    {
+                        ...
+                    }
+                ]
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of Relation,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'visible': True|False
+            }
         """
         return self._do("create", "relation", RelationData)
 
     def RelationUpdate(self, RelationData):
         """
-        Updates relation with RelationData.
-        Returns updated RelationData (without timestamp).
+        Updates relation with the supplied `RelationData` dict:
+
+            #!python
+            {
+                'id': id of relation,
+                'member': [] list of member dicts,
+                'tag': {},
+                'version': version number of relation,
+            }
+
+        Returns updated `RelationData` (without timestamp):
+
+            #!python
+            {
+                'id': id of Relation,
+                'member': [
+                    {
+                        'ref': ID of referenced element,
+                        'role': optional description of role in relation
+                        'type': node|way|relation
+                    },
+                    {
+                        ...
+                    }
+                ]
+                'tag': {} dict of tags
+                'changeset': id of changeset of last change,
+                'version': version number of Relation,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'visible': True|False
+            }
         """
         return self._do("modify", "relation", RelationData)
 
     def RelationDelete(self, RelationData):
         """
-        Delete relation with RelationData.
-        Returns updated RelationData (without timestamp).
+        Delete relation with `RelationData` dict:
+
+            #!python
+            {
+                'id': id of relation,
+                'member': [] list of member dicts,
+                'tag': {},
+                'version': version number of relation,
+            }
+
+        Returns updated `RelationData` (without timestamp):
+
+            #!python
+            {
+                'id': id of Relation,
+                'member': [
+                    {
+                        'ref': ID of referenced element,
+                        'role': optional description of role in relation
+                        'type': node|way|relation
+                    },
+                    {
+                        ...
+                    }
+                ]
+                'tag': {} dict of tags,
+                'changeset': id of changeset of last change,
+                'version': version number of Relation,
+                'user': username of user that made the last change,
+                'uid': id of user that made the last change,
+                'visible': True|False
+            }
         """
         return self._do("delete", "relation", RelationData)
 
     def RelationHistory(self, RelationId):
         """
-        Returns dict(RelationVerrsion: RelationData).
+        Returns dict with version as key:
+
+            #!python
+            {
+                '1': dict of RelationData,
+                '2': dict of RelationData,
+                ...
+            }
+
+        `RelationId` is the unique identifier of a relation.
         """
         uri = "/api/0.6/relation/"+str(RelationId)+"/history"
         data = self._get(uri)
@@ -374,7 +878,36 @@ class OsmApi:
 
     def RelationRelations(self, RelationId):
         """
-        Returns list of RelationData containing relation #RelationId.
+        Returns a list of dicts of `RelationData`
+        containing relation `RelationId`:
+
+            #!python
+            [
+                {
+                    'id': id of Relation,
+                    'member': [
+                        {
+                            'ref': ID of referenced element,
+                            'role': optional description of role in relation
+                            'type': node|way|relation
+                        },
+                        {
+                            ...
+                        }
+                    ]
+                    'tag': {} dict of tags,
+                    'changeset': id of changeset of last change,
+                    'version': version number of Way,
+                    'user': username of user that made the last change,
+                    'uid': id of user that made the last change,
+                    'visible': True|False
+                },
+                {
+                    ...
+                },
+            ]
+
+        The `RelationId` is a unique identifier for a relation.
         """
         uri = "/api/0.6/relation/%d/relations" % RelationId
         data = self._get(uri)
@@ -388,8 +921,24 @@ class OsmApi:
 
     def RelationFullRecur(self, RelationId):
         """
-        Return full data for relation RelationId.
-        Recurisve version relation of relations.
+        Returns the full data (all levels) for relation
+        `RelationId` as list of dicts:
+
+            #!python
+            [
+                {
+                    'type': node|way|relation,
+                    'data': {} data dict for node|way|relation
+                },
+                { ... }
+            ]
+
+        The `RelationId` is a unique identifier for a way.
+
+        This function is useful for relations containing other relations.
+
+        If you don't need all levels, use `osmapi.OsmApi.RelationFull`
+        instead, which return only 2 levels.
         """
         data = []
         todo = [RelationId]
@@ -409,8 +958,21 @@ class OsmApi:
 
     def RelationFull(self, RelationId):
         """
-        Return full data for relation RelationId as
-        list of {type: node|way|relation, data: {}}.
+        Returns the full data (two levels) for relation
+        `RelationId` as list of dicts:
+
+            #!python
+            [
+                {
+                    'type': node|way|relation,
+                    'data': {} data dict for node|way|relation
+                },
+                { ... }
+            ]
+
+        The `RelationId` is a unique identifier for a way.
+
+        If you need all levels, use `osmapi.OsmApi.RelationFullRecur`.
         """
         uri = "/api/0.6/relation/"+str(RelationId)+"/full"
         data = self._get(uri)
@@ -418,8 +980,18 @@ class OsmApi:
 
     def RelationsGet(self, RelationIdList):
         """
-        Returns dict(RelationId: RelationData)
-        for each relation in RelationIdList
+        Returns dict with the id of the relation as a key
+        for each relation in `RelationIdList`:
+
+            #!python
+            {
+                '1234': dict of RelationData,
+                '5678': dict of RelationData,
+                ...
+            }
+
+        `RelationIdList` is a list containing unique identifiers
+        for multiple relations.
         """
         relation_list = ",".join([str(x) for x in RelationIdList])
         uri = "/api/0.6/relations?relations=" + relation_list
@@ -438,7 +1010,25 @@ class OsmApi:
 
     def ChangesetGet(self, ChangesetId):
         """
-        Returns ChangesetData for changeset #ChangesetId.
+        Returns changeset with `ChangesetId` as a dict:
+
+            #!python
+            {
+                'id': id of Changeset,
+                'open': True|False, wheter or not this changeset is open
+                'tag': {} dict of tags,
+                'created_at': timestamp of creation of this changeset
+                'closed_at': timestamp when changeset was closed
+                'comments_count': amount of comments
+                'max_lon': maximum longitude of changes in this changeset
+                'max_lat': maximum latitude of changes in this changeset
+                'min_lon': minimum longitude of changes in this changeset
+                'min_lat': minimum longitude of changes in this changeset
+                'user': username of user that created this changeset,
+                'uid': id of user that created this changeset,
+            }
+
+        `ChangesetId` is the unique identifier of a changeset.
         """
         data = self._get("/api/0.6/changeset/"+str(ChangesetId))
         data = xml.dom.minidom.parseString(data)
@@ -448,7 +1038,7 @@ class OsmApi:
 
     def ChangesetUpdate(self, ChangesetTags={}):
         """
-        Updates current changeset with ChangesetTags.
+        Updates current changeset with `ChangesetTags`.
         """
         if not self._CurrentChangesetId:
             raise Exception("No changeset currently opened")
@@ -462,7 +1052,11 @@ class OsmApi:
 
     def ChangesetCreate(self, ChangesetTags={}):
         """
-        Opens a changeset. Returns #ChangesetId.
+        Opens a changeset.
+
+        If `ChangesetTags` are given, this tags are applied (key/value).
+
+        Returns `ChangesetId`
         """
         if self._CurrentChangesetId:
             raise Exception("Changeset already opened")
@@ -477,7 +1071,9 @@ class OsmApi:
 
     def ChangesetClose(self):
         """
-        Closes current changeset. Returns #ChangesetId.
+        Closes current changeset.
+
+        Returns `ChangesetId`.
         """
         if not self._CurrentChangesetId:
             raise Exception("No changeset currently opened")
@@ -491,13 +1087,15 @@ class OsmApi:
 
     def ChangesetUpload(self, ChangesData):
         """
-        Upload data.
-        ChangesData is a list of dict
-        {
-            type: node|way|relation,
-            action: create|delete|modify,
-            data: {}
-        }.
+        Upload data with the `ChangesData` list of dicts:
+
+            #!python
+            {
+                type: node|way|relation,
+                action: create|delete|modify,
+                data: {}
+            }
+
         Returns list with updated ids.
         """
         data = ""
@@ -533,13 +1131,16 @@ class OsmApi:
 
     def ChangesetDownload(self, ChangesetId):
         """
-        Download data from a changeset.
-        Returns list of dict
-        {
-            type: node|way|relation,
-            action: create|delete|modify,
-            data: {}
-        }.
+        Download data from changeset `ChangesetId`.
+
+        Returns list of dict:
+
+            #!python
+            {
+                'type': node|way|relation,
+                'action': create|delete|modify,
+                'data': {}
+            }
         """
         uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
         data = self._get(uri)
@@ -558,7 +1159,17 @@ class OsmApi:
             only_open=False,
             only_closed=False):
         """
-        Returns dict(ChangsetId: ChangesetData) matching all criteria.
+        Returns a dict with the id of the changeset as key
+        matching all criteria:
+
+            #!python
+            {
+                '1234': dict of ChangesetData,
+                '5678': dict of ChangesetData,
+                ...
+            }
+
+        All parameters are optional.
         """
 
         uri = "/api/0.6/changesets"
@@ -604,10 +1215,31 @@ class OsmApi:
     # Notes                                          #
     ##################################################
 
-    def NotesGet(self, min_lon, min_lat, max_lon, max_lat,
-                 limit=100, closed=7):
+    def NotesGet(
+            self,
+            min_lon,
+            min_lat,
+            max_lon,
+            max_lat,
+            limit=100,
+            closed=7):
         """
-        Returns a list of dicts of notes in the specified bounding box.
+        Returns a list of dicts of notes in the specified bounding box:
+
+            #!python
+            [
+                {
+                    'id': integer,
+                    'action': opened|commented|closed,
+                    'status': open|closed
+                    'date_created': creation date
+                    'date_closed': closing data|None
+                    'uid': User ID|None
+                    'user': User name|None
+                    'comments': {}
+                },
+                { ... }
+            ]
 
         The limit parameter defines how many results should be returned.
 
@@ -615,6 +1247,8 @@ class OsmApi:
         to no longer be returned.
         The value 0 means only open bugs are returned,
         -1 means all bugs are returned.
+
+        All parameters are optional.
         """
         uri = (
             "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
@@ -626,16 +1260,20 @@ class OsmApi:
     def NoteGet(self, id):
         """
         Returns a note as dict:
-        {
-            id: integer,
-            action: opened|commented|closed,
-            status: open|closed
-            date_created: creation date
-            date_closed: closing data|None
-            uid: User ID|None
-            user: User name|None
-            comments: {}
-        }.
+
+            #!python
+            {
+                'id': integer,
+                'action': opened|commented|closed,
+                'status': open|closed
+                'date_created': creation date
+                'date_closed': closing data|None
+                'uid': User ID|None
+                'user': User name|None
+                'comments': {}
+            }
+
+        `id` is the unique identifier of the note.
         """
         uri = "/api/0.6/notes/%s" % (id)
         data = self._get(uri)
@@ -728,11 +1366,14 @@ class OsmApi:
     def Map(self, min_lon, min_lat, max_lon, max_lat):
         """
         Download data in bounding box.
-        Returns list of dict
-        {
-            type: node|way|relation,
-            data: {}
-        }.
+
+        Returns list of dict:
+
+            #!python
+            {
+                type: node|way|relation,
+                data: {}
+            }
         """
         uri = (
             "/api/0.6/map?bbox=%f,%f,%f,%f"
@@ -748,11 +1389,14 @@ class OsmApi:
     def ParseOsm(self, data):
         """
         Parse osm data.
-        Returns list of dict
-        {
-            type: node|way|relation,
-            data: {}
-        }.
+
+        Returns list of dict:
+
+            #!python
+            {
+                type: node|way|relation,
+                data: {}
+            }
         """
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
@@ -778,12 +1422,15 @@ class OsmApi:
     def ParseOsc(self, data):
         """
         Parse osc data.
-        Returns list of dict
-        {
-            type: node|way|relation,
-            action: create|delete|modify,
-            data: {}
-        }.
+
+        Returns list of dict:
+
+            #!python
+            {
+                type: node|way|relation,
+                action: create|delete|modify,
+                data: {}
+            }
         """
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osmChange")[0]
@@ -813,6 +1460,26 @@ class OsmApi:
         return result
 
     def ParseNotes(self, data):
+        """
+        Parse notes data.
+
+        Returns a list of dict:
+
+            #!python
+            [
+                {
+                    'id': integer,
+                    'action': opened|commented|closed,
+                    'status': open|closed
+                    'date_created': creation date
+                    'date_closed': closing data|None
+                    'uid': User ID|None
+                    'user': User name|None
+                    'comments': {}
+                },
+                { ... }
+            ]
+        """
         data = xml.dom.minidom.parseString(data)
         result = []
         osm_data = data.getElementsByTagName("osm")[0]

@@ -2,4 +2,4 @@
 # Install with a command like: pip install -r pip-requirements.txt
 pypandoc==0.7.0
 Unidecode==0.04.14
-pdoc==0.2.4
+pdoc==0.3.1

@@ -1684,6 +1684,14 @@ class OsmApi:
                 v = (v == "true")
             elif k == "ref":
                 v = int(v)
+            elif k == "comments_count":
+                v = int(v)
+            elif k == "timestamp":
+                v = self._ParseDate(v)
+            elif k == "created_at":
+                v = self._ParseDate(v)
+            elif k == "closed_at":
+                v = self._ParseDate(v)
             result[k] = v
         return result
 
@@ -1785,10 +1793,16 @@ class OsmApi:
         return result
 
     def _ParseDate(self, DateString):
+        result = DateString
         try:
-            return datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
+            result = datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
         except:
-            return None
+            try:
+                result = datetime.strptime(DateString, "%Y-%m-%dT%H:%M:%SZ")
+            except:
+                pass
+
+        return result
 
     ##################################################
     # Internal xml builder                           #

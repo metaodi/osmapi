@@ -3,6 +3,7 @@ from nose.tools import *  # noqa
 from . import osmapi_tests
 import mock
 import xmltodict
+import datetime
 try:
     import urlparse
 except:
@@ -60,8 +61,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         self.assertEquals(result, {
             'id': 123,
-            'closed_at': '2009-09-07T22:57:37Z',
-            'created_at': '2009-09-07T21:57:36Z',
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
             'max_lat': '52.4710193',
             'max_lon': '-1.4831815',
             'min_lat': '45.9667901',
@@ -491,7 +492,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                     'tag': {
                         'highway': 'traffic_signals'
                     },
-                    'timestamp': '2013-05-14T10:33:04Z',
+                    'timestamp': datetime.datetime(2013, 5, 14, 10, 33, 4),
                     'uid': 1178,
                     'user': 'tyrTester06',
                     'version': 1,
@@ -522,8 +523,8 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(len(result), 10)
 
         self.assertEquals(result[41417], {
-            'closed_at': '2014-04-29T20:25:01Z',
-            'created_at': '2014-04-29T20:25:01Z',
+            'closed_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
+            'created_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
             'id': 41417,
             'max_lat': '58.8997467',
             'max_lon': '22.7364427',

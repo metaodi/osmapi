@@ -2,6 +2,7 @@ from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
 import mock
+import datetime
 
 
 class TestOsmApiWay(osmapi_tests.TestOsmApi):
@@ -18,7 +19,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
             'id': 321,
             'changeset': 298,
             'uid': 12,
-            'timestamp': '2009-09-14T23:23:18Z',
+            'timestamp': datetime.datetime(2009, 9, 14, 23, 23, 18),
             'visible': True,
             'version': 1,
             'user': 'green525',

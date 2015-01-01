@@ -3,6 +3,7 @@ from nose.tools import *  # noqa
 from . import osmapi_tests
 from osmapi import OsmApi
 import mock
+import datetime
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
@@ -19,7 +20,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 15293,
             'uid': 605,
-            'timestamp': '2012-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2012, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -45,7 +46,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 4152,
             'uid': 605,
-            'timestamp': '2011-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2011, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -270,7 +271,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 15293,
             'uid': 605,
-            'timestamp': '2012-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2012, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -285,7 +286,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result[345], {
             'id': 345,
             'changeset': 244,
-            'timestamp': '2009-09-12T03:22:59Z',
+            'timestamp': datetime.datetime(2009, 9, 12, 3, 22, 59),
             'uid': 1,
             'visible': False,
             'version': 2,

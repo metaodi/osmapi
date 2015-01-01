@@ -4,6 +4,9 @@
 The OsmApi module is a wrapper for the OpenStreetMap API.
 As such it provides an easy access to the functionality of the API.
 
+You can find this module [on PyPI](https://pypi.python.org/pypi/osmapi)
+or [on GitHub](https://github.com/metaodi/osmapi).
+
 ## Notes:
 
 * **dictionary keys** are _unicode_

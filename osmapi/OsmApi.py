@@ -71,6 +71,14 @@ class ApiError(Exception):
         )
 
 
+class AlreadySubscribedApiError(ApiError):
+    pass
+
+
+class NotSubscribedApiError(ApiError):
+    pass
+
+
 class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
@@ -1011,7 +1019,7 @@ class OsmApi:
     # Changeset                                      #
     ##################################################
 
-    def ChangesetGet(self, ChangesetId):
+    def ChangesetGet(self, ChangesetId, include_discussion=False):
         """
         Returns changeset with `ChangesetId` as a dict:
 
@@ -1023,6 +1031,7 @@ class OsmApi:
                 'created_at': timestamp of creation of this changeset
                 'closed_at': timestamp when changeset was closed
                 'comments_count': amount of comments
+                'discussion': [] list of comment dict (-> `include_discussion`)
                 'max_lon': maximum longitude of changes in this changeset
                 'max_lat': maximum latitude of changes in this changeset
                 'min_lon': minimum longitude of changes in this changeset
@@ -1032,8 +1041,14 @@ class OsmApi:
             }
 
         `ChangesetId` is the unique identifier of a changeset.
+
+        If `include_discussion` is set to `True` the changeset discussion
+        will be available in the result.
         """
-        data = self._get("/api/0.6/changeset/"+str(ChangesetId))
+        path = "/api/0.6/changeset/"+str(ChangesetId)
+        if (include_discussion):
+            path = path + "?include_discussion=true"
+        data = self._get(path)
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
         data = data.getElementsByTagName("changeset")[0]
@@ -1213,6 +1228,119 @@ class OsmApi:
             tmpCS = self._DomParseChangeset(curChangeset)
             result[tmpCS["id"]] = tmpCS
         return result
+
+    def ChangesetComment(self, ChangesetId, comment):
+        """
+        Adds a comment to the changeset `ChangesetId`
+
+        `comment` should be a string.
+
+        Returns the updated `ChangesetData` dict:
+
+            #!python
+            {
+                'id': id of Changeset,
+                'open': True|False, wheter or not this changeset is open
+                'tag': {} dict of tags,
+                'created_at': timestamp of creation of this changeset
+                'closed_at': timestamp when changeset was closed
+                'comments_count': amount of comments
+                'max_lon': maximum longitude of changes in this changeset
+                'max_lat': maximum latitude of changes in this changeset
+                'min_lon': minimum longitude of changes in this changeset
+                'min_lat': minimum longitude of changes in this changeset
+                'user': username of user that created this changeset,
+                'uid': id of user that created this changeset,
+            }
+
+        """
+        params = urllib.urlencode({'text': comment})
+        data = self._post(
+            "/api/0.6/changeset/"+str(ChangesetId)+"/comment",
+            params
+        )
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osm")[0]
+        data = data.getElementsByTagName("changeset")[0]
+        return self._DomParseChangeset(data)
+
+    def ChangesetSubscribe(self, ChangesetId):
+        """
+        Subcribe to the changeset discussion of changeset `ChangesetId`.
+
+        The user will be informed about new comments (i.e. receive an email).
+
+        Returns the updated `ChangesetData` dict:
+
+            #!python
+            {
+                'id': id of Changeset,
+                'open': True|False, wheter or not this changeset is open
+                'tag': {} dict of tags,
+                'created_at': timestamp of creation of this changeset
+                'closed_at': timestamp when changeset was closed
+                'comments_count': amount of comments
+                'max_lon': maximum longitude of changes in this changeset
+                'max_lat': maximum latitude of changes in this changeset
+                'min_lon': minimum longitude of changes in this changeset
+                'min_lat': minimum longitude of changes in this changeset
+                'user': username of user that created this changeset,
+                'uid': id of user that created this changeset,
+            }
+        """
+        try:
+            data = self._post(
+                "/api/0.6/changeset/"+str(ChangesetId)+"/subscribe",
+                None
+            )
+        except ApiError as e:
+            if e.status == 409:
+                raise AlreadySubscribedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osm")[0]
+        data = data.getElementsByTagName("changeset")[0]
+        return self._DomParseChangeset(data)
+
+    def ChangesetUnsubscribe(self, ChangesetId):
+        """
+        Subcribe to the changeset discussion of changeset `ChangesetId`.
+
+        The user will be informed about new comments (i.e. receive an email).
+
+        Returns the updated `ChangesetData` dict:
+
+            #!python
+            {
+                'id': id of Changeset,
+                'open': True|False, wheter or not this changeset is open
+                'tag': {} dict of tags,
+                'created_at': timestamp of creation of this changeset
+                'closed_at': timestamp when changeset was closed
+                'comments_count': amount of comments
+                'max_lon': maximum longitude of changes in this changeset
+                'max_lat': maximum latitude of changes in this changeset
+                'min_lon': minimum longitude of changes in this changeset
+                'min_lat': minimum longitude of changes in this changeset
+                'user': username of user that created this changeset,
+                'uid': id of user that created this changeset,
+            }
+        """
+        try:
+            data = self._post(
+                "/api/0.6/changeset/"+str(ChangesetId)+"/unsubscribe",
+                None
+            )
+        except ApiError as e:
+            if e.status == 404:
+                raise NotSubscribedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osm")[0]
+        data = data.getElementsByTagName("changeset")[0]
+        return self._DomParseChangeset(data)
 
     ##################################################
     # Notes                                          #
@@ -1692,6 +1820,8 @@ class OsmApi:
                 v = self._ParseDate(v)
             elif k == "closed_at":
                 v = self._ParseDate(v)
+            elif k == "date":
+                v = self._ParseDate(v)
             result[k] = v
         return result
 
@@ -1713,6 +1843,21 @@ class OsmApi:
         result = []
         for t in DomElement.getElementsByTagName("nd"):
             result.append(int(int(t.attributes["ref"].value)))
+        return result
+
+    def _DomGetDiscussion(self, DomElement):
+        """
+        Returns the dictionnary of comments of a DomElement.
+        """
+        result = []
+        try:
+            discussion = DomElement.getElementsByTagName("discussion")[0]
+            for t in discussion.getElementsByTagName("comment"):
+                comment = self._DomGetAttributes(t)
+                comment['text'] = self._GetXmlValue(t, "text")
+                result.append(comment)
+        except IndexError:
+            pass
         return result
 
     def _DomGetComments(self, DomElement):
@@ -1772,6 +1917,8 @@ class OsmApi:
         """
         result = self._DomGetAttributes(DomElement)
         result["tag"] = self._DomGetTag(DomElement)
+        result["discussion"] = self._DomGetDiscussion(DomElement)
+
         return result
 
     def _DomParseNote(self, DomElement):

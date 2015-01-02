@@ -7,6 +7,10 @@ As such it provides an easy access to the functionality of the API.
 You can find this module [on PyPI](https://pypi.python.org/pypi/osmapi)
 or [on GitHub](https://github.com/metaodi/osmapi).
 
+Find all information about changes of the different versions of this module
+[in the CHANGELOG](https://github.com/metaodi/osmapi/blob/master/CHANGELOG.md).
+
+
 ## Notes:
 
 * **dictionary keys** are _unicode_

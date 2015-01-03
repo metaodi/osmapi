@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 0.5.0 - 2015-01-03
 ### Changed
 - BC-break: all dates are now parsed as datetime objects
 

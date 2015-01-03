@@ -53,6 +53,29 @@ class UsernamePasswordMissingError(Exception):
     pass
 
 
+class NoChangesetOpenError(Exception):
+    """
+    Error when an operation requires an open changeset, but currently
+    no changeset _is_ open
+    """
+    pass
+
+
+class ChangesetAlreadyOpenError(Exception):
+    """
+    Error when a user tries to open a changeset when there is already
+    an open changeset
+    """
+    pass
+
+
+class OsmTypeAlreadyExists(Exception):
+    """
+    Error when a user tries to create an object that already exsits
+    """
+    pass
+
+
 class ApiError(Exception):
     """
     Error class, is thrown when an API request fails
@@ -76,10 +99,18 @@ class ApiError(Exception):
 
 
 class AlreadySubscribedApiError(ApiError):
+    """
+    Error when a user tries to subscribe to a changeset
+    that she is already subscribed to
+    """
     pass
 
 
 class NotSubscribedApiError(ApiError):
+    """
+    Error when user tries to unsubscribe from a changeset
+    that he is not subscribed to
+    """
     pass
 
 
@@ -1063,7 +1094,7 @@ class OsmApi:
         Updates current changeset with `ChangesetTags`.
         """
         if not self._CurrentChangesetId:
-            raise Exception("No changeset currently opened")
+            raise NoChangesetOpenError("No changeset currently opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         self._put(
@@ -1081,7 +1112,7 @@ class OsmApi:
         Returns `ChangesetId`
         """
         if self._CurrentChangesetId:
-            raise Exception("Changeset already opened")
+            raise ChangesetAlreadyOpenError("Changeset already opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         result = self._put(
@@ -1098,7 +1129,7 @@ class OsmApi:
         Returns `ChangesetId`.
         """
         if not self._CurrentChangesetId:
-            raise Exception("No changeset currently opened")
+            raise NoChangesetOpenError("No changeset currently opened")
         self._put(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close",
             ""
@@ -1642,7 +1673,7 @@ class OsmApi:
 
     def _do_manu(self, action, OsmType, OsmData):
         if not self._CurrentChangesetId:
-            raise Exception(
+            raise NoChangesetOpenError(
                 "You need to open a changeset before uploading data"
             )
         if "timestamp" in OsmData:
@@ -1650,7 +1681,7 @@ class OsmApi:
         OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get("id", -1) > 0:
-                raise Exception("This "+OsmType+" already exists")
+                raise OsmTypeAlreadyExists("This "+OsmType+" already exists")
             result = self._put(
                 "/api/0.6/" + OsmType + "/create",
                 self._XmlBuild(OsmType, OsmData)

@@ -1,7 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
-from osmapi import OsmApi
+from osmapi import OsmApi, UsernamePasswordMissingError
 import mock
 import datetime
 
@@ -56,21 +56,6 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
                 'amenity': 'school',
             },
         })
-
-    def test_NodeCreate_wo_changeset(self):
-        test_node = {
-            'lat': 47.287,
-            'lon': 8.765,
-            'tag': {
-                'amenity': 'place_of_worship',
-                'religion': 'pastafarian'
-            }
-        }
-
-        with self.assertRaisesRegexp(
-                Exception,
-                'need to open a changeset'):
-            self.api.NodeCreate(test_node)
 
     def test_NodeCreate_changesetauto(self):
         # setup mock
@@ -127,6 +112,43 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['lat'], test_node['lat'])
         self.assertEquals(result['lon'], test_node['lon'])
         self.assertEquals(result['tag'], test_node['tag'])
+
+    def test_NodeCreate_wo_changeset(self):
+        test_node = {
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                Exception,
+                'need to open a changeset'):
+            self.api.NodeCreate(test_node)
+
+    def test_NodeCreate_wo_auth(self):
+        self._conn_mock()
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+        test_node = {
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                UsernamePasswordMissingError,
+                'Username/Password missing'):
+            self.api.NodeCreate(test_node)
 
     def test_NodeUpdate(self):
         self._conn_mock(auth=True)

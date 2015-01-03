@@ -2,6 +2,7 @@ from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
 import mock
+import datetime
 
 
 def debug(result):
@@ -12,11 +13,11 @@ def debug(result):
 
 class TestOsmApiRelation(osmapi_tests.TestOsmApi):
     def test_RelationGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationGet(321)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/relation/321')
 
@@ -24,7 +25,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
             'id': 321,
             'changeset': 434,
             'uid': 12,
-            'timestamp': '2009-09-15T22:24:25Z',
+            'timestamp': datetime.datetime(2009, 9, 15, 22, 24, 25),
             'visible': True,
             'version': 1,
             'user': 'green525',
@@ -83,11 +84,11 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         })
 
     def test_RelationGet_with_version(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationGet(765, 2)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/relation/765/2')
 
@@ -97,7 +98,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag']['source'], 'test')
 
     def test_RelationCreate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -130,7 +131,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationCreate(test_relation)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/relation/create')
 
@@ -140,7 +141,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_relation['tag'])
 
     def test_RelationUpdate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -169,7 +170,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationUpdate(test_relation)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/relation/8989')
 
@@ -179,7 +180,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_relation['tag'])
 
     def test_RelationDelete(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -198,7 +199,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationDelete(test_relation)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/relation/8989')
 
@@ -206,11 +207,11 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['version'], 43)
 
     def test_RelationHistory(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationHistory(2470397)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/relation/2470397/history')
 
@@ -226,11 +227,11 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result[2]['version'], 2)
 
     def test_RelationRelations(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationRelations(1532552)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/relation/1532552/relations')
 
@@ -245,11 +246,11 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         )
 
     def test_RelationFull(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationFull(2470397)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/relation/2470397/full')
 
@@ -262,11 +263,11 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result[10]['type'], 'relation')
 
     def test_RelationsGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.RelationsGet([1532552, 1532553])
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(
             args[1],

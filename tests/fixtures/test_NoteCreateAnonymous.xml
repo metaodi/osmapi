@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+<note lon="25.8826183" lat="58.3368222">
+  <id>842</id>
+  <url>http://api06.dev.openstreetmap.org/api/0.6/notes/842</url>
+  <comment_url>http://api06.dev.openstreetmap.org/api/0.6/notes/842/comment</comment_url>
+  <close_url>http://api06.dev.openstreetmap.org/api/0.6/notes/842/close</close_url>
+  <date_created>2015-01-03 10:49:39 UTC</date_created>
+  <status>open</status>
+  <comments>
+    <comment>
+      <date>2015-01-03 10:49:39 UTC</date>
+      <action>opened</action>
+      <text>test 123</text>
+      <html>&lt;p&gt;test 123&lt;/p&gt;</html>
+    </comment>
+  </comments>
+</note>
+</osm>

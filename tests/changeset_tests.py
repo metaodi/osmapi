@@ -1,8 +1,10 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+from osmapi import AlreadySubscribedApiError, NotSubscribedApiError
 import mock
 import xmltodict
+import datetime
 try:
     import urlparse
 except:
@@ -49,19 +51,19 @@ def debug(result):
 
 class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
     def test_ChangesetGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.ChangesetGet(123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/changeset/123')
-        self.assertFalse(args[2])
 
         self.assertEquals(result, {
             'id': 123,
-            'closed_at': '2009-09-07T22:57:37Z',
-            'created_at': '2009-09-07T21:57:36Z',
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
             'max_lat': '52.4710193',
             'max_lon': '-1.4831815',
             'min_lat': '45.9667901',
@@ -76,7 +78,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         })
 
     def test_ChangesetUpdate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -90,18 +92,18 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/changeset/4444')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osm version="0.6" generator="osmapi/0.5.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
-                b'    <tag k="created_by" v="osmapi/0.4.2"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.5.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -109,7 +111,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(result, 4444)
 
     def test_ChangesetUpdate_with_created_by(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -124,15 +126,15 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/changeset/4444')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osm version="0.6" generator="osmapi/0.5.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
                 b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -143,7 +145,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(result, 4444)
 
     def test_ChangesetUpdate_wo_changeset(self):
-        self._http_mock()
+        self._conn_mock()
 
         with self.assertRaisesRegexp(
                 Exception,
@@ -155,7 +157,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             )
 
     def test_ChangesetCreate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         result = self.api.ChangesetCreate(
             {
@@ -163,18 +165,18 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/changeset/create')
-        self.assertTrue(args[2])
+        sendargs, kwargs = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osm version="0.6" generator="osmapi/0.5.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
-                b'    <tag k="created_by" v="osmapi/0.4.2"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.5.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -182,7 +184,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(result, 4321)
 
     def test_ChangesetCreate_with_created_by(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         result = self.api.ChangesetCreate(
             {
@@ -191,15 +193,15 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/changeset/create')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osm version="0.6" generator="osmapi/0.5.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
                 b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -210,7 +212,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(result, 1234)
 
     def test_ChangesetCreate_with_open_changeset(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         self.api.ChangesetCreate(
             {
@@ -228,7 +230,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             )
 
     def test_ChangesetClose(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -238,13 +240,12 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         self.api.ChangesetClose()
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/changeset/4444/close')
-        self.assertTrue(args[2])
 
     def test_ChangesetClose_with_no_changeset(self):
-        self._http_mock()
+        self._conn_mock()
 
         with self.assertRaisesRegexp(
                 Exception,
@@ -252,7 +253,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             self.api.ChangesetClose()
 
     def test_ChangesetUpload_create_node(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -277,15 +278,15 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'POST')
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.5.0">\n'
                 b'<create>\n'
                 b'  <node lat="47.123" lon="8.555" visible="true" '
                 b'changeset="4444">\n'
@@ -308,7 +309,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(result[0]['data']['version'], 1)
 
     def test_ChangesetUpload_modify_way(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -351,15 +352,15 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'POST')
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.5.0">\n'
                 b'<modify>\n'
                 b'  <way id="4294967296" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -397,7 +398,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(data['version'], 3)
 
     def test_ChangesetUpload_delete_relation(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -435,15 +436,15 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'POST')
         self.assertEquals(args[1], '/api/0.6/changeset/4444/upload')
-        self.assertTrue(args[2])
+        sendargs, _ = self.api._conn.send.call_args
         self.assertEquals(
-            xmltosorteddict(args[3]),
+            xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.4.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.5.0">\n'
                 b'<delete>\n'
                 b'  <relation id="676" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -468,14 +469,13 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertNotIn('version', data)
 
     def test_ChangesetDownload(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.ChangesetDownload(23123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, _ = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/changeset/23123/download')
-        self.assertFalse(args[2])
 
         self.assertEquals(len(result), 16)
         self.assertEquals(
@@ -491,7 +491,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                     'tag': {
                         'highway': 'traffic_signals'
                     },
-                    'timestamp': '2013-05-14T10:33:04Z',
+                    'timestamp': datetime.datetime(2013, 5, 14, 10, 33, 4),
                     'uid': 1178,
                     'user': 'tyrTester06',
                     'version': 1,
@@ -501,14 +501,14 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         )
 
     def test_ChangesetsGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.ChangesetsGet(
             only_closed=True,
             username='metaodi'
         )
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(
             dict(urlparse.parse_qsl(urlparse.urlparse(args[1])[4])),
@@ -517,14 +517,14 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                 'closed': '1'
             }
         )
-        self.assertFalse(args[2])
 
         self.assertEquals(len(result), 10)
 
         self.assertEquals(result[41417], {
-            'closed_at': '2014-04-29T20:25:01Z',
-            'created_at': '2014-04-29T20:25:01Z',
+            'closed_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
+            'created_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
             'id': 41417,
+            'discussion': [],
             'max_lat': '58.8997467',
             'max_lon': '22.7364427',
             'min_lat': '58.8501594',
@@ -538,3 +538,163 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             'uid': 1841,
             'user': 'metaodi'
         })
+
+    def test_ChangesetGetWithComment(self):
+        self._conn_mock()
+
+        result = self.api.ChangesetGet(52924, include_discussion=True)
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/changeset/52924?include_discussion=true'
+        )
+
+        self.assertEquals(result, {
+            'id': 52924,
+            'closed_at': datetime.datetime(2015, 1, 1, 14, 54, 2),
+            'created_at': datetime.datetime(2015, 1, 1, 14, 54, 1),
+            'comments_count': 3,
+            'max_lat': '58.3369242',
+            'max_lon': '25.8829107',
+            'min_lat': '58.336813',
+            'min_lon': '25.8823273',
+            'discussion': [
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 18, 56, 48),
+                    'text': 'test',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 18, 58, 3),
+                    'text': 'another comment',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 19, 16, 5),
+                    'text': 'hello',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+            ],
+            'open': False,
+            'user': 'metaodi',
+            'uid': 1841,
+            'tag': {
+                'comment': 'My test',
+                'created_by': 'osmapi/0.4.1',
+            },
+        })
+
+    def test_ChangesetComment(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetComment(
+            123,
+            comment="test comment"
+        )
+
+        args, _ = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/comment')
+        sendargs, _ = self.api._conn.send.call_args
+        self.assertEquals(
+            sendargs[0],
+            "text=test+comment"
+        )
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetSubscribe(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetSubscribe(123)
+
+        args, _ = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/subscribe')
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetSubscribeWhenAlreadySubscribed(self):
+        self._conn_mock(auth=True, status=409)
+
+        with self.assertRaises(AlreadySubscribedApiError) as cm:
+            self.api.ChangesetSubscribe(52924)
+
+        self.assertEquals(cm.exception.status, 409)
+        self.assertEquals(
+            cm.exception.payload,
+            "You are already subscribed to changeset 52924."
+        )
+
+    def test_ChangesetUnsubscribe(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetUnsubscribe(123)
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/unsubscribe')
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetUnsubscribeWhenNotSubscribed(self):
+        self._conn_mock(auth=True, status=404)
+
+        with self.assertRaises(NotSubscribedApiError) as cm:
+            self.api.ChangesetUnsubscribe(52924)
+
+        self.assertEquals(cm.exception.status, 404)
+        self.assertEquals(
+            cm.exception.payload,
+            "You are not subscribed to changeset 52924."
+        )

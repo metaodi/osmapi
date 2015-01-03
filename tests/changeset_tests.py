@@ -1,6 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+from osmapi import AlreadySubscribedApiError, NotSubscribedApiError
 import mock
 import xmltodict
 import datetime
@@ -62,6 +63,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             'id': 123,
             'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
             'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
             'max_lat': '52.4710193',
             'max_lon': '-1.4831815',
             'min_lat': '45.9667901',
@@ -522,6 +524,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             'closed_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
             'created_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
             'id': 41417,
+            'discussion': [],
             'max_lat': '58.8997467',
             'max_lon': '22.7364427',
             'min_lat': '58.8501594',
@@ -535,3 +538,163 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             'uid': 1841,
             'user': 'metaodi'
         })
+
+    def test_ChangesetGetWithComment(self):
+        self._conn_mock()
+
+        result = self.api.ChangesetGet(52924, include_discussion=True)
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/changeset/52924?include_discussion=true'
+        )
+
+        self.assertEquals(result, {
+            'id': 52924,
+            'closed_at': datetime.datetime(2015, 1, 1, 14, 54, 2),
+            'created_at': datetime.datetime(2015, 1, 1, 14, 54, 1),
+            'comments_count': 3,
+            'max_lat': '58.3369242',
+            'max_lon': '25.8829107',
+            'min_lat': '58.336813',
+            'min_lon': '25.8823273',
+            'discussion': [
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 18, 56, 48),
+                    'text': 'test',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 18, 58, 3),
+                    'text': 'another comment',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+                {
+                    'date':  datetime.datetime(2015, 1, 1, 19, 16, 5),
+                    'text': 'hello',
+                    'uid': 1841,
+                    'user': 'metaodi',
+                },
+            ],
+            'open': False,
+            'user': 'metaodi',
+            'uid': 1841,
+            'tag': {
+                'comment': 'My test',
+                'created_by': 'osmapi/0.4.1',
+            },
+        })
+
+    def test_ChangesetComment(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetComment(
+            123,
+            comment="test comment"
+        )
+
+        args, _ = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/comment')
+        sendargs, _ = self.api._conn.send.call_args
+        self.assertEquals(
+            sendargs[0],
+            "text=test+comment"
+        )
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetSubscribe(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetSubscribe(123)
+
+        args, _ = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/subscribe')
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetSubscribeWhenAlreadySubscribed(self):
+        self._conn_mock(auth=True, status=409)
+
+        with self.assertRaises(AlreadySubscribedApiError) as cm:
+            self.api.ChangesetSubscribe(52924)
+
+        self.assertEquals(cm.exception.status, 409)
+        self.assertEquals(
+            cm.exception.payload,
+            "You are already subscribed to changeset 52924."
+        )
+
+    def test_ChangesetUnsubscribe(self):
+        self._conn_mock(auth=True)
+
+        result = self.api.ChangesetUnsubscribe(123)
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(args[1], '/api/0.6/changeset/123/unsubscribe')
+        self.assertEquals(result, {
+            'id': 123,
+            'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
+            'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
+            'discussion': [],
+            'max_lat': '52.4710193',
+            'max_lon': '-1.4831815',
+            'min_lat': '45.9667901',
+            'min_lon': '-1.4998534',
+            'open': False,
+            'user': 'randomjunk',
+            'uid': 3,
+            'tag': {
+                'comment': 'correct node bug',
+                'created_by': 'Potlatch 1.2a',
+            },
+        })
+
+    def test_ChangesetUnsubscribeWhenNotSubscribed(self):
+        self._conn_mock(auth=True, status=404)
+
+        with self.assertRaises(NotSubscribedApiError) as cm:
+            self.api.ChangesetUnsubscribe(52924)
+
+        self.assertEquals(cm.exception.status, 404)
+        self.assertEquals(
+            cm.exception.payload,
+            "You are not subscribed to changeset 52924."
+        )

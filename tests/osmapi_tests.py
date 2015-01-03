@@ -24,10 +24,8 @@ class TestOsmApi(unittest.TestCase):
             api="api06.dev.openstreetmap.org"
         )
         self.maxDiff = None
-
-    def _http_mock(self, filenames=None):
-        self.api._http_request = mock.Mock()
-        self.api._http_request.side_effect = self._return_values(filenames)
+        print(self._testMethodName)
+        print(self.api)
 
     def _conn_mock(self, auth=False, filenames=None, status=200, reason=None):
         if auth:

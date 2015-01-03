@@ -8,11 +8,11 @@ import datetime
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
     def test_NodeGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeGet(123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123')
 
@@ -34,11 +34,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         })
 
     def test_NodeGet_with_version(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeGet(123, NodeVersion=2)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123/2')
 
@@ -78,7 +78,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
-        self._http_mock(filenames=[
+        self._conn_mock(auth=True, filenames=[
             'test_NodeCreate_changesetauto.xml',
             'test_ChangesetUpload_create_node.xml',
             'test_ChangesetClose.xml',
@@ -96,7 +96,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertIsNone(self.api.NodeCreate(test_node))
 
     def test_NodeCreate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -119,7 +119,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeCreate(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/node/create')
 
@@ -129,7 +129,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_node['tag'])
 
     def test_NodeUpdate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -153,7 +153,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeUpdate(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/node/7676')
 
@@ -164,7 +164,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_node['tag'])
 
     def test_NodeDelete(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -183,18 +183,18 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeDelete(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/node/7676')
         self.assertEquals(result['id'], 7676)
         self.assertEquals(result['version'], 4)
 
     def test_NodeHistory(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeHistory(123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123/history')
 
@@ -211,11 +211,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodeWays(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeWays(234)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/234/ways')
 
@@ -231,11 +231,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodeRelations(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeRelations(4295668179)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/4295668179/relations')
 
@@ -258,11 +258,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodesGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodesGet([123, 345])
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/nodes?nodes=123,345')
 

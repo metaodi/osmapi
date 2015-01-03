@@ -2,15 +2,16 @@ from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
 import mock
+import datetime
 
 
 class TestOsmApiWay(osmapi_tests.TestOsmApi):
     def test_WayGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayGet(321)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/321')
 
@@ -18,7 +19,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
             'id': 321,
             'changeset': 298,
             'uid': 12,
-            'timestamp': '2009-09-14T23:23:18Z',
+            'timestamp': datetime.datetime(2009, 9, 14, 23, 23, 18),
             'visible': True,
             'version': 1,
             'user': 'green525',
@@ -48,11 +49,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         })
 
     def test_WayGet_with_version(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayGet(4294967296, 2)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/4294967296/2')
 
@@ -61,18 +62,18 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['user'], 'metaodi')
 
     def test_WayGet_nodata(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayGet(321)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/321')
 
         self.assertEquals(result, '')
 
     def test_WayCreate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -95,7 +96,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayCreate(test_way)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/way/create')
 
@@ -104,7 +105,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_way['tag'])
 
     def test_WayUpdate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -128,7 +129,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayUpdate(test_way)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/way/876')
 
@@ -138,7 +139,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_way['tag'])
 
     def test_WayDelete(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -157,18 +158,18 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayDelete(test_way)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/way/876')
         self.assertEquals(result['id'], 876)
         self.assertEquals(result['version'], 8)
 
     def test_WayHistory(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayHistory(4294967296)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/4294967296/history')
 
@@ -183,11 +184,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         )
 
     def test_WayRelations(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayRelations(4295032193)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/4295032193/relations')
 
@@ -210,11 +211,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         )
 
     def test_WayFull(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WayFull(321)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/way/321/full')
 
@@ -227,11 +228,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result[16]['type'], 'way')
 
     def test_WaysGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.WaysGet([456, 678])
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/ways?ways=456,678')
 

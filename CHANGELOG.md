@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- BC-break: all dates are now parsed as datetime objects
+
+### Added
+- Implementation for changeset discussions (ChangesetComment, ChangesetSubscribe, ChangesetUnsubscribe)
+- When (un)subscribing to a changeset, there are two special errors `AlreadySubscribedApiError` and `NotSubscribedApiError` to check for
+- The ChangesetGet method got a new parameter `include_discussion` to determine wheter or not changeset discussion should be in the response
 
 ## 0.4.2 - 2015-01-01
 ### Fixed

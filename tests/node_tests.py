@@ -1,17 +1,18 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
-from osmapi import OsmApi
+from osmapi import OsmApi, UsernamePasswordMissingError
 import mock
+import datetime
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
     def test_NodeGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeGet(123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123')
 
@@ -19,7 +20,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 15293,
             'uid': 605,
-            'timestamp': '2012-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2012, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -33,11 +34,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         })
 
     def test_NodeGet_with_version(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeGet(123, NodeVersion=2)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123/2')
 
@@ -45,7 +46,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 4152,
             'uid': 605,
-            'timestamp': '2011-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2011, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -56,28 +57,13 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             },
         })
 
-    def test_NodeCreate_wo_changeset(self):
-        test_node = {
-            'lat': 47.287,
-            'lon': 8.765,
-            'tag': {
-                'amenity': 'place_of_worship',
-                'religion': 'pastafarian'
-            }
-        }
-
-        with self.assertRaisesRegexp(
-                Exception,
-                'need to open a changeset'):
-            self.api.NodeCreate(test_node)
-
     def test_NodeCreate_changesetauto(self):
         # setup mock
         self.api = OsmApi(
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
-        self._http_mock(filenames=[
+        self._conn_mock(auth=True, filenames=[
             'test_NodeCreate_changesetauto.xml',
             'test_ChangesetUpload_create_node.xml',
             'test_ChangesetClose.xml',
@@ -95,7 +81,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertIsNone(self.api.NodeCreate(test_node))
 
     def test_NodeCreate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -118,7 +104,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeCreate(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/node/create')
 
@@ -127,8 +113,45 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['lon'], test_node['lon'])
         self.assertEquals(result['tag'], test_node['tag'])
 
+    def test_NodeCreate_wo_changeset(self):
+        test_node = {
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                Exception,
+                'need to open a changeset'):
+            self.api.NodeCreate(test_node)
+
+    def test_NodeCreate_wo_auth(self):
+        self._conn_mock()
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+        test_node = {
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                UsernamePasswordMissingError,
+                'Username/Password missing'):
+            self.api.NodeCreate(test_node)
+
     def test_NodeUpdate(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -152,7 +175,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeUpdate(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'PUT')
         self.assertEquals(args[1], '/api/0.6/node/7676')
 
@@ -163,7 +186,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_node['tag'])
 
     def test_NodeDelete(self):
-        self._http_mock()
+        self._conn_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -182,18 +205,18 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeDelete(test_node)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'DELETE')
         self.assertEquals(args[1], '/api/0.6/node/7676')
         self.assertEquals(result['id'], 7676)
         self.assertEquals(result['version'], 4)
 
     def test_NodeHistory(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeHistory(123)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/123/history')
 
@@ -210,11 +233,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodeWays(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeWays(234)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/234/ways')
 
@@ -230,11 +253,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodeRelations(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodeRelations(4295668179)
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/node/4295668179/relations')
 
@@ -257,11 +280,11 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         )
 
     def test_NodesGet(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.NodesGet([123, 345])
 
-        args, kwargs = self.api._http_request.call_args
+        args, kwargs = self.api._conn.putrequest.call_args
         self.assertEquals(args[0], 'GET')
         self.assertEquals(args[1], '/api/0.6/nodes?nodes=123,345')
 
@@ -270,7 +293,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             'id': 123,
             'changeset': 15293,
             'uid': 605,
-            'timestamp': '2012-04-18T11:14:26Z',
+            'timestamp': datetime.datetime(2012, 4, 18, 11, 14, 26),
             'lat': 51.8753146,
             'lon': -1.4857118,
             'visible': True,
@@ -285,7 +308,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result[345], {
             'id': 345,
             'changeset': 244,
-            'timestamp': '2009-09-12T03:22:59Z',
+            'timestamp': datetime.datetime(2009, 9, 12, 3, 22, 59),
             'uid': 1,
             'visible': False,
             'version': 2,

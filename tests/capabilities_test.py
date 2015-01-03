@@ -5,7 +5,7 @@ from . import osmapi_tests
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):
     def test_Capabilities(self):
-        self._http_mock()
+        self._conn_mock()
 
         result = self.api.Capabilities()
         assert_equals(result, {

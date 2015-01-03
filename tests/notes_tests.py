@@ -138,6 +138,44 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             ]
         })
 
+    def test_NoteCreateAnonymous(self):
+        self._conn_mock()
+
+        note = {
+            'lat': 47.123,
+            'lon': 8.432,
+            'text': 'test 123'
+        }
+        result = self.api.NoteCreate(note)
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+
+        urlParts = urlparse.urlparse(args[1])
+        params = urlparse.parse_qs(urlParts.query)
+        self.assertEquals(params['lat'][0], '47.123')
+        self.assertEquals(params['lon'][0], '8.432')
+        self.assertEquals(params['text'][0], 'test 123')
+
+        self.assertEquals(result, {
+            'id': '842',
+            'lat': 58.3368222,
+            'lon': 25.8826183,
+            'date_created': datetime(2015, 1, 3, 10, 49, 39),
+            'date_closed': None,
+            'status': 'open',
+            'comments': [
+                {
+                    'date': datetime(2015, 1, 3, 10, 49, 39),
+                    'action': 'opened',
+                    'text': "test 123",
+                    'html': "<p>test 123</p>",
+                    'uid': None,
+                    'user': None,
+                }
+            ]
+        })
+
     def test_NoteComment(self):
         self._conn_mock(auth=True)
 
@@ -173,6 +211,45 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                     'html': "<p>This is a comment</p>",
                     'uid': '1841',
                     'user': 'metaodi'
+                }
+            ]
+        })
+
+    def test_NoteCommentAnonymous(self):
+        self._conn_mock()
+
+        result = self.api.NoteComment(842, 'blubb')
+
+        args, kwargs = self.api._conn.putrequest.call_args
+        self.assertEquals(args[0], 'POST')
+        self.assertEquals(
+            args[1],
+            '/api/0.6/notes/842/comment?text=blubb'
+        )
+
+        self.assertEquals(result, {
+            'id': '842',
+            'lat': 58.3368222,
+            'lon': 25.8826183,
+            'date_created': datetime(2015, 1, 3, 10, 49, 39),
+            'date_closed': None,
+            'status': 'open',
+            'comments': [
+                {
+                    'date': datetime(2015, 1, 3, 10, 49, 39),
+                    'action': 'opened',
+                    'text': "test 123",
+                    'html': "<p>test 123</p>",
+                    'uid': None,
+                    'user': None,
+                },
+                {
+                    'date': datetime(2015, 1, 3, 11, 6, 0),
+                    'action': 'commented',
+                    'text': "blubb",
+                    'html': "<p>blubb</p>",
+                    'uid': None,
+                    'user': None,
                 }
             ]
         })

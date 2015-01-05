@@ -3,6 +3,14 @@ from nose.tools import *  # noqa
 from . import osmapi_tests
 import osmapi
 import mock
+import os
+
+__location__ = os.path.realpath(
+    os.path.join(
+        os.getcwd(),
+        os.path.dirname(__file__)
+    )
+)
 
 
 class TestOsmApiHelper(osmapi_tests.TestOsmApi):
@@ -22,6 +30,16 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.api._conn.endheaders = mock.Mock()
         self.api._username = 'testuser'
         self.api._password = 'testpassword'
+
+    def test_passwordfile(self):
+        path = os.path.join(
+            __location__,
+            'fixtures',
+            'passwordfile.txt'
+        )
+        my_api = osmapi.OsmApi(passwordfile=path)
+        self.assertEquals('testosm', my_api._username)
+        self.assertEquals('testpass', my_api._password)
 
     def test_http_request_get(self):
         response = self.api._http_request(

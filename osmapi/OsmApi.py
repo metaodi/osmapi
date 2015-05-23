@@ -39,11 +39,11 @@ import sys
 import urllib
 from datetime import datetime
 
+from osmapi import __version__
+
 # Python 3.x
 if getattr(urllib, 'urlencode', None) is None:
     urllib.urlencode = urllib.parse.urlencode
-
-from osmapi import __version__
 
 
 class UsernamePasswordMissingError(Exception):

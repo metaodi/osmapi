@@ -1,7 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
-from osmapi import AlreadySubscribedApiError, NotSubscribedApiError
+import osmapi
 import mock
 import xmltodict
 import datetime
@@ -148,7 +148,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self._conn_mock()
 
         with self.assertRaisesRegexp(
-                Exception,
+                osmapi.NoChangesetOpenError,
                 'No changeset currently opened'):
             self.api.ChangesetUpdate(
                 {
@@ -221,7 +221,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         )
 
         with self.assertRaisesRegexp(
-                Exception,
+                osmapi.ChangesetAlreadyOpenError,
                 'Changeset already opened'):
             self.api.ChangesetCreate(
                 {
@@ -248,7 +248,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self._conn_mock()
 
         with self.assertRaisesRegexp(
-                Exception,
+                osmapi.NoChangesetOpenError,
                 'No changeset currently opened'):
             self.api.ChangesetClose()
 
@@ -652,7 +652,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
     def test_ChangesetSubscribeWhenAlreadySubscribed(self):
         self._conn_mock(auth=True, status=409)
 
-        with self.assertRaises(AlreadySubscribedApiError) as cm:
+        with self.assertRaises(osmapi.AlreadySubscribedApiError) as cm:
             self.api.ChangesetSubscribe(52924)
 
         self.assertEquals(cm.exception.status, 409)
@@ -690,7 +690,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
     def test_ChangesetUnsubscribeWhenNotSubscribed(self):
         self._conn_mock(auth=True, status=404)
 
-        with self.assertRaises(NotSubscribedApiError) as cm:
+        with self.assertRaises(osmapi.NotSubscribedApiError) as cm:
             self.api.ChangesetUnsubscribe(52924)
 
         self.assertEquals(cm.exception.status, 404)

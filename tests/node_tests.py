@@ -1,7 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
-from osmapi import OsmApi, UsernamePasswordMissingError
+import osmapi
 import mock
 import datetime
 
@@ -59,7 +59,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
     def test_NodeCreate_changesetauto(self):
         # setup mock
-        self.api = OsmApi(
+        self.api = osmapi.OsmApi(
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
@@ -124,8 +124,30 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         }
 
         with self.assertRaisesRegexp(
-                Exception,
+                osmapi.NoChangesetOpenError,
                 'need to open a changeset'):
+            self.api.NodeCreate(test_node)
+
+    def test_NodeCreate_existing_node(self):
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_node = {
+            'id': 123,
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                osmapi.OsmTypeAlreadyExistsError,
+                'This node already exists'):
             self.api.NodeCreate(test_node)
 
     def test_NodeCreate_wo_auth(self):
@@ -146,7 +168,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         }
 
         with self.assertRaisesRegexp(
-                UsernamePasswordMissingError,
+                osmapi.UsernamePasswordMissingError,
                 'Username/Password missing'):
             self.api.NodeCreate(test_node)
 

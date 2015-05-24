@@ -46,14 +46,26 @@ if getattr(urllib, 'urlencode', None) is None:
     urllib.urlencode = urllib.parse.urlencode
 
 
-class UsernamePasswordMissingError(Exception):
+class OsmApiError(Exception):
+    """
+    General OsmApi error class to provide a superclass for all other errors
+    """
+
+
+class MaximumRetryLimitReachedError(OsmApiError):
+    """
+    Error when the maximum amount of retries is reached and we have to give up
+    """
+
+
+class UsernamePasswordMissingError(OsmApiError):
     """
     Error when username or password is missing for an authenticated request
     """
     pass
 
 
-class NoChangesetOpenError(Exception):
+class NoChangesetOpenError(OsmApiError):
     """
     Error when an operation requires an open changeset, but currently
     no changeset _is_ open
@@ -61,7 +73,7 @@ class NoChangesetOpenError(Exception):
     pass
 
 
-class ChangesetAlreadyOpenError(Exception):
+class ChangesetAlreadyOpenError(OsmApiError):
     """
     Error when a user tries to open a changeset when there is already
     an open changeset
@@ -69,14 +81,14 @@ class ChangesetAlreadyOpenError(Exception):
     pass
 
 
-class OsmTypeAlreadyExists(Exception):
+class OsmTypeAlreadyExistsError(OsmApiError):
     """
     Error when a user tries to create an object that already exsits
     """
     pass
 
 
-class ApiError(Exception):
+class ApiError(OsmApiError):
     """
     Error class, is thrown when an API request fails
     """
@@ -1681,7 +1693,9 @@ class OsmApi:
         OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get("id", -1) > 0:
-                raise OsmTypeAlreadyExists("This "+OsmType+" already exists")
+                raise OsmTypeAlreadyExistsError(
+                    "This "+OsmType+" already exists"
+                )
             result = self._put(
                 "/api/0.6/" + OsmType + "/create",
                 self._XmlBuild(OsmType, OsmData)

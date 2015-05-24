@@ -130,6 +130,7 @@ class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
     """
+    MAX_RETRY_LIMIT = 5
 
     def __init__(
             self,
@@ -1803,16 +1804,21 @@ class OsmApi:
                 return self._http_request(cmd, path, auth, send)
             except ApiError as e:
                 if e.status >= 500:
-                    if i == 5:
+                    if i == self.MAX_RETRY_LIMIT:
                         raise
                     if i != 1:
                         self._sleep()
                     self._conn = self._get_http_connection()
                 else:
                     raise
-            except Exception:
-                if i == 5:
-                    raise
+            except Exception as e:
+                print(e)
+                if i == self.MAX_RETRY_LIMIT:
+                    if isinstance(e, OsmApiError):
+                        raise
+                    raise MaximumRetryLimitReachedError(
+                        "Give up after %s retries" % i
+                    )
                 if i != 1:
                     self._sleep()
                 self._conn = self._get_http_connection()

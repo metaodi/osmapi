@@ -172,6 +172,29 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
                 'Username/Password missing'):
             self.api.NodeCreate(test_node)
 
+    def test_NodeCreate_with_exception(self):
+        self._conn_mock(auth=True)
+        self.api._http_request = mock.Mock(side_effect=Exception)
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+        test_node = {
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'religion': 'pastafarian'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                osmapi.MaximumRetryLimitReachedError,
+                'Give up after 5 retries'):
+            self.api.NodeCreate(test_node)
+
     def test_NodeUpdate(self):
         self._conn_mock(auth=True)
 

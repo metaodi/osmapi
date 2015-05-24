@@ -39,11 +39,11 @@ import sys
 import urllib
 from datetime import datetime
 
+from osmapi import __version__
+
 # Python 3.x
 if getattr(urllib, 'urlencode', None) is None:
     urllib.urlencode = urllib.parse.urlencode
-
-from osmapi import __version__
 
 
 class UsernamePasswordMissingError(Exception):
@@ -95,7 +95,7 @@ class OsmApi:
             passwordfile=None,
             appid="",
             created_by="osmapi/"+__version__,
-            api="www.openstreetmap.org",
+            api="https://www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},
             changesetautosize=500,
@@ -1773,7 +1773,12 @@ class OsmApi:
                 self._conn = self._get_http_connection()
 
     def _get_http_connection(self):
-        return httplib.HTTPConnection(self._api, 80)
+        if self._api.lower().startswith('https://'):
+            return httplib.HTTPSConnection(self._api[8:], 443)
+        elif self._api.lower().startswith('http://'):
+            return httplib.HTTPConnection(self._api[7:], 80)
+        else:
+            return httplib.HTTPConnection(self._api, 80)
 
     def _sleep(self):
         time.sleep(5)

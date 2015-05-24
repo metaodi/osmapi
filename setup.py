@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import codecs
+from distutils.core import setup
 
 version = __import__('osmapi').__version__
 
@@ -13,7 +14,6 @@ try:
 except (IOError, ImportError):
     description = 'Python wrapper for the OSM API'
 
-from distutils.core import setup
 setup(
     name='osmapi',
     packages=['osmapi'],

@@ -1704,12 +1704,9 @@ class OsmApi:
 
     def _http_request(self, cmd, path, auth, send):  # noqa
         if self._debug:
-            path2 = path
-            if len(path2) > 50:
-                path2 = path2[:50]+"[...]"
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
             )
             print(error_msg, file=sys.stderr)
         self._conn.putrequest(cmd, path)
@@ -1748,7 +1745,7 @@ class OsmApi:
         if self._debug:
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
             )
             print(error_msg, file=sys.stderr)
         return response.read()

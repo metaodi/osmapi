@@ -1,6 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+import osmapi
 import mock
 import datetime
 
@@ -139,6 +140,37 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['version'], 1)
         self.assertEquals(result['member'], test_relation['member'])
         self.assertEquals(result['tag'], test_relation['tag'])
+
+    def test_RelationCreate_existing_node(self):
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_relation = {
+            'id': 456,
+            'tag': {
+                'type': 'test',
+            },
+            'member': [
+                {
+                    'ref': 6908,
+                    'role': 'outer',
+                    'type': 'way'
+                },
+                {
+                    'ref': 6352,
+                    'role': 'point',
+                    'type': 'node'
+                },
+            ]
+        }
+
+        with self.assertRaisesRegexp(
+                osmapi.OsmTypeAlreadyExistsError,
+                'This relation already exists'):
+            self.api.RelationCreate(test_relation)
 
     def test_RelationUpdate(self):
         self._conn_mock(auth=True)

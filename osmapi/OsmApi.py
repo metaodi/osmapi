@@ -114,9 +114,12 @@ class OsmApi:
         If this is omitted "osmapi" is used.
 
         It is possible to configure the URL to connect to using the `api`
-        parameter.  By default this is the production API of OpenStreetMap,
-        for testing purposes, one might prefer the official test instance at
-        "api06.dev.openstreetmap.org".
+        parameter.  By default this is the SSL version of the production API
+        of OpenStreetMap, for testing purposes, one might prefer the official
+        test instance at "api06.dev.openstreetmap.org" or any other valid
+        OSM-API. To use an encrypted connection (HTTPS) simply add 'https://'
+        in front of the hostname of the `api` parameter (e.g.
+        https://api.openstreetmap.com).
 
         There are several options to control the changeset behaviour. By
         default, a programmer has to take care to open and close a changeset
@@ -1773,10 +1776,12 @@ class OsmApi:
                 self._conn = self._get_http_connection()
 
     def _get_http_connection(self):
-        if self._api.lower().startswith('https://'):
-            return httplib.HTTPSConnection(self._api[8:], 443)
-        elif self._api.lower().startswith('http://'):
-            return httplib.HTTPConnection(self._api[7:], 80)
+        https_str = 'https://'
+        http_str = 'http://'
+        if self._api.lower().startswith(https_str):
+            return httplib.HTTPSConnection(self._api[len(https_str):], 443)
+        elif self._api.lower().startswith(http_str):
+            return httplib.HTTPConnection(self._api[len(http_str):], 80)
         else:
             return httplib.HTTPConnection(self._api, 80)
 

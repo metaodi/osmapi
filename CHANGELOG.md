@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Added
+- SSL support for the API calls (thanks [Austin Hartzheim](http://austinhartzheim.me/)!)
+- Run tests on Python 3.4 as well
+- A bunch of new *Error classes (see below)
+- Dependency to 'Pygments' to enable syntax highlighting for [online documentation](http://osmapi.divshot.io)
+- [Contributing guidelines](https://github.com/metaodi/osmapi/blob/master/CONTRIBUTING.md) 
+
+### Changed
+- Changed generic `Exception` with more specific ones, so a client can catch those and react accordingly (no BC-break!)
 
 ## 0.5.0 - 2015-01-03
 ### Changed

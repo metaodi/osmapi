@@ -130,7 +130,9 @@ class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
     """
+
     MAX_RETRY_LIMIT = 5
+    """Maximum retries if a call to the remote API fails (default: 5)"""
 
     def __init__(
             self,
@@ -353,13 +355,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If the supplied information contain an existing node,
-        `osmapi.OsmTypeAlreadyExistsError` is raised.
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
         """
         return self._do("create", "node", NodeData)
 
@@ -392,13 +394,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "node", NodeData)
 
@@ -431,13 +433,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "node", NodeData)
 
@@ -624,16 +626,16 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If the supplied information contain an existing node,
-        `osmapi.OsmTypeAlreadyExistsError` is raised.
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("create", "way", WayData)
 
@@ -664,13 +666,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "way", WayData)
 
@@ -701,13 +703,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "way", WayData)
 
@@ -897,16 +899,16 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If the supplied information contain an existing node,
-        `osmapi.OsmTypeAlreadyExistsError` is raised.
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("create", "relation", RelationData)
 
@@ -946,13 +948,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "relation", RelationData)
 
@@ -992,13 +994,13 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "relation", RelationData)
 
@@ -1086,7 +1088,7 @@ class OsmApi:
 
         This function is useful for relations containing other relations.
 
-        If you don't need all levels, use `osmapi.OsmApi.RelationFull`
+        If you don't need all levels, use `OsmApi.RelationFull`
         instead, which return only 2 levels.
         """
         data = []
@@ -1121,7 +1123,7 @@ class OsmApi:
 
         The `RelationId` is a unique identifier for a way.
 
-        If you need all levels, use `osmapi.OsmApi.RelationFullRecur`.
+        If you need all levels, use `OsmApi.RelationFullRecur`.
         """
         uri = "/api/0.6/relation/"+str(RelationId)+"/full"
         data = self._get(uri)
@@ -1197,10 +1199,10 @@ class OsmApi:
         Updates current changeset with `ChangesetTags`.
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
         """
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
@@ -1221,10 +1223,10 @@ class OsmApi:
         Returns `ChangesetId`
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         if self._CurrentChangesetId:
             raise ChangesetAlreadyOpenError("Changeset already opened")
@@ -1244,10 +1246,10 @@ class OsmApi:
         Returns `ChangesetId`.
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
         """
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
@@ -1273,7 +1275,7 @@ class OsmApi:
         Returns list with updated ids.
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         data = ""
         data += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1414,7 +1416,7 @@ class OsmApi:
 
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         params = urllib.urlencode({'text': comment})
         data = self._post(
@@ -1451,7 +1453,7 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
             data = self._post(
@@ -1493,7 +1495,7 @@ class OsmApi:
             }
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
             data = self._post(
@@ -1609,7 +1611,7 @@ class OsmApi:
         Returns the updated note.
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         path = "/api/0.6/notes/%s/close" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)
@@ -1621,7 +1623,7 @@ class OsmApi:
         Returns the updated note.
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         path = "/api/0.6/notes/%s/reopen" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)
@@ -1856,13 +1858,13 @@ class OsmApi:
         Force the changes to be uploaded to OSM and the changeset to be closed
 
         If no authentication information are provided,
-        `osmapi.UsernamePasswordMissingError` is raised.
+        `OsmApi.UsernamePasswordMissingError` is raised.
 
         If there is no open changeset,
-        `osmapi.NoChangesetOpenError` is raised.
+        `OsmApi.NoChangesetOpenError` is raised.
 
         If there is already an open changeset,
-        `osmapi.ChangesetAlreadyOpenError` is raised.
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._changesetautoflush(True)
 

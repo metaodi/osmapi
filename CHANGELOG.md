@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 0.6.0 - 2015-05-26
 ### Added
 - SSL support for the API calls (thanks [Austin Hartzheim](http://austinhartzheim.me/)!)
 - Run tests on Python 3.4 as well

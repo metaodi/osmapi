@@ -39,21 +39,56 @@ import sys
 import urllib
 from datetime import datetime
 
+from osmapi import __version__
+
 # Python 3.x
 if getattr(urllib, 'urlencode', None) is None:
     urllib.urlencode = urllib.parse.urlencode
 
-from osmapi import __version__
+
+class OsmApiError(Exception):
+    """
+    General OsmApi error class to provide a superclass for all other errors
+    """
 
 
-class UsernamePasswordMissingError(Exception):
+class MaximumRetryLimitReachedError(OsmApiError):
+    """
+    Error when the maximum amount of retries is reached and we have to give up
+    """
+
+
+class UsernamePasswordMissingError(OsmApiError):
     """
     Error when username or password is missing for an authenticated request
     """
     pass
 
 
-class ApiError(Exception):
+class NoChangesetOpenError(OsmApiError):
+    """
+    Error when an operation requires an open changeset, but currently
+    no changeset _is_ open
+    """
+    pass
+
+
+class ChangesetAlreadyOpenError(OsmApiError):
+    """
+    Error when a user tries to open a changeset when there is already
+    an open changeset
+    """
+    pass
+
+
+class OsmTypeAlreadyExistsError(OsmApiError):
+    """
+    Error when a user tries to create an object that already exsits
+    """
+    pass
+
+
+class ApiError(OsmApiError):
     """
     Error class, is thrown when an API request fails
     """
@@ -76,10 +111,18 @@ class ApiError(Exception):
 
 
 class AlreadySubscribedApiError(ApiError):
+    """
+    Error when a user tries to subscribe to a changeset
+    that she is already subscribed to
+    """
     pass
 
 
 class NotSubscribedApiError(ApiError):
+    """
+    Error when user tries to unsubscribe from a changeset
+    that he is not subscribed to
+    """
     pass
 
 
@@ -88,6 +131,9 @@ class OsmApi:
     Main class of osmapi, instanciate this class to use osmapi
     """
 
+    MAX_RETRY_LIMIT = 5
+    """Maximum retries if a call to the remote API fails (default: 5)"""
+
     def __init__(
             self,
             username=None,
@@ -95,7 +141,7 @@ class OsmApi:
             passwordfile=None,
             appid="",
             created_by="osmapi/"+__version__,
-            api="www.openstreetmap.org",
+            api="https://www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},
             changesetautosize=500,
@@ -114,9 +160,12 @@ class OsmApi:
         If this is omitted "osmapi" is used.
 
         It is possible to configure the URL to connect to using the `api`
-        parameter.  By default this is the production API of OpenStreetMap,
-        for testing purposes, one might prefer the official test instance at
-        "api06.dev.openstreetmap.org".
+        parameter.  By default this is the SSL version of the production API
+        of OpenStreetMap, for testing purposes, one might prefer the official
+        test instance at "api06.dev.openstreetmap.org" or any other valid
+        OSM-API. To use an encrypted connection (HTTPS) simply add 'https://'
+        in front of the hostname of the `api` parameter (e.g.
+        https://api.openstreetmap.com).
 
         There are several options to control the changeset behaviour. By
         default, a programmer has to take care to open and close a changeset
@@ -304,6 +353,15 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If the supplied information contain an existing node,
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
         """
         return self._do("create", "node", NodeData)
 
@@ -334,6 +392,15 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "node", NodeData)
 
@@ -364,6 +431,15 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "node", NodeData)
 
@@ -548,6 +624,18 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the supplied information contain an existing node,
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("create", "way", WayData)
 
@@ -576,6 +664,15 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "way", WayData)
 
@@ -604,6 +701,15 @@ class OsmApi:
                 'uid': id of user of last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "way", WayData)
 
@@ -791,6 +897,18 @@ class OsmApi:
                 'uid': id of user that made the last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the supplied information contain an existing node,
+        `OsmApi.OsmTypeAlreadyExistsError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("create", "relation", RelationData)
 
@@ -828,6 +946,15 @@ class OsmApi:
                 'uid': id of user that made the last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("modify", "relation", RelationData)
 
@@ -865,6 +992,15 @@ class OsmApi:
                 'uid': id of user that made the last change,
                 'visible': True|False
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._do("delete", "relation", RelationData)
 
@@ -952,7 +1088,7 @@ class OsmApi:
 
         This function is useful for relations containing other relations.
 
-        If you don't need all levels, use `osmapi.OsmApi.RelationFull`
+        If you don't need all levels, use `OsmApi.RelationFull`
         instead, which return only 2 levels.
         """
         data = []
@@ -987,7 +1123,7 @@ class OsmApi:
 
         The `RelationId` is a unique identifier for a way.
 
-        If you need all levels, use `osmapi.OsmApi.RelationFullRecur`.
+        If you need all levels, use `OsmApi.RelationFullRecur`.
         """
         uri = "/api/0.6/relation/"+str(RelationId)+"/full"
         data = self._get(uri)
@@ -1061,9 +1197,15 @@ class OsmApi:
     def ChangesetUpdate(self, ChangesetTags={}):
         """
         Updates current changeset with `ChangesetTags`.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
         """
         if not self._CurrentChangesetId:
-            raise Exception("No changeset currently opened")
+            raise NoChangesetOpenError("No changeset currently opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         self._put(
@@ -1079,9 +1221,15 @@ class OsmApi:
         If `ChangesetTags` are given, this tags are applied (key/value).
 
         Returns `ChangesetId`
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         if self._CurrentChangesetId:
-            raise Exception("Changeset already opened")
+            raise ChangesetAlreadyOpenError("Changeset already opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         result = self._put(
@@ -1096,9 +1244,15 @@ class OsmApi:
         Closes current changeset.
 
         Returns `ChangesetId`.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
         """
         if not self._CurrentChangesetId:
-            raise Exception("No changeset currently opened")
+            raise NoChangesetOpenError("No changeset currently opened")
         self._put(
             "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close",
             ""
@@ -1119,6 +1273,9 @@ class OsmApi:
             }
 
         Returns list with updated ids.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         data = ""
         data += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1257,6 +1414,9 @@ class OsmApi:
                 'uid': id of user that created this changeset,
             }
 
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         params = urllib.urlencode({'text': comment})
         data = self._post(
@@ -1291,6 +1451,9 @@ class OsmApi:
                 'user': username of user that created this changeset,
                 'uid': id of user that created this changeset,
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
             data = self._post(
@@ -1330,6 +1493,9 @@ class OsmApi:
                 'user': username of user that created this changeset,
                 'uid': id of user that created this changeset,
             }
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
             data = self._post(
@@ -1422,6 +1588,7 @@ class OsmApi:
     def NoteCreate(self, NoteData):
         """
         Creates a note.
+
         Returns updated NoteData (without timestamp).
         """
         uri = "/api/0.6/notes"
@@ -1431,6 +1598,7 @@ class OsmApi:
     def NoteComment(self, NoteId, comment):
         """
         Adds a new comment to a note.
+
         Returns the updated note.
         """
         path = "/api/0.6/notes/%s/comment" % NoteId
@@ -1439,7 +1607,11 @@ class OsmApi:
     def NoteClose(self, NoteId, comment):
         """
         Closes a note.
+
         Returns the updated note.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         path = "/api/0.6/notes/%s/close" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)
@@ -1447,7 +1619,11 @@ class OsmApi:
     def NoteReopen(self, NoteId, comment):
         """
         Reopens a note.
+
         Returns the updated note.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
         """
         path = "/api/0.6/notes/%s/reopen" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)
@@ -1476,6 +1652,7 @@ class OsmApi:
     def _NoteAction(self, path, comment=None, optionalAuth=True):
         """
         Performs an action on a Note with a comment
+
         Return the updated note
         """
         uri = path
@@ -1642,7 +1819,7 @@ class OsmApi:
 
     def _do_manu(self, action, OsmType, OsmData):
         if not self._CurrentChangesetId:
-            raise Exception(
+            raise NoChangesetOpenError(
                 "You need to open a changeset before uploading data"
             )
         if "timestamp" in OsmData:
@@ -1650,7 +1827,9 @@ class OsmApi:
         OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get("id", -1) > 0:
-                raise Exception("This "+OsmType+" already exists")
+                raise OsmTypeAlreadyExistsError(
+                    "This "+OsmType+" already exists"
+                )
             result = self._put(
                 "/api/0.6/" + OsmType + "/create",
                 self._XmlBuild(OsmType, OsmData)
@@ -1677,6 +1856,15 @@ class OsmApi:
     def flush(self):
         """
         Force the changes to be uploaded to OSM and the changeset to be closed
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         return self._changesetautoflush(True)
 
@@ -1701,12 +1889,9 @@ class OsmApi:
 
     def _http_request(self, cmd, path, auth, send):  # noqa
         if self._debug:
-            path2 = path
-            if len(path2) > 50:
-                path2 = path2[:50]+"[...]"
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
             )
             print(error_msg, file=sys.stderr)
         self._conn.putrequest(cmd, path)
@@ -1745,7 +1930,7 @@ class OsmApi:
         if self._debug:
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path2)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
             )
             print(error_msg, file=sys.stderr)
         return response.read()
@@ -1758,22 +1943,34 @@ class OsmApi:
                 return self._http_request(cmd, path, auth, send)
             except ApiError as e:
                 if e.status >= 500:
-                    if i == 5:
+                    if i == self.MAX_RETRY_LIMIT:
                         raise
                     if i != 1:
                         self._sleep()
                     self._conn = self._get_http_connection()
                 else:
                     raise
-            except Exception:
-                if i == 5:
-                    raise
+            except Exception as e:
+                print(e)
+                if i == self.MAX_RETRY_LIMIT:
+                    if isinstance(e, OsmApiError):
+                        raise
+                    raise MaximumRetryLimitReachedError(
+                        "Give up after %s retries" % i
+                    )
                 if i != 1:
                     self._sleep()
                 self._conn = self._get_http_connection()
 
     def _get_http_connection(self):
-        return httplib.HTTPConnection(self._api, 80)
+        https_str = 'https://'
+        http_str = 'http://'
+        if self._api.lower().startswith(https_str):
+            return httplib.HTTPSConnection(self._api[len(https_str):], 443)
+        elif self._api.lower().startswith(http_str):
+            return httplib.HTTPConnection(self._api[len(http_str):], 80)
+        else:
+            return httplib.HTTPConnection(self._api, 80)
 
     def _sleep(self):
         time.sleep(5)

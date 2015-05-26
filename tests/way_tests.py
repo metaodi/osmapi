@@ -1,6 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
+import osmapi
 import mock
 import datetime
 
@@ -103,6 +104,27 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['id'], 5454)
         self.assertEquals(result['nd'], test_way['nd'])
         self.assertEquals(result['tag'], test_way['tag'])
+
+    def test_WayCreate_existing_node(self):
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_way = {
+            'id': 456,
+            'nd': [11949, 11950],
+            'tag': {
+                'highway': 'unclassified',
+                'name': 'Osmapi Street'
+            }
+        }
+
+        with self.assertRaisesRegexp(
+                osmapi.OsmTypeAlreadyExistsError,
+                'This way already exists'):
+            self.api.WayCreate(test_way)
 
     def test_WayUpdate(self):
         self._conn_mock(auth=True)

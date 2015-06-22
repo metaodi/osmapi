@@ -1,15 +1,11 @@
 from __future__ import unicode_literals
 from nose.tools import *  # noqa
 from osmapi import OsmApi
+from . import unittest
 import mock
 import os
-import sys
 import pystache
 
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
 
 __location__ = os.path.realpath(
     os.path.join(

@@ -1,9 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from nose.tools import *  # noqa
 from . import osmapi_tests
-
-from hypothesis import given
-from hypothesis.strategies import integers, floats
+from . import given, integers, floats
 
 
 class TestOsmApiNode(osmapi_tests.TestOsmApi):

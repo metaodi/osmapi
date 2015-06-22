@@ -4,6 +4,7 @@ from osmapi import OsmApi
 import mock
 import os
 import sys
+import pystache
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -27,17 +28,25 @@ class TestOsmApi(unittest.TestCase):
         print(self._testMethodName)
         print(self.api)
 
-    def _conn_mock(self, auth=False, filenames=None, status=200, reason=None):
+    def _conn_mock(self, auth=False, filenames=None,
+                   status=200, reason=None, args=None):
         if auth:
             self.api._username = 'testuser'
             self.api._password = 'testpassword'
 
-        response_mock = mock.Mock()
-        response_mock.status = status
-        response_mock.reason = reason
-        response_mock.read = mock.Mock(
-            side_effect=self._return_values(filenames)
-        )
+        if args is not None:
+            response_mock = self._response_mock_from_template(
+                status,
+                reason,
+                filenames,
+                args
+            )
+        else:
+            response_mock = self._response_mock_from_fixture(
+                status,
+                reason,
+                filenames
+            )
 
         conn_mock = mock.Mock()
         conn_mock.putrequest = mock.Mock()
@@ -51,7 +60,25 @@ class TestOsmApi(unittest.TestCase):
 
         self.api._sleep = mock.Mock()
 
-    def _return_values(self, filenames):
+    def _response_mock_from_fixture(self, status, reason, filenames):
+        response_mock = mock.Mock()
+        response_mock.status = status
+        response_mock.reason = reason
+        response_mock.read = mock.Mock(
+            side_effect=self._return_fixture_values(filenames)
+        )
+        return response_mock
+
+    def _response_mock_from_template(self, status, reason, filenames, args):
+        response_mock = mock.Mock()
+        response_mock.status = status
+        response_mock.reason = reason
+        response_mock.read = mock.Mock(
+            side_effect=self._return_template_values(filenames, args)
+        )
+        return response_mock
+
+    def _return_fixture_values(self, filenames):
         if filenames is None:
             filenames = [self._testMethodName + ".xml"]
 
@@ -65,6 +92,28 @@ class TestOsmApi(unittest.TestCase):
             try:
                 with open(path) as file:
                     return_values.append(file.read())
+            except:
+                pass
+        return return_values
+
+    def _return_template_values(self, templates, args):
+        if templates is None:
+            templates = [self._testMethodName + ".xml"]
+
+        return_values = []
+        for filename in templates:
+            path = os.path.join(
+                __location__,
+                'templates',
+                filename
+            )
+            try:
+                with open(path) as file:
+                    rendered_values = pystache.render(
+                        file.read(),
+                        args
+                    )
+                    return_values.append(rendered_values)
             except:
                 pass
         return return_values

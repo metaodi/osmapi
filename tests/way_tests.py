@@ -12,9 +12,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayGet(321)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/321')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/321')
 
         self.assertEquals(result, {
             'id': 321,
@@ -54,9 +53,9 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayGet(4294967296, 2)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/4294967296/2')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/way/4294967296/2')
 
         self.assertEquals(result['id'], 4294967296)
         self.assertEquals(result['changeset'], 41303)
@@ -67,9 +66,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayGet(321)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/321')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/321')
 
         self.assertEquals(result, '')
 
@@ -97,9 +95,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayCreate(test_way)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], '/api/0.6/way/create')
+        args, kwargs = self.api._conn.put.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/create')
 
         self.assertEquals(result['id'], 5454)
         self.assertEquals(result['nd'], test_way['nd'])
@@ -151,9 +148,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayUpdate(test_way)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], '/api/0.6/way/876')
+        args, kwargs = self.api._conn.put.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/876')
 
         self.assertEquals(result['id'], 876)
         self.assertEquals(result['version'], 7)
@@ -180,9 +176,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayDelete(test_way)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'DELETE')
-        self.assertEquals(args[1], '/api/0.6/way/876')
+        args, kwargs = self.api._conn.delete.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/876')
         self.assertEquals(result['id'], 876)
         self.assertEquals(result['version'], 8)
 
@@ -191,9 +186,9 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayHistory(4294967296)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/4294967296/history')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/way/4294967296/history')
 
         self.assertEquals(len(result), 2)
         self.assertEquals(result[1]['id'], 4294967296)
@@ -210,9 +205,9 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayRelations(4295032193)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/4295032193/relations')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/way/4295032193/relations')
 
         self.assertEquals(len(result), 1)
         self.assertEquals(result[0]['id'], 4294968148)
@@ -237,9 +232,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WayFull(321)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/way/321/full')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/way/321/full')
 
         self.assertEquals(len(result), 17)
         self.assertEquals(result[0]['data']['id'], 11949)
@@ -254,9 +248,9 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
 
         result = self.api.WaysGet([456, 678])
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/ways?ways=456,678')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/ways?ways=456,678')
 
         self.assertEquals(len(result), 2)
         self.assertIs(type(result[456]), dict)

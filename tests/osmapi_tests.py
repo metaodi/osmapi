@@ -20,8 +20,9 @@ __location__ = os.path.realpath(
 
 class TestOsmApi(unittest.TestCase):
     def setUp(self):
+        self.api_base = "http://api06.dev.openstreetmap.org"
         self.api = OsmApi(
-            api="api06.dev.openstreetmap.org"
+            api=self.api_base
         )
         self.maxDiff = None
         print(self._testMethodName)
@@ -33,18 +34,21 @@ class TestOsmApi(unittest.TestCase):
             self.api._password = 'testpassword'
 
         response_mock = mock.Mock()
-        response_mock.status = status
-        response_mock.reason = reason
-        response_mock.read = mock.Mock(
-            side_effect=self._return_values(filenames)
-        )
+        response_mock.status_code = status
+        return_values = self._return_values(filenames)
+        print(filenames)
+        print(return_values)
+        assert len(return_values) < 2
+        if return_values:
+            response_mock.text = return_values[0]
 
         conn_mock = mock.Mock()
-        conn_mock.putrequest = mock.Mock()
-        conn_mock.putheader = mock.Mock()
-        conn_mock.endheaders = mock.Mock()
-        conn_mock.send = mock.Mock()
-        conn_mock.getresponse = mock.Mock(return_value=response_mock)
+        conn_mock.get = mock.Mock(return_value=response_mock)
+        conn_mock.post = mock.Mock(return_value=response_mock)
+        conn_mock.update = mock.Mock(return_value=response_mock)
+        conn_mock.delete = mock.Mock(return_value=response_mock)
+        conn_mock.head = mock.Mock(return_value=response_mock)
+        conn_mock.put = mock.Mock(return_value=response_mock)
 
         self.api._get_http_connection = mock.Mock(return_value=conn_mock)
         self.api._conn = conn_mock

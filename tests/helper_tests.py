@@ -20,14 +20,11 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
 
     def setupMock(self, status=200):
         mock_response = mock.Mock()
-        mock_response.status = status
+        mock_response.status_code = status
         mock_response.reason = "test reason"
-        mock_response.read = mock.Mock(return_value='test response')
-        self.api._conn.getresponse = mock.Mock(return_value=mock_response)
-        self.api._conn.putrequest = mock.Mock()
-        self.api._conn.putheader = mock.Mock()
-        self.api._conn.send = mock.Mock()
-        self.api._conn.endheaders = mock.Mock()
+        mock_response.text = 'test response'
+        self.api._conn.get = mock.Mock(return_value=mock_response)
+        self.api._conn.put = mock.Mock(return_value=mock_response)
         self.api._username = 'testuser'
         self.api._password = 'testpassword'
 
@@ -43,81 +40,70 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
 
     def test_http_request_get(self):
         response = self.api._http_request(
-            'GET',
+            self.api._conn.get,
             '/api/0.6/test',
             False,
             None
         )
-        self.api._conn.putrequest.assert_called_with('GET', '/api/0.6/test')
+        self.api._conn.get.assert_called_with(self.api_base + '/api/0.6/test',
+                                              headers={})
         self.assertEquals(response, "test response")
-        self.assertEquals(self.api._conn.putheader.call_count, 1)
+        self.assertEquals(self.api._conn.get.call_count, 1)
 
     def test_http_request_put(self):
+        data = "data"
         response = self.api._http_request(
-            'PUT',
+            self.api._conn.put,
             '/api/0.6/testput',
             False,
-            "data"
+            data
         )
-        self.api._conn.putrequest.assert_called_with(
-            'PUT',
-            '/api/0.6/testput'
+        self.api._conn.put.assert_called_with(
+            self.api_base + '/api/0.6/testput',
+            data="data",
+            headers={'Content-Length': len(data)}
         )
         self.assertEquals(response, "test response")
-        self.assertEquals(self.api._conn.putheader.call_count, 2)
-        args = self.api._conn.putheader.call_args_list[1]
-        header, value = args[0]
-        self.assertEquals(header, 'Content-Length')
-        self.assertEquals(value, 4)
 
     def test_http_request_delete(self):
+        data = "delete data"
         response = self.api._http_request(
-            'PUT',
+            self.api._conn.put,
             '/api/0.6/testdelete',
             False,
-            "delete data"
+            data
         )
-        self.api._conn.putrequest.assert_called_with(
-            'PUT',
-            '/api/0.6/testdelete'
+        self.api._conn.put.assert_called_with(
+            self.api_base + '/api/0.6/testdelete',
+            data="delete data",
+            headers={'Content-Length': len(data)}
         )
         self.assertEquals(response, "test response")
-        self.assertEquals(self.api._conn.putheader.call_count, 2)
-        args = self.api._conn.putheader.call_args_list[1]
-        header, value = args[0]
-        self.assertEquals(header, 'Content-Length')
-        self.assertEquals(value, 11)
 
     def test_http_request_auth(self):
         response = self.api._http_request(
-            'PUT',
+            self.api._conn.put,
             '/api/0.6/testauth',
             True,
             None
         )
-        self.api._conn.putrequest.assert_called_with(
-            'PUT',
-            '/api/0.6/testauth'
+        self.api._conn.put.assert_called_with(
+            self.api_base + '/api/0.6/testauth',
+            headers={'Authorization': 'Basic dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'}
         )
         self.assertEquals(response, "test response")
-
-        self.assertEquals(self.api._conn.putheader.call_count, 2)
-        args = self.api._conn.putheader.call_args_list[1]
-        header, value = args[0]
-        self.assertEquals(header, 'Authorization')
-        self.assertEquals(value, 'Basic dGVzdHVzZXI6dGVzdHBhc3N3b3Jk')
 
     def test_http_request_410_response(self):
         self.setupMock(410)
         response = self.api._http_request(
-            'GET',
+            self.api._conn.get,
             '/api/0.6/test410',
             False,
             None
         )
-        self.api._conn.putrequest.assert_called_with(
-            'GET',
-            '/api/0.6/test410'
+        self.api._conn.get.assert_called_with(
+            self.api_base + '/api/0.6/test410',
+            headers={}
         )
         self.assertIsNone(response, "test response")
 
@@ -125,8 +111,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.setupMock(500)
         with self.assertRaises(osmapi.ApiError) as cm:
             self.api._http_request(
-                'GET',
-                '/api/0.6/test500',
+                self.api._conn.get,
+                self.api_base + '/api/0.6/test500',
                 False,
                 None
             )

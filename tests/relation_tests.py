@@ -18,9 +18,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationGet(321)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/relation/321')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/321')
 
         self.assertEquals(result, {
             'id': 321,
@@ -89,9 +88,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationGet(765, 2)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/relation/765/2')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/765/2')
 
         self.assertEquals(result['id'], 765)
         self.assertEquals(result['changeset'], 41378)
@@ -132,9 +130,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationCreate(test_relation)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], '/api/0.6/relation/create')
+        args, kwargs = self.api._conn.put.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/create')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 1)
@@ -202,9 +199,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationUpdate(test_relation)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], '/api/0.6/relation/8989')
+        args, kwargs = self.api._conn.put.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/8989')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 42)
@@ -231,9 +227,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationDelete(test_relation)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'DELETE')
-        self.assertEquals(args[1], '/api/0.6/relation/8989')
+        args, kwargs = self.api._conn.delete.call_args
+        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/8989')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 43)
@@ -243,9 +238,9 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationHistory(2470397)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/relation/2470397/history')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/relation/2470397/history')
 
         self.assertEquals(len(result), 2)
         self.assertEquals(result[1]['id'], 2470397)
@@ -263,9 +258,10 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationRelations(1532552)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/relation/1532552/relations')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          (self.api_base +
+                           '/api/0.6/relation/1532552/relations'))
 
         self.assertEquals(len(result), 1)
         self.assertEquals(result[0]['id'], 1532553)
@@ -282,9 +278,9 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationFull(2470397)
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], '/api/0.6/relation/2470397/full')
+        args, kwargs = self.api._conn.get.call_args
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/relation/2470397/full')
 
         self.assertEquals(len(result), 11)
         self.assertEquals(result[1]['data']['id'], 101142277)
@@ -299,11 +295,10 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationsGet([1532552, 1532553])
 
-        args, kwargs = self.api._conn.putrequest.call_args
-        self.assertEquals(args[0], 'GET')
+        args, kwargs = self.api._conn.get.call_args
         self.assertEquals(
-            args[1],
-            '/api/0.6/relations?relations=1532552,1532553'
+            args[0],
+            self.api_base + '/api/0.6/relations?relations=1532552,1532553'
         )
 
         self.assertEquals(len(result), 2)

@@ -249,7 +249,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WaysGet([456, 678])
 
         args, kwargs = self.api._conn.get.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/ways?ways=456,678')
+        self.assertEquals(args[0],
+                          self.api_base + '/api/0.6/ways?ways=456,678')
 
         self.assertEquals(len(result), 2)
         self.assertIs(type(result[456]), dict)

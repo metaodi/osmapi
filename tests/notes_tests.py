@@ -294,7 +294,8 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         args, kwargs = self.api._conn.post.call_args
         self.assertEquals(
             args[0],
-            self.api_base + '/api/0.6/notes/815/reopen?text=Reopen+this+note%21'
+            (self.api_base +
+             '/api/0.6/notes/815/reopen?text=Reopen+this+note%21')
         )
 
         self.assertEquals(result, {

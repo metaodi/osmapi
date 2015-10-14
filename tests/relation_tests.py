@@ -260,7 +260,8 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         args, kwargs = self.api._conn.get.call_args
         self.assertEquals(args[0],
-                          self.api_base + '/api/0.6/relation/1532552/relations')
+                          (self.api_base +
+                           '/api/0.6/relation/1532552/relations'))
 
         self.assertEquals(len(result), 1)
         self.assertEquals(result[0]['id'], 1532553)

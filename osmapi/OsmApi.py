@@ -28,10 +28,6 @@ Find all information about changes of the different versions of this module
 """
 
 from __future__ import (absolute_import, print_function, unicode_literals)
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
 import base64
 import xml.dom.minidom
 import time
@@ -1326,7 +1322,7 @@ class OsmApi:
         data = self._get(uri)
         return self.ParseOsc(data)
 
-    def ChangesetsGet(# noqa
+    def ChangesetsGet(  # noqa
             self,
             min_lon=None,
             min_lat=None,

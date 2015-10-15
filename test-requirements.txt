@@ -6,3 +6,7 @@ tox==1.7.1
 coveralls==0.4.1
 mock==1.0.1
 xmltodict==0.9.0
+
+# Keep coverage at a lower version to prevent TravisCI failures:
+# https://github.com/travis-ci/travis-ci/issues/4866
+coverage<4

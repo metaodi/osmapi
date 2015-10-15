@@ -116,6 +116,6 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
                 False,
                 None
             )
-            self.assertEquals(cm.exception.status, 500)
-            self.assertEquals(cm.exception.reason, "test reason")
-            self.assertEquals(cm.exception.payload, "test response")
+        self.assertEquals(cm.exception.status, 500)
+        self.assertEquals(cm.exception.reason, "test reason")
+        self.assertEquals(cm.exception.payload, "test response")

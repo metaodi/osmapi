@@ -1935,7 +1935,7 @@ class OsmApi:
             if response.status_code == 410:
                 return None
             payload = response.text.strip()
-            raise ApiError(response.status, response.reason, payload)
+            raise ApiError(response.status_code, response.reason, payload)
         if self._debug:
             error_msg = (
                 "%s %s %s"

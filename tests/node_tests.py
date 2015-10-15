@@ -61,22 +61,21 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             api="api06.dev.openstreetmap.org",
             changesetauto=True
         )
-        self._conn_mock(auth=True, filenames=[
-            'test_NodeCreate_changesetauto.xml',
-            'test_ChangesetUpload_create_node.xml',
-            'test_ChangesetClose.xml',
-        ])
+        for filename in ['test_NodeCreate_changesetauto.xml',
+                         'test_ChangesetUpload_create_node.xml',
+                         'test_ChangesetClose.xml']:
+            self._conn_mock(auth=True, filenames=[filename])
 
-        test_node = {
-            'lat': 47.123,
-            'lon': 8.555,
-            'tag': {
-                'amenity': 'place_of_worship',
-                'religion': 'pastafarian'
+            test_node = {
+                'lat': 47.123,
+                'lon': 8.555,
+                'tag': {
+                    'amenity': 'place_of_worship',
+                    'religion': 'pastafarian'
+                }
             }
-        }
 
-        self.assertIsNone(self.api.NodeCreate(test_node))
+            self.assertIsNone(self.api.NodeCreate(test_node))
 
     def test_NodeCreate(self):
         self._conn_mock(auth=True)

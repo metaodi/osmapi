@@ -36,8 +36,9 @@ class TestOsmApi(unittest.TestCase):
         response_mock = mock.Mock()
         response_mock.status_code = status
         return_values = self._return_values(filenames)
-        if len(return_values) > 1:
-            print('Need to split these tests')  # TODO: remove debug
+        print(filenames)
+        print(return_values)
+        assert len(return_values) < 2
         if return_values:
             response_mock.text = return_values[0]
 

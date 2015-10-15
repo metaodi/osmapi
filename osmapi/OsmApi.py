@@ -214,7 +214,7 @@ class OsmApi:
         self._changesetautodata = []
 
         # Get API
-        self._api = api
+        self._api = api.strip('/')
 
         # Get created_by
         if not appid:
@@ -1891,7 +1891,8 @@ class OsmApi:
         `method` is a method from self._conn which is to be executed
         with the request data. For example: self._conn.get.
         `path` is the path to the requested resource relative to the
-        base API address stored in self._api.
+        base API address stored in self._api. Should start with a
+        slash character to separate the URL.
         `auth` is a boolean indicating whether authentication should
         be preformed on this request.
         `send` contains additional data that might be sent in a

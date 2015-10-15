@@ -1906,7 +1906,7 @@ class OsmApi:
             print(error_msg, file=sys.stderr)
 
         # Add API base URL to path
-        path = self._get_api_base() + path
+        path = self._api + path
 
         headers = {}
         if auth:
@@ -1981,17 +1981,6 @@ class OsmApi:
             'user-agent': self._created_by
         })
         return session
-
-    def _get_api_base(self):
-        """
-        Return the API hostname along with any prefix strings such as
-        http:// or https://. Returned strings will not have a trailing
-        slash as these are added elsewhere.
-        """
-        if self._api.startswith('http://') or self._api.startswith('https://'):
-            return self._api.strip('/')
-        else:
-            return 'http://' + self._api.strip('/')
 
     def _sleep(self):
         time.sleep(5)

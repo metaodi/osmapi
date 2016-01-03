@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- The documentation is now available at a new domain: http://osmapi.metaodi.ch, the previous provider does no longer provide this service
 
 ## 0.6.0 - 2015-05-26
 ### Added

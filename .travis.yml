@@ -32,12 +32,3 @@ deploy:
       branch: master
       python: 2.7
       repo: metaodi/osmapi
-  - provider: divshot
-    skip_cleanup: true
-    environment:
-        develop: development
-        master: production
-    on:
-      python: 2.7
-    api_key:
-      secure: WTpFZfmA9QOPGLp9c+yljSVLk8GijvlMT4FxPX1BlI0cdU0VHHBkKfRk+UW3n8vHBAcaH+1SlbPc+9BWw9oHirtJ5Wc57SNfWS1NHKVB/rUxVCn+GYM6RBN9wJ26St0KNG81VtvajkA41ZP5jkpWVFtbylbctcTmVNagJke7cUE=

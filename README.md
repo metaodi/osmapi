@@ -1,11 +1,11 @@
 osmapi
 ======
 
-[![Build](https://travis-ci.org/metaodi/osmapi.png?branch=develop)](https://travis-ci.org/metaodi/osmapi)
-[![Coverage](https://coveralls.io/repos/metaodi/osmapi/badge.png?branch=develop)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
-[![Version](https://badge.fury.io/py/osmapi.png)](http://badge.fury.io/py/osmapi)
-[![Downloads](https://pypip.in/d/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
-[![License](https://pypip.in/license/osmapi/badge.png)](https://pypi.python.org/pypi/osmapi/)
+[![Build](https://img.shields.io/travis/metaodi/osmapi/develop.svg)](https://travis-ci.org/metaodi/osmapi)
+[![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
+[![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
+[![Downloads](https://img.shields.io/pypi/dm/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
+[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
 Python wrapper for the OSM API
 
@@ -15,33 +15,6 @@ Install `osmapi` simply by using pip:
 
     pip install osmapi
 
-### Development
-
-If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
-
-    pip install -r requirements.txt
-    pip install -r test-requirements.txt
-
-After that, it is recommended to install the `flake8` pre-commit-hook:
-
-    flake8 --install-hook
-
-### Tests
-
-To run the tests use the following command:
-
-    nosetests --verbose
-
-By using tox you can even run the tests against different versions of python (2.6, 2.7, 3.2 and 3.3):
-
-    tox
-
-## Note
-
-Scripted imports and automated edits should only be carried out by those with experience and understanding of the way the OpenStreetMap community creates maps, and only with careful **planning** and **consultation** with the local community.
-
-See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines) and [Automated Edits/Code of Conduct](http://wiki.openstreetmap.org/wiki/Automated_Edits/Code_of_Conduct) for more information.
-
 ## Documentation
 
 The documentation is generated using `pdoc` and can be [viewed online](http://osmapi.metaodi.ch).
@@ -49,6 +22,9 @@ The documentation is generated using `pdoc` and can be [viewed online](http://os
 The build the documentation locally, you can use
 
     pdoc --html osmapi.OsmApi # create HTML file
+
+This project uses GitHub Pages to publish its documentation.
+To update the online documentation, you need to re-generate the documentation with the above command and update the `gh-pages` branch of this repository.
 
 ## Examples
 
@@ -86,6 +62,33 @@ print api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
 # {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
 api.ChangesetClose()
 ```
+
+## Note
+
+Scripted imports and automated edits should only be carried out by those with experience and understanding of the way the OpenStreetMap community creates maps, and only with careful **planning** and **consultation** with the local community.
+
+See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines) and [Automated Edits/Code of Conduct](http://wiki.openstreetmap.org/wiki/Automated_Edits/Code_of_Conduct) for more information.
+
+### Development
+
+If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
+
+    pip install -r requirements.txt
+    pip install -r test-requirements.txt
+
+After that, it is recommended to install the `flake8` pre-commit-hook:
+
+    flake8 --install-hook
+
+### Tests
+
+To run the tests use the following command:
+
+    nosetests --verbose
+
+By using tox you can even run the tests against different versions of python (2.6, 2.7, 3.2 and 3.3):
+
+    tox
 
 ## Attribution
 

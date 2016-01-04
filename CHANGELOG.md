@@ -4,6 +4,11 @@ This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## 0.6.2 - 2016-01-04
+### Changed
+- Re-arranged README
+- Make sure PyPI releases are only created when a release has been tagged on GitHub
+
 ## 0.6.1 - 2016-01-04
 ### Changed
 - The documentation is now available at a new domain: http://osmapi.metaodi.ch, the previous provider does no longer provide this service

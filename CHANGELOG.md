@@ -4,6 +4,10 @@ This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## 0.6.1 - 2016-01-04
+### Changed
+- The documentation is now available at a new domain: http://osmapi.metaodi.ch, the previous provider does no longer provide this service
+
 ## 0.6.0 - 2015-05-26
 ### Added
 - SSL support for the API calls (thanks [Austin Hartzheim](http://austinhartzheim.me/)!)

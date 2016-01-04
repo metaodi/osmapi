@@ -100,10 +100,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osm version="0.6" generator="osmapi/0.6.1">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
-                b'    <tag k="created_by" v="osmapi/0.6.0"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.6.1"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -134,7 +134,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osm version="0.6" generator="osmapi/0.6.1">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
                 b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -173,10 +173,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osm version="0.6" generator="osmapi/0.6.1">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
-                b'    <tag k="created_by" v="osmapi/0.6.0"/>\n'
+                b'    <tag k="created_by" v="osmapi/0.6.1"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -201,7 +201,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osm version="0.6" generator="osmapi/0.6.1">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
                 b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -286,7 +286,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.6.1">\n'
                 b'<create>\n'
                 b'  <node lat="47.123" lon="8.555" visible="true" '
                 b'changeset="4444">\n'
@@ -360,7 +360,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.6.1">\n'
                 b'<modify>\n'
                 b'  <way id="4294967296" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -444,7 +444,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(sendargs[0]),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/0.6.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/0.6.1">\n'
                 b'<delete>\n'
                 b'  <relation id="676" version="2" visible="true" '
                 b'changeset="4444">\n'

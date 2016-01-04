@@ -5,7 +5,7 @@ osmapi
 [![Coverage](https://coveralls.io/repos/metaodi/osmapi/badge.png?branch=develop)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![Downloads](https://img.shields.io/pypi/dm/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
-[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
+[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
 Python wrapper for the OSM API
 

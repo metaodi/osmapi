@@ -45,8 +45,10 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             False,
             None
         )
-        self.api._session.get.assert_called_with(self.api_base + '/api/0.6/test',
-                                              headers={})
+        self.api._session.get.assert_called_with(
+            self.api_base + '/api/0.6/test',
+            headers={}
+        )
         self.assertEquals(response, "test response")
         self.assertEquals(self.api._session.get.call_count, 1)
 

@@ -47,7 +47,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         )
         self.api._session.get.assert_called_with(
             self.api_base + '/api/0.6/test',
-            headers={}
+            headers={},
+            data=None
         )
         self.assertEquals(response, "test response")
         self.assertEquals(self.api._session.get.call_count, 1)
@@ -63,7 +64,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.api._session.put.assert_called_with(
             self.api_base + '/api/0.6/testput',
             data="data",
-            headers={'Content-Length': len(data)}
+            headers={}
         )
         self.assertEquals(response, "test response")
 
@@ -78,7 +79,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.api._session.put.assert_called_with(
             self.api_base + '/api/0.6/testdelete',
             data="delete data",
-            headers={'Content-Length': len(data)}
+            headers={}
         )
         self.assertEquals(response, "test response")
 
@@ -91,7 +92,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         )
         self.api._session.put.assert_called_with(
             self.api_base + '/api/0.6/testauth',
-            headers={'Authorization': 'Basic dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'}
+            headers={'Authorization': 'Basic dGVzdHVzZXI6dGVzdHBhc3N3b3Jk'},
+            data=None
         )
         self.assertEquals(response, "test response")
 
@@ -105,7 +107,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         )
         self.api._session.get.assert_called_with(
             self.api_base + '/api/0.6/test410',
-            headers={}
+            headers={},
+            data=None
         )
         self.assertIsNone(response, "test response")
 

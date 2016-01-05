@@ -1926,12 +1926,8 @@ class OsmApi:
                 base64_user_pass = base64_user_pass.decode('utf-8')
 
             headers['Authorization'] = 'Basic ' + base64_user_pass
-        if send is not None:
-            headers['Content-Length'] = len(send)
-        if send:  # If we have additional data to send
-            response = method(path, headers=headers, data=send)
-        else:
-            response = method(path, headers=headers)
+
+        response = method(path, headers=headers, data=send)
         if response.status_code != 200:
             if response.status_code == 410:
                 return None

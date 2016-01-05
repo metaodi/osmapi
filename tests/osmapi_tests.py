@@ -50,8 +50,8 @@ class TestOsmApi(unittest.TestCase):
         conn_mock.head = mock.Mock(return_value=response_mock)
         conn_mock.put = mock.Mock(return_value=response_mock)
 
-        self.api._get_http_connection = mock.Mock(return_value=conn_mock)
-        self.api._conn = conn_mock
+        self.api._get_http_session = mock.Mock(return_value=conn_mock)
+        self.api._session = conn_mock
 
         self.api._sleep = mock.Mock()
 

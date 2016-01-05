@@ -55,7 +55,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetGet(123)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/changeset/123')
 
         self.assertEquals(result, {
@@ -91,7 +91,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/changeset/4444')
         self.assertEquals(
             xmltosorteddict(kwargs['data']),
@@ -123,7 +123,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/changeset/4444')
         self.assertEquals(
             xmltosorteddict(kwargs['data']),
@@ -160,7 +160,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/changeset/create')
         self.assertEquals(
             xmltosorteddict(kwargs['data']),
@@ -186,7 +186,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/changeset/create')
         self.assertEquals(
             xmltosorteddict(kwargs['data']),
@@ -231,7 +231,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         self.api.ChangesetClose()
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/4444/close')
 
@@ -269,7 +269,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/4444/upload')
         self.assertEquals(
@@ -342,7 +342,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/4444/upload')
         self.assertEquals(
@@ -425,7 +425,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/4444/upload')
         self.assertEquals(
@@ -461,7 +461,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetDownload(23123)
 
-        args, _ = self.api._conn.get.call_args
+        args, _ = self.api._session.get.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/23123/download')
 
@@ -496,7 +496,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             username='metaodi'
         )
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(
             dict(urlparse.parse_qsl(urlparse.urlparse(args[0])[4])),
             {
@@ -531,7 +531,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetGet(52924, include_discussion=True)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(
             args[0],
             self.api_base + '/api/0.6/changeset/52924?include_discussion=true'
@@ -583,7 +583,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             comment="test comment"
         )
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/123/comment')
         self.assertEquals(
@@ -613,7 +613,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetSubscribe(123)
 
-        args, _ = self.api._conn.post.call_args
+        args, _ = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/123/subscribe')
         self.assertEquals(result, {
@@ -651,7 +651,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
 
         result = self.api.ChangesetUnsubscribe(123)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/changeset/123/unsubscribe')
         self.assertEquals(result, {

@@ -12,7 +12,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeGet(123)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/123')
 
         self.assertEquals(result, {
@@ -37,7 +37,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeGet(123, NodeVersion=2)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/123/2')
 
         self.assertEquals(result, {
@@ -101,7 +101,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeCreate(test_node)
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/create')
 
         self.assertEquals(result['id'], 9876)
@@ -216,7 +216,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(cs, 1111)
         result = self.api.NodeUpdate(test_node)
 
-        args, kwargs = self.api._conn.put.call_args
+        args, kwargs = self.api._session.put.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/7676')
 
         self.assertEquals(result['id'], 7676)
@@ -245,7 +245,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeDelete(test_node)
 
-        args, kwargs = self.api._conn.delete.call_args
+        args, kwargs = self.api._session.delete.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/7676')
         self.assertEquals(result['id'], 7676)
         self.assertEquals(result['version'], 4)
@@ -255,7 +255,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeHistory(123)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/123/history')
 
         self.assertEquals(len(result), 8)
@@ -275,7 +275,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeWays(234)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/node/234/ways')
 
         self.assertEquals(len(result), 1)
@@ -294,7 +294,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodeRelations(4295668179)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/node/4295668179/relations')
 
@@ -321,7 +321,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
 
         result = self.api.NodesGet([123, 345])
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0],
                           self.api_base + '/api/0.6/nodes?nodes=123,345')
 

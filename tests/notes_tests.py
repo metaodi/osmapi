@@ -20,7 +20,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             52.4710193
         )
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
 
         urlParts = urlparse.urlparse(args[0])
         params = urlparse.parse_qs(urlParts.query)
@@ -68,7 +68,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NoteGet(1111)
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
         self.assertEquals(args[0], self.api_base + '/api/0.6/notes/1111')
 
         self.assertEquals(result, {
@@ -108,7 +108,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
 
         urlParts = urlparse.urlparse(args[0])
         params = urlparse.parse_qs(urlParts.query)
@@ -145,7 +145,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
 
         urlParts = urlparse.urlparse(args[0])
         params = urlparse.parse_qs(urlParts.query)
@@ -177,7 +177,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NoteComment(812, 'This is a comment')
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(
             args[0],
             self.api_base + '/api/0.6/notes/812/comment?text=This+is+a+comment'
@@ -215,7 +215,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NoteComment(842, 'blubb')
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(
             args[0],
             self.api_base + '/api/0.6/notes/842/comment?text=blubb'
@@ -253,7 +253,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NoteClose(814, 'Close this note!')
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(
             args[0],
             self.api_base + '/api/0.6/notes/814/close?text=Close+this+note%21'
@@ -291,7 +291,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NoteReopen(815, 'Reopen this note!')
 
-        args, kwargs = self.api._conn.post.call_args
+        args, kwargs = self.api._session.post.call_args
         self.assertEquals(
             args[0],
             (self.api_base +
@@ -338,7 +338,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
 
         result = self.api.NotesSearch('street')
 
-        args, kwargs = self.api._conn.get.call_args
+        args, kwargs = self.api._session.get.call_args
 
         urlParts = urlparse.urlparse(args[0])
         params = urlparse.parse_qs(urlParts.query)

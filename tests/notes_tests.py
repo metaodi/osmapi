@@ -11,7 +11,7 @@ except ImportError:
 
 class TestOsmApiNotes(osmapi_tests.TestOsmApi):
     def test_NotesGet(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.NotesGet(
             -1.4998534,
@@ -20,9 +20,9 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
             52.4710193
         )
 
-        args, kwargs = self.api._session.get.call_args
-
-        urlParts = urlparse.urlparse(args[0])
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
         self.assertEquals(
             params['bbox'][0],
@@ -64,12 +64,13 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteGet(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.NoteGet(1111)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/notes/1111')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/notes/1111')
 
         self.assertEquals(result, {
             'id': '1111',
@@ -99,7 +100,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteCreate(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         note = {
             'lat': 47.123,
@@ -108,9 +109,9 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._session.post.call_args
-
-        urlParts = urlparse.urlparse(args[0])
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
+        urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
         self.assertEquals(params['lat'][0], '47.123')
         self.assertEquals(params['lon'][0], '8.432')
@@ -136,7 +137,7 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteCreateAnonymous(self):
-        self._conn_mock()
+        self._session_mock()
 
         note = {
             'lat': 47.123,
@@ -145,9 +146,9 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._session.post.call_args
-
-        urlParts = urlparse.urlparse(args[0])
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
+        urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
         self.assertEquals(params['lat'][0], '47.123')
         self.assertEquals(params['lon'][0], '8.432')
@@ -173,13 +174,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteComment(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         result = self.api.NoteComment(812, 'This is a comment')
 
-        args, kwargs = self.api._session.post.call_args
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
         self.assertEquals(
-            args[0],
+            args[1],
             self.api_base + '/api/0.6/notes/812/comment?text=This+is+a+comment'
         )
 
@@ -211,13 +213,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteCommentAnonymous(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.NoteComment(842, 'blubb')
 
-        args, kwargs = self.api._session.post.call_args
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
         self.assertEquals(
-            args[0],
+            args[1],
             self.api_base + '/api/0.6/notes/842/comment?text=blubb'
         )
 
@@ -249,13 +252,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteClose(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         result = self.api.NoteClose(814, 'Close this note!')
 
-        args, kwargs = self.api._session.post.call_args
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
         self.assertEquals(
-            args[0],
+            args[1],
             self.api_base + '/api/0.6/notes/814/close?text=Close+this+note%21'
         )
 
@@ -287,13 +291,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NoteReopen(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         result = self.api.NoteReopen(815, 'Reopen this note!')
 
-        args, kwargs = self.api._session.post.call_args
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'POST')
         self.assertEquals(
-            args[0],
+            args[1],
             (self.api_base +
              '/api/0.6/notes/815/reopen?text=Reopen+this+note%21')
         )
@@ -334,13 +339,13 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         })
 
     def test_NotesSearch(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.NotesSearch('street')
 
-        args, kwargs = self.api._session.get.call_args
-
-        urlParts = urlparse.urlparse(args[0])
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
         self.assertEquals(params['q'][0], 'street')
         self.assertEquals(params['limit'][0], '100')

@@ -136,7 +136,7 @@ class OsmApi:
             password=None,
             passwordfile=None,
             appid="",
-            created_by="osmapi/" + __version__,
+            created_by="osmapi/%s" % __version__,
             api="https://www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},
@@ -219,7 +219,7 @@ class OsmApi:
         if not appid:
             self._created_by = created_by
         else:
-            self._created_by = appid + " (" + created_by + ")"
+            self._created_by = "%s (%s)" % (appid, created_by)
 
         # Initialisation
         self._CurrentChangesetId = 0
@@ -313,9 +313,9 @@ class OsmApi:
         If `NodeVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/node/" + str(NodeId)
+        uri = "/api/0.6/node/%s" % (NodeId)
         if NodeVersion != -1:
-            uri += "/" + str(NodeVersion)
+            uri += "/%s" % (NodeVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -452,7 +452,7 @@ class OsmApi:
 
         `NodeId` is the unique identifier of a node.
         """
-        uri = "/api/0.6/node/" + str(NodeId) + "/history"
+        uri = "/api/0.6/node/%s/history" % NodeId
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -552,7 +552,8 @@ class OsmApi:
         `NodeIdList` is a list containing unique identifiers
         for multiple nodes.
         """
-        uri = "/api/0.6/nodes?nodes=" + ",".join([str(x) for x in NodeIdList])
+        node_list = ",".join([str(x) for x in NodeIdList])
+        uri = "/api/0.6/nodes?nodes=%s" % node_list
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -586,9 +587,9 @@ class OsmApi:
         If `WayVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/way/" + str(WayId)
+        uri = "/api/0.6/way/%s" % (WayId)
         if WayVersion != -1:
-            uri += "/" + str(WayVersion)
+            uri += "/%s" % (WayVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -722,7 +723,7 @@ class OsmApi:
 
         `WayId` is the unique identifier of a way.
         """
-        uri = "/api/0.6/way/" + str(WayId) + "/history"
+        uri = "/api/0.6/way/%s/history" % (WayId)
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -789,7 +790,7 @@ class OsmApi:
 
         The `WayId` is a unique identifier for a way.
         """
-        uri = "/api/0.6/way/" + str(WayId) + "/full"
+        uri = "/api/0.6/way/%s/full" % (WayId)
         data = self._get(uri)
         return self.ParseOsm(data)
 
@@ -807,7 +808,8 @@ class OsmApi:
 
         `WayIdList` is a list containing unique identifiers for multiple ways.
         """
-        uri = "/api/0.6/ways?ways=" + ",".join([str(x) for x in WayIdList])
+        way_list = ",".join([str(x) for x in WayIdList])
+        uri = "/api/0.6/ways?ways=%s" % way_list
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -850,9 +852,9 @@ class OsmApi:
         If `RelationVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/relation/" + str(RelationId)
+        uri = "/api/0.6/relation/%s" % (RelationId)
         if RelationVersion != -1:
-            uri += "/" + str(RelationVersion)
+            uri += "/%s" % (RelationVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -1013,7 +1015,7 @@ class OsmApi:
 
         `RelationId` is the unique identifier of a relation.
         """
-        uri = "/api/0.6/relation/" + str(RelationId) + "/history"
+        uri = "/api/0.6/relation/%s/history" % (RelationId)
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -1121,7 +1123,7 @@ class OsmApi:
 
         If you need all levels, use `OsmApi.RelationFullRecur`.
         """
-        uri = "/api/0.6/relation/" + str(RelationId) + "/full"
+        uri = "/api/0.6/relation/%s/full" % (RelationId)
         data = self._get(uri)
         return self.ParseOsm(data)
 
@@ -1141,7 +1143,7 @@ class OsmApi:
         for multiple relations.
         """
         relation_list = ",".join([str(x) for x in RelationIdList])
-        uri = "/api/0.6/relations?relations=" + relation_list
+        uri = "/api/0.6/relations?relations=%s" % relation_list
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -1181,9 +1183,9 @@ class OsmApi:
         If `include_discussion` is set to `True` the changeset discussion
         will be available in the result.
         """
-        path = "/api/0.6/changeset/" + str(ChangesetId)
+        path = "/api/0.6/changeset/%s" % (ChangesetId)
         if (include_discussion):
-            path = path + "?include_discussion=true"
+            path += "?include_discussion=true"
         data = self._get(path)
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
@@ -1205,7 +1207,7 @@ class OsmApi:
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         self._put(
-            "/api/0.6/changeset/" + str(self._CurrentChangesetId),
+            "/api/0.6/changeset/%s" % (self._CurrentChangesetId),
             self._XmlBuild("changeset", {"tag": ChangesetTags})
         )
         return self._CurrentChangesetId
@@ -1250,7 +1252,7 @@ class OsmApi:
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
         self._put(
-            "/api/0.6/changeset/" + str(self._CurrentChangesetId) + "/close",
+            "/api/0.6/changeset/%s/close" % (self._CurrentChangesetId),
             ""
         )
         CurrentChangesetId = self._CurrentChangesetId
@@ -1288,7 +1290,7 @@ class OsmApi:
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
         data = self._post(
-            "/api/0.6/changeset/" + str(self._CurrentChangesetId) + "/upload",
+            "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
             data.encode("utf-8")
         )
         data = xml.dom.minidom.parseString(data)
@@ -1317,7 +1319,7 @@ class OsmApi:
                 'data': {}
             }
         """
-        uri = "/api/0.6/changeset/" + str(ChangesetId) + "/download"
+        uri = "/api/0.6/changeset/%s/download" % (ChangesetId)
         data = self._get(uri)
         return self.ParseOsc(data)
 
@@ -1367,7 +1369,7 @@ class OsmApi:
         if created_before:
             if not closed_after:
                 closed_after = "1970-01-01T00:00:00Z"
-            params["time"] = closed_after + "," + created_before
+            params["time"] = "%s,%s" % (closed_after, created_before)
         if only_open:
             params["open"] = 1
         if only_closed:
@@ -1416,7 +1418,7 @@ class OsmApi:
         """
         params = urllib.urlencode({'text': comment})
         data = self._post(
-            "/api/0.6/changeset/" + str(ChangesetId) + "/comment",
+            "/api/0.6/changeset/%s/comment" % (ChangesetId),
             params
         )
         data = xml.dom.minidom.parseString(data)
@@ -1453,7 +1455,7 @@ class OsmApi:
         """
         try:
             data = self._post(
-                "/api/0.6/changeset/" + str(ChangesetId) + "/subscribe",
+                "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
                 None
             )
         except ApiError as e:
@@ -1495,7 +1497,7 @@ class OsmApi:
         """
         try:
             data = self._post(
-                "/api/0.6/changeset/" + str(ChangesetId) + "/unsubscribe",
+                "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
                 None
             )
         except ApiError as e:
@@ -1824,10 +1826,10 @@ class OsmApi:
         if action == "create":
             if OsmData.get("id", -1) > 0:
                 raise OsmTypeAlreadyExistsError(
-                    "This " + OsmType + " already exists"
+                    "This %s already exists" % OsmType
                 )
             result = self._put(
-                "/api/0.6/" + OsmType + "/create",
+                "/api/0.6/%s/create" % OsmType,
                 self._XmlBuild(OsmType, OsmData)
             )
             OsmData["id"] = int(result.strip())
@@ -1835,14 +1837,14 @@ class OsmApi:
             return OsmData
         elif action == "modify":
             result = self._put(
-                "/api/0.6/" + OsmType + "/" + str(OsmData["id"]),
+                "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
                 self._XmlBuild(OsmType, OsmData)
             )
             OsmData["version"] = int(result.strip())
             return OsmData
         elif action == "delete":
             result = self._delete(
-                "/api/0.6/" + OsmType + "/" + str(OsmData["id"]),
+                "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
                 self._XmlBuild(OsmType, OsmData)
             )
             OsmData["version"] = int(result.strip())

@@ -14,12 +14,13 @@ def debug(result):
 
 class TestOsmApiRelation(osmapi_tests.TestOsmApi):
     def test_RelationGet(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationGet(321)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/321')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/321')
 
         self.assertEquals(result, {
             'id': 321,
@@ -84,12 +85,13 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         })
 
     def test_RelationGet_with_version(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationGet(765, 2)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/765/2')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/765/2')
 
         self.assertEquals(result['id'], 765)
         self.assertEquals(result['changeset'], 41378)
@@ -97,7 +99,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag']['source'], 'test')
 
     def test_RelationCreate(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -130,8 +132,9 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationCreate(test_relation)
 
-        args, kwargs = self.api._session.put.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/create')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/create')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 1)
@@ -170,7 +173,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
             self.api.RelationCreate(test_relation)
 
     def test_RelationUpdate(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -199,8 +202,9 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationUpdate(test_relation)
 
-        args, kwargs = self.api._session.put.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/8989')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'PUT')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/8989')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 42)
@@ -208,7 +212,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result['tag'], test_relation['tag'])
 
     def test_RelationDelete(self):
-        self._conn_mock(auth=True)
+        self._session_mock(auth=True)
 
         # setup mock
         self.api.ChangesetCreate = mock.Mock(
@@ -227,19 +231,21 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
 
         result = self.api.RelationDelete(test_relation)
 
-        args, kwargs = self.api._session.delete.call_args
-        self.assertEquals(args[0], self.api_base + '/api/0.6/relation/8989')
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'DELETE')
+        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/8989')
 
         self.assertEquals(result['id'], 8989)
         self.assertEquals(result['version'], 43)
 
     def test_RelationHistory(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationHistory(2470397)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0],
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1],
                           self.api_base + '/api/0.6/relation/2470397/history')
 
         self.assertEquals(len(result), 2)
@@ -254,12 +260,13 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result[2]['version'], 2)
 
     def test_RelationRelations(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationRelations(1532552)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0],
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1],
                           (self.api_base +
                            '/api/0.6/relation/1532552/relations'))
 
@@ -274,12 +281,13 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         )
 
     def test_RelationFull(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationFull(2470397)
 
-        args, kwargs = self.api._session.get.call_args
-        self.assertEquals(args[0],
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1],
                           self.api_base + '/api/0.6/relation/2470397/full')
 
         self.assertEquals(len(result), 11)
@@ -291,13 +299,14 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result[10]['type'], 'relation')
 
     def test_RelationsGet(self):
-        self._conn_mock()
+        self._session_mock()
 
         result = self.api.RelationsGet([1532552, 1532553])
 
-        args, kwargs = self.api._session.get.call_args
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
         self.assertEquals(
-            args[0],
+            args[1],
             self.api_base + '/api/0.6/relations?relations=1532552,1532553'
         )
 

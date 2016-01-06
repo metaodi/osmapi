@@ -28,7 +28,8 @@ class TestOsmApi(unittest.TestCase):
         print(self._testMethodName)
         print(self.api)
 
-    def _conn_mock(self, auth=False, filenames=None, status=200, reason=None):
+    def _session_mock(self, auth=False, filenames=None, status=200,
+                      reason=None):
         if auth:
             self.api._username = 'testuser'
             self.api._password = 'testpassword'
@@ -42,16 +43,11 @@ class TestOsmApi(unittest.TestCase):
         if return_values:
             response_mock.text = return_values[0]
 
-        conn_mock = mock.Mock()
-        conn_mock.get = mock.Mock(return_value=response_mock)
-        conn_mock.post = mock.Mock(return_value=response_mock)
-        conn_mock.update = mock.Mock(return_value=response_mock)
-        conn_mock.delete = mock.Mock(return_value=response_mock)
-        conn_mock.head = mock.Mock(return_value=response_mock)
-        conn_mock.put = mock.Mock(return_value=response_mock)
+        session_mock = mock.Mock()
+        session_mock.request = mock.Mock(return_value=response_mock)
 
-        self.api._get_http_session = mock.Mock(return_value=conn_mock)
-        self.api._session = conn_mock
+        self.api._get_http_session = mock.Mock(return_value=session_mock)
+        self.api._session = session_mock
 
         self.api._sleep = mock.Mock()
 

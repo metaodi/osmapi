@@ -1927,7 +1927,8 @@ class OsmApi:
 
             headers['Authorization'] = 'Basic ' + base64_user_pass
 
-        response = method(path, headers=headers, data=send)
+        response = self._session.request(method, path, headers=headers,
+                                         data=send)
         if response.status_code != 200:
             if response.status_code == 410:
                 return None
@@ -1982,20 +1983,20 @@ class OsmApi:
         time.sleep(5)
 
     def _get(self, path):
-        return self._http(self._session.get, path, False, None)
+        return self._http('GET', path, False, None)
 
     def _put(self, path, data):
-        return self._http(self._session.put, path, True, data)
+        return self._http('PUT', path, True, data)
 
     def _post(self, path, data, optionalAuth=False):
         auth = True
         # the Notes API allows certain POSTs by non-authenticated users
         if optionalAuth:
             auth = hasattr(self, '_username')
-        return self._http(self._session.post, path, auth, data)
+        return self._http('POST', path, auth, data)
 
     def _delete(self, path, data):
-        return self._http(self._session.delete, path, True, data)
+        return self._http('DELETE', path, True, data)
 
     ##################################################
     # Internal dom function                          #

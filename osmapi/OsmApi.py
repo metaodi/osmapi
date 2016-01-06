@@ -28,15 +28,11 @@ Find all information about changes of the different versions of this module
 """
 
 from __future__ import (absolute_import, print_function, unicode_literals)
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
-import base64
 import xml.dom.minidom
 import time
 import sys
 import urllib
+import requests
 from datetime import datetime
 
 from osmapi import __version__
@@ -140,7 +136,7 @@ class OsmApi:
             password=None,
             passwordfile=None,
             appid="",
-            created_by="osmapi/"+__version__,
+            created_by="osmapi/" + __version__,
             api="https://www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},
@@ -217,7 +213,7 @@ class OsmApi:
         self._changesetautodata = []
 
         # Get API
-        self._api = api
+        self._api = api.strip('/')
 
         # Get created_by
         if not appid:
@@ -229,7 +225,7 @@ class OsmApi:
         self._CurrentChangesetId = 0
 
         # Http connection
-        self._conn = self._get_http_connection()
+        self._session = self._get_http_session()
 
     def __del__(self):
         if self._changesetauto:
@@ -317,9 +313,9 @@ class OsmApi:
         If `NodeVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/node/"+str(NodeId)
+        uri = "/api/0.6/node/" + str(NodeId)
         if NodeVersion != -1:
-            uri += "/"+str(NodeVersion)
+            uri += "/" + str(NodeVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -456,7 +452,7 @@ class OsmApi:
 
         `NodeId` is the unique identifier of a node.
         """
-        uri = "/api/0.6/node/"+str(NodeId)+"/history"
+        uri = "/api/0.6/node/" + str(NodeId) + "/history"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -590,9 +586,9 @@ class OsmApi:
         If `WayVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/way/"+str(WayId)
+        uri = "/api/0.6/way/" + str(WayId)
         if WayVersion != -1:
-            uri += "/"+str(WayVersion)
+            uri += "/" + str(WayVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -726,7 +722,7 @@ class OsmApi:
 
         `WayId` is the unique identifier of a way.
         """
-        uri = "/api/0.6/way/"+str(WayId)+"/history"
+        uri = "/api/0.6/way/" + str(WayId) + "/history"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -793,7 +789,7 @@ class OsmApi:
 
         The `WayId` is a unique identifier for a way.
         """
-        uri = "/api/0.6/way/"+str(WayId)+"/full"
+        uri = "/api/0.6/way/" + str(WayId) + "/full"
         data = self._get(uri)
         return self.ParseOsm(data)
 
@@ -854,9 +850,9 @@ class OsmApi:
         If `RelationVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
         """
-        uri = "/api/0.6/relation/"+str(RelationId)
+        uri = "/api/0.6/relation/" + str(RelationId)
         if RelationVersion != -1:
-            uri += "/"+str(RelationVersion)
+            uri += "/" + str(RelationVersion)
         data = self._get(uri)
         if not data:
             return data
@@ -1017,7 +1013,7 @@ class OsmApi:
 
         `RelationId` is the unique identifier of a relation.
         """
-        uri = "/api/0.6/relation/"+str(RelationId)+"/history"
+        uri = "/api/0.6/relation/" + str(RelationId) + "/history"
         data = self._get(uri)
         data = xml.dom.minidom.parseString(data)
         result = {}
@@ -1125,7 +1121,7 @@ class OsmApi:
 
         If you need all levels, use `OsmApi.RelationFullRecur`.
         """
-        uri = "/api/0.6/relation/"+str(RelationId)+"/full"
+        uri = "/api/0.6/relation/" + str(RelationId) + "/full"
         data = self._get(uri)
         return self.ParseOsm(data)
 
@@ -1185,7 +1181,7 @@ class OsmApi:
         If `include_discussion` is set to `True` the changeset discussion
         will be available in the result.
         """
-        path = "/api/0.6/changeset/"+str(ChangesetId)
+        path = "/api/0.6/changeset/" + str(ChangesetId)
         if (include_discussion):
             path = path + "?include_discussion=true"
         data = self._get(path)
@@ -1254,7 +1250,7 @@ class OsmApi:
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
         self._put(
-            "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close",
+            "/api/0.6/changeset/" + str(self._CurrentChangesetId) + "/close",
             ""
         )
         CurrentChangesetId = self._CurrentChangesetId
@@ -1282,17 +1278,17 @@ class OsmApi:
         data += "<osmChange version=\"0.6\" generator=\""
         data += self._created_by + "\">\n"
         for change in ChangesData:
-            data += "<"+change["action"]+">\n"
+            data += "<" + change["action"] + ">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
             data += self._XmlBuild(
                 change["type"],
                 change["data"],
                 False
             ).decode("utf-8")
-            data += "</"+change["action"]+">\n"
+            data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
         data = self._post(
-            "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload",
+            "/api/0.6/changeset/" + str(self._CurrentChangesetId) + "/upload",
             data.encode("utf-8")
         )
         data = xml.dom.minidom.parseString(data)
@@ -1321,7 +1317,7 @@ class OsmApi:
                 'data': {}
             }
         """
-        uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
+        uri = "/api/0.6/changeset/" + str(ChangesetId) + "/download"
         data = self._get(uri)
         return self.ParseOsc(data)
 
@@ -1420,7 +1416,7 @@ class OsmApi:
         """
         params = urllib.urlencode({'text': comment})
         data = self._post(
-            "/api/0.6/changeset/"+str(ChangesetId)+"/comment",
+            "/api/0.6/changeset/" + str(ChangesetId) + "/comment",
             params
         )
         data = xml.dom.minidom.parseString(data)
@@ -1457,7 +1453,7 @@ class OsmApi:
         """
         try:
             data = self._post(
-                "/api/0.6/changeset/"+str(ChangesetId)+"/subscribe",
+                "/api/0.6/changeset/" + str(ChangesetId) + "/subscribe",
                 None
             )
         except ApiError as e:
@@ -1499,7 +1495,7 @@ class OsmApi:
         """
         try:
             data = self._post(
-                "/api/0.6/changeset/"+str(ChangesetId)+"/unsubscribe",
+                "/api/0.6/changeset/" + str(ChangesetId) + "/unsubscribe",
                 None
             )
         except ApiError as e:
@@ -1828,7 +1824,7 @@ class OsmApi:
         if action == "create":
             if OsmData.get("id", -1) > 0:
                 raise OsmTypeAlreadyExistsError(
-                    "This "+OsmType+" already exists"
+                    "This " + OsmType + " already exists"
                 )
             result = self._put(
                 "/api/0.6/" + OsmType + "/create",
@@ -1887,53 +1883,51 @@ class OsmApi:
             self._changesetautocpt = 0
         return None
 
-    def _http_request(self, cmd, path, auth, send):  # noqa
+    def _http_request(self, method, path, auth, send):  # noqa
+        """
+        Returns the response generated by an HTTP request.
+
+        `method` is a HTTP method to be executed
+        with the request data. For example: 'GET' or 'POST'.
+        `path` is the path to the requested resource relative to the
+        base API address stored in self._api. Should start with a
+        slash character to separate the URL.
+        `auth` is a boolean indicating whether authentication should
+        be preformed on this request.
+        `send` contains additional data that might be sent in a
+        request.
+        """
         if self._debug:
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
             )
             print(error_msg, file=sys.stderr)
-        self._conn.putrequest(cmd, path)
-        self._conn.putheader('User-Agent', self._created_by)
+
+        # Add API base URL to path
+        path = self._api + path
+
+        user_pass = None
         if auth:
             try:
-                user_pass = self._username + ':' + self._password
+                user_pass = (self._username, self._password)
             except AttributeError:
                 raise UsernamePasswordMissingError("Username/Password missing")
 
-            try:
-                # Python 2
-                base64_user_pass = base64.encodestring(user_pass).strip()
-            except TypeError:
-                # Python 3
-                base64_user_pass = base64.encodestring(
-                    user_pass.encode('ascii')
-                    ).strip()
-                base64_user_pass = base64_user_pass.decode('utf-8')
-
-            self._conn.putheader(
-                'Authorization',
-                'Basic ' + base64_user_pass
-            )
-        if send is not None:
-            self._conn.putheader('Content-Length', len(send))
-        self._conn.endheaders()
-        if send:
-            self._conn.send(send)
-        response = self._conn.getresponse()
-        if response.status != 200:
-            payload = response.read().strip()
-            if response.status == 410:
+        response = self._session.request(method, path, auth=user_pass,
+                                         data=send)
+        if response.status_code != 200:
+            if response.status_code == 410:
                 return None
-            raise ApiError(response.status, response.reason, payload)
+            payload = response.text.strip()
+            raise ApiError(response.status_code, response.reason, payload)
         if self._debug:
             error_msg = (
                 "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), cmd, path)
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
             )
             print(error_msg, file=sys.stderr)
-        return response.read()
+        return response.text
 
     def _http(self, cmd, path, auth, send):  # noqa
         i = 0
@@ -1947,7 +1941,7 @@ class OsmApi:
                         raise
                     if i != 1:
                         self._sleep()
-                    self._conn = self._get_http_connection()
+                    self._session = self._get_http_session()
                 else:
                     raise
             except Exception as e:
@@ -1960,17 +1954,17 @@ class OsmApi:
                     )
                 if i != 1:
                     self._sleep()
-                self._conn = self._get_http_connection()
+                self._session = self._get_http_session()
 
-    def _get_http_connection(self):
-        https_str = 'https://'
-        http_str = 'http://'
-        if self._api.lower().startswith(https_str):
-            return httplib.HTTPSConnection(self._api[len(https_str):], 443)
-        elif self._api.lower().startswith(http_str):
-            return httplib.HTTPConnection(self._api[len(http_str):], 80)
-        else:
-            return httplib.HTTPConnection(self._api, 80)
+    def _get_http_session(self):
+        """
+        Creates a requests session for connection pooling.
+        """
+        session = requests.Session()
+        session.headers.update({
+            'user-agent': self._created_by
+        })
+        return session
 
     def _sleep(self):
         time.sleep(5)
@@ -2189,7 +2183,7 @@ class OsmApi:
         # <tag... />
         for k, v in ElementData.get("tag", {}).items():
             xml += "    <tag k=\"" + self._XmlEncode(k)
-            xml += "\" v=\"" + self._XmlEncode(v)+"\"/>\n"
+            xml += "\" v=\"" + self._XmlEncode(v) + "\"/>\n"
 
         # <member... />
         for member in ElementData.get("member", []):
@@ -2200,7 +2194,7 @@ class OsmApi:
 
         # <nd... />
         for ref in ElementData.get("nd", []):
-            xml += "    <nd ref=\""+str(ref)+"\"/>\n"
+            xml += "    <nd ref=\"" + str(ref) + "\"/>\n"
 
         # </element>
         xml += "  </" + ElementType + ">\n"

@@ -28,7 +28,6 @@ Find all information about changes of the different versions of this module
 """
 
 from __future__ import (absolute_import, print_function, unicode_literals)
-import base64
 import xml.dom.minidom
 import time
 import sys
@@ -1908,26 +1907,14 @@ class OsmApi:
         # Add API base URL to path
         path = self._api + path
 
-        headers = {}
+        user_pass = None
         if auth:
             try:
-                user_pass = self._username + ':' + self._password
+                user_pass = (self._username, self._password)
             except AttributeError:
                 raise UsernamePasswordMissingError("Username/Password missing")
 
-            try:
-                # Python 2
-                base64_user_pass = base64.encodestring(user_pass).strip()
-            except TypeError:
-                # Python 3
-                base64_user_pass = base64.encodestring(
-                    user_pass.encode('ascii')
-                    ).strip()
-                base64_user_pass = base64_user_pass.decode('utf-8')
-
-            headers['Authorization'] = 'Basic ' + base64_user_pass
-
-        response = self._session.request(method, path, headers=headers,
+        response = self._session.request(method, path, auth=user_pass,
                                          data=send)
         if response.status_code != 200:
             if response.status_code == 410:

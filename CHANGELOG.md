@@ -5,6 +5,7 @@ This project follows [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 ### Changed
 - Replace the old httplib with requests library (thanks a lot [Austin Hartzheim](http://austinhartzheim.me/)!)
+- Use format strings instead of ugly string concatenation
 
 ## 0.6.2 - 2016-01-04
 ### Changed

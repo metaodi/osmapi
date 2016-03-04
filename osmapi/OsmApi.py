@@ -1921,7 +1921,7 @@ class OsmApi:
         if response.status_code != 200:
             if response.status_code == 410:
                 return None
-            payload = response.text.strip()
+            payload = response.content.strip()
             raise ApiError(response.status_code, response.reason, payload)
         if self._debug:
             error_msg = (
@@ -1929,7 +1929,7 @@ class OsmApi:
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
             )
             print(error_msg, file=sys.stderr)
-        return response.text
+        return response.content
 
     def _http(self, cmd, path, auth, send):  # noqa
         i = 0

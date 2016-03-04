@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Note, this is not the original data from openstreetmap.org. This changeset has been reduced in size for practical reasons -->
+<osmChange version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <create>
+    <node id="4022271572" changeset="37393499" timestamp="2016-02-23T16:55:35Z" version="1" visible="true" user="InternationalUser" uid="328556" lat="57.0040348" lon="10.1947379"/>
+  </create>
+  <create>
+    <way id="399491497" changeset="37393499" timestamp="2016-02-23T16:55:35Z" version="1" visible="true" user="InternationalUser" uid="328556">
+      <nd ref="4022271571"/>
+      <nd ref="4022271567"/>
+      <nd ref="4022271565"/>
+      <tag k="highway" v="service"/>
+      <tag k="name" v="Sønderskovvej"/>
+      <tag k="service" v="driveway"/>
+    </way>
+  </create>
+</osmChange>

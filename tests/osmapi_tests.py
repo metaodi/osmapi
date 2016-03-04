@@ -41,7 +41,7 @@ class TestOsmApi(unittest.TestCase):
         print(return_values)
         assert len(return_values) < 2
         if return_values:
-            response_mock.text = return_values[0]
+            response_mock.content = return_values[0]
 
         session_mock = mock.Mock()
         session_mock.request = mock.Mock(return_value=response_mock)

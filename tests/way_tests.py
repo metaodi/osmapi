@@ -1,5 +1,4 @@
 from __future__ import (unicode_literals, absolute_import)
-from nose.tools import *  # noqa
 from . import osmapi_tests
 import osmapi
 import mock

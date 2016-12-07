@@ -1,5 +1,4 @@
 from __future__ import (unicode_literals, absolute_import)
-from nose.tools import *  # noqa
 from . import osmapi_tests
 
 
@@ -8,7 +7,7 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self._session_mock()
 
         result = self.api.Capabilities()
-        assert_equals(result, {
+        self.assertEquals(result, {
             'area': {'maximum': 0.25},
             'changesets': {'maximum_elements': 50000.0},
             'status': {

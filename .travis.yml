@@ -13,11 +13,11 @@ before_install:
 
 install:
 - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then
-     pip install --use-mirrors unittest2;
+     pip install unittest2;
   fi
-- pip install .
 - pip install -r requirements.txt
 - pip install -r test-requirements.txt
+- pip install .
 
 script: ./build.sh
 

@@ -11,7 +11,7 @@ Python wrapper for the OSM API
 
 ## Installation
 
-Install `osmapi` simply by using pip:
+Install [`osmapi` from PyPi](https://pypi.python.org/pypi/osmapi) by using pip: 
 
     pip install osmapi
 

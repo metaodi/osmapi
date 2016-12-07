@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from nose.tools import *  # noqa
 from osmapi import OsmApi
 import mock
 import os
@@ -20,34 +19,34 @@ __location__ = os.path.realpath(
 
 class TestOsmApi(unittest.TestCase):
     def setUp(self):
+        self.api_base = "http://api06.dev.openstreetmap.org"
         self.api = OsmApi(
-            api="api06.dev.openstreetmap.org"
+            api=self.api_base
         )
         self.maxDiff = None
         print(self._testMethodName)
         print(self.api)
 
-    def _conn_mock(self, auth=False, filenames=None, status=200, reason=None):
+    def _session_mock(self, auth=False, filenames=None, status=200,
+                      reason=None):
         if auth:
             self.api._username = 'testuser'
             self.api._password = 'testpassword'
 
         response_mock = mock.Mock()
-        response_mock.status = status
-        response_mock.reason = reason
-        response_mock.read = mock.Mock(
-            side_effect=self._return_values(filenames)
-        )
+        response_mock.status_code = status
+        return_values = self._return_values(filenames)
+        print(filenames)
+        print(return_values)
+        assert len(return_values) < 2
+        if return_values:
+            response_mock.content = return_values[0]
 
-        conn_mock = mock.Mock()
-        conn_mock.putrequest = mock.Mock()
-        conn_mock.putheader = mock.Mock()
-        conn_mock.endheaders = mock.Mock()
-        conn_mock.send = mock.Mock()
-        conn_mock.getresponse = mock.Mock(return_value=response_mock)
+        session_mock = mock.Mock()
+        session_mock.request = mock.Mock(return_value=response_mock)
 
-        self.api._get_http_connection = mock.Mock(return_value=conn_mock)
-        self.api._conn = conn_mock
+        self.api._get_http_session = mock.Mock(return_value=session_mock)
+        self.api._session = session_mock
 
         self.api._sleep = mock.Mock()
 
@@ -73,4 +72,4 @@ class TestOsmApi(unittest.TestCase):
         pass
 
     def test_constructor(self):
-        assert_true(isinstance(self.api, OsmApi))
+        self.assertTrue(isinstance(self.api, OsmApi))

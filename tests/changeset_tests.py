@@ -516,7 +516,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                             'service': 'driveway'},
                     'timestamp': datetime.datetime(2016, 2, 23, 16, 55, 35),
                     'uid': 328556,
-                    'user': u'InternationalUser',
+                    'user': 'InternationalUser',
                     'version': 1,
                     'visible': True
                 }

@@ -21,7 +21,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         mock_response = mock.Mock()
         mock_response.status_code = status
         mock_response.reason = "test reason"
-        mock_response.text = 'test response'
+        mock_response.content = 'test response'
         self.api._session.request = mock.Mock(return_value=mock_response)
         self.api._username = 'testuser'
         self.api._password = 'testpassword'

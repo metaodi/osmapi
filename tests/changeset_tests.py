@@ -491,6 +491,38 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             }
         )
 
+    def test_ChangesetDownloadContainingUnicode(self):
+        self._session_mock()
+
+        # This changeset contains unicode tag values
+        # Note that the fixture data has been reduced from the
+        # original from openstreetmap.org
+        result = self.api.ChangesetDownload(37393499)
+
+        self.assertEquals(len(result), 2)
+        self.assertEquals(
+            result[1],
+            {
+                'action': 'create',
+                'type': 'way',
+                'data': {
+                    'changeset': 37393499,
+                    'id': 399491497,
+                    'nd': [4022271571, 4022271567, 4022271565],
+                    'tag': {'highway': 'service',
+                            # UTF-8 encoded 'LATIN SMALL LETTER O WITH STROKE'
+                            # Aka. 0xf8 in latin-1/ISO 8859-1
+                            'name': b'S\xc3\xb8nderskovvej'.decode('utf-8'),
+                            'service': 'driveway'},
+                    'timestamp': datetime.datetime(2016, 2, 23, 16, 55, 35),
+                    'uid': 328556,
+                    'user': u'InternationalUser',
+                    'version': 1,
+                    'visible': True
+                }
+            }
+        )
+
     def test_ChangesetsGet(self):
         self._session_mock()
 

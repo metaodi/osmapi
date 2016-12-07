@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from nose.tools import *  # noqa
 from osmapi import OsmApi
 import mock
 import os
@@ -73,4 +72,4 @@ class TestOsmApi(unittest.TestCase):
         pass
 
     def test_constructor(self):
-        assert_true(isinstance(self.api, OsmApi))
+        self.assertTrue(isinstance(self.api, OsmApi))

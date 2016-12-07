@@ -1,5 +1,4 @@
 from __future__ import (unicode_literals, absolute_import)
-from nose.tools import *  # noqa
 from . import osmapi_tests
 import osmapi
 import mock
@@ -41,12 +40,6 @@ def recursive_sort(col):  # noqa
 def xmltosorteddict(xml):
     xml_dict = xmltodict.parse(xml, dict_constructor=dict)
     return recursive_sort(xml_dict)
-
-
-def debug(result):
-    from pprint import pprint
-    pprint(result)
-    assert_equals(0, 1)
 
 
 class TestOsmApiChangeset(osmapi_tests.TestOsmApi):

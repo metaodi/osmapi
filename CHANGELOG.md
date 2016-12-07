@@ -3,9 +3,12 @@ All notable changes to this project will be documented in this file.
 This project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 0.7.0 - 2016-12-07
 ### Changed
 - Replace the old httplib with requests library (thanks a lot [Austin Hartzheim](http://austinhartzheim.me/)!)
 - Use format strings instead of ugly string concatenation
+- Fix unicode in changesets (thanks a lot to [MichaelVL](https://github.com/MichaelVL)!)
 
 ## 0.6.2 - 2016-01-04
 ### Changed

@@ -9,7 +9,7 @@ function cleanup {
 trap "cleanup" EXIT
 
 # Check PEP-8 code style and McCabe complexity
-flake8 --show-pep8 --show-source .
+flake8 --statistics --show-source .
 
 # run tests
 nosetests --verbose --with-coverage

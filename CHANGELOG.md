@@ -1,8 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
-This project follows [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 0.7.1 - 2016-12-12
+### Changed
+- Catch OSError in setup.py to avoid installation errors
 
 ## 0.7.0 - 2016-12-07
 ### Changed

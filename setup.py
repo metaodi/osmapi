@@ -11,7 +11,7 @@ try:
     description = codecs.open('README.md', encoding='utf-8').read()
     description = unidecode(description)
     description = pypandoc.convert(description, 'rst', format='md')
-except (IOError, ImportError):
+except (IOError, OSError, ImportError):
     description = 'Python wrapper for the OSM API'
 
 setup(
@@ -23,7 +23,7 @@ setup(
     author='Etienne Chové',
     author_email='chove@crans.org',
     maintainer='Stefan Oderbolz',
-    maintainer_email='odi@readmore.ch',
+    maintainer_email='odi@metaodi.ch',
     url='https://github.com/metaodi/osmapi',
     download_url='https://github.com/metaodi/osmapi/archive/v%s.zip' % version,
     keywords=['openstreetmap', 'osm', 'api'],
@@ -40,5 +40,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
 )

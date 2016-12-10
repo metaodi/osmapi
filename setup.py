@@ -11,7 +11,7 @@ try:
     description = codecs.open('README.md', encoding='utf-8').read()
     description = unidecode(description)
     description = pypandoc.convert(description, 'rst', format='md')
-except (IOError, ImportError):
+except (IOError, OSError, ImportError):
     description = 'Python wrapper for the OSM API'
 
 setup(

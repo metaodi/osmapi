@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import codecs
+import re
 from distutils.core import setup
 
-version = __import__('osmapi').__version__
+with open('osmapi/__init__.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
+
+if not version:
+    raise RuntimeError('Cannot find version information')
 
 try:
     import pypandoc

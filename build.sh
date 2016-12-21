@@ -18,3 +18,7 @@ nosetests --verbose --with-coverage
 if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then
     pdoc --html --overwrite osmapi/OsmApi.py
 fi
+
+# setup a new virtualenv and try to install the lib
+virtualenv pyenv
+source pyenv/bin/activate && pip install .

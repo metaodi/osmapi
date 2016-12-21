@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 0.8.1 - 2016-12-21
+### Fixed
+- Use setuptools instead of distutils in setup.py
+
 ## 0.8.0 - 2016-12-21
 ### Removed
 - This release no longer supports Python 3.2, if you need it, go back to release <= 0.6.2

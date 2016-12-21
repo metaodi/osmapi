@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import codecs
+from codecs import open
+from setuptools import setup
 import re
-from distutils.core import setup
 
 with open('osmapi/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
@@ -14,7 +14,7 @@ if not version:
 try:
     import pypandoc
     from unidecode import unidecode
-    description = codecs.open('README.md', encoding='utf-8').read()
+    description = open('README.md', encoding='utf-8').read()
     description = unidecode(description)
     description = pypandoc.convert(description, 'rst', format='md')
 except (IOError, OSError, ImportError):

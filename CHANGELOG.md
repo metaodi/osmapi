@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 0.7.2 - 2016-12-21
+### Fixed
+- Added 'requests' as a dependency to setup.py to fix installation problems
+
 ## 0.7.1 - 2016-12-12
 ### Changed
 - Catch OSError in setup.py to avoid installation errors

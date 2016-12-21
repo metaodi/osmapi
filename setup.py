@@ -18,6 +18,7 @@ setup(
     name='osmapi',
     packages=['osmapi'],
     version=version,
+    install_requires=['requests'],
     description='Python wrapper for the OSM API',
     long_description=description,
     author='Etienne Chové',

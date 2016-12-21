@@ -3,8 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 0.8.0 - 2016-12-21
 ### Removed
 - This release no longer supports Python 3.2, if you need it, go back to release <= 0.6.2
+
+## Changed
+- Read version from __init__.py instead of importing it in setup.py
 
 ## 0.7.2 - 2016-12-21
 ### Fixed

@@ -56,7 +56,7 @@ Note: The password file should have the format _user:password_
 
 ```python
 import osmapi
-api = osmapi.OsmApi(api='api06.dev.openstreetmap.org', username = u"metaodi", password = u"*******")
+api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
 api.ChangesetCreate({u"comment": u"My first test"})
 print api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
 # {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}

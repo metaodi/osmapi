@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 - osmapi does **not** support Python 2.6 anymore (it might work, it might not)
 
+### Changed
+- **BC-Break:** raise an exception of the requested element is deleted (previoulsy `None` has been returned)
+
 ## 0.8.1 - 2016-12-21
 ### Fixed
 - Use setuptools instead of distutils in setup.py

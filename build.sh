@@ -14,10 +14,8 @@ flake8 --statistics --show-source .
 # run tests
 nosetests --verbose --with-coverage
 
-# generate docs (currently it's not possible to generate docs in Python 2.6)
-if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then
-    pdoc --html --overwrite osmapi/OsmApi.py
-fi
+# generate the docs
+pdoc --html --overwrite osmapi/OsmApi.py
 
 # setup a new virtualenv and try to install the lib
 virtualenv pyenv

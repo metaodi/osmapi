@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Removed
+- osmapi does **not** support Python 2.6 anymore (it might work, it might not)
 
 ## 0.8.1 - 2016-12-21
 ### Fixed

@@ -101,19 +101,16 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
 
     def test_http_request_410_response(self):
         self.setupMock(410)
-        response = self.api._http_request(
-            'GET',
-            '/api/0.6/test410',
-            False,
-            None
-        )
-        self.api._session.request.assert_called_with(
-            'GET',
-            self.api_base + '/api/0.6/test410',
-            auth=None,
-            data=None
-        )
-        self.assertIsNone(response, "test response")
+        with self.assertRaises(osmapi.ElementDeletedApiError) as cm:
+            self.api._http_request(
+                'GET',
+                '/api/0.6/test410',
+                False,
+                None
+            )
+        self.assertEquals(cm.exception.status, 410)
+        self.assertEquals(cm.exception.reason, "test reason")
+        self.assertEquals(cm.exception.payload, "test response")
 
     def test_http_request_500_response(self):
         self.setupMock(500)

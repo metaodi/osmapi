@@ -122,6 +122,13 @@ class NotSubscribedApiError(ApiError):
     pass
 
 
+class ElementDeletedApiError(ApiError):
+    """
+    Error when the requested element is deleted
+    """
+    pass
+
+
 class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
@@ -1898,6 +1905,15 @@ class OsmApi:
         be preformed on this request.
         `send` contains additional data that might be sent in a
         request.
+
+        If the username or password is missing,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
+
+        If the response status code indicates an error,
+        `OsmApi.ApiError` is raised.
         """
         if self._debug:
             error_msg = (
@@ -1919,9 +1935,13 @@ class OsmApi:
         response = self._session.request(method, path, auth=user_pass,
                                          data=send)
         if response.status_code != 200:
-            if response.status_code == 410:
-                return None
             payload = response.content.strip()
+            if response.status_code == 410:
+                raise ElementDeletedApiError(
+                    response.status_code,
+                    response.reason,
+                    payload
+                )
             raise ApiError(response.status_code, response.reason, payload)
         if self._debug:
             error_msg = (

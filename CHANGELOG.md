@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 1.0.0 - 2017-09-05
 ### Added
 - Officially support Python 3.5 and 3.6
 
@@ -10,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - osmapi does **not** support Python 2.6 anymore (it might work, it might not)
 
 ### Changed
-- **BC-Break:** raise an exception of the requested element is deleted (previoulsy `None` has been returned)
+- **BC-Break:** raise an exception if the requested element is deleted (previoulsy `None` has been returned)
 
 ## 0.8.1 - 2016-12-21
 ### Fixed

@@ -86,9 +86,19 @@ To run the tests use the following command:
 
     nosetests --verbose
 
-By using tox you can even run the tests against different versions of python (2.7, 3.2 and 3.3):
+By using tox you can even run the tests against different versions of python (2.7, 3.3, 3.4, 3.5 and 3.6):
 
     tox
+
+## Release
+
+To create a new release, follow these steps (please respect [Semantic Versioning](http://semver.org/)):
+
+1. Adapt the version number in `osmapi/__init__.py`
+1. Update the CHANGELOG with the version
+1. Create a pull request to merge develop into master
+1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the master branch)
+1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [Travis CI](https://travis-ci.org/metaodi/osmapi) on every tagged commit
 
 ## Attribution
 

@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.0.1 - 2017-09-07
+### Fixed
+- Make sure tests run offline
+
 ## 1.0.0 - 2017-09-05
 ### Added
 - Officially support Python 3.5 and 3.6

@@ -235,8 +235,12 @@ class OsmApi:
         self._session = self._get_http_session()
 
     def __del__(self):
-        if self._changesetauto:
-            self._changesetautoflush(True)
+        try:
+            if self._changesetauto:
+                self._changesetautoflush(True)
+        except ValueError:
+            pass
+
         return None
 
     ##################################################
@@ -319,13 +323,14 @@ class OsmApi:
 
         If `NodeVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/node/%s" % (NodeId)
         if NodeVersion != -1:
             uri += "/%s" % (NodeVersion)
         data = self._get(uri)
-        if not data:
-            return data
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
         data = data.getElementsByTagName("node")[0]
@@ -443,6 +448,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the requested element has already been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         return self._do("delete", "node", NodeData)
 
@@ -593,13 +601,14 @@ class OsmApi:
 
         If `WayVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/way/%s" % (WayId)
         if WayVersion != -1:
             uri += "/%s" % (WayVersion)
         data = self._get(uri)
-        if not data:
-            return data
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
         data = data.getElementsByTagName("way")[0]
@@ -714,6 +723,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the requested element has already been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         return self._do("delete", "way", WayData)
 
@@ -796,6 +808,9 @@ class OsmApi:
             ]
 
         The `WayId` is a unique identifier for a way.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/way/%s/full" % (WayId)
         data = self._get(uri)
@@ -858,13 +873,14 @@ class OsmApi:
 
         If `RelationVersion` is supplied, this specific version is returned,
         otherwise the latest version is returned.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/relation/%s" % (RelationId)
         if RelationVersion != -1:
             uri += "/%s" % (RelationVersion)
         data = self._get(uri)
-        if not data:
-            return data
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0]
         data = data.getElementsByTagName("relation")[0]
@@ -1006,6 +1022,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the requested element has already been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         return self._do("delete", "relation", RelationData)
 
@@ -1095,6 +1114,9 @@ class OsmApi:
 
         If you don't need all levels, use `OsmApi.RelationFull`
         instead, which return only 2 levels.
+
+        If any relation (on any level) has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         data = []
         todo = [RelationId]
@@ -1129,6 +1151,9 @@ class OsmApi:
         The `RelationId` is a unique identifier for a way.
 
         If you need all levels, use `OsmApi.RelationFullRecur`.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/relation/%s/full" % (RelationId)
         data = self._get(uri)
@@ -1629,6 +1654,9 @@ class OsmApi:
 
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
         """
         path = "/api/0.6/notes/%s/reopen" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)

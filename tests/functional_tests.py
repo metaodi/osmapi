@@ -6,6 +6,7 @@ import osmapi
 class TestOsmApiFunctional(unittest.TestCase):
     @httpretty.activate
     def test_deleted_element_raises_exception(self):
+        httpretty.HTTPretty.allow_net_connect = False
         httpretty.register_uri(
             httpretty.GET,
             "https://www.openstreetmap.org/api/0.6/relation/2911456/full",

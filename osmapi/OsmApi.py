@@ -235,8 +235,12 @@ class OsmApi:
         self._session = self._get_http_session()
 
     def __del__(self):
-        if self._changesetauto:
-            self._changesetautoflush(True)
+        try:
+            if self._changesetauto:
+                self._changesetautoflush(True)
+        except ValueError:
+            pass
+
         return None
 
     ##################################################

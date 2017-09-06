@@ -62,17 +62,6 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['changeset'], 41303)
         self.assertEquals(result['user'], 'metaodi')
 
-    def test_WayGet_nodata(self):
-        self._session_mock()
-
-        result = self.api.WayGet(321)
-
-        args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/321')
-
-        self.assertEquals(result, '')
-
     def test_WayCreate(self):
         self._session_mock(auth=True)
 

@@ -26,7 +26,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.api._username = 'testuser'
         self.api._password = 'testpassword'
 
-    def test_passwordfile(self):
+    def test_passwordfile_only(self):
         path = os.path.join(
             __location__,
             'fixtures',
@@ -35,6 +35,16 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         my_api = osmapi.OsmApi(passwordfile=path)
         self.assertEquals('testosm', my_api._username)
         self.assertEquals('testpass', my_api._password)
+
+    def test_passwordfile_with_user(self):
+        path = os.path.join(
+            __location__,
+            'fixtures',
+            'passwordfile.txt'
+        )
+        my_api = osmapi.OsmApi(username='testuser', passwordfile=path)
+        self.assertEquals('testuser', my_api._username)
+        self.assertEquals('testuserpass', my_api._password)
 
     def test_http_request_get(self):
         response = self.api._http_request(

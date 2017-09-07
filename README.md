@@ -28,6 +28,8 @@ To update the online documentation, you need to re-generate the documentation wi
 
 ## Examples
 
+To test this library, please create an account on the [development server of OpenStreetMap (https://api06.dev.openstreetmap.org)](https://api06.dev.openstreetmap.org).
+
 ### Read from OpenStreetMap
 
 ```python
@@ -45,7 +47,7 @@ print api.NodeGet(123)
 
 ```python
 import osmapi
-api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
+api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "you", password = "***")
 api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
 api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
 ```
@@ -56,7 +58,7 @@ Note: The password file should have the format _user:password_
 
 ```python
 import osmapi
-api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
+api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
 api.ChangesetCreate({u"comment": u"My first test"})
 print api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
 # {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}

@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.0.2 - 2017-09-07
+### Added
+- Rais ResponseEmptyApiError if we expect a response from the OpenStreetMap API, but didn't get one
+
+### Removed
+- Removed httpretty as HTTP mock library
+
 ## 1.0.1 - 2017-09-07
 ### Fixed
 - Make sure tests run offline

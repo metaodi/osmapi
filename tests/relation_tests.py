@@ -310,3 +310,10 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         self.assertEquals(result[1532552]['id'], 1532552)
         self.assertEquals(result[1532552]['visible'], True)
         self.assertEquals(result[1532552]['tag']['route'], 'bicycle')
+
+    def test_RelationFull_with_deleted_relation(self):
+        self._session_mock(filenames=[], status=410)
+
+        with self.assertRaises(osmapi.ElementDeletedApiError) as context:
+            self.api.RelationFull(2911456)
+        self.assertEquals(410, context.exception.status)

@@ -96,7 +96,7 @@ To create a new release, follow these steps (please respect [Semantic Versioning
 
 1. Adapt the version number in `osmapi/__init__.py`
 1. Update the CHANGELOG with the version
-1. Create a pull request to merge develop into master
+1. Create a pull request to merge develop into master (make sure the tests pass!)
 1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the master branch)
 1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [Travis CI](https://travis-ci.org/metaodi/osmapi) on every tagged commit
 

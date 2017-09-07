@@ -47,10 +47,10 @@ print api.NodeGet(123)
 import osmapi
 api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
 api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
-api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
+api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # if only the passwordfile is specified, the credentials on the first line of the file will be used
 ```
 
-Note: The password file should have the format _user:password_
+Note: Each line in the password file should have the format _user:password_
 
 ### Write to OpenStreetMap
 

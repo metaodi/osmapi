@@ -29,6 +29,7 @@ Find all information about changes of the different versions of this module
 
 from __future__ import (absolute_import, print_function, unicode_literals)
 import xml.dom.minidom
+import xml.parsers.expat
 import time
 import sys
 import urllib
@@ -82,6 +83,12 @@ class OsmTypeAlreadyExistsError(OsmApiError):
     Error when a user tries to create an object that already exsits
     """
     pass
+
+
+class XmlResponseInvalidError(OsmApiError):
+    """
+    Error if the XML response from the OpenStreetMap API is invalid
+    """
 
 
 class ApiError(OsmApiError):
@@ -291,9 +298,8 @@ class OsmApi:
         """
         uri = "/api/capabilities"
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("api")[0]
+
+        data = self._OsmResponseToDom(data, tag="api", single=True)
         result = {}
         for elem in data.childNodes:
             if elem.nodeType != elem.ELEMENT_NODE:
@@ -338,9 +344,7 @@ class OsmApi:
         if NodeVersion != -1:
             uri += "/%s" % (NodeVersion)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("node")[0]
+        data = self._OsmResponseToDom(data, tag="node", single=True)
         return self._DomParseNode(data)
 
     def NodeCreate(self, NodeData):
@@ -476,11 +480,10 @@ class OsmApi:
         """
         uri = "/api/0.6/node/%s/history" % NodeId
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        nodes = self._OsmResponseToDom(data, tag="node")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("node"):
-            data = self._DomParseNode(data)
+        for node in nodes:
+            data = self._DomParseNode(node)
             result[data["version"]] = data
         return result
 
@@ -509,11 +512,10 @@ class OsmApi:
         """
         uri = "/api/0.6/node/%d/ways" % NodeId
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        ways = self._OsmResponseToDom(data, tag="way")
         result = []
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("way"):
-            data = self._DomParseWay(data)
+        for way in ways:
+            data = self._DomParseWay(way)
             result.append(data)
         return result
 
@@ -551,11 +553,10 @@ class OsmApi:
         """
         uri = "/api/0.6/node/%d/relations" % NodeId
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        relations = self._OsmResponseToDom(data, tag="relation")
         result = []
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("relation"):
-            data = self._DomParseRelation(data)
+        for relation in relations:
+            data = self._DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -577,11 +578,10 @@ class OsmApi:
         node_list = ",".join([str(x) for x in NodeIdList])
         uri = "/api/0.6/nodes?nodes=%s" % node_list
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        nodes = self._OsmResponseToDom(data, tag="node")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("node"):
-            data = self._DomParseNode(data)
+        for node in nodes:
+            data = self._DomParseNode(node)
             result[data["id"]] = data
         return result
 
@@ -616,10 +616,8 @@ class OsmApi:
         if WayVersion != -1:
             uri += "/%s" % (WayVersion)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("way")[0]
-        return self._DomParseWay(data)
+        way = self._OsmResponseToDom(data, tag="way", single=True)
+        return self._DomParseWay(way)
 
     def WayCreate(self, WayData):
         """
@@ -751,11 +749,10 @@ class OsmApi:
         """
         uri = "/api/0.6/way/%s/history" % (WayId)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        ways = self._OsmResponseToDom(data, tag="way")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("way"):
-            data = self._DomParseWay(data)
+        for way in ways:
+            data = self._DomParseWay(way)
             result[data["version"]] = data
         return result
 
@@ -793,11 +790,10 @@ class OsmApi:
         """
         uri = "/api/0.6/way/%d/relations" % WayId
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        relations = self._OsmResponseToDom(data, tag="relation")
         result = []
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("relation"):
-            data = self._DomParseRelation(data)
+        for relation in relations:
+            data = self._DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -840,11 +836,10 @@ class OsmApi:
         way_list = ",".join([str(x) for x in WayIdList])
         uri = "/api/0.6/ways?ways=%s" % way_list
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        ways = self._OsmResponseToDom(data, tag="way")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("way"):
-            data = self._DomParseWay(data)
+        for way in ways:
+            data = self._DomParseWay(way)
             result[data["id"]] = data
         return result
 
@@ -888,10 +883,8 @@ class OsmApi:
         if RelationVersion != -1:
             uri += "/%s" % (RelationVersion)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("relation")[0]
-        return self._DomParseRelation(data)
+        relation = self._OsmResponseToDom(data, tag="relation", single=True)
+        return self._DomParseRelation(relation)
 
     def RelationCreate(self, RelationData):
         """
@@ -1050,11 +1043,10 @@ class OsmApi:
         """
         uri = "/api/0.6/relation/%s/history" % (RelationId)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        relations = self._OsmResponseToDom(data, tag="relation")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("relation"):
-            data = self._DomParseRelation(data)
+        for relation in relations:
+            data = self._DomParseRelation(relation)
             result[data["version"]] = data
         return result
 
@@ -1093,11 +1085,10 @@ class OsmApi:
         """
         uri = "/api/0.6/relation/%d/relations" % RelationId
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        relations = self._OsmResponseToDom(data, tag="relation")
         result = []
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("relation"):
-            data = self._DomParseRelation(data)
+        for relation in relations:
+            data = self._DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -1184,11 +1175,10 @@ class OsmApi:
         relation_list = ",".join([str(x) for x in RelationIdList])
         uri = "/api/0.6/relations?relations=%s" % relation_list
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
+        relations = self._OsmResponseToDom(data, tag="relation")
         result = {}
-        osm_data = data.getElementsByTagName("osm")[0]
-        for data in osm_data.getElementsByTagName("relation"):
-            data = self._DomParseRelation(data)
+        for relation in relations:
+            data = self._DomParseRelation(relation)
             result[data["id"]] = data
         return result
 
@@ -1226,10 +1216,8 @@ class OsmApi:
         if (include_discussion):
             path += "?include_discussion=true"
         data = self._get(path)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("changeset")[0]
-        return self._DomParseChangeset(data)
+        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
+        return self._DomParseChangeset(changeset)
 
     def ChangesetUpdate(self, ChangesetTags={}):
         """
@@ -1334,9 +1322,15 @@ class OsmApi:
             "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
             data.encode("utf-8")
         )
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("diffResult")[0]
-        data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
+        try:
+            data = xml.dom.minidom.parseString(data)
+            data = data.getElementsByTagName("diffResult")[0]
+            data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
+        except (xml.parsers.expat.ExpatError, IndexError) as e:
+            raise XmlResponseInvalidError(
+                "The XML response from the OSM API is invalid: %r" % e
+            )
+
         for i in range(len(ChangesData)):
             if ChangesData[i]["action"] == "delete":
                 ChangesData[i]["data"].pop("version")
@@ -1420,11 +1414,9 @@ class OsmApi:
             uri += "?" + urllib.urlencode(params)
 
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("changeset")
+        changesets = self._OsmResponseToDom(data, tag="changeset")
         result = {}
-        for curChangeset in data:
+        for curChangeset in changesets:
             tmpCS = self._DomParseChangeset(curChangeset)
             result[tmpCS["id"]] = tmpCS
         return result
@@ -1462,10 +1454,8 @@ class OsmApi:
             "/api/0.6/changeset/%s/comment" % (ChangesetId),
             params
         )
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("changeset")[0]
-        return self._DomParseChangeset(data)
+        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
+        return self._DomParseChangeset(changeset)
 
     def ChangesetSubscribe(self, ChangesetId):
         """
@@ -1504,10 +1494,8 @@ class OsmApi:
                 raise AlreadySubscribedApiError(e.status, e.reason, e.payload)
             else:
                 raise
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("changeset")[0]
-        return self._DomParseChangeset(data)
+        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
+        return self._DomParseChangeset(changeset)
 
     def ChangesetUnsubscribe(self, ChangesetId):
         """
@@ -1546,10 +1534,8 @@ class OsmApi:
                 raise NotSubscribedApiError(e.status, e.reason, e.payload)
             else:
                 raise
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
-        data = data.getElementsByTagName("changeset")[0]
-        return self._DomParseChangeset(data)
+        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
+        return self._DomParseChangeset(changeset)
 
     ##################################################
     # Notes                                          #
@@ -1617,12 +1603,8 @@ class OsmApi:
         """
         uri = "/api/0.6/notes/%s" % (id)
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data)
-        osm_data = data.getElementsByTagName("osm")[0]
-
-        noteElement = osm_data.getElementsByTagName("note")[0]
-        note = self._DomParseNote(noteElement)
-        return note
+        noteElement = self._OsmResponseToDom(data, tag="note", single=True)
+        return self._DomParseNote(noteElement)
 
     def NoteCreate(self, NoteData):
         """
@@ -1705,13 +1687,8 @@ class OsmApi:
         result = self._post(uri, None, optionalAuth=optionalAuth)
 
         # parse the result
-        data = xml.dom.minidom.parseString(result)
-        osm_data = data.getElementsByTagName("osm")[0]
-
-        noteElement = osm_data.getElementsByTagName("note")[0]
-        note = self._DomParseNote(noteElement)
-
-        return note
+        noteElement = self._OsmResponseToDom(result, tag="note", single=True)
+        return self._DomParseNote(noteElement)
 
     ##################################################
     # Other                                          #
@@ -1752,8 +1729,14 @@ class OsmApi:
                 data: {}
             }
         """
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
+        try:
+            data = xml.dom.minidom.parseString(data)
+            data = data.getElementsByTagName("osm")[0]
+        except (xml.parsers.expat.ExpatError, IndexError) as e:
+            raise XmlResponseInvalidError(
+                "The XML response from the OSM API is invalid: %r" % e
+            )
+
         result = []
         for elem in data.childNodes:
             if elem.nodeName == "node":
@@ -1786,8 +1769,14 @@ class OsmApi:
                 data: {}
             }
         """
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osmChange")[0]
+        try:
+            data = xml.dom.minidom.parseString(data)
+            data = data.getElementsByTagName("osmChange")[0]
+        except (xml.parsers.expat.ExpatError, IndexError) as e:
+            raise XmlResponseInvalidError(
+                "The XML response from the OSM API is invalid: %r" % e
+            )
+
         result = []
         for action in data.childNodes:
             if action.nodeName == "#text":
@@ -1834,11 +1823,9 @@ class OsmApi:
                 { ... }
             ]
         """
-        data = xml.dom.minidom.parseString(data)
+        noteElements = self._OsmResponseToDom(data, tag="note")
         result = []
-        osm_data = data.getElementsByTagName("osm")[0]
-
-        for noteElement in osm_data.getElementsByTagName("note"):
+        for noteElement in noteElements:
             note = self._DomParseNote(noteElement)
             result.append(note)
         return result
@@ -2062,6 +2049,24 @@ class OsmApi:
     ##################################################
     # Internal dom function                          #
     ##################################################
+
+    def _OsmResponseToDom(self, response, tag, single=False):
+        """
+        Returns the (sub-) DOM parsed from an OSM response
+        """
+        try:
+            dom = xml.dom.minidom.parseString(response)
+            osm_dom = dom.getElementsByTagName("osm")[0]
+            all_data = osm_dom.getElementsByTagName(tag)
+            first_element = all_data[0]
+        except (xml.parsers.expat.ExpatError, IndexError) as e:
+            raise XmlResponseInvalidError(
+                "The XML response from the OSM API is invalid: %r" % e
+            )
+
+        if single:
+            return first_element
+        return all_data
 
     def _DomGetAttributes(self, DomElement):  # noqa
         """

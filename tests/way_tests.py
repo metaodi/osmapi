@@ -246,6 +246,12 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result[16]['data']['changeset'], 298)
         self.assertEquals(result[16]['type'], 'way')
 
+    def test_WayFull_invalid_response(self):
+        self._session_mock()
+
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.WayFull(321)
+
     def test_WaysGet(self):
         self._session_mock()
 

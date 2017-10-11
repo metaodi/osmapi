@@ -458,6 +458,46 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(data['id'], 676)
         self.assertNotIn('version', data)
 
+    def test_ChangesetUpload_invalid_response(self):
+        self._session_mock(auth=True)
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=4444
+        )
+        self.api._CurrentChangesetId = 4444
+
+        changesdata = [
+            {
+                'type': 'relation',
+                'action': 'delete',
+                'data': {
+                    'id': 676,
+                    'version': 2,
+                    'member': [
+                        {
+                            'ref': 4799,
+                            'role': 'outer',
+                            'type': 'way'
+                        },
+                        {
+                            'ref': 9391,
+                            'role': 'outer',
+                            'type': 'way'
+                        },
+                    ],
+                    'tag': {
+                        'admin_level': '9',
+                        'boundary': 'administrative',
+                        'type': 'multipolygon'
+                    }
+                }
+            }
+        ]
+
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.ChangesetUpload(changesdata)
+
     def test_ChangesetDownload(self):
         self._session_mock()
 
@@ -490,6 +530,11 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                 }
             }
         )
+
+    def test_ChangesetDownload_invalid_response(self):
+        self._session_mock()
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.ChangesetDownload(23123)
 
     def test_ChangesetDownloadContainingUnicode(self):
         self._session_mock()

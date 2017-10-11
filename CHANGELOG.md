@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.1.0 - 2017-10-11
+### Added
+- Raise new `XmlResponseInvalidError` if XML response from the OpenStreetMap API is invalid
+
+### Changed
+- Improved README (thanks [Mateusz Konieczny](https://github.com/matkoniecz))
+
 ## 1.0.2 - 2017-09-07
 ### Added
 - Rais ResponseEmptyApiError if we expect a response from the OpenStreetMap API, but didn't get one

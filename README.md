@@ -28,6 +28,8 @@ To update the online documentation, you need to re-generate the documentation wi
 
 ## Examples
 
+To test this library, please create an account on the [development server of OpenStreetMap (https://api06.dev.openstreetmap.org)](https://api06.dev.openstreetmap.org).
+
 ### Read from OpenStreetMap
 
 ```python
@@ -45,12 +47,12 @@ print api.NodeGet(123)
 
 ```python
 import osmapi
-api = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username = "you", password = "***")
+api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "you", password = "***")
 api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
-api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # username will be first line username
+api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # if only the passwordfile is specified, the credentials on the first line of the file will be used
 ```
 
-Note: The password file should have the format _user:password_
+Note: Each line in the password file should have the format _user:password_
 
 ### Write to OpenStreetMap
 
@@ -99,6 +101,7 @@ To create a new release, follow these steps (please respect [Semantic Versioning
 1. Create a pull request to merge develop into master (make sure the tests pass!)
 1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the master branch)
 1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [Travis CI](https://travis-ci.org/metaodi/osmapi) on every tagged commit
+1. Re-build the documentation (see above) and copy the generated file to `index.html` on the `gh-pages` branch
 
 ## Attribution
 

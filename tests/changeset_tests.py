@@ -92,10 +92,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
-                b'    <tag k="created_by" v="osmapi/1.0.2"/>\n'
+                b'    <tag k="created_by" v="osmapi/1.1.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -125,7 +125,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
                 b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -163,10 +163,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
-                b'    <tag k="created_by" v="osmapi/1.0.2"/>\n'
+                b'    <tag k="created_by" v="osmapi/1.1.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -190,7 +190,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
                 b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -276,7 +276,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
                 b'<create>\n'
                 b'  <node lat="47.123" lon="8.555" visible="true" '
                 b'changeset="4444">\n'
@@ -350,7 +350,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
                 b'<modify>\n'
                 b'  <way id="4294967296" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -434,7 +434,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.0.2">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
                 b'<delete>\n'
                 b'  <relation id="676" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -457,6 +457,46 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
         self.assertEquals(data['tag'], changesdata[0]['data']['tag'])
         self.assertEquals(data['id'], 676)
         self.assertNotIn('version', data)
+
+    def test_ChangesetUpload_invalid_response(self):
+        self._session_mock(auth=True)
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=4444
+        )
+        self.api._CurrentChangesetId = 4444
+
+        changesdata = [
+            {
+                'type': 'relation',
+                'action': 'delete',
+                'data': {
+                    'id': 676,
+                    'version': 2,
+                    'member': [
+                        {
+                            'ref': 4799,
+                            'role': 'outer',
+                            'type': 'way'
+                        },
+                        {
+                            'ref': 9391,
+                            'role': 'outer',
+                            'type': 'way'
+                        },
+                    ],
+                    'tag': {
+                        'admin_level': '9',
+                        'boundary': 'administrative',
+                        'type': 'multipolygon'
+                    }
+                }
+            }
+        ]
+
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.ChangesetUpload(changesdata)
 
     def test_ChangesetDownload(self):
         self._session_mock()
@@ -490,6 +530,11 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
                 }
             }
         )
+
+    def test_ChangesetDownload_invalid_response(self):
+        self._session_mock()
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.ChangesetDownload(23123)
 
     def test_ChangesetDownloadContainingUnicode(self):
         self._session_mock()

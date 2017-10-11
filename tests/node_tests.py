@@ -56,6 +56,12 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             },
         })
 
+    def test_NodeGet_invalid_response(self):
+        self._session_mock()
+
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.NodeGet(987)
+
     def test_NodeCreate_changesetauto(self):
         # setup mock
         self.api = osmapi.OsmApi(

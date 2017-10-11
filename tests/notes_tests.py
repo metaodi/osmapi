@@ -1,6 +1,7 @@
 from __future__ import (unicode_literals, absolute_import)
 from . import osmapi_tests
 from datetime import datetime
+import osmapi
 
 try:
     import urlparse
@@ -97,6 +98,12 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
                 }
             ]
         })
+
+    def test_NoteGet_invalid_xml(self):
+        self._session_mock()
+
+        with self.assertRaises(osmapi.XmlResponseInvalidError):
+            self.api.NoteGet(1111)
 
     def test_NoteCreate(self):
         self._session_mock(auth=True)

@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Added
+- Raise new `XmlResponseInvalidError` if XML response from the OpenStreetMap API is invalid
+
 ### Changed
 - Improved README (thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 

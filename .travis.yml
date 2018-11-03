@@ -18,6 +18,7 @@ before_install:
 
 install:
 - pip install -r requirements.txt -r test-requirements.txt
+- pip install .
 
 script: ./build.sh
 

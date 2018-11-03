@@ -32,5 +32,5 @@ deploy:
     on:
       tags: true
       all_branches: true
-      python: 2.7
+      python: 3.7
       repo: metaodi/osmapi

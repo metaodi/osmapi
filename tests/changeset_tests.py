@@ -6,7 +6,7 @@ import xmltodict
 import datetime
 try:
     import urlparse
-except:
+except Exception:
     import urllib
     urlparse = urllib.parse
 
@@ -23,7 +23,7 @@ def recursive_sort(col):  # noqa
                 col = sorted(col)
             except TypeError:  # in Python 3.x: lists of dicts are not sortable
                 col = sorted(col, key=lambda k: hash(frozenset(k.items())))
-            except:
+            except Exception:
                 pass
 
             for idx, elem in enumerate(col):

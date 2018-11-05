@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Added
+- Support Python 3.7 (thanks a lot [cclauss](https://github.com/cclauss))
+
+### Removed
+- Python 3.3 is no longer supported (EOL) 
+
+### Changed
+- Updated dependencies for Python 3.7
+- Adapt README to use Python 3 syntax (thanks [cclauss](https://github.com/cclauss))
 
 ## 1.1.0 - 2017-10-11
 ### Added

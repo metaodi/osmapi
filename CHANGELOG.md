@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.2.1 - 2018-11-05
+### Fixed
+- Deployment to PyPI with Travis
+
 ## 1.2.0 - 2018-11-05
 ### Added
 - Support Python 3.7 (thanks a lot [cclauss](https://github.com/cclauss))

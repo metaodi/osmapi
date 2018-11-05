@@ -87,7 +87,7 @@ To run the tests use the following command:
 
     nosetests --verbose
 
-By using tox you can even run the tests against different versions of python (2.7, 3.3, 3.4, 3.5 and 3.6):
+By using tox you can even run the tests against different versions of python (2.7, 3.4, 3.5, 3.6 and 3.7):
 
     tox
 

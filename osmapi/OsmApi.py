@@ -213,10 +213,10 @@ class OsmApi:
         if password:
             self._password = password
         elif passwordfile:
-            for l in open(passwordfile).readlines():
-                l = l.strip().split(":")
-                if l[0] == self._username:
-                    self._password = l[1]
+            for line in open(passwordfile).readlines():
+                line = line.strip().split(":")
+                if line[0] == self._username:
+                    self._password = line[1]
 
         # Changest informations
         # auto create and close changesets
@@ -308,7 +308,7 @@ class OsmApi:
             for k, v in elem.attributes.items():
                 try:
                     result[elem.nodeName][k] = float(v)
-                except:
+                except Exception:
                     result[elem.nodeName][k] = v
         return result
 
@@ -2223,10 +2223,10 @@ class OsmApi:
         result = DateString
         try:
             result = datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
-        except:
+        except Exception:
             try:
                 result = datetime.strptime(DateString, "%Y-%m-%dT%H:%M:%SZ")
-            except:
+            except Exception:
                 pass
 
         return result
@@ -2296,5 +2296,5 @@ class OsmApi:
         try:
             elem = DomElement.getElementsByTagName(tag)[0]
             return elem.firstChild.nodeValue
-        except:
+        except Exception:
             return None

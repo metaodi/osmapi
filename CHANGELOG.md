@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## 1.2.0 - 2018-11-05
 ### Added
 - Support Python 3.7 (thanks a lot [cclauss](https://github.com/cclauss))
 

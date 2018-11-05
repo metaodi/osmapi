@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.2.2 - 2018-11-05
+### Fixed
+- Update PyPI password for deployment
+
 ## 1.2.1 - 2018-11-05
 ### Fixed
 - Deployment to PyPI with Travis

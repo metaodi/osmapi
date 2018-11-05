@@ -4,7 +4,6 @@ osmapi
 [![Build](https://img.shields.io/travis/metaodi/osmapi/develop.svg)](https://travis-ci.org/metaodi/osmapi)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
-[![Downloads](https://img.shields.io/pypi/dm/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
 Python wrapper for the OSM API
@@ -35,7 +34,7 @@ To test this library, please create an account on the [development server of Ope
 ```python
 import osmapi
 api = osmapi.OsmApi()
-print api.NodeGet(123)
+print(api.NodeGet(123))
 # {u'changeset': 532907, u'uid': 14298,
 # u'timestamp': u'2007-09-29T09:19:17Z',
 # u'lon': 10.790009299999999, u'visible': True,
@@ -60,7 +59,7 @@ Note: Each line in the password file should have the format _user:password_
 import osmapi
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
 api.ChangesetCreate({u"comment": u"My first test"})
-print api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+print(api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}}))
 # {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
 api.ChangesetClose()
 ```
@@ -88,7 +87,7 @@ To run the tests use the following command:
 
     nosetests --verbose
 
-By using tox you can even run the tests against different versions of python (2.7, 3.3, 3.4, 3.5 and 3.6):
+By using tox you can even run the tests against different versions of python (2.7, 3.4, 3.5, 3.6 and 3.7):
 
     tox
 

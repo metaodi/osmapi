@@ -6,7 +6,7 @@ import xmltodict
 import datetime
 try:
     import urlparse
-except:
+except Exception:
     import urllib
     urlparse = urllib.parse
 
@@ -23,7 +23,7 @@ def recursive_sort(col):  # noqa
                 col = sorted(col)
             except TypeError:  # in Python 3.x: lists of dicts are not sortable
                 col = sorted(col, key=lambda k: hash(frozenset(k.items())))
-            except:
+            except Exception:
                 pass
 
             for idx, elem in enumerate(col):
@@ -92,10 +92,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osm version="0.6" generator="osmapi/1.2.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
-                b'    <tag k="created_by" v="osmapi/1.1.0"/>\n'
+                b'    <tag k="created_by" v="osmapi/1.2.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -125,7 +125,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osm version="0.6" generator="osmapi/1.2.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="test" v="foobar"/>\n'
                 b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -163,10 +163,10 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osm version="0.6" generator="osmapi/1.2.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
-                b'    <tag k="created_by" v="osmapi/1.1.0"/>\n'
+                b'    <tag k="created_by" v="osmapi/1.2.0"/>\n'
                 b'  </changeset>\n'
                 b'</osm>\n'
             )
@@ -190,7 +190,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osm version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osm version="0.6" generator="osmapi/1.2.0">\n'
                 b'  <changeset visible="true">\n'
                 b'    <tag k="foobar" v="A new test changeset"/>\n'
                 b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -276,7 +276,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.2.0">\n'
                 b'<create>\n'
                 b'  <node lat="47.123" lon="8.555" visible="true" '
                 b'changeset="4444">\n'
@@ -350,7 +350,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.2.0">\n'
                 b'<modify>\n'
                 b'  <way id="4294967296" version="2" visible="true" '
                 b'changeset="4444">\n'
@@ -434,7 +434,7 @@ class TestOsmApiChangeset(osmapi_tests.TestOsmApi):
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
                 b'<?xml version="1.0" encoding="UTF-8"?>\n'
-                b'<osmChange version="0.6" generator="osmapi/1.1.0">\n'
+                b'<osmChange version="0.6" generator="osmapi/1.2.0">\n'
                 b'<delete>\n'
                 b'  <relation id="676" version="2" visible="true" '
                 b'changeset="4444">\n'

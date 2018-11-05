@@ -4,6 +4,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.2.0 - 2018-11-05
+### Added
+- Support Python 3.7 (thanks a lot [cclauss](https://github.com/cclauss))
+
+### Removed
+- Python 3.3 is no longer supported (EOL) 
+
+### Changed
+- Updated dependencies for Python 3.7
+- Adapt README to use Python 3 syntax (thanks [cclauss](https://github.com/cclauss))
+
 ## 1.1.0 - 2017-10-11
 ### Added
 - Raise new `XmlResponseInvalidError` if XML response from the OpenStreetMap API is invalid

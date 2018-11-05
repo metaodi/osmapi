@@ -64,7 +64,7 @@ class TestOsmApi(unittest.TestCase):
             try:
                 with open(path) as file:
                     return_values.append(file.read())
-            except:
+            except Exception:
                 pass
         return return_values
 

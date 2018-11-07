@@ -26,10 +26,9 @@ after_success: coveralls
 
 deploy:
   - provider: pypi
-    twine_version: 1.12.1
     user: odi
     password:
-      secure: MU3ZQ4rcpsXo0xIYSWXBfaKTAPn1IrL7AEcH231sseFV1RVmdC96Sfmtc2llvD9Eoc0KJpdW0Vy50azNqAMJwXCt/q3gagfao1PTnAEbklU+g1s2PTqW401E95Qm6w192WzWk/q0dy3SJwxEQt023QR78K+nEcYaCdLWDHjR2hY=
+      secure: "EfW0Fje7pn/iLv2+eiFGc/PwD2jcdfF5Df9uUKWTCRP8wqMrFriErTczlWqfEIARZDnxQXU5c+UWEQvZ/5D5/4ZctJyvMcmgYi7I1ECXVwYQh0c5prsFl+9uynNJQWfW404v5Kb3MJE1iGaSEOeonObeqThQGdtDTPYZd9H4j20="
     on:
       tags: true
       all_branches: true

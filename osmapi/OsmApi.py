@@ -214,7 +214,7 @@ class OsmApi:
             self._password = password
         elif passwordfile:
             for line in open(passwordfile).readlines():
-                line = line.strip().split(":")
+                line = line.strip().split(":", 1)
                 if line[0] == self._username:
                     self._password = line[1]
 

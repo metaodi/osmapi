@@ -206,17 +206,19 @@ class OsmApi:
         if username:
             self._username = username
         elif passwordfile:
-            pass_line = open(passwordfile).readline()
+            with open(passwordfile) as f:
+                pass_line = f.readline()
             self._username = pass_line.split(":")[0].strip()
 
         # Get password
         if password:
             self._password = password
         elif passwordfile:
-            for line in open(passwordfile).readlines():
-                line = line.strip().split(":")
-                if line[0] == self._username:
-                    self._password = line[1]
+            with open(passwordfile) as f:
+                for line in f:
+                    line = line.strip().split(":", 1)
+                    if line[0] == self._username:
+                        self._password = line[1]
 
         # Changest informations
         # auto create and close changesets

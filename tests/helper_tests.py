@@ -46,6 +46,16 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         self.assertEquals('testuser', my_api._username)
         self.assertEquals('testuserpass', my_api._password)
 
+    def test_passwordfile_with_colon(self):
+        path = os.path.join(
+            __location__,
+            'fixtures',
+            'passwordfile_colon.txt'
+        )
+        my_api = osmapi.OsmApi(username='testuser', passwordfile=path)
+        self.assertEquals('testuser', my_api._username)
+        self.assertEquals('test:userpass', my_api._password)
+
     def test_http_request_get(self):
         response = self.api._http_request(
             'GET',

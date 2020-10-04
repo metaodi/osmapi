@@ -23,6 +23,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         mock_response.reason = "test reason"
         mock_response.content = 'test response'
         self.api._session.request = mock.Mock(return_value=mock_response)
+        self.api._session.close = mock.Mock()
         self.api._username = 'testuser'
         self.api._password = 'testpassword'
 
@@ -55,6 +56,15 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
         my_api = osmapi.OsmApi(username='testuser', passwordfile=path)
         self.assertEquals('testuser', my_api._username)
         self.assertEquals('test:userpass', my_api._password)
+
+    def test_close_call(self):
+        self.api.close()
+        self.assertEquals(self.api._session.close.call_count, 1)
+
+    def test_close_context_manager(self):
+        with osmapi.OsmApi() as my_api:
+            my_api._session.close = mock.Mock()
+        self.assertEquals(my_api._session.close.call_count, 1)
 
     def test_http_request_get(self):
         response = self.api._http_request(

@@ -251,13 +251,26 @@ class OsmApi:
         self._session = self._get_http_session()
 
     def __del__(self):
+        self.close()
+
+        return None
+
+    def __enter__(self):
+        self._session = self._get_http_session()
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
+    def close(self):
         try:
             if self._changesetauto:
                 self._changesetautoflush(True)
         except ResponseEmptyApiError:
             pass
 
-        return None
+        if self._session:
+            self._session.close()
 
     ##################################################
     # Capabilities                                   #

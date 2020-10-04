@@ -4,6 +4,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased][unreleased]
 
+## 1.3.0 - 2020-10-05
+### Added
+- Add close() method to close the underlying http session (see issue #107)
+- Add context manager to automatically open and close the http session (see issue #107)
+
+### Fixed
+- Correctly parse password file (thanks [Julien Palard](https://github.com/JulienPalard), see pull request #106)
+
 ## 1.2.2 - 2018-11-05
 ### Fixed
 - Update PyPI password for deployment

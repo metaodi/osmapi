@@ -4,3 +4,4 @@ MANIFEST
 *.egg-info
 .coverage
 .tox
+.pycache/*

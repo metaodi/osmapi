@@ -1,7 +1,7 @@
 # This file lists the dependencies of this extension.
 # Install with a command like: pip install -r pip-requirements.txt
 pdoc==0.3.2
-Pygments==2.2.0
+Pygments==2.7.4
 pypandoc==1.4
 requests==2.20.0
 Unidecode==1.0.22

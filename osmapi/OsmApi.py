@@ -163,7 +163,8 @@ class OsmApi:
             changesetautotags={},
             changesetautosize=500,
             changesetautomulti=1,
-            debug=False):
+            debug=False,
+            auth_session=None):
         """
         Initialized the OsmApi object.
 
@@ -202,23 +203,26 @@ class OsmApi:
         # debug
         self._debug = debug
 
-        # Get username
-        if username:
-            self._username = username
-        elif passwordfile:
-            with open(passwordfile) as f:
-                pass_line = f.readline()
-            self._username = pass_line.split(":")[0].strip()
+        if auth_session:
+            self._auth_session = auth_session
+        else:
+            # Get username
+            if username:
+                self._username = username
+            elif passwordfile:
+                with open(passwordfile) as f:
+                    pass_line = f.readline()
+                self._username = pass_line.split(":")[0].strip()
 
-        # Get password
-        if password:
-            self._password = password
-        elif passwordfile:
-            with open(passwordfile) as f:
-                for line in f:
-                    line = line.strip().split(":", 1)
-                    if line[0] == self._username:
-                        self._password = line[1]
+            # Get password
+            if password:
+                self._password = password
+            elif passwordfile:
+                with open(passwordfile) as f:
+                    for line in f:
+                        line = line.strip().split(":", 1)
+                        if line[0] == self._username:
+                            self._password = line[1]
 
         # Changest informations
         # auto create and close changesets
@@ -1967,14 +1971,17 @@ class OsmApi:
         path = self._api + path
 
         user_pass = None
-        if auth:
+        if auth and not self._auth_session:
             try:
                 user_pass = (self._username, self._password)
             except AttributeError:
                 raise UsernamePasswordMissingError("Username/Password missing")
 
-        response = self._session.request(method, path, auth=user_pass,
-                                         data=send)
+        if self._auth_session:
+            response = self._session.request(method, path, data=send)
+        else:
+            response = self._session.request(
+                method, path, auth=user_pass, data=send)
         if response.status_code != 200:
             payload = response.content.strip()
             if response.status_code == 410:
@@ -2036,7 +2043,11 @@ class OsmApi:
         """
         Creates a requests session for connection pooling.
         """
-        session = requests.Session()
+        session = None
+        if self._auth_session:
+            session = self._auth_session
+        else:
+            session = requests.Session()
         session.headers.update({
             'user-agent': self._created_by
         })

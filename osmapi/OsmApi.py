@@ -203,7 +203,9 @@ class OsmApi:
         # debug
         self._debug = debug
 
-        if auth_session:
+        self._auth_session = auth_session
+
+        if self._auth_session:
             self._auth_session = auth_session
         else:
             # Get username

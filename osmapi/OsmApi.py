@@ -38,10 +38,6 @@ from datetime import datetime
 
 from osmapi import __version__
 
-# Python 3.x
-if getattr(urllib, 'urlencode', None) is None:
-    urllib.urlencode = urllib.parse.urlencode
-
 
 class OsmApiError(Exception):
     """
@@ -1426,7 +1422,7 @@ class OsmApi:
             params["closed"] = 1
 
         if params:
-            uri += "?" + urllib.urlencode(params)
+            uri += "?" + urllib.parse.urlencode(params)
 
         data = self._get(uri)
         changesets = self._OsmResponseToDom(data, tag="changeset")
@@ -1464,7 +1460,7 @@ class OsmApi:
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
         """
-        params = urllib.urlencode({'text': comment})
+        params = urllib.parse.urlencode({'text': comment})
         data = self._post(
             "/api/0.6/changeset/%s/comment" % (ChangesetId),
             params
@@ -1628,7 +1624,7 @@ class OsmApi:
         Returns updated NoteData (without timestamp).
         """
         uri = "/api/0.6/notes"
-        uri += "?" + urllib.urlencode(NoteData)
+        uri += "?" + urllib.parse.urlencode(NoteData)
         return self._NoteAction(uri)
 
     def NoteComment(self, NoteId, comment):
@@ -1683,7 +1679,7 @@ class OsmApi:
         params['q'] = query
         params['limit'] = limit
         params['closed'] = closed
-        uri += "?" + urllib.urlencode(params)
+        uri += "?" + urllib.parse.urlencode(params)
         data = self._get(uri)
 
         return self.ParseNotes(data)
@@ -1698,7 +1694,7 @@ class OsmApi:
         if comment is not None:
             params = {}
             params['text'] = comment
-            uri += "?" + urllib.urlencode(params)
+            uri += "?" + urllib.parse.urlencode(params)
         result = self._post(uri, None, optionalAuth=optionalAuth)
 
         # parse the result

@@ -1848,6 +1848,10 @@ class OsmApi:
             except ApiError as e:
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
                     raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                elif e.status == 409:
+                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                elif e.status == 412:
+                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["id"] = int(result.strip())
@@ -1863,6 +1867,10 @@ class OsmApi:
                 print(e.reason)
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
                     raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                elif e.status == 409:
+                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                elif e.status == 412:
+                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["version"] = int(result.strip())
@@ -1876,6 +1884,10 @@ class OsmApi:
             except ApiError as e:
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
                     raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                elif e.status == 409:
+                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                elif e.status == 412:
+                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["version"] = int(result.strip())

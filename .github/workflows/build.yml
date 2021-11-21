@@ -33,3 +33,5 @@ jobs:
     - name: Test coverage
       run: coveralls
       if: ${{ matrix.python-version == '3.8' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

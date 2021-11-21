@@ -32,6 +32,7 @@ import xml.parsers.expat
 import time
 import sys
 import urllib.parse
+import re
 import requests
 from datetime import datetime
 
@@ -292,6 +293,9 @@ class OsmApi:
 
         If the supplied information contain an existing node,
         `OsmApi.OsmTypeAlreadyExistsError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("create", "node", NodeData)
 
@@ -331,6 +335,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("modify", "node", NodeData)
 
@@ -370,6 +377,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -565,6 +575,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("create", "way", WayData)
 
@@ -602,6 +615,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("modify", "way", WayData)
 
@@ -639,6 +655,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -841,6 +860,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("create", "relation", RelationData)
 
@@ -887,6 +909,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         return self._do("modify", "relation", RelationData)
 
@@ -933,6 +958,9 @@ class OsmApi:
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -1139,16 +1167,25 @@ class OsmApi:
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
-        self._put(
-            "/api/0.6/changeset/%s" % (self._CurrentChangesetId),
-            self._XmlBuild("changeset", {"tag": ChangesetTags}),
-            return_value=False
-        )
+        try:
+            self._put(
+                "/api/0.6/changeset/%s" % (self._CurrentChangesetId),
+                self._XmlBuild("changeset", {"tag": ChangesetTags}),
+                return_value=False
+            )
+        except ApiError as e:
+            if e.status == 409:
+                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
         return self._CurrentChangesetId
 
     def ChangesetCreate(self, ChangesetTags={}):
@@ -1187,16 +1224,25 @@ class OsmApi:
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError("No changeset currently opened")
-        self._put(
-            "/api/0.6/changeset/%s/close" % (self._CurrentChangesetId),
-            "",
-            return_value=False
-        )
-        CurrentChangesetId = self._CurrentChangesetId
-        self._CurrentChangesetId = 0
+        try:
+            self._put(
+                "/api/0.6/changeset/%s/close" % (self._CurrentChangesetId),
+                "",
+                return_value=False
+            )
+            CurrentChangesetId = self._CurrentChangesetId
+            self._CurrentChangesetId = 0
+        except ApiError as e:
+            if e.status == 409:
+                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
         return CurrentChangesetId
 
     def ChangesetUpload(self, ChangesData):
@@ -1214,6 +1260,9 @@ class OsmApi:
 
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         data = ""
         data += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1229,10 +1278,16 @@ class OsmApi:
             ).decode("utf-8")
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
-        data = self._post(
-            "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
-            data.encode("utf-8")
-        )
+        try:
+            data = self._post(
+                "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
+                data.encode("utf-8")
+            )
+        except ApiError as e:
+            if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
         try:
             data = xml.dom.minidom.parseString(data)
             data = data.getElementsByTagName("diffResult")[0]
@@ -1359,12 +1414,21 @@ class OsmApi:
 
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the changeset is already closed,
+        `OsmApi.ChangesetClosedApiError` is raised.
         """
         params = urllib.parse.urlencode({'text': comment})
-        data = self._post(
-            "/api/0.6/changeset/%s/comment" % (ChangesetId),
-            params
-        )
+        try:
+            data = self._post(
+                "/api/0.6/changeset/%s/comment" % (ChangesetId),
+                params
+            )
+        except ApiError as e:
+            if e.status == 409:
+                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
         changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
         return self._DomParseChangeset(changeset)
 
@@ -1595,7 +1659,13 @@ class OsmApi:
             params = {}
             params['text'] = comment
             uri += "?" + urllib.parse.urlencode(params)
-        result = self._post(uri, None, optionalAuth=optionalAuth)
+        try:
+            result = self._post(uri, None, optionalAuth=optionalAuth)
+        except ApiError as e:
+            if e.status == 404:
+                raise NoteClosedApiError(e.status, e.reason, e.payload)
+            else:
+                raise
 
         # parse the result
         noteElement = self._OsmResponseToDom(result, tag="note", single=True)
@@ -1770,25 +1840,44 @@ class OsmApi:
                 raise OsmTypeAlreadyExistsError(
                     "This %s already exists" % OsmType
                 )
-            result = self._put(
-                "/api/0.6/%s/create" % OsmType,
-                self._XmlBuild(OsmType, OsmData)
-            )
+            try:
+                result = self._put(
+                    "/api/0.6/%s/create" % OsmType,
+                    self._XmlBuild(OsmType, OsmData)
+                )
+            except ApiError as e:
+                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                else:
+                    raise
             OsmData["id"] = int(result.strip())
             OsmData["version"] = 1
             return OsmData
         elif action == "modify":
-            result = self._put(
-                "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
-                self._XmlBuild(OsmType, OsmData)
-            )
+            try:
+                result = self._put(
+                    "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
+                    self._XmlBuild(OsmType, OsmData)
+                )
+            except ApiError as e:
+                print(e.reason)
+                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                else:
+                    raise
             OsmData["version"] = int(result.strip())
             return OsmData
         elif action == "delete":
-            result = self._delete(
-                "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
-                self._XmlBuild(OsmType, OsmData)
-            )
+            try:
+                result = self._delete(
+                    "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
+                    self._XmlBuild(OsmType, OsmData)
+                )
+            except ApiError as e:
+                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                else:
+                    raise
             OsmData["version"] = int(result.strip())
             OsmData["visible"] = False
             return OsmData

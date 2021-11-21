@@ -234,6 +234,37 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['lon'], test_node['lon'])
         self.assertEquals(result['tag'], test_node['tag'])
 
+    def test_NodeUpdateWhenChangesetIsClosed(self):
+        self._session_mock(auth=True, status=409)
+
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_node = {
+            'id': 7676,
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'name': 'christian'
+            }
+        }
+
+        cs = self.api.ChangesetCreate({
+            'comment': 'This is a test dataset'
+        })
+
+        with self.assertRaises(osmapi.ChangesetClosedApiError) as cm:
+            result = self.api.NodeUpdate(test_node)
+
+        self.assertEquals(cm.exception.status, 409)
+        self.assertEquals(
+            cm.exception.payload,
+            "The changeset 2222 was closed at 2021-11-20 09:42:47 UTC."
+        )
+
     def test_NodeDelete(self):
         self._session_mock(auth=True)
 

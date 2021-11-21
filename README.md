@@ -1,7 +1,7 @@
 osmapi
 ======
 
-[![Build](https://img.shields.io/travis/metaodi/osmapi/develop.svg)](https://travis-ci.org/metaodi/osmapi)
+[![Build osmapi](https://github.com/metaodi/osmapi/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/osmapi/actions/workflows/build.yml)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)

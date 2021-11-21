@@ -20,7 +20,7 @@ The documentation is generated using `pdoc` and can be [viewed online](http://os
 
 The build the documentation locally, you can use
 
-    pdoc --html osmapi.OsmApi # create HTML file
+    pdoc -o . osmapi # create HTML files
 
 This project uses GitHub Pages to publish its documentation.
 To update the online documentation, you need to re-generate the documentation with the above command and update the `gh-pages` branch of this repository.

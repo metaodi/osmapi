@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Move from Travis CI to Github Actions
 
 ### Changed
-- **BC-Break**: osmapi does **not** support Python 2.7, 3.3, 3.4 and 3.5 anymore
+- **BC-Break**: osmapi does **not** support Python 2.7, 3.3, 3.4, 3.5 and 3.6 anymore
 
 ## 1.3.0 - 2020-10-05
 ### Added

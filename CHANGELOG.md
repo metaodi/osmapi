@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- **BC-Break**: osmapi does **not** support Python 2.7, 3.3, 3.4 and 3.5 anymore
 
 ## 1.3.0 - 2020-10-05
 ### Added

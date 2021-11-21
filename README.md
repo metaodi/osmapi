@@ -20,7 +20,7 @@ The documentation is generated using `pdoc` and can be [viewed online](http://os
 
 The build the documentation locally, you can use
 
-    pdoc --html osmapi.OsmApi # create HTML file
+    pdoc -o . osmapi # create HTML files
 
 This project uses GitHub Pages to publish its documentation.
 To update the online documentation, you need to re-generate the documentation with the above command and update the `gh-pages` branch of this repository.
@@ -87,7 +87,7 @@ To run the tests use the following command:
 
     nosetests --verbose
 
-By using tox you can even run the tests against different versions of python (2.7, 3.4, 3.5, 3.6 and 3.7):
+By using tox you can even run the tests against different versions of python (3.7, 3.8, 3.9):
 
     tox
 

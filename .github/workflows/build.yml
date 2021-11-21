@@ -31,7 +31,7 @@ jobs:
       run: ./build.sh
 
     - name: Test coverage
-      run: coveralls
+      run: coveralls --service=github
       if: ${{ matrix.python-version == '3.8' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

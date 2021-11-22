@@ -155,6 +155,39 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         self.assertEquals(result['nd'], test_way['nd'])
         self.assertEquals(result['tag'], test_way['tag'])
 
+    def test_WayUpdatePreconditionFailed(self):
+        self._session_mock(auth=True, status=412)
+
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_way = {
+            'id': 876,
+            'nd': [11949, 11950],
+            'tag': {
+                'highway': 'unclassified',
+                'name': 'Osmapi Street Update'
+            }
+        }
+
+        self.api.ChangesetCreate({
+            'comment': 'This is a test dataset'
+        })
+
+        with self.assertRaises(osmapi.PreconditionFailedApiError) as cm:
+            self.api.WayUpdate(test_way)
+
+        self.assertEquals(cm.exception.status, 412)
+        self.assertEquals(
+            cm.exception.payload,
+            (
+                "Way 876 requires the nodes with id in (11950), "
+                "which either do not exist, or are not visible."
+            )
+        )
+
     def test_WayDelete(self):
         self._session_mock(auth=True)
 

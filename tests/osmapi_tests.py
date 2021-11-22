@@ -27,8 +27,7 @@ class TestOsmApi(unittest.TestCase):
         print(self._testMethodName)
         print(self.api)
 
-    def _session_mock(self, auth=False, filenames=None, status=200,
-                      reason=None):
+    def _session_mock(self, auth=False, filenames=None, status=200):
         if auth:
             self.api._username = 'testuser'
             self.api._password = 'testpassword'

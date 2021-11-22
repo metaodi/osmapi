@@ -2,9 +2,24 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## [Unreleased]
 
-## 1.3.0 - 2020-10-05
+## [2.0.0] - 2021-11-22
+### Added
+- Move from Travis CI to Github Actions
+- Add more API-specific errors to catch specific errors (see issue #115, thanks [Mateusz Konieczny](https://github.com/matkoniecz)):
+    - `ChangesetClosedApiError`
+    - `NoteClosedApiError`
+    - `VersionMismatchApiError`
+    - `PreconditionFailedApiError`
+
+### Changed
+- **BC-Break**: osmapi does **not** support Python 2.7, 3.3, 3.4, 3.5 and 3.6 anymore
+
+### Fixed
+- Return an empty list in `NodeRelations`, `WayRelations`, `RelationRelations` and `NodeWays` if the returned XML is empty (thanks [FisherTsai](https://github.com/FisherTsai), see issue #117)
+
+## [1.3.0] - 2020-10-05
 ### Added
 - Add close() method to close the underlying http session (see issue #107)
 - Add context manager to automatically open and close the http session (see issue #107)
@@ -12,15 +27,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Correctly parse password file (thanks [Julien Palard](https://github.com/JulienPalard), see pull request #106)
 
-## 1.2.2 - 2018-11-05
+## [1.2.2] - 2018-11-05
 ### Fixed
 - Update PyPI password for deployment
 
-## 1.2.1 - 2018-11-05
+## [1.2.1] - 2018-11-05
 ### Fixed
 - Deployment to PyPI with Travis
 
-## 1.2.0 - 2018-11-05
+## [1.2.0] - 2018-11-05
 ### Added
 - Support Python 3.7 (thanks a lot [cclauss](https://github.com/cclauss))
 
@@ -31,25 +46,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Updated dependencies for Python 3.7
 - Adapt README to use Python 3 syntax (thanks [cclauss](https://github.com/cclauss))
 
-## 1.1.0 - 2017-10-11
+## [1.1.0] - 2017-10-11
 ### Added
 - Raise new `XmlResponseInvalidError` if XML response from the OpenStreetMap API is invalid
 
 ### Changed
 - Improved README (thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 
-## 1.0.2 - 2017-09-07
+## [1.0.2] - 2017-09-07
 ### Added
 - Rais ResponseEmptyApiError if we expect a response from the OpenStreetMap API, but didn't get one
 
 ### Removed
 - Removed httpretty as HTTP mock library
 
-## 1.0.1 - 2017-09-07
+## [1.0.1] - 2017-09-07
 ### Fixed
 - Make sure tests run offline
 
-## 1.0.0 - 2017-09-05
+## [1.0.0] - 2017-09-05
 ### Added
 - Officially support Python 3.5 and 3.6
 
@@ -59,41 +74,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - **BC-Break:** raise an exception if the requested element is deleted (previoulsy `None` has been returned)
 
-## 0.8.1 - 2016-12-21
+## [0.8.1] - 2016-12-21
 ### Fixed
 - Use setuptools instead of distutils in setup.py
 
-## 0.8.0 - 2016-12-21
+## [0.8.0] - 2016-12-21
 ### Removed
 - This release no longer supports Python 3.2, if you need it, go back to release <= 0.6.2
 
 ## Changed
 - Read version from __init__.py instead of importing it in setup.py
 
-## 0.7.2 - 2016-12-21
+## [0.7.2] - 2016-12-21
 ### Fixed
 - Added 'requests' as a dependency to setup.py to fix installation problems
 
-## 0.7.1 - 2016-12-12
+## [0.7.1] - 2016-12-12
 ### Changed
 - Catch OSError in setup.py to avoid installation errors
 
-## 0.7.0 - 2016-12-07
+## [0.7.0] - 2016-12-07
 ### Changed
 - Replace the old httplib with requests library (thanks a lot [Austin Hartzheim](http://austinhartzheim.me/)!)
 - Use format strings instead of ugly string concatenation
 - Fix unicode in changesets (thanks a lot to [MichaelVL](https://github.com/MichaelVL)!)
 
-## 0.6.2 - 2016-01-04
+## [0.6.2] - 2016-01-04
 ### Changed
 - Re-arranged README
 - Make sure PyPI releases are only created when a release has been tagged on GitHub
 
-## 0.6.1 - 2016-01-04
+## [0.6.1] - 2016-01-04
 ### Changed
 - The documentation is now available at a new domain: http://osmapi.metaodi.ch, the previous provider does no longer provide this service
 
-## 0.6.0 - 2015-05-26
+## [0.6.0] - 2015-05-26
 ### Added
 - SSL support for the API calls (thanks [Austin Hartzheim](http://austinhartzheim.me/)!)
 - Run tests on Python 3.4 as well
@@ -104,7 +119,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Changed generic `Exception` with more specific ones, so a client can catch those and react accordingly (no BC-break!)
 
-## 0.5.0 - 2015-01-03
+## [0.5.0] - 2015-01-03
 ### Changed
 - BC-break: all dates are now parsed as datetime objects
 
@@ -113,7 +128,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - When (un)subscribing to a changeset, there are two special errors `AlreadySubscribedApiError` and `NotSubscribedApiError` to check for
 - The ChangesetGet method got a new parameter `include_discussion` to determine wheter or not changeset discussion should be in the response
 
-## 0.4.2 - 2015-01-01
+## [0.4.2] - 2015-01-01
 ### Fixed
 - Result of `NodeWay` is now actually parsed as a `way`
 
@@ -123,54 +138,54 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Update to pdoc 0.3.1 which changed the appearance of the online docs
 
-## 0.4.1 - 2014-10-08
+## [0.4.1] - 2014-10-08
 ### Changed
 - Parse dates in notes as `datetime` objects
 
-## 0.4.0 - 2014-10-07
+## [0.4.0] - 2014-10-07
 ### Added
 - Release for OSM Notes API
 - Generation of online documentation (http://osmapi.divshot.io)
 
-## 0.3.1 - 2014-06-21
+## [0.3.1] - 2014-06-21
 ### Fixed
 - Hotfix release of Python 3.x (base64)
 
-## 0.3.0 - 2014-05-20
+## [0.3.0] - 2014-05-20
 ### Added
 - Support for Python 3.x
 - Use `tox` to run tests against multiple versions of Python
 
-## 0.2.26 - 2014-05-02
+## [0.2.26] - 2014-05-02
 ### Fixed
 - Fixed notes again
 
-## 0.2.25 - 2014-05-02
+## [0.2.25] - 2014-05-02
 ### Fixed
 - Unit tests for basic functionality
 - Fixed based on the unit tests (previously undetected bugs)
 
-## 0.2.24 - 2014-01-07
+## [0.2.24] - 2014-01-07
 ### Fixed
 - Fixed notes
 
-## 0.2.23 - 2014-01-03
+## [0.2.23] - 2014-01-03
 ### Changed
 - Hotfix release
 
-## 0.2.22 - 2014-01-03
+## [0.2.22] - 2014-01-03
 ### Fixed
 - Fixed README.md not found error during installation
 
-## 0.2.21 - 2014-01-03
+## [0.2.21] - 2014-01-03
 ### Changed
 - Updated description
 
-## 0.2.20 - 2014-01-01
+## [0.2.20] - 2014-01-01
 ### Added
 - First release of PyPI package "osmapi"
 
-## 0.2.19 - 2014-01-01
+## [0.2.19] - 2014-01-01
 ### Changed
 - Inital version from SVN (http://svn.openstreetmap.org/applications/utils/python_lib/OsmApi/OsmApi.py)
 - Move to GitHub
@@ -265,3 +280,37 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Removed` for deprecated features removed in this release.
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
+
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/metaodi/osmapi/compare/v1.3.0...v2.0.0
+[1.3.0]: https://github.com/metaodi/osmapi/compare/v1.2.2...v1.3.0
+[1.2.2]: https://github.com/metaodi/osmapi/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/metaodi/osmapi/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/metaodi/osmapi/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/metaodi/osmapi/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/metaodi/osmapi/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/metaodi/osmapi/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/metaodi/osmapi/compare/v0.8.1...v1.0.0
+[0.8.1]: https://github.com/metaodi/osmapi/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/metaodi/osmapi/compare/v0.7.2...v0.8.0
+[0.7.2]: https://github.com/metaodi/osmapi/compare/v0.7.1...v0.7.2
+[0.7.1]: https://github.com/metaodi/osmapi/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/metaodi/osmapi/compare/v0.6.2...v0.7.0
+[0.6.2]: https://github.com/metaodi/osmapi/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/metaodi/osmapi/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/metaodi/osmapi/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/metaodi/osmapi/compare/v0.4.2...v0.5.0
+[0.4.2]: https://github.com/metaodi/osmapi/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/metaodi/osmapi/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/metaodi/osmapi/compare/v0.3.1...v0.4.0
+[0.3.1]: https://github.com/metaodi/osmapi/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/metaodi/osmapi/compare/v0.2.26...v0.3.0
+[0.2.26]: https://github.com/metaodi/osmapi/compare/v0.2.25...v0.2.26
+[0.2.25]: https://github.com/metaodi/osmapi/compare/v0.2.24...v0.2.25
+[0.2.24]: https://github.com/metaodi/osmapi/compare/v0.2.23...v0.2.24
+[0.2.23]: https://github.com/metaodi/osmapi/compare/v0.2.22...v0.2.23
+[0.2.22]: https://github.com/metaodi/osmapi/compare/v0.2.21...v0.2.22
+[0.2.21]: https://github.com/metaodi/osmapi/compare/v0.2.20...v0.2.21
+[0.2.20]: https://github.com/metaodi/osmapi/compare/v0.2.19...v0.2.20
+[0.2.19]: https://github.com/metaodi/osmapi/releases/tag/v0.2.19
+

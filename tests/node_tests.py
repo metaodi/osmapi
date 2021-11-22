@@ -234,6 +234,68 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
         self.assertEquals(result['lon'], test_node['lon'])
         self.assertEquals(result['tag'], test_node['tag'])
 
+    def test_NodeUpdateWhenChangesetIsClosed(self):
+        self._session_mock(auth=True, status=409)
+
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_node = {
+            'id': 7676,
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'name': 'christian'
+            }
+        }
+
+        self.api.ChangesetCreate({
+            'comment': 'This is a test dataset'
+        })
+
+        with self.assertRaises(osmapi.ChangesetClosedApiError) as cm:
+            self.api.NodeUpdate(test_node)
+
+        self.assertEquals(cm.exception.status, 409)
+        self.assertEquals(
+            cm.exception.payload,
+            "The changeset 2222 was closed at 2021-11-20 09:42:47 UTC."
+        )
+
+    def test_NodeUpdateConflict(self):
+        self._session_mock(auth=True, status=409)
+
+        self.api.ChangesetCreate = mock.Mock(
+            return_value=1111
+        )
+        self.api._CurrentChangesetId = 1111
+
+        test_node = {
+            'id': 7676,
+            'lat': 47.287,
+            'lon': 8.765,
+            'tag': {
+                'amenity': 'place_of_worship',
+                'name': 'christian'
+            }
+        }
+
+        self.api.ChangesetCreate({
+            'comment': 'This is a test dataset'
+        })
+
+        with self.assertRaises(osmapi.VersionMismatchApiError) as cm:
+            self.api.NodeUpdate(test_node)
+
+        self.assertEquals(cm.exception.status, 409)
+        self.assertEquals(
+            cm.exception.payload,
+            "Version does not match the current database version of the element"
+        )
+
     def test_NodeDelete(self):
         self._session_mock(auth=True)
 
@@ -301,6 +363,18 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         )
 
+    def test_NodeWaysNotExists(self):
+        self._session_mock()
+
+        result = self.api.NodeWays(404)
+
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(args[1], f'{self.api_base}/api/0.6/node/404/ways')
+
+        self.assertEquals(len(result), 0)
+        self.assertIsInstance(result, list)
+
     def test_NodeRelations(self):
         self._session_mock()
 
@@ -328,6 +402,21 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
                 'type': 'fancy',
             }
         )
+
+    def test_NodeRelationsUnusedElement(self):
+        self._session_mock()
+
+        result = self.api.NodeRelations(4295668179)
+
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            self.api_base + '/api/0.6/node/4295668179/relations'
+        )
+
+        self.assertEquals(len(result), 0)
+        self.assertIsInstance(result, list)
 
     def test_NodesGet(self):
         self._session_mock()

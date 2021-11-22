@@ -1,12 +1,12 @@
 osmapi
 ======
 
-[![Build](https://img.shields.io/travis/metaodi/osmapi/develop.svg)](https://travis-ci.org/metaodi/osmapi)
+[![Build osmapi](https://github.com/metaodi/osmapi/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/osmapi/actions/workflows/build.yml)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
-Python wrapper for the OSM API
+Python wrapper for the OSM API (requires Python >= 3.7)
 
 ## Installation
 
@@ -20,7 +20,7 @@ The documentation is generated using `pdoc` and can be [viewed online](http://os
 
 The build the documentation locally, you can use
 
-    pdoc --html osmapi.OsmApi # create HTML file
+    pdoc -o . osmapi # create HTML files
 
 This project uses GitHub Pages to publish its documentation.
 To update the online documentation, you need to re-generate the documentation with the above command and update the `gh-pages` branch of this repository.
@@ -87,7 +87,7 @@ To run the tests use the following command:
 
     nosetests --verbose
 
-By using tox you can even run the tests against different versions of python (2.7, 3.4, 3.5, 3.6 and 3.7):
+By using tox you can even run the tests against different versions of python (3.7, 3.8, 3.9):
 
     tox
 
@@ -99,8 +99,8 @@ To create a new release, follow these steps (please respect [Semantic Versioning
 1. Update the CHANGELOG with the version
 1. Create a pull request to merge develop into master (make sure the tests pass!)
 1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the master branch)
-1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [Travis CI](https://travis-ci.org/metaodi/osmapi) on every tagged commit
-1. Re-build the documentation (see above) and copy the generated file to `index.html` on the `gh-pages` branch
+1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_python.yml) on every tagged commit
+1. Re-build the documentation (see above) and copy the generated files to the `gh-pages` branch
 
 ## Attribution
 

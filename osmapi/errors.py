@@ -118,6 +118,7 @@ class VersionMismatchApiError(ApiError):
     of the element
     """
 
+
 class PreconditionFailedApiError(ApiError):
     """
     Error if the precondition of the operation was not met:

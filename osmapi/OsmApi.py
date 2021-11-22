@@ -37,7 +37,22 @@ import requests
 from datetime import datetime
 
 from osmapi import __version__
-from .errors import *  # noqa
+from .errors import AlreadySubscribedApiError
+from .errors import ApiError
+from .errors import ChangesetAlreadyOpenError
+from .errors import ChangesetClosedApiError
+from .errors import ElementDeletedApiError
+from .errors import MaximumRetryLimitReachedError
+from .errors import NoChangesetOpenError
+from .errors import NotSubscribedApiError
+from .errors import NoteClosedApiError
+from .errors import OsmApiError
+from .errors import OsmTypeAlreadyExistsError
+from .errors import PreconditionFailedApiError
+from .errors import ResponseEmptyApiError
+from .errors import UsernamePasswordMissingError
+from .errors import VersionMismatchApiError
+from .errors import XmlResponseInvalidError
 
 
 class OsmApi:
@@ -1827,7 +1842,7 @@ class OsmApi:
         else:
             return self._do_manu(action, OsmType, OsmData)
 
-    def _do_manu(self, action, OsmType, OsmData):
+    def _do_manu(self, action, OsmType, OsmData):  # noqa
         if not self._CurrentChangesetId:
             raise NoChangesetOpenError(
                 "You need to open a changeset before uploading data"

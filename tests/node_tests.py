@@ -252,19 +252,19 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         }
 
-        cs = self.api.ChangesetCreate({
+        self.api.ChangesetCreate({
             'comment': 'This is a test dataset'
         })
 
         with self.assertRaises(osmapi.ChangesetClosedApiError) as cm:
-            result = self.api.NodeUpdate(test_node)
+            self.api.NodeUpdate(test_node)
 
         self.assertEquals(cm.exception.status, 409)
         self.assertEquals(
             cm.exception.payload,
             "The changeset 2222 was closed at 2021-11-20 09:42:47 UTC."
         )
-        
+
     def test_NodeUpdateConflict(self):
         self._session_mock(auth=True, status=409)
 
@@ -283,12 +283,12 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         }
 
-        cs = self.api.ChangesetCreate({
+        self.api.ChangesetCreate({
             'comment': 'This is a test dataset'
         })
 
         with self.assertRaises(osmapi.VersionMismatchApiError) as cm:
-            result = self.api.NodeUpdate(test_node)
+            self.api.NodeUpdate(test_node)
 
         self.assertEquals(cm.exception.status, 409)
         self.assertEquals(

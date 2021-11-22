@@ -391,6 +391,21 @@ class TestOsmApiNode(osmapi_tests.TestOsmApi):
             }
         )
 
+    def test_NodeRelationsUnusedElement(self):
+        self._session_mock()
+
+        result = self.api.NodeRelations(4295668179)
+
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            self.api_base + '/api/0.6/node/4295668179/relations'
+        )
+
+        self.assertEquals(len(result), 0)
+        self.assertIsInstance(result, list)
+
     def test_NodesGet(self):
         self._session_mock()
 

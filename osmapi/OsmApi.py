@@ -489,7 +489,7 @@ class OsmApi:
         """
         uri = "/api/0.6/node/%d/relations" % NodeId
         data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation")
+        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
             data = self._DomParseRelation(relation)
@@ -735,7 +735,7 @@ class OsmApi:
         """
         uri = "/api/0.6/way/%d/relations" % WayId
         data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation")
+        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
             data = self._DomParseRelation(relation)
@@ -1039,7 +1039,7 @@ class OsmApi:
         """
         uri = "/api/0.6/relation/%d/relations" % RelationId
         data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation")
+        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
             data = self._DomParseRelation(relation)
@@ -2077,7 +2077,7 @@ class OsmApi:
     # Internal dom function                          #
     ##################################################
 
-    def _OsmResponseToDom(self, response, tag, single=False):
+    def _OsmResponseToDom(self, response, tag, single=False, allow_empty=False):
         """
         Returns the (sub-) DOM parsed from an OSM response
         """
@@ -2086,7 +2086,13 @@ class OsmApi:
             osm_dom = dom.getElementsByTagName("osm")[0]
             all_data = osm_dom.getElementsByTagName(tag)
             first_element = all_data[0]
-        except (xml.parsers.expat.ExpatError, IndexError) as e:
+        except (IndexError) as e:
+            if allow_empty:
+                return []
+            raise XmlResponseInvalidError(
+                "The XML response from the OSM API is invalid: %r" % e
+            )
+        except (xml.parsers.expat.ExpatError) as e:
             raise XmlResponseInvalidError(
                 "The XML response from the OSM API is invalid: %r" % e
             )

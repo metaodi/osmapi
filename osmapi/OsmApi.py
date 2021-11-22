@@ -448,7 +448,7 @@ class OsmApi:
         """
         uri = "/api/0.6/node/%d/ways" % NodeId
         data = self._get(uri)
-        ways = self._OsmResponseToDom(data, tag="way")
+        ways = self._OsmResponseToDom(data, tag="way", allow_empty=True)
         result = []
         for way in ways:
             data = self._DomParseWay(way)

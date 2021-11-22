@@ -262,6 +262,21 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
             }
         )
 
+    def test_WayRelationsUnusedElement(self):
+        self._session_mock()
+
+        result = self.api.WayRelations(4295032193)
+
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            self.api_base + '/api/0.6/way/4295032193/relations'
+        )
+
+        self.assertEquals(len(result), 0)
+        self.assertIsInstance(result, list)
+
     def test_WayFull(self):
         self._session_mock()
 

@@ -273,6 +273,21 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
             'Aargauischer Radroutennetz'
         )
 
+    def test_RelationRelationsUnusedElement(self):
+        self._session_mock()
+
+        result = self.api.RelationRelations(1532552)
+
+        args, kwargs = self.api._session.request.call_args
+        self.assertEquals(args[0], 'GET')
+        self.assertEquals(
+            args[1],
+            f'{self.api_base}/api/0.6/relation/1532552/relations'
+        )
+
+        self.assertEquals(len(result), 0)
+        self.assertIsInstance(result, list)
+
     def test_RelationFull(self):
         self._session_mock()
 

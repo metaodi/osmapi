@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Long description of osmapi (now using directly the README.md)
 
+### Changed
+- Switch from nose to pytest
+
+### Removed
+- Remove tox configuration and dependency
+
 ## [2.0.0] - 2021-11-22
 ### Added
 - Move from Travis CI to Github Actions

@@ -12,7 +12,7 @@ trap "cleanup" EXIT
 flake8 --statistics --show-source .
 
 # run tests
-nosetests --verbose --with-coverage
+pytest --cov=osmapi tests/
 
 # generate the docs
 pdoc -o . osmapi

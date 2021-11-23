@@ -85,11 +85,7 @@ After that, it is recommended to install the `flake8` pre-commit-hook:
 
 To run the tests use the following command:
 
-    nosetests --verbose
-
-By using tox you can even run the tests against different versions of python (3.7, 3.8, 3.9):
-
-    tox
+    pytest
 
 ## Release
 

@@ -1,5 +1,5 @@
 from __future__ import (unicode_literals, absolute_import)
-from . import osmapi_tests
+from . import osmapi_test
 import osmapi
 import mock
 import os
@@ -12,7 +12,7 @@ __location__ = os.path.realpath(
 )
 
 
-class TestOsmApiHelper(osmapi_tests.TestOsmApi):
+class TestOsmApiHelper(osmapi_test.TestOsmApi):
     def setUp(self):
         super(TestOsmApiHelper, self).setUp()
         self.setupMock()
@@ -34,8 +34,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             'passwordfile.txt'
         )
         my_api = osmapi.OsmApi(passwordfile=path)
-        self.assertEquals('testosm', my_api._username)
-        self.assertEquals('testpass', my_api._password)
+        self.assertEqual('testosm', my_api._username)
+        self.assertEqual('testpass', my_api._password)
 
     def test_passwordfile_with_user(self):
         path = os.path.join(
@@ -44,8 +44,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             'passwordfile.txt'
         )
         my_api = osmapi.OsmApi(username='testuser', passwordfile=path)
-        self.assertEquals('testuser', my_api._username)
-        self.assertEquals('testuserpass', my_api._password)
+        self.assertEqual('testuser', my_api._username)
+        self.assertEqual('testuserpass', my_api._password)
 
     def test_passwordfile_with_colon(self):
         path = os.path.join(
@@ -54,17 +54,17 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             'passwordfile_colon.txt'
         )
         my_api = osmapi.OsmApi(username='testuser', passwordfile=path)
-        self.assertEquals('testuser', my_api._username)
-        self.assertEquals('test:userpass', my_api._password)
+        self.assertEqual('testuser', my_api._username)
+        self.assertEqual('test:userpass', my_api._password)
 
     def test_close_call(self):
         self.api.close()
-        self.assertEquals(self.api._session.close.call_count, 1)
+        self.assertEqual(self.api._session.close.call_count, 1)
 
     def test_close_context_manager(self):
         with osmapi.OsmApi() as my_api:
             my_api._session.close = mock.Mock()
-        self.assertEquals(my_api._session.close.call_count, 1)
+        self.assertEqual(my_api._session.close.call_count, 1)
 
     def test_http_request_get(self):
         response = self.api._http_request(
@@ -79,8 +79,8 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             auth=None,
             data=None
         )
-        self.assertEquals(response, "test response")
-        self.assertEquals(self.api._session.request.call_count, 1)
+        self.assertEqual(response, "test response")
+        self.assertEqual(self.api._session.request.call_count, 1)
 
     def test_http_request_put(self):
         data = "data"
@@ -96,7 +96,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             data="data",
             auth=None
         )
-        self.assertEquals(response, "test response")
+        self.assertEqual(response, "test response")
 
     def test_http_request_delete(self):
         data = "delete data"
@@ -112,7 +112,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             data="delete data",
             auth=None
         )
-        self.assertEquals(response, "test response")
+        self.assertEqual(response, "test response")
 
     def test_http_request_auth(self):
         response = self.api._http_request(
@@ -127,7 +127,7 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
             auth=('testuser', 'testpassword'),
             data=None
         )
-        self.assertEquals(response, "test response")
+        self.assertEqual(response, "test response")
 
     def test_http_request_410_response(self):
         self.setupMock(410)
@@ -138,9 +138,9 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
                 False,
                 None
             )
-        self.assertEquals(cm.exception.status, 410)
-        self.assertEquals(cm.exception.reason, "test reason")
-        self.assertEquals(cm.exception.payload, "test response")
+        self.assertEqual(cm.exception.status, 410)
+        self.assertEqual(cm.exception.reason, "test reason")
+        self.assertEqual(cm.exception.payload, "test response")
 
     def test_http_request_500_response(self):
         self.setupMock(500)
@@ -151,6 +151,6 @@ class TestOsmApiHelper(osmapi_tests.TestOsmApi):
                 False,
                 None
             )
-        self.assertEquals(cm.exception.status, 500)
-        self.assertEquals(cm.exception.reason, "test reason")
-        self.assertEquals(cm.exception.payload, "test response")
+        self.assertEqual(cm.exception.status, 500)
+        self.assertEqual(cm.exception.reason, "test reason")
+        self.assertEqual(cm.exception.payload, "test response")

@@ -1,21 +1,21 @@
 from __future__ import (unicode_literals, absolute_import)
-from . import osmapi_tests
+from . import osmapi_test
 import osmapi
 import mock
 import datetime
 
 
-class TestOsmApiWay(osmapi_tests.TestOsmApi):
+class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_WayGet(self):
         self._session_mock()
 
         result = self.api.WayGet(321)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/321')
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/way/321')
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': 321,
             'changeset': 298,
             'uid': 12,
@@ -54,13 +54,13 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayGet(4294967296, 2)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/way/4294967296/2')
 
-        self.assertEquals(result['id'], 4294967296)
-        self.assertEquals(result['changeset'], 41303)
-        self.assertEquals(result['user'], 'metaodi')
+        self.assertEqual(result['id'], 4294967296)
+        self.assertEqual(result['changeset'], 41303)
+        self.assertEqual(result['user'], 'metaodi')
 
     def test_WayGet_nodata(self):
         self._session_mock()
@@ -88,17 +88,17 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way'
         })
-        self.assertEquals(cs, 2222)
+        self.assertEqual(cs, 2222)
 
         result = self.api.WayCreate(test_way)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/create')
+        self.assertEqual(args[0], 'PUT')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/way/create')
 
-        self.assertEquals(result['id'], 5454)
-        self.assertEquals(result['nd'], test_way['nd'])
-        self.assertEquals(result['tag'], test_way['tag'])
+        self.assertEqual(result['id'], 5454)
+        self.assertEqual(result['nd'], test_way['nd'])
+        self.assertEqual(result['tag'], test_way['tag'])
 
     def test_WayCreate_existing_node(self):
         # setup mock
@@ -116,7 +116,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
             }
         }
 
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 osmapi.OsmTypeAlreadyExistsError,
                 'This way already exists'):
             self.api.WayCreate(test_way)
@@ -142,18 +142,18 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way'
         })
-        self.assertEquals(cs, 2222)
+        self.assertEqual(cs, 2222)
 
         result = self.api.WayUpdate(test_way)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/876')
+        self.assertEqual(args[0], 'PUT')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/way/876')
 
-        self.assertEquals(result['id'], 876)
-        self.assertEquals(result['version'], 7)
-        self.assertEquals(result['nd'], test_way['nd'])
-        self.assertEquals(result['tag'], test_way['tag'])
+        self.assertEqual(result['id'], 876)
+        self.assertEqual(result['version'], 7)
+        self.assertEqual(result['nd'], test_way['nd'])
+        self.assertEqual(result['tag'], test_way['tag'])
 
     def test_WayUpdatePreconditionFailed(self):
         self._session_mock(auth=True, status=412)
@@ -179,8 +179,8 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         with self.assertRaises(osmapi.PreconditionFailedApiError) as cm:
             self.api.WayUpdate(test_way)
 
-        self.assertEquals(cm.exception.status, 412)
-        self.assertEquals(
+        self.assertEqual(cm.exception.status, 412)
+        self.assertEqual(
             cm.exception.payload,
             (
                 "Way 876 requires the nodes with id in (11950), "
@@ -204,15 +204,15 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test way delete'
         })
-        self.assertEquals(cs, 2222)
+        self.assertEqual(cs, 2222)
 
         result = self.api.WayDelete(test_way)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'DELETE')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/876')
-        self.assertEquals(result['id'], 876)
-        self.assertEquals(result['version'], 8)
+        self.assertEqual(args[0], 'DELETE')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/way/876')
+        self.assertEqual(result['id'], 876)
+        self.assertEqual(result['version'], 8)
 
     def test_WayHistory(self):
         self._session_mock()
@@ -220,14 +220,14 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayHistory(4294967296)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/way/4294967296/history')
 
-        self.assertEquals(len(result), 2)
-        self.assertEquals(result[1]['id'], 4294967296)
-        self.assertEquals(result[1]['version'], 1)
-        self.assertEquals(
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[1]['id'], 4294967296)
+        self.assertEqual(result[1]['version'], 1)
+        self.assertEqual(
             result[1]['tag'], {
                 'highway': 'unclassified',
                 'name': 'Stansted Road',
@@ -240,14 +240,14 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayRelations(4295032193)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/way/4295032193/relations')
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(result[0]['id'], 4294968148)
-        self.assertEquals(result[0]['changeset'], 23123)
-        self.assertEquals(
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['id'], 4294968148)
+        self.assertEqual(result[0]['changeset'], 23123)
+        self.assertEqual(
             result[0]['member'][4],
             {
                 'role': '',
@@ -255,7 +255,7 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
                 'type': 'way',
             }
         )
-        self.assertEquals(
+        self.assertEqual(
             result[0]['tag'],
             {
                 'type': 'fancy',
@@ -268,13 +268,13 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayRelations(4295032193)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(
             args[1],
             self.api_base + '/api/0.6/way/4295032193/relations'
         )
 
-        self.assertEquals(len(result), 0)
+        self.assertEqual(len(result), 0)
         self.assertIsInstance(result, list)
 
     def test_WayFull(self):
@@ -283,16 +283,16 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WayFull(321)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/way/321/full')
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/way/321/full')
 
-        self.assertEquals(len(result), 17)
-        self.assertEquals(result[0]['data']['id'], 11949)
-        self.assertEquals(result[0]['data']['changeset'], 298)
-        self.assertEquals(result[0]['type'], 'node')
-        self.assertEquals(result[16]['data']['id'], 321)
-        self.assertEquals(result[16]['data']['changeset'], 298)
-        self.assertEquals(result[16]['type'], 'way')
+        self.assertEqual(len(result), 17)
+        self.assertEqual(result[0]['data']['id'], 11949)
+        self.assertEqual(result[0]['data']['changeset'], 298)
+        self.assertEqual(result[0]['type'], 'node')
+        self.assertEqual(result[16]['data']['id'], 321)
+        self.assertEqual(result[16]['data']['changeset'], 298)
+        self.assertEqual(result[16]['type'], 'way')
 
     def test_WayFull_invalid_response(self):
         self._session_mock()
@@ -306,11 +306,11 @@ class TestOsmApiWay(osmapi_tests.TestOsmApi):
         result = self.api.WaysGet([456, 678])
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/ways?ways=456,678')
 
-        self.assertEquals(len(result), 2)
+        self.assertEqual(len(result), 2)
         self.assertIs(type(result[456]), dict)
         self.assertIs(type(result[678]), dict)
         with self.assertRaises(KeyError):

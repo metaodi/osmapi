@@ -1,21 +1,21 @@
 from __future__ import (unicode_literals, absolute_import)
-from . import osmapi_tests
+from . import osmapi_test
 import osmapi
 import mock
 import datetime
 
 
-class TestOsmApiRelation(osmapi_tests.TestOsmApi):
+class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_RelationGet(self):
         self._session_mock()
 
         result = self.api.RelationGet(321)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/321')
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/relation/321')
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': 321,
             'changeset': 434,
             'uid': 12,
@@ -83,13 +83,13 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationGet(765, 2)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/765/2')
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/relation/765/2')
 
-        self.assertEquals(result['id'], 765)
-        self.assertEquals(result['changeset'], 41378)
-        self.assertEquals(result['user'], 'metaodi')
-        self.assertEquals(result['tag']['source'], 'test')
+        self.assertEqual(result['id'], 765)
+        self.assertEqual(result['changeset'], 41378)
+        self.assertEqual(result['user'], 'metaodi')
+        self.assertEqual(result['tag']['source'], 'test')
 
     def test_RelationCreate(self):
         self._session_mock(auth=True)
@@ -121,18 +121,18 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test relation'
         })
-        self.assertEquals(cs, 3333)
+        self.assertEqual(cs, 3333)
 
         result = self.api.RelationCreate(test_relation)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/create')
+        self.assertEqual(args[0], 'PUT')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/relation/create')
 
-        self.assertEquals(result['id'], 8989)
-        self.assertEquals(result['version'], 1)
-        self.assertEquals(result['member'], test_relation['member'])
-        self.assertEquals(result['tag'], test_relation['tag'])
+        self.assertEqual(result['id'], 8989)
+        self.assertEqual(result['version'], 1)
+        self.assertEqual(result['member'], test_relation['member'])
+        self.assertEqual(result['tag'], test_relation['tag'])
 
     def test_RelationCreate_existing_node(self):
         # setup mock
@@ -160,7 +160,7 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
             ]
         }
 
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 osmapi.OsmTypeAlreadyExistsError,
                 'This relation already exists'):
             self.api.RelationCreate(test_relation)
@@ -191,18 +191,18 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test relation'
         })
-        self.assertEquals(cs, 3333)
+        self.assertEqual(cs, 3333)
 
         result = self.api.RelationUpdate(test_relation)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'PUT')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/8989')
+        self.assertEqual(args[0], 'PUT')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/relation/8989')
 
-        self.assertEquals(result['id'], 8989)
-        self.assertEquals(result['version'], 42)
-        self.assertEquals(result['member'], test_relation['member'])
-        self.assertEquals(result['tag'], test_relation['tag'])
+        self.assertEqual(result['id'], 8989)
+        self.assertEqual(result['version'], 42)
+        self.assertEqual(result['member'], test_relation['member'])
+        self.assertEqual(result['tag'], test_relation['tag'])
 
     def test_RelationDelete(self):
         self._session_mock(auth=True)
@@ -220,16 +220,16 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         cs = self.api.ChangesetCreate({
             'comment': 'This is a test relation'
         })
-        self.assertEquals(cs, 3333)
+        self.assertEqual(cs, 3333)
 
         result = self.api.RelationDelete(test_relation)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'DELETE')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/relation/8989')
+        self.assertEqual(args[0], 'DELETE')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/relation/8989')
 
-        self.assertEquals(result['id'], 8989)
-        self.assertEquals(result['version'], 43)
+        self.assertEqual(result['id'], 8989)
+        self.assertEqual(result['version'], 43)
 
     def test_RelationHistory(self):
         self._session_mock()
@@ -237,20 +237,20 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationHistory(2470397)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/relation/2470397/history')
 
-        self.assertEquals(len(result), 2)
-        self.assertEquals(result[1]['id'], 2470397)
-        self.assertEquals(result[1]['version'], 1)
-        self.assertEquals(
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[1]['id'], 2470397)
+        self.assertEqual(result[1]['version'], 1)
+        self.assertEqual(
             result[1]['tag'], {
                 'restriction': 'only_straight_on',
                 'type': 'restriction',
             }
         )
-        self.assertEquals(result[2]['version'], 2)
+        self.assertEqual(result[2]['version'], 2)
 
     def test_RelationRelations(self):
         self._session_mock()
@@ -258,17 +258,17 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationRelations(1532552)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           (self.api_base +
                            '/api/0.6/relation/1532552/relations'))
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(result[0]['id'], 1532553)
-        self.assertEquals(result[0]['version'], 85)
-        self.assertEquals(len(result[0]['member']), 120)
-        self.assertEquals(result[0]['tag']['type'], 'network')
-        self.assertEquals(
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['id'], 1532553)
+        self.assertEqual(result[0]['version'], 85)
+        self.assertEqual(len(result[0]['member']), 120)
+        self.assertEqual(result[0]['tag']['type'], 'network')
+        self.assertEqual(
             result[0]['tag']['name'],
             'Aargauischer Radroutennetz'
         )
@@ -279,13 +279,13 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationRelations(1532552)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(
             args[1],
             f'{self.api_base}/api/0.6/relation/1532552/relations'
         )
 
-        self.assertEquals(len(result), 0)
+        self.assertEqual(len(result), 0)
         self.assertIsInstance(result, list)
 
     def test_RelationFull(self):
@@ -294,17 +294,17 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationFull(2470397)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1],
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1],
                           self.api_base + '/api/0.6/relation/2470397/full')
 
-        self.assertEquals(len(result), 11)
-        self.assertEquals(result[1]['data']['id'], 101142277)
-        self.assertEquals(result[1]['data']['version'], 8)
-        self.assertEquals(result[1]['type'], 'node')
-        self.assertEquals(result[10]['data']['id'], 2470397)
-        self.assertEquals(result[10]['data']['version'], 2)
-        self.assertEquals(result[10]['type'], 'relation')
+        self.assertEqual(len(result), 11)
+        self.assertEqual(result[1]['data']['id'], 101142277)
+        self.assertEqual(result[1]['data']['version'], 8)
+        self.assertEqual(result[1]['type'], 'node')
+        self.assertEqual(result[10]['data']['id'], 2470397)
+        self.assertEqual(result[10]['data']['version'], 2)
+        self.assertEqual(result[10]['type'], 'relation')
 
     def test_RelationsGet(self):
         self._session_mock()
@@ -312,23 +312,23 @@ class TestOsmApiRelation(osmapi_tests.TestOsmApi):
         result = self.api.RelationsGet([1532552, 1532553])
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(
             args[1],
             self.api_base + '/api/0.6/relations?relations=1532552,1532553'
         )
 
-        self.assertEquals(len(result), 2)
-        self.assertEquals(result[1532553]['id'], 1532553)
-        self.assertEquals(result[1532553]['version'], 85)
-        self.assertEquals(result[1532553]['user'], 'SimonPoole')
-        self.assertEquals(result[1532552]['id'], 1532552)
-        self.assertEquals(result[1532552]['visible'], True)
-        self.assertEquals(result[1532552]['tag']['route'], 'bicycle')
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[1532553]['id'], 1532553)
+        self.assertEqual(result[1532553]['version'], 85)
+        self.assertEqual(result[1532553]['user'], 'SimonPoole')
+        self.assertEqual(result[1532552]['id'], 1532552)
+        self.assertEqual(result[1532552]['visible'], True)
+        self.assertEqual(result[1532552]['tag']['route'], 'bicycle')
 
     def test_RelationFull_with_deleted_relation(self):
         self._session_mock(filenames=[], status=410)
 
         with self.assertRaises(osmapi.ElementDeletedApiError) as context:
             self.api.RelationFull(2911456)
-        self.assertEquals(410, context.exception.status)
+        self.assertEqual(410, context.exception.status)

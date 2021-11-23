@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Switch from nose to pytest
+- Move docs to its own subdirectory
 
 ### Removed
 - Remove tox configuration and dependency

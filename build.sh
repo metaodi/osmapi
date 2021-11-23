@@ -15,7 +15,7 @@ flake8 --statistics --show-source .
 pytest --cov=osmapi tests/
 
 # generate the docs
-pdoc -o . osmapi
+pdoc -o docs osmapi
 
 # setup a new virtualenv and try to install the lib
 virtualenv pyenv

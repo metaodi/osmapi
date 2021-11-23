@@ -30,9 +30,14 @@ jobs:
 
     - name: Build the package 
       run: ./build.sh
-
-    - name: Test coverage
-      run: coveralls --service=github
-      if: ${{ matrix.python-version == '3.8' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+  test_coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true

@@ -20,7 +20,7 @@ The documentation is generated using `pdoc` and can be [viewed online](http://os
 
 The build the documentation locally, you can use
 
-    pdoc -o . osmapi # create HTML files
+    make docs
 
 This project uses GitHub Pages to publish its documentation.
 To update the online documentation, you need to re-generate the documentation with the above command and update the `gh-pages` branch of this repository.
@@ -85,7 +85,7 @@ After that, it is recommended to install the `flake8` pre-commit-hook:
 
 To run the tests use the following command:
 
-    pytest
+    make test
 
 ## Release
 

@@ -382,8 +382,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'GET')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/node/4295668179/relations')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/node/4295668179/relations'
+        )
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]['id'], 4294968148)
@@ -425,8 +427,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'GET')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/nodes?nodes=123,345')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/nodes?nodes=123,345'
+        )
 
         self.assertEqual(len(result), 2)
         self.assertEqual(result[123], {

@@ -231,8 +231,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'PUT')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/4444/close')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/4444/close'
+        )
 
     def test_ChangesetClose_with_no_changeset(self):
         self._session_mock()
@@ -270,8 +272,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/4444/upload')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/4444/upload'
+        )
         self.assertEqual(
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
@@ -344,8 +348,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/4444/upload')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/4444/upload'
+        )
         self.assertEqual(
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
@@ -428,8 +434,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/4444/upload')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/4444/upload'
+        )
         self.assertEqual(
             xmltosorteddict(kwargs['data']),
             xmltosorteddict(
@@ -505,8 +513,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, _ = self.api._session.request.call_args
         self.assertEqual(args[0], 'GET')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/23123/download')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/23123/download'
+        )
 
         self.assertEqual(len(result), 16)
         self.assertEqual(
@@ -667,8 +677,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/123/comment')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/123/comment'
+        )
         self.assertEqual(
             kwargs['data'],
             "text=test+comment"
@@ -698,8 +710,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, _ = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/123/subscribe')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/123/subscribe'
+        )
         self.assertEqual(result, {
             'id': 123,
             'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
@@ -737,8 +751,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         args, kwargs = self.api._session.request.call_args
         self.assertEqual(args[0], 'POST')
-        self.assertEqual(args[1],
-                          self.api_base + '/api/0.6/changeset/123/unsubscribe')
+        self.assertEqual(
+            args[1],
+            f'{self.api_base}/api/0.6/changeset/123/unsubscribe'
+        )
         self.assertEqual(result, {
             'id': 123,
             'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),

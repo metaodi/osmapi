@@ -21,6 +21,7 @@ setup(
     install_requires=['requests'],
     description='Python wrapper for the OSM API',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Etienne Chové',
     author_email='chove@crans.org',
     maintainer='Stefan Oderbolz',

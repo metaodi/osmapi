@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ## [2.0.1] - 2021-11-23
+### Added
+- Add Makefile for all common tasks
+
 ### Fixed
 - Long description of osmapi (now using directly the README.md)
 

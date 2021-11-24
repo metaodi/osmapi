@@ -4,3 +4,4 @@ virtualenv
 xmltodict
 pytest
 pytest-cov
+coverage

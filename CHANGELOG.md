@@ -4,7 +4,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
-## [2.0.1] - 2021-11-23
+## [2.0.2] - 2021-11-24
+### Changed
+- Set `long_description` format to markdown
+
+## [2.0.1] - 2021-11-24
 ### Added
 - Add Makefile for all common tasks
 
@@ -295,7 +299,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/metaodi/osmapi/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/metaodi/osmapi/compare/v1.3.0...v2.0.0
 [1.3.0]: https://github.com/metaodi/osmapi/compare/v1.2.2...v1.3.0

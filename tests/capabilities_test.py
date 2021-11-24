@@ -1,13 +1,13 @@
 from __future__ import (unicode_literals, absolute_import)
-from . import osmapi_tests
+from . import osmapi_test
 
 
-class TestOsmApiNode(osmapi_tests.TestOsmApi):
+class TestOsmApiNode(osmapi_test.TestOsmApi):
     def test_Capabilities(self):
         self._session_mock()
 
         result = self.api.Capabilities()
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'area': {'maximum': 0.25},
             'changesets': {'maximum_elements': 50000.0},
             'status': {

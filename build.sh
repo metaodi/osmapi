@@ -9,13 +9,13 @@ function cleanup {
 trap "cleanup" EXIT
 
 # Check PEP-8 code style and McCabe complexity
-flake8 --statistics --show-source .
+make lint
 
 # run tests
-nosetests --verbose --with-coverage
+make test
 
 # generate the docs
-pdoc -o . osmapi
+make docs
 
 # setup a new virtualenv and try to install the lib
 virtualenv pyenv

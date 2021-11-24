@@ -5,3 +5,4 @@ MANIFEST
 .coverage
 .tox
 .pycache/*
+.pytest_cache/*

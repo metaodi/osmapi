@@ -12,7 +12,7 @@ deps:  ## Install dependencies
 	python -m pip install -r test-requirements.txt
 
 docs:  ## Generate documentation
-	python -m pdocs -o docs osmapi
+	python -m pdoc -o docs osmapi
 
 lint:  ## Linting of source code
 	python -m flake8 --statistics --show-source .

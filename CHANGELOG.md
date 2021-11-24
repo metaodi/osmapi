@@ -4,6 +4,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [2.0.1] - 2021-11-23
+### Added
+- Add Makefile for all common tasks
+
+### Fixed
+- Long description of osmapi (now using directly the README.md)
+
+### Changed
+- Switch from nose to pytest
+- Move docs to its own subdirectory
+
+### Removed
+- Remove tox configuration and dependency
+
 ## [2.0.0] - 2021-11-22
 ### Added
 - Move from Travis CI to Github Actions
@@ -281,7 +295,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/metaodi/osmapi/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/metaodi/osmapi/compare/v1.3.0...v2.0.0
 [1.3.0]: https://github.com/metaodi/osmapi/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/metaodi/osmapi/compare/v1.2.1...v1.2.2

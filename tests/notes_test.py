@@ -1,5 +1,5 @@
 from __future__ import (unicode_literals, absolute_import)
-from . import osmapi_tests
+from . import osmapi_test
 from datetime import datetime
 import osmapi
 
@@ -9,7 +9,7 @@ except ImportError:
     from urllib import parse as urlparse
 
 
-class TestOsmApiNotes(osmapi_tests.TestOsmApi):
+class TestOsmApiNotes(osmapi_test.TestOsmApi):
     def test_NotesGet(self):
         self._session_mock()
 
@@ -21,18 +21,18 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         )
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
+        self.assertEqual(args[0], 'GET')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
-        self.assertEquals(
+        self.assertEqual(
             params['bbox'][0],
             '-1.499853,45.966790,-1.483181,52.471019'
         )
-        self.assertEquals(params['limit'][0], '100')
-        self.assertEquals(params['closed'][0], '7')
+        self.assertEqual(params['limit'][0], '100')
+        self.assertEqual(params['closed'][0], '7')
 
-        self.assertEquals(len(result), 14)
-        self.assertEquals(result[2], {
+        self.assertEqual(len(result), 14)
+        self.assertEqual(result[2], {
             'id': '231775',
             'lon': -1.4929605,
             'lat': 52.4107312,
@@ -69,10 +69,10 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteGet(1111)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
-        self.assertEquals(args[1], self.api_base + '/api/0.6/notes/1111')
+        self.assertEqual(args[0], 'GET')
+        self.assertEqual(args[1], self.api_base + '/api/0.6/notes/1111')
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '1111',
             'lon': 12.3133135,
             'lat': 37.9305489,
@@ -116,14 +116,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteCreate(note)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
+        self.assertEqual(args[0], 'POST')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
-        self.assertEquals(params['lat'][0], '47.123')
-        self.assertEquals(params['lon'][0], '8.432')
-        self.assertEquals(params['text'][0], 'This is a test')
+        self.assertEqual(params['lat'][0], '47.123')
+        self.assertEqual(params['lon'][0], '8.432')
+        self.assertEqual(params['text'][0], 'This is a test')
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '816',
             'lat': 47.123,
             'lon': 8.432,
@@ -153,14 +153,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteCreate(note)
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
+        self.assertEqual(args[0], 'POST')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
-        self.assertEquals(params['lat'][0], '47.123')
-        self.assertEquals(params['lon'][0], '8.432')
-        self.assertEquals(params['text'][0], 'test 123')
+        self.assertEqual(params['lat'][0], '47.123')
+        self.assertEqual(params['lon'][0], '8.432')
+        self.assertEqual(params['text'][0], 'test 123')
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '842',
             'lat': 58.3368222,
             'lon': 25.8826183,
@@ -185,13 +185,13 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteComment(812, 'This is a comment')
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
-        self.assertEquals(
+        self.assertEqual(args[0], 'POST')
+        self.assertEqual(
             args[1],
             self.api_base + '/api/0.6/notes/812/comment?text=This+is+a+comment'
         )
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '812',
             'lat': 47.123,
             'lon': 8.432,
@@ -224,13 +224,13 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteComment(842, 'blubb')
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
-        self.assertEquals(
+        self.assertEqual(args[0], 'POST')
+        self.assertEqual(
             args[1],
             self.api_base + '/api/0.6/notes/842/comment?text=blubb'
         )
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '842',
             'lat': 58.3368222,
             'lon': 25.8826183,
@@ -263,13 +263,13 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteClose(814, 'Close this note!')
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
-        self.assertEquals(
+        self.assertEqual(args[0], 'POST')
+        self.assertEqual(
             args[1],
             self.api_base + '/api/0.6/notes/814/close?text=Close+this+note%21'
         )
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '815',
             'lat': 47.123,
             'lon': 8.432,
@@ -302,14 +302,14 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NoteReopen(815, 'Reopen this note!')
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'POST')
-        self.assertEquals(
+        self.assertEqual(args[0], 'POST')
+        self.assertEqual(
             args[1],
             (self.api_base +
              '/api/0.6/notes/815/reopen?text=Reopen+this+note%21')
         )
 
-        self.assertEquals(result, {
+        self.assertEqual(result, {
             'id': '815',
             'lat': 47.123,
             'lon': 8.432,
@@ -350,15 +350,15 @@ class TestOsmApiNotes(osmapi_tests.TestOsmApi):
         result = self.api.NotesSearch('street')
 
         args, kwargs = self.api._session.request.call_args
-        self.assertEquals(args[0], 'GET')
+        self.assertEqual(args[0], 'GET')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
-        self.assertEquals(params['q'][0], 'street')
-        self.assertEquals(params['limit'][0], '100')
-        self.assertEquals(params['closed'][0], '7')
+        self.assertEqual(params['q'][0], 'street')
+        self.assertEqual(params['limit'][0], '100')
+        self.assertEqual(params['closed'][0], '7')
 
-        self.assertEquals(len(result), 3)
-        self.assertEquals(result[1], {
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[1], {
             'id': '788',
             'lon': 11.96395,
             'lat': 57.70301,

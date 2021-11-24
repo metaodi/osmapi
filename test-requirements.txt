@@ -1,8 +1,7 @@
-coverage
-coveralls
 flake8
 mock
-nose
-tox
 virtualenv
 xmltodict
+pytest
+pytest-cov
+coverage

@@ -2,7 +2,7 @@ name: Build osmapi
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [master, develop]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,9 +30,3 @@ jobs:
 
     - name: Build the package 
       run: ./build.sh
-
-    - name: Test coverage
-      run: coveralls --service=github
-      if: ${{ matrix.python-version == '3.8' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

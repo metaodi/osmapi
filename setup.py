@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from codecs import open
-from setuptools import setup
+from setuptools import setup, find_packages
 import re
 
 with open('osmapi/__init__.py', 'r') as fd:
@@ -11,22 +11,16 @@ with open('osmapi/__init__.py', 'r') as fd:
 if not version:
     raise RuntimeError('Cannot find version information')
 
-try:
-    import pypandoc
-    from unidecode import unidecode
-    description = open('README.md', encoding='utf-8').read()
-    description = unidecode(description)
-    description = pypandoc.convert(description, 'rst', format='md')
-except (IOError, OSError, ImportError):
-    description = 'Python wrapper for the OSM API'
+with open('README.md', 'r', encoding="utf-8") as f:
+    long_description = f.read()
 
 setup(
     name='osmapi',
-    packages=['osmapi'],
+    packages=find_packages(),
     version=version,
     install_requires=['requests'],
     description='Python wrapper for the OSM API',
-    long_description=description,
+    long_description=long_description,
     author='Etienne Chové',
     author_email='chove@crans.org',
     maintainer='Stefan Oderbolz',

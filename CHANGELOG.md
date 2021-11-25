@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Added `python_requires` to setup.py to define Python 3.7 as minimum version
 
 ## [2.0.2] - 2021-11-24
 ### Changed

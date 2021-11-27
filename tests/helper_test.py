@@ -22,10 +22,18 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
         mock_response.status_code = status
         mock_response.reason = "test reason"
         mock_response.content = 'test response'
-        self.api._session.request = mock.Mock(return_value=mock_response)
-        self.api._session.close = mock.Mock()
-        self.api._username = 'testuser'
-        self.api._password = 'testpassword'
+
+        self.mock_session = mock.Mock()
+        self.mock_session.request = mock.Mock(return_value=mock_response)
+        self.mock_session.close = mock.Mock()
+        self.mock_session.auth = ('testuser', 'testpassword')
+
+        self.api = osmapi.OsmApi(
+            api=self.api_base,
+            session=self.mock_session,
+            username='testuser',
+            password='testpassword'
+        )
 
     def test_passwordfile_only(self):
         path = os.path.join(
@@ -59,7 +67,7 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
 
     def test_close_call(self):
         self.api.close()
-        self.assertEqual(self.api._session.close.call_count, 1)
+        self.assertEqual(self.api._session._session.close.call_count, 1)
 
     def test_close_context_manager(self):
         with osmapi.OsmApi() as my_api:
@@ -67,72 +75,69 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
         self.assertEqual(my_api._session.close.call_count, 1)
 
     def test_http_request_get(self):
-        response = self.api._http_request(
+        response = self.api._session._http_request(
             'GET',
             '/api/0.6/test',
             False,
             None
         )
-        self.api._session.request.assert_called_with(
+        self.mock_session.request.assert_called_with(
             'GET',
             self.api_base + '/api/0.6/test',
-            auth=None,
             data=None
         )
         self.assertEqual(response, "test response")
-        self.assertEqual(self.api._session.request.call_count, 1)
+        self.assertEqual(self.mock_session.request.call_count, 1)
 
     def test_http_request_put(self):
         data = "data"
-        response = self.api._http_request(
+        response = self.api._session._http_request(
             'PUT',
             '/api/0.6/testput',
             False,
             data
         )
-        self.api._session.request.assert_called_with(
+        self.mock_session.request.assert_called_with(
             'PUT',
             self.api_base + '/api/0.6/testput',
-            data="data",
-            auth=None
+            data="data"
         )
         self.assertEqual(response, "test response")
 
     def test_http_request_delete(self):
         data = "delete data"
-        response = self.api._http_request(
+        response = self.api._session._http_request(
             'PUT',
             '/api/0.6/testdelete',
             False,
             data
         )
-        self.api._session.request.assert_called_with(
+        self.mock_session.request.assert_called_with(
             'PUT',
             self.api_base + '/api/0.6/testdelete',
-            data="delete data",
-            auth=None
+            data="delete data"
         )
         self.assertEqual(response, "test response")
 
     def test_http_request_auth(self):
-        response = self.api._http_request(
+        response = self.api._session._http_request(
             'PUT',
             '/api/0.6/testauth',
             True,
             None
         )
-        self.api._session.request.assert_called_with(
+        self.mock_session.request.assert_called_with(
             'PUT',
             self.api_base + '/api/0.6/testauth',
-            auth=('testuser', 'testpassword'),
             data=None
         )
+        self.assertEqual(self.mock_session.auth, ('testuser', 'testpassword'))
         self.assertEqual(response, "test response")
 
     def test_http_request_410_response(self):
         self.setupMock(410)
         with self.assertRaises(osmapi.ElementDeletedApiError) as cm:
-            self.api._http_request(
+            self.api._session._http_request(
                 'GET',
                 '/api/0.6/test410',
                 False,
@@ -145,7 +150,7 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
     def test_http_request_500_response(self):
         self.setupMock(500)
         with self.assertRaises(osmapi.ApiError) as cm:
-            self.api._http_request(
+            self.api._session._http_request(
                 'GET',
                 self.api_base + '/api/0.6/test500',
                 False,

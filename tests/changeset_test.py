@@ -4,11 +4,7 @@ import osmapi
 import mock
 import xmltodict
 import datetime
-try:
-    import urlparse
-except Exception:
-    import urllib
-    urlparse = urllib.parse
+import urllib
 
 
 def recursive_sort(col):  # noqa
@@ -48,7 +44,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetGet(123)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/changeset/123')
 
@@ -85,7 +81,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/changeset/4444')
         self.assertEqual(
@@ -118,7 +114,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/changeset/4444')
         self.assertEqual(
@@ -156,7 +152,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/changeset/create')
         self.assertEqual(
@@ -183,7 +179,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             }
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/changeset/create')
         self.assertEqual(
@@ -229,7 +225,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         self.api.ChangesetClose()
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(
             args[1],
@@ -270,7 +266,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -346,7 +342,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -432,7 +428,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetUpload(changesdata)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -511,7 +507,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetDownload(23123)
 
-        args, _ = self.api._session.request.call_args
+        args, _ = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -586,10 +582,10 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             username='metaodi'
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
-            dict(urlparse.parse_qsl(urlparse.urlparse(args[1])[4])),
+            dict(urllib.parse.parse_qsl(urllib.parse.urlparse(args[1])[4])),
             {
                 'display_name': 'metaodi',
                 'closed': '1'
@@ -622,7 +618,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetGet(52924, include_discussion=True)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -675,7 +671,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
             comment="test comment"
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -708,7 +704,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetSubscribe(123)
 
-        args, _ = self.api._session.request.call_args
+        args, _ = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -749,7 +745,7 @@ class TestOsmApiChangeset(osmapi_test.TestOsmApi):
 
         result = self.api.ChangesetUnsubscribe(123)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],

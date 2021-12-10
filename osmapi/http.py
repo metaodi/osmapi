@@ -1,8 +1,12 @@
 import sys
 import time
+import logging
 import requests
 
 from . import errors
+
+
+logger = logging.getLogger(__name__)
 
 
 class OsmApiSession:
@@ -10,17 +14,10 @@ class OsmApiSession:
     MAX_RETRY_LIMIT = 5
     """Maximum retries if a call to the remote API fails (default: 5)"""
 
-    def __init__(
-            self,
-            base_url,
-            created_by,
-            auth=None,
-            session=None,
-            debug=False):
+    def __init__(self, base_url, created_by, auth=None, session=None):
         self._api = base_url
         self._created_by = created_by
         self._auth = auth
-        self._debug = debug
 
         self._http_session = session
         self._session = self._get_http_session()
@@ -54,12 +51,11 @@ class OsmApiSession:
         If the response status code indicates an error,
         `OsmApi.ApiError` is raised.
         """
-        if self._debug:
-            error_msg = (
-                "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-            )
-            print(error_msg, file=sys.stderr)
+        msg = (
+            "%s %s %s"
+            % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
+        )
+        logger.debug(msg)
 
         # Add API base URL to path
         path = self._api + path
@@ -88,12 +84,11 @@ class OsmApiSession:
                 ''
             )
 
-        if self._debug:
-            error_msg = (
-                "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-            )
-            print(error_msg, file=sys.stderr)
+        msg = (
+            "%s %s %s"
+            % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
+        )
+        logger.debug(msg)
         return response.content
 
     def _http(self, cmd, path, auth, send, return_value=True):  # noqa
@@ -118,7 +113,7 @@ class OsmApiSession:
                 else:
                     raise
             except Exception as e:
-                print(e)
+                logger.error(e)
                 if i == self.MAX_RETRY_LIMIT:
                     if isinstance(e, errors.OsmApiError):
                         raise

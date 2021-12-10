@@ -153,11 +153,6 @@ class OsmApi:
             session=self.http_session
         )
 
-    def __del__(self):
-        self.close()
-
-        return None
-
     def __enter__(self):
         self._session = http.OsmApiSession(
             self._api,

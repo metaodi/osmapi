@@ -90,41 +90,36 @@ def DomParseNote(DomElement):
     return result
 
 
-def _DomGetAttributes(DomElement):  # noqa
+def _DomGetAttributes(DomElement):
     """
     Returns a formated dictionnary of attributes of a DomElement.
     """
+
+    def is_true(v):
+        return (v == "true")
+
+    attribute_mapping = {
+        'uid': int,
+        'changeset': int,
+        'version': int,
+        'id': int,
+        'lat': float,
+        'lon': float,
+        'open': is_true,
+        'visible': is_true,
+        'ref': int,
+        'comments_count': int,
+        'timestamp': _ParseDate,
+        'created_at': _ParseDate,
+        'closed_at': _ParseDate,
+        'date': _ParseDate,
+    }
     result = {}
     for k, v in DomElement.attributes.items():
-        if k == "uid":
-            v = int(v)
-        elif k == "changeset":
-            v = int(v)
-        elif k == "version":
-            v = int(v)
-        elif k == "id":
-            v = int(v)
-        elif k == "lat":
-            v = float(v)
-        elif k == "lon":
-            v = float(v)
-        elif k == "open":
-            v = (v == "true")
-        elif k == "visible":
-            v = (v == "true")
-        elif k == "ref":
-            v = int(v)
-        elif k == "comments_count":
-            v = int(v)
-        elif k == "timestamp":
-            v = _ParseDate(v)
-        elif k == "created_at":
-            v = _ParseDate(v)
-        elif k == "closed_at":
-            v = _ParseDate(v)
-        elif k == "date":
-            v = _ParseDate(v)
-        result[k] = v
+        try:
+            result[k] = attribute_mapping[k](v)
+        except KeyError:
+            result[k] = v
     return result
 
 

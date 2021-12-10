@@ -31,6 +31,7 @@ import xml.dom.minidom
 import xml.parsers.expat
 import urllib.parse
 import re
+import logging
 
 from osmapi import __version__
 from . import dom
@@ -38,6 +39,9 @@ from . import errors
 from . import http
 from . import parser
 from . import xmlbuilder
+
+
+logger = logging.getLogger(__name__)
 
 
 class OsmApi:
@@ -56,7 +60,6 @@ class OsmApi:
             changesetautotags={},
             changesetautosize=500,
             changesetautomulti=1,
-            debug=False,
             session=None):
         """
         Initialized the OsmApi object.
@@ -89,12 +92,7 @@ class OsmApi:
         upload (default: 500) and `changesetautomulti` defines how many
         uploads should be made before closing a changeset and opening a new
         one (default: 1).
-
-        The `debug` parameter can be used to generate a more verbose output.
         """
-
-        # debug
-        self._debug = debug
 
         # Get username
         self._username = None
@@ -152,20 +150,13 @@ class OsmApi:
             self._api,
             self._created_by,
             auth=auth,
-            debug=self._debug,
             session=self.http_session
         )
-
-    def __del__(self):
-        self.close()
-
-        return None
 
     def __enter__(self):
         self._session = http.OsmApiSession(
             self._api,
             self._created_by,
-            debug=self._debug,
             session=self.http_session
         )
         return self
@@ -1777,7 +1768,7 @@ class OsmApi:
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:
-                print(e.reason)
+                logger.error(e.reason)
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
                     raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:

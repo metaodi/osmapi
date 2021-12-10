@@ -35,12 +35,26 @@ class TestOsmApiDom(osmapi_test.TestOsmApi):
             osmapi.dom._ParseDate('2021-02-25 09:49:33 UTC'),
             datetime.datetime(2021, 2, 25, 9, 49, 33)
         )
-        self.assertEqual(
-            osmapi.dom._ParseDate('2021-02-25'),
-            '2021-02-25'
-        )
-        self.assertEqual(
-            osmapi.dom._ParseDate(''),
-            ''
-        )
-        self.assertIsNone(osmapi.dom._ParseDate(None))
+        with self.assertLogs('osmapi.dom', level='DEBUG') as cm:
+            self.assertEqual(
+                osmapi.dom._ParseDate('2021-02-25'),
+                '2021-02-25'
+            )
+            self.assertEqual(
+                osmapi.dom._ParseDate(''),
+                ''
+            )
+            self.assertIsNone(osmapi.dom._ParseDate(None))
+
+            # test logging output
+            self.assertEqual(
+                cm.output,
+                [
+                    'DEBUG:osmapi.dom:2021-02-25 does not match %Y-%m-%d %H:%M:%S UTC',
+                    'DEBUG:osmapi.dom:2021-02-25 does not match %Y-%m-%dT%H:%M:%SZ',
+                    'DEBUG:osmapi.dom: does not match %Y-%m-%d %H:%M:%S UTC',
+                    'DEBUG:osmapi.dom: does not match %Y-%m-%dT%H:%M:%SZ',
+                    'DEBUG:osmapi.dom:None does not match %Y-%m-%d %H:%M:%S UTC',
+                    'DEBUG:osmapi.dom:None does not match %Y-%m-%dT%H:%M:%SZ',
+                ]
+            )

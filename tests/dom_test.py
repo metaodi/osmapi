@@ -25,3 +25,22 @@ class TestOsmApiDom(osmapi_test.TestOsmApi):
         self.assertEqual(result['lat'], 47.1234)
         self.assertEqual(result['date'], datetime.datetime(2021, 12, 10, 21, 28, 3))
         self.assertEqual(result['new_attribute'], 'Test 123')
+
+    def test_ParseDate(self):
+        self.assertEqual(
+            osmapi.dom._ParseDate('2021-02-25T09:49:33Z'),
+            datetime.datetime(2021, 2, 25, 9, 49, 33)
+        )
+        self.assertEqual(
+            osmapi.dom._ParseDate('2021-02-25 09:49:33 UTC'),
+            datetime.datetime(2021, 2, 25, 9, 49, 33)
+        )
+        self.assertEqual(
+            osmapi.dom._ParseDate('2021-02-25'),
+            '2021-02-25'
+        )
+        self.assertEqual(
+            osmapi.dom._ParseDate(''),
+            ''
+        )
+        self.assertIsNone(osmapi.dom._ParseDate(None))

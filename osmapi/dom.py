@@ -1,9 +1,13 @@
 from datetime import datetime
 import xml.dom.minidom
 import xml.parsers.expat
+import logging
 
 from . import errors
 from . import xmlbuilder
+
+
+logger = logging.getLogger(__name__)
 
 
 def OsmResponseToDom(response, tag, single=False, allow_empty=False):
@@ -189,13 +193,12 @@ def _DomGetMember(DomElement):
 
 
 def _ParseDate(DateString):
-    result = DateString
-    try:
-        result = datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
-    except Exception:
+    date_formats = ["%Y-%m-%d %H:%M:%S UTC", "%Y-%m-%dT%H:%M:%SZ"]
+    for date_format in date_formats:
         try:
-            result = datetime.strptime(DateString, "%Y-%m-%dT%H:%M:%SZ")
-        except Exception:
-            pass
+            result = datetime.strptime(DateString, date_format)
+            return result
+        except (ValueError, TypeError):
+            logger.debug(f"{DateString} does not match {date_format}")
 
-    return result
+    return DateString

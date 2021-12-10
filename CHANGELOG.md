@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - Refactor code into several modules/files to improve maintainability
+- Use `logging` module to log debug information
+
+### Removed
+- Remove `debug` parameter of OsmApi, replaced debug messages with `logging` module
 
 ### Fixed
 - Added `python_requires` to setup.py to define Python 3.7 as minimum version

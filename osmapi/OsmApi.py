@@ -29,40 +29,21 @@ Find all information about changes of the different versions of this module
 
 import xml.dom.minidom
 import xml.parsers.expat
-import time
-import sys
 import urllib.parse
 import re
-import requests
-from datetime import datetime
 
 from osmapi import __version__
-from .errors import AlreadySubscribedApiError
-from .errors import ApiError
-from .errors import ChangesetAlreadyOpenError
-from .errors import ChangesetClosedApiError
-from .errors import ElementDeletedApiError
-from .errors import MaximumRetryLimitReachedError
-from .errors import NoChangesetOpenError
-from .errors import NotSubscribedApiError
-from .errors import NoteClosedApiError
-from .errors import OsmApiError
-from .errors import OsmTypeAlreadyExistsError
-from .errors import PreconditionFailedApiError
-from .errors import ResponseEmptyApiError
-from .errors import UsernamePasswordMissingError
-from .errors import VersionMismatchApiError
-from .errors import XmlResponseInvalidError
+from . import dom
+from . import errors
+from . import http
+from . import parser
+from . import xmlbuilder
 
 
 class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
     """
-
-    MAX_RETRY_LIMIT = 5
-    """Maximum retries if a call to the remote API fails (default: 5)"""
-
     def __init__(
             self,
             username=None,
@@ -75,7 +56,8 @@ class OsmApi:
             changesetautotags={},
             changesetautosize=500,
             changesetautomulti=1,
-            debug=False):
+            debug=False,
+            session=None):
         """
         Initialized the OsmApi object.
 
@@ -115,6 +97,7 @@ class OsmApi:
         self._debug = debug
 
         # Get username
+        self._username = None
         if username:
             self._username = username
         elif passwordfile:
@@ -123,6 +106,7 @@ class OsmApi:
             self._username = pass_line.split(":")[0].strip()
 
         # Get password
+        self._password = None
         if password:
             self._password = password
         elif passwordfile:
@@ -160,7 +144,17 @@ class OsmApi:
         self._CurrentChangesetId = 0
 
         # Http connection
-        self._session = self._get_http_session()
+        self.http_session = session
+        auth = None
+        if self._username and self._password:
+            auth = (self._username, self._password)
+        self._session = http.OsmApiSession(
+            self._api,
+            self._created_by,
+            auth=auth,
+            debug=self._debug,
+            session=self.http_session
+        )
 
     def __del__(self):
         self.close()
@@ -168,7 +162,12 @@ class OsmApi:
         return None
 
     def __enter__(self):
-        self._session = self._get_http_session()
+        self._session = http.OsmApiSession(
+            self._api,
+            self._created_by,
+            debug=self._debug,
+            session=self.http_session
+        )
         return self
 
     def __exit__(self, *args):
@@ -178,7 +177,7 @@ class OsmApi:
         try:
             if self._changesetauto:
                 self._changesetautoflush(True)
-        except ResponseEmptyApiError:
+        except errors.ResponseEmptyApiError:
             pass
 
         if self._session:
@@ -224,9 +223,9 @@ class OsmApi:
         gain insights of the server in use.
         """
         uri = "/api/capabilities"
-        data = self._get(uri)
+        data = self._session._get(uri)
 
-        data = self._OsmResponseToDom(data, tag="api", single=True)
+        data = dom.OsmResponseToDom(data, tag="api", single=True)
         result = {}
         for elem in data.childNodes:
             if elem.nodeType != elem.ELEMENT_NODE:
@@ -270,9 +269,9 @@ class OsmApi:
         uri = "/api/0.6/node/%s" % (NodeId)
         if NodeVersion != -1:
             uri += "/%s" % (NodeVersion)
-        data = self._get(uri)
-        data = self._OsmResponseToDom(data, tag="node", single=True)
-        return self._DomParseNode(data)
+        data = self._session._get(uri)
+        data = dom.OsmResponseToDom(data, tag="node", single=True)
+        return dom.DomParseNode(data)
 
     def NodeCreate(self, NodeData):
         """
@@ -415,11 +414,11 @@ class OsmApi:
         `NodeId` is the unique identifier of a node.
         """
         uri = "/api/0.6/node/%s/history" % NodeId
-        data = self._get(uri)
-        nodes = self._OsmResponseToDom(data, tag="node")
+        data = self._session._get(uri)
+        nodes = dom.OsmResponseToDom(data, tag="node")
         result = {}
         for node in nodes:
-            data = self._DomParseNode(node)
+            data = dom.DomParseNode(node)
             result[data["version"]] = data
         return result
 
@@ -447,11 +446,11 @@ class OsmApi:
         The `NodeId` is a unique identifier for a node.
         """
         uri = "/api/0.6/node/%d/ways" % NodeId
-        data = self._get(uri)
-        ways = self._OsmResponseToDom(data, tag="way", allow_empty=True)
+        data = self._session._get(uri)
+        ways = dom.OsmResponseToDom(data, tag="way", allow_empty=True)
         result = []
         for way in ways:
-            data = self._DomParseWay(way)
+            data = dom.DomParseWay(way)
             result.append(data)
         return result
 
@@ -488,11 +487,11 @@ class OsmApi:
         The `NodeId` is a unique identifier for a node.
         """
         uri = "/api/0.6/node/%d/relations" % NodeId
-        data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
+        data = self._session._get(uri)
+        relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
-            data = self._DomParseRelation(relation)
+            data = dom.DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -513,11 +512,11 @@ class OsmApi:
         """
         node_list = ",".join([str(x) for x in NodeIdList])
         uri = "/api/0.6/nodes?nodes=%s" % node_list
-        data = self._get(uri)
-        nodes = self._OsmResponseToDom(data, tag="node")
+        data = self._session._get(uri)
+        nodes = dom.OsmResponseToDom(data, tag="node")
         result = {}
         for node in nodes:
-            data = self._DomParseNode(node)
+            data = dom.DomParseNode(node)
             result[data["id"]] = data
         return result
 
@@ -551,9 +550,9 @@ class OsmApi:
         uri = "/api/0.6/way/%s" % (WayId)
         if WayVersion != -1:
             uri += "/%s" % (WayVersion)
-        data = self._get(uri)
-        way = self._OsmResponseToDom(data, tag="way", single=True)
-        return self._DomParseWay(way)
+        data = self._session._get(uri)
+        way = dom.OsmResponseToDom(data, tag="way", single=True)
+        return dom.DomParseWay(way)
 
     def WayCreate(self, WayData):
         """
@@ -693,11 +692,11 @@ class OsmApi:
         `WayId` is the unique identifier of a way.
         """
         uri = "/api/0.6/way/%s/history" % (WayId)
-        data = self._get(uri)
-        ways = self._OsmResponseToDom(data, tag="way")
+        data = self._session._get(uri)
+        ways = dom.OsmResponseToDom(data, tag="way")
         result = {}
         for way in ways:
-            data = self._DomParseWay(way)
+            data = dom.DomParseWay(way)
             result[data["version"]] = data
         return result
 
@@ -734,11 +733,11 @@ class OsmApi:
         The `WayId` is a unique identifier for a way.
         """
         uri = "/api/0.6/way/%d/relations" % WayId
-        data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
+        data = self._session._get(uri)
+        relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
-            data = self._DomParseRelation(relation)
+            data = dom.DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -761,8 +760,8 @@ class OsmApi:
         `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/way/%s/full" % (WayId)
-        data = self._get(uri)
-        return self.ParseOsm(data)
+        data = self._session._get(uri)
+        return parser.ParseOsm(data)
 
     def WaysGet(self, WayIdList):
         """
@@ -780,11 +779,11 @@ class OsmApi:
         """
         way_list = ",".join([str(x) for x in WayIdList])
         uri = "/api/0.6/ways?ways=%s" % way_list
-        data = self._get(uri)
-        ways = self._OsmResponseToDom(data, tag="way")
+        data = self._session._get(uri)
+        ways = dom.OsmResponseToDom(data, tag="way")
         result = {}
         for way in ways:
-            data = self._DomParseWay(way)
+            data = dom.DomParseWay(way)
             result[data["id"]] = data
         return result
 
@@ -827,9 +826,9 @@ class OsmApi:
         uri = "/api/0.6/relation/%s" % (RelationId)
         if RelationVersion != -1:
             uri += "/%s" % (RelationVersion)
-        data = self._get(uri)
-        relation = self._OsmResponseToDom(data, tag="relation", single=True)
-        return self._DomParseRelation(relation)
+        data = self._session._get(uri)
+        relation = dom.OsmResponseToDom(data, tag="relation", single=True)
+        return dom.DomParseRelation(relation)
 
     def RelationCreate(self, RelationData):
         """
@@ -996,11 +995,11 @@ class OsmApi:
         `RelationId` is the unique identifier of a relation.
         """
         uri = "/api/0.6/relation/%s/history" % (RelationId)
-        data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation")
+        data = self._session._get(uri)
+        relations = dom.OsmResponseToDom(data, tag="relation")
         result = {}
         for relation in relations:
-            data = self._DomParseRelation(relation)
+            data = dom.DomParseRelation(relation)
             result[data["version"]] = data
         return result
 
@@ -1038,11 +1037,11 @@ class OsmApi:
         The `RelationId` is a unique identifier for a relation.
         """
         uri = "/api/0.6/relation/%d/relations" % RelationId
-        data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation", allow_empty=True)
+        data = self._session._get(uri)
+        relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
         for relation in relations:
-            data = self._DomParseRelation(relation)
+            data = dom.DomParseRelation(relation)
             result.append(data)
         return result
 
@@ -1108,8 +1107,8 @@ class OsmApi:
         `OsmApi.ElementDeletedApiError` is raised.
         """
         uri = "/api/0.6/relation/%s/full" % (RelationId)
-        data = self._get(uri)
-        return self.ParseOsm(data)
+        data = self._session._get(uri)
+        return parser.ParseOsm(data)
 
     def RelationsGet(self, RelationIdList):
         """
@@ -1128,11 +1127,11 @@ class OsmApi:
         """
         relation_list = ",".join([str(x) for x in RelationIdList])
         uri = "/api/0.6/relations?relations=%s" % relation_list
-        data = self._get(uri)
-        relations = self._OsmResponseToDom(data, tag="relation")
+        data = self._session._get(uri)
+        relations = dom.OsmResponseToDom(data, tag="relation")
         result = {}
         for relation in relations:
-            data = self._DomParseRelation(relation)
+            data = dom.DomParseRelation(relation)
             result[data["id"]] = data
         return result
 
@@ -1169,9 +1168,9 @@ class OsmApi:
         path = "/api/0.6/changeset/%s" % (ChangesetId)
         if (include_discussion):
             path += "?include_discussion=true"
-        data = self._get(path)
-        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
-        return self._DomParseChangeset(changeset)
+        data = self._session._get(path)
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+        return dom.DomParseChangeset(changeset)
 
     def ChangesetUpdate(self, ChangesetTags={}):
         """
@@ -1187,18 +1186,18 @@ class OsmApi:
         `OsmApi.ChangesetClosedApiError` is raised.
         """
         if not self._CurrentChangesetId:
-            raise NoChangesetOpenError("No changeset currently opened")
+            raise errors.NoChangesetOpenError("No changeset currently opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
         try:
-            self._put(
+            self._session._put(
                 "/api/0.6/changeset/%s" % (self._CurrentChangesetId),
-                self._XmlBuild("changeset", {"tag": ChangesetTags}),
+                xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self),
                 return_value=False
             )
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 409:
-                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
         return self._CurrentChangesetId
@@ -1218,12 +1217,12 @@ class OsmApi:
         `OsmApi.ChangesetAlreadyOpenError` is raised.
         """
         if self._CurrentChangesetId:
-            raise ChangesetAlreadyOpenError("Changeset already opened")
+            raise errors.ChangesetAlreadyOpenError("Changeset already opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
-        result = self._put(
+        result = self._session._put(
             "/api/0.6/changeset/create",
-            self._XmlBuild("changeset", {"tag": ChangesetTags})
+            xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self)
         )
         self._CurrentChangesetId = int(result)
         return self._CurrentChangesetId
@@ -1244,18 +1243,18 @@ class OsmApi:
         `OsmApi.ChangesetClosedApiError` is raised.
         """
         if not self._CurrentChangesetId:
-            raise NoChangesetOpenError("No changeset currently opened")
+            raise errors.NoChangesetOpenError("No changeset currently opened")
         try:
-            self._put(
+            self._session._put(
                 "/api/0.6/changeset/%s/close" % (self._CurrentChangesetId),
                 "",
                 return_value=False
             )
             CurrentChangesetId = self._CurrentChangesetId
             self._CurrentChangesetId = 0
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 409:
-                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
         return CurrentChangesetId
@@ -1286,21 +1285,22 @@ class OsmApi:
         for change in ChangesData:
             data += "<" + change["action"] + ">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
-            data += self._XmlBuild(
+            data += xmlbuilder._XmlBuild(
                 change["type"],
                 change["data"],
-                False
+                False,
+                data=self
             ).decode("utf-8")
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
         try:
-            data = self._post(
+            data = self._session._post(
                 "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
                 data.encode("utf-8")
             )
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
-                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
         try:
@@ -1308,7 +1308,7 @@ class OsmApi:
             data = data.getElementsByTagName("diffResult")[0]
             data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
         except (xml.parsers.expat.ExpatError, IndexError) as e:
-            raise XmlResponseInvalidError(
+            raise errors.XmlResponseInvalidError(
                 "The XML response from the OSM API is invalid: %r" % e
             )
 
@@ -1336,8 +1336,8 @@ class OsmApi:
             }
         """
         uri = "/api/0.6/changeset/%s/download" % (ChangesetId)
-        data = self._get(uri)
-        return self.ParseOsc(data)
+        data = self._session._get(uri)
+        return parser.ParseOsc(data)
 
     def ChangesetsGet(  # noqa
             self,
@@ -1394,11 +1394,11 @@ class OsmApi:
         if params:
             uri += "?" + urllib.parse.urlencode(params)
 
-        data = self._get(uri)
-        changesets = self._OsmResponseToDom(data, tag="changeset")
+        data = self._session._get(uri)
+        changesets = dom.OsmResponseToDom(data, tag="changeset")
         result = {}
         for curChangeset in changesets:
-            tmpCS = self._DomParseChangeset(curChangeset)
+            tmpCS = dom.DomParseChangeset(curChangeset)
             result[tmpCS["id"]] = tmpCS
         return result
 
@@ -1435,17 +1435,17 @@ class OsmApi:
         """
         params = urllib.parse.urlencode({'text': comment})
         try:
-            data = self._post(
+            data = self._session._post(
                 "/api/0.6/changeset/%s/comment" % (ChangesetId),
                 params
             )
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 409:
-                raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
-        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
-        return self._DomParseChangeset(changeset)
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+        return dom.DomParseChangeset(changeset)
 
     def ChangesetSubscribe(self, ChangesetId):
         """
@@ -1475,17 +1475,17 @@ class OsmApi:
         `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
-            data = self._post(
+            data = self._session._post(
                 "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
                 None
             )
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 409:
-                raise AlreadySubscribedApiError(e.status, e.reason, e.payload)
+                raise errors.AlreadySubscribedApiError(e.status, e.reason, e.payload)
             else:
                 raise
-        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
-        return self._DomParseChangeset(changeset)
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+        return dom.DomParseChangeset(changeset)
 
     def ChangesetUnsubscribe(self, ChangesetId):
         """
@@ -1515,17 +1515,17 @@ class OsmApi:
         `OsmApi.UsernamePasswordMissingError` is raised.
         """
         try:
-            data = self._post(
+            data = self._session._post(
                 "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
                 None
             )
-        except ApiError as e:
+        except errors.ApiError as e:
             if e.status == 404:
-                raise NotSubscribedApiError(e.status, e.reason, e.payload)
+                raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
             else:
                 raise
-        changeset = self._OsmResponseToDom(data, tag="changeset", single=True)
-        return self._DomParseChangeset(changeset)
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+        return dom.DomParseChangeset(changeset)
 
     ##################################################
     # Notes                                          #
@@ -1570,8 +1570,8 @@ class OsmApi:
             "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
             % (min_lon, min_lat, max_lon, max_lat, limit, closed)
         )
-        data = self._get(uri)
-        return self.ParseNotes(data)
+        data = self._session._get(uri)
+        return parser.ParseNotes(data)
 
     def NoteGet(self, id):
         """
@@ -1592,9 +1592,9 @@ class OsmApi:
         `id` is the unique identifier of the note.
         """
         uri = "/api/0.6/notes/%s" % (id)
-        data = self._get(uri)
-        noteElement = self._OsmResponseToDom(data, tag="note", single=True)
-        return self._DomParseNote(noteElement)
+        data = self._session._get(uri)
+        noteElement = dom.OsmResponseToDom(data, tag="note", single=True)
+        return dom.DomParseNote(noteElement)
 
     def NoteCreate(self, NoteData):
         """
@@ -1659,9 +1659,9 @@ class OsmApi:
         params['limit'] = limit
         params['closed'] = closed
         uri += "?" + urllib.parse.urlencode(params)
-        data = self._get(uri)
+        data = self._session._get(uri)
 
-        return self.ParseNotes(data)
+        return parser.ParseNotes(data)
 
     def _NoteAction(self, path, comment=None, optionalAuth=True):
         """
@@ -1675,16 +1675,16 @@ class OsmApi:
             params['text'] = comment
             uri += "?" + urllib.parse.urlencode(params)
         try:
-            result = self._post(uri, None, optionalAuth=optionalAuth)
-        except ApiError as e:
+            result = self._session._post(uri, None, optionalAuth=optionalAuth)
+        except errors.ApiError as e:
             if e.status == 404:
-                raise NoteClosedApiError(e.status, e.reason, e.payload)
+                raise errors.NoteClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
 
         # parse the result
-        noteElement = self._OsmResponseToDom(result, tag="note", single=True)
-        return self._DomParseNote(noteElement)
+        noteElement = dom.OsmResponseToDom(result, tag="note", single=True)
+        return dom.DomParseNote(noteElement)
 
     ##################################################
     # Other                                          #
@@ -1706,128 +1706,26 @@ class OsmApi:
             "/api/0.6/map?bbox=%f,%f,%f,%f"
             % (min_lon, min_lat, max_lon, max_lat)
         )
-        data = self._get(uri)
-        return self.ParseOsm(data)
+        data = self._session._get(uri)
+        return parser.ParseOsm(data)
+
+    def flush(self):
+        """
+        Force the changes to be uploaded to OSM and the changeset to be closed
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is no open changeset,
+        `OsmApi.NoChangesetOpenError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
+        """
+        return self._changesetautoflush(True)
 
     ##################################################
-    # Data parser                                    #
-    ##################################################
-
-    def ParseOsm(self, data):
-        """
-        Parse osm data.
-
-        Returns list of dict:
-
-            #!python
-            {
-                type: node|way|relation,
-                data: {}
-            }
-        """
-        try:
-            data = xml.dom.minidom.parseString(data)
-            data = data.getElementsByTagName("osm")[0]
-        except (xml.parsers.expat.ExpatError, IndexError) as e:
-            raise XmlResponseInvalidError(
-                "The XML response from the OSM API is invalid: %r" % e
-            )
-
-        result = []
-        for elem in data.childNodes:
-            if elem.nodeName == "node":
-                result.append({
-                    "type": elem.nodeName,
-                    "data": self._DomParseNode(elem)
-                })
-            elif elem.nodeName == "way":
-                result.append({
-                    "type": elem.nodeName,
-                    "data": self._DomParseWay(elem)
-                })
-            elif elem.nodeName == "relation":
-                result.append({
-                    "type": elem.nodeName,
-                    "data": self._DomParseRelation(elem)
-                })
-        return result
-
-    def ParseOsc(self, data):
-        """
-        Parse osc data.
-
-        Returns list of dict:
-
-            #!python
-            {
-                type: node|way|relation,
-                action: create|delete|modify,
-                data: {}
-            }
-        """
-        try:
-            data = xml.dom.minidom.parseString(data)
-            data = data.getElementsByTagName("osmChange")[0]
-        except (xml.parsers.expat.ExpatError, IndexError) as e:
-            raise XmlResponseInvalidError(
-                "The XML response from the OSM API is invalid: %r" % e
-            )
-
-        result = []
-        for action in data.childNodes:
-            if action.nodeName == "#text":
-                continue
-            for elem in action.childNodes:
-                if elem.nodeName == "node":
-                    result.append({
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": self._DomParseNode(elem)
-                    })
-                elif elem.nodeName == "way":
-                    result.append({
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": self._DomParseWay(elem)
-                    })
-                elif elem.nodeName == "relation":
-                    result.append({
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": self._DomParseRelation(elem)
-                    })
-        return result
-
-    def ParseNotes(self, data):
-        """
-        Parse notes data.
-
-        Returns a list of dict:
-
-            #!python
-            [
-                {
-                    'id': integer,
-                    'action': opened|commented|closed,
-                    'status': open|closed
-                    'date_created': creation date
-                    'date_closed': closing data|None
-                    'uid': User ID|None
-                    'user': User name|None
-                    'comments': {}
-                },
-                { ... }
-            ]
-        """
-        noteElements = self._OsmResponseToDom(data, tag="note")
-        result = []
-        for noteElement in noteElements:
-            note = self._DomParseNote(noteElement)
-            result.append(note)
-        return result
-
-    ##################################################
-    # Internal http function                         #
+    # Internal method                                #
     ##################################################
 
     def _do(self, action, OsmType, OsmData):
@@ -1844,7 +1742,7 @@ class OsmApi:
 
     def _do_manu(self, action, OsmType, OsmData):  # noqa
         if not self._CurrentChangesetId:
-            raise NoChangesetOpenError(
+            raise errors.NoChangesetOpenError(
                 "You need to open a changeset before uploading data"
             )
         if "timestamp" in OsmData:
@@ -1852,21 +1750,21 @@ class OsmApi:
         OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get("id", -1) > 0:
-                raise OsmTypeAlreadyExistsError(
+                raise errors.OsmTypeAlreadyExistsError(
                     "This %s already exists" % OsmType
                 )
             try:
-                result = self._put(
+                result = self._session._put(
                     "/api/0.6/%s/create" % OsmType,
-                    self._XmlBuild(OsmType, OsmData)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
-            except ApiError as e:
+            except errors.ApiError as e:
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
-                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
-                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["id"] = int(result.strip())
@@ -1874,55 +1772,40 @@ class OsmApi:
             return OsmData
         elif action == "modify":
             try:
-                result = self._put(
+                result = self._session._put(
                     "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
-                    self._XmlBuild(OsmType, OsmData)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
-            except ApiError as e:
+            except errors.ApiError as e:
                 print(e.reason)
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
-                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
-                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["version"] = int(result.strip())
             return OsmData
         elif action == "delete":
             try:
-                result = self._delete(
+                result = self._session._delete(
                     "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
-                    self._XmlBuild(OsmType, OsmData)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
-            except ApiError as e:
+            except errors.ApiError as e:
                 if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
-                    raise ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
-                    raise VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
                 else:
                     raise
             OsmData["version"] = int(result.strip())
             OsmData["visible"] = False
             return OsmData
-
-    def flush(self):
-        """
-        Force the changes to be uploaded to OSM and the changeset to be closed
-
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
-
-        If there is no open changeset,
-        `OsmApi.NoChangesetOpenError` is raised.
-
-        If there is already an open changeset,
-        `OsmApi.ChangesetAlreadyOpenError` is raised.
-        """
-        return self._changesetautoflush(True)
 
     def _changesetautoflush(self, force=False):
         autosize = self._changesetautosize
@@ -1942,392 +1825,3 @@ class OsmApi:
             self.ChangesetClose()
             self._changesetautocpt = 0
         return None
-
-    def _http_request(self, method, path, auth, send, return_value=True):  # noqa
-        """
-        Returns the response generated by an HTTP request.
-
-        `method` is a HTTP method to be executed
-        with the request data. For example: 'GET' or 'POST'.
-        `path` is the path to the requested resource relative to the
-        base API address stored in self._api. Should start with a
-        slash character to separate the URL.
-        `auth` is a boolean indicating whether authentication should
-        be preformed on this request.
-        `send` contains additional data that might be sent in a
-        request.
-        `return_value` indicates wheter this request should return
-        any data or not.
-
-        If the username or password is missing,
-        `OsmApi.UsernamePasswordMissingError` is raised.
-
-        If the requested element has been deleted,
-        `OsmApi.ElementDeletedApiError` is raised.
-
-        If the response status code indicates an error,
-        `OsmApi.ApiError` is raised.
-        """
-        if self._debug:
-            error_msg = (
-                "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-            )
-            print(error_msg, file=sys.stderr)
-
-        # Add API base URL to path
-        path = self._api + path
-
-        user_pass = None
-        if auth:
-            try:
-                user_pass = (self._username, self._password)
-            except AttributeError:
-                raise UsernamePasswordMissingError("Username/Password missing")
-
-        response = self._session.request(method, path, auth=user_pass,
-                                         data=send)
-        if response.status_code != 200:
-            payload = response.content.strip()
-            if response.status_code == 410:
-                raise ElementDeletedApiError(
-                    response.status_code,
-                    response.reason,
-                    payload
-                )
-            raise ApiError(response.status_code, response.reason, payload)
-        if return_value and not response.content:
-            raise ResponseEmptyApiError(
-                response.status_code,
-                response.reason,
-                ''
-            )
-
-        if self._debug:
-            error_msg = (
-                "%s %s %s"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-            )
-            print(error_msg, file=sys.stderr)
-        return response.content
-
-    def _http(self, cmd, path, auth, send, return_value=True):  # noqa
-        i = 0
-        while True:
-            i += 1
-            try:
-                return self._http_request(
-                    cmd,
-                    path,
-                    auth,
-                    send,
-                    return_value=return_value
-                )
-            except ApiError as e:
-                if e.status >= 500:
-                    if i == self.MAX_RETRY_LIMIT:
-                        raise
-                    if i != 1:
-                        self._sleep()
-                    self._session = self._get_http_session()
-                else:
-                    raise
-            except Exception as e:
-                print(e)
-                if i == self.MAX_RETRY_LIMIT:
-                    if isinstance(e, OsmApiError):
-                        raise
-                    raise MaximumRetryLimitReachedError(
-                        "Give up after %s retries" % i
-                    )
-                if i != 1:
-                    self._sleep()
-                self._session = self._get_http_session()
-
-    def _get_http_session(self):
-        """
-        Creates a requests session for connection pooling.
-        """
-        session = requests.Session()
-        session.headers.update({
-            'user-agent': self._created_by
-        })
-        return session
-
-    def _sleep(self):
-        time.sleep(5)
-
-    def _get(self, path):
-        return self._http('GET', path, False, None)
-
-    def _put(self, path, data, return_value=True):
-        return self._http('PUT', path, True, data, return_value=return_value)
-
-    def _post(self, path, data, optionalAuth=False):
-        auth = True
-        # the Notes API allows certain POSTs by non-authenticated users
-        if optionalAuth:
-            auth = hasattr(self, '_username')
-        return self._http('POST', path, auth, data)
-
-    def _delete(self, path, data):
-        return self._http('DELETE', path, True, data)
-
-    ##################################################
-    # Internal dom function                          #
-    ##################################################
-
-    def _OsmResponseToDom(self, response, tag, single=False, allow_empty=False):
-        """
-        Returns the (sub-) DOM parsed from an OSM response
-        """
-        try:
-            dom = xml.dom.minidom.parseString(response)
-            osm_dom = dom.getElementsByTagName("osm")[0]
-            all_data = osm_dom.getElementsByTagName(tag)
-            first_element = all_data[0]
-        except (IndexError) as e:
-            if allow_empty:
-                return []
-            raise XmlResponseInvalidError(
-                "The XML response from the OSM API is invalid: %r" % e
-            )
-        except (xml.parsers.expat.ExpatError) as e:
-            raise XmlResponseInvalidError(
-                "The XML response from the OSM API is invalid: %r" % e
-            )
-
-        if single:
-            return first_element
-        return all_data
-
-    def _DomGetAttributes(self, DomElement):  # noqa
-        """
-        Returns a formated dictionnary of attributes of a DomElement.
-        """
-        result = {}
-        for k, v in DomElement.attributes.items():
-            if k == "uid":
-                v = int(v)
-            elif k == "changeset":
-                v = int(v)
-            elif k == "version":
-                v = int(v)
-            elif k == "id":
-                v = int(v)
-            elif k == "lat":
-                v = float(v)
-            elif k == "lon":
-                v = float(v)
-            elif k == "open":
-                v = (v == "true")
-            elif k == "visible":
-                v = (v == "true")
-            elif k == "ref":
-                v = int(v)
-            elif k == "comments_count":
-                v = int(v)
-            elif k == "timestamp":
-                v = self._ParseDate(v)
-            elif k == "created_at":
-                v = self._ParseDate(v)
-            elif k == "closed_at":
-                v = self._ParseDate(v)
-            elif k == "date":
-                v = self._ParseDate(v)
-            result[k] = v
-        return result
-
-    def _DomGetTag(self, DomElement):
-        """
-        Returns the dictionnary of tags of a DomElement.
-        """
-        result = {}
-        for t in DomElement.getElementsByTagName("tag"):
-            k = t.attributes["k"].value
-            v = t.attributes["v"].value
-            result[k] = v
-        return result
-
-    def _DomGetNd(self, DomElement):
-        """
-        Returns the list of nodes of a DomElement.
-        """
-        result = []
-        for t in DomElement.getElementsByTagName("nd"):
-            result.append(int(int(t.attributes["ref"].value)))
-        return result
-
-    def _DomGetDiscussion(self, DomElement):
-        """
-        Returns the dictionnary of comments of a DomElement.
-        """
-        result = []
-        try:
-            discussion = DomElement.getElementsByTagName("discussion")[0]
-            for t in discussion.getElementsByTagName("comment"):
-                comment = self._DomGetAttributes(t)
-                comment['text'] = self._GetXmlValue(t, "text")
-                result.append(comment)
-        except IndexError:
-            pass
-        return result
-
-    def _DomGetComments(self, DomElement):
-        """
-        Returns the list of comments of a DomElement.
-        """
-        result = []
-        for t in DomElement.getElementsByTagName("comment"):
-            comment = {}
-            comment['date'] = self._ParseDate(self._GetXmlValue(t, "date"))
-            comment['action'] = self._GetXmlValue(t, "action")
-            comment['text'] = self._GetXmlValue(t, "text")
-            comment['html'] = self._GetXmlValue(t, "html")
-            comment['uid'] = self._GetXmlValue(t, "uid")
-            comment['user'] = self._GetXmlValue(t, "user")
-            result.append(comment)
-        return result
-
-    def _DomGetMember(self, DomElement):
-        """
-        Returns a list of relation members.
-        """
-        result = []
-        for m in DomElement.getElementsByTagName("member"):
-            result.append(self._DomGetAttributes(m))
-        return result
-
-    def _DomParseNode(self, DomElement):
-        """
-        Returns NodeData for the node.
-        """
-        result = self._DomGetAttributes(DomElement)
-        result["tag"] = self._DomGetTag(DomElement)
-        return result
-
-    def _DomParseWay(self, DomElement):
-        """
-        Returns WayData for the way.
-        """
-        result = self._DomGetAttributes(DomElement)
-        result["tag"] = self._DomGetTag(DomElement)
-        result["nd"] = self._DomGetNd(DomElement)
-        return result
-
-    def _DomParseRelation(self, DomElement):
-        """
-        Returns RelationData for the relation.
-        """
-        result = self._DomGetAttributes(DomElement)
-        result["tag"] = self._DomGetTag(DomElement)
-        result["member"] = self._DomGetMember(DomElement)
-        return result
-
-    def _DomParseChangeset(self, DomElement):
-        """
-        Returns ChangesetData for the changeset.
-        """
-        result = self._DomGetAttributes(DomElement)
-        result["tag"] = self._DomGetTag(DomElement)
-        result["discussion"] = self._DomGetDiscussion(DomElement)
-
-        return result
-
-    def _DomParseNote(self, DomElement):
-        """
-        Returns NoteData for the note.
-        """
-        result = self._DomGetAttributes(DomElement)
-        result["id"] = self._GetXmlValue(DomElement, "id")
-        result["status"] = self._GetXmlValue(DomElement, "status")
-
-        result["date_created"] = self._ParseDate(
-            self._GetXmlValue(DomElement, "date_created")
-        )
-        result["date_closed"] = self._ParseDate(
-            self._GetXmlValue(DomElement, "date_closed")
-        )
-        result["comments"] = self._DomGetComments(DomElement)
-
-        return result
-
-    def _ParseDate(self, DateString):
-        result = DateString
-        try:
-            result = datetime.strptime(DateString, "%Y-%m-%d %H:%M:%S UTC")
-        except Exception:
-            try:
-                result = datetime.strptime(DateString, "%Y-%m-%dT%H:%M:%SZ")
-            except Exception:
-                pass
-
-        return result
-
-    ##################################################
-    # Internal xml builder                           #
-    ##################################################
-
-    def _XmlBuild(self, ElementType, ElementData, WithHeaders=True):  # noqa
-
-        xml = ""
-        if WithHeaders:
-            xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            xml += "<osm version=\"0.6\" generator=\""
-            xml += self._created_by + "\">\n"
-
-        # <element attr="val">
-        xml += "  <" + ElementType
-        if "id" in ElementData:
-            xml += " id=\"" + str(ElementData["id"]) + "\""
-        if "lat" in ElementData:
-            xml += " lat=\"" + str(ElementData["lat"]) + "\""
-        if "lon" in ElementData:
-            xml += " lon=\"" + str(ElementData["lon"]) + "\""
-        if "version" in ElementData:
-            xml += " version=\"" + str(ElementData["version"]) + "\""
-        visible_str = str(ElementData.get("visible", True)).lower()
-        xml += " visible=\"" + visible_str + "\""
-        if ElementType in ["node", "way", "relation"]:
-            xml += " changeset=\"" + str(self._CurrentChangesetId) + "\""
-        xml += ">\n"
-
-        # <tag... />
-        for k, v in ElementData.get("tag", {}).items():
-            xml += "    <tag k=\"" + self._XmlEncode(k)
-            xml += "\" v=\"" + self._XmlEncode(v) + "\"/>\n"
-
-        # <member... />
-        for member in ElementData.get("member", []):
-            xml += "    <member type=\"" + member["type"]
-            xml += "\" ref=\"" + str(member["ref"])
-            xml += "\" role=\"" + self._XmlEncode(member["role"])
-            xml += "\"/>\n"
-
-        # <nd... />
-        for ref in ElementData.get("nd", []):
-            xml += "    <nd ref=\"" + str(ref) + "\"/>\n"
-
-        # </element>
-        xml += "  </" + ElementType + ">\n"
-
-        if WithHeaders:
-            xml += "</osm>\n"
-
-        return xml.encode("utf8")
-
-    def _XmlEncode(self, text):
-        return (
-            text
-            .replace("&", "&amp;")
-            .replace("\"", "&quot;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-        )
-
-    def _GetXmlValue(self, DomElement, tag):
-        try:
-            elem = DomElement.getElementsByTagName(tag)[0]
-            return elem.firstChild.nodeValue
-        except Exception:
-            return None

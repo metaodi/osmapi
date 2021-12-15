@@ -1,11 +1,7 @@
-from . import osmapi_test
 import osmapi
-import mock
 import xmltodict
 import datetime
-import urllib
 import pytest
-import responses
 from responses import GET, PUT, POST
 
 
@@ -43,7 +39,7 @@ def test_Changeset_contextmanager(auth_api, add_response):
 
 def test_ChangesetGet(api, add_response):
     # Setup mock
-    resp = add_response(GET, '/changeset/123')
+    add_response(GET, '/changeset/123')
 
     # Call
     result = api.ChangesetGet(123)
@@ -121,7 +117,7 @@ def test_ChangesetUpdate_with_created_by(auth_api, add_response):
 
 def test_ChangesetUpdate_wo_changeset(auth_api):
     with pytest.raises(osmapi.NoChangesetOpenError) as execinfo:
-        auth_api.ChangesetUpdate({'test': 'foobar' })
+        auth_api.ChangesetUpdate({'test': 'foobar'})
     assert str(execinfo.value) == 'No changeset currently opened'
 
 
@@ -170,7 +166,7 @@ def test_ChangesetCreate_with_created_by(auth_api, add_response):
 
 
 def test_ChangesetCreate_with_open_changeset(auth_api, add_response):
-    resp = add_response(PUT, '/changeset/create')
+    add_response(PUT, '/changeset/create')
 
     auth_api.ChangesetCreate(
         {
@@ -179,7 +175,7 @@ def test_ChangesetCreate_with_open_changeset(auth_api, add_response):
     )
 
     with pytest.raises(osmapi.ChangesetAlreadyOpenError) as execinfo:
-        auth_api.ChangesetCreate({'test': 'foobar' })
+        auth_api.ChangesetCreate({'test': 'foobar'})
     assert str(execinfo.value) == 'Changeset already opened'
 
 
@@ -193,6 +189,7 @@ def test_ChangesetClose(auth_api, add_response):
     auth_api.ChangesetClose()
 
     assert '/api/0.6/changeset/1414/close' in resp.calls[1].request.url
+
 
 def test_ChangesetClose_with_no_changeset(auth_api):
     with pytest.raises(osmapi.NoChangesetOpenError) as execinfo:
@@ -328,8 +325,8 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
     assert result[0]['action'] == changesdata[0]['action']
 
     data = result[0]['data']
-    assert data['nd'] ==changesdata[0]['data']['nd']
-    assert data['tag'] ==changesdata[0]['data']['tag']
+    assert data['nd'] == changesdata[0]['data']['nd']
+    assert data['tag'] == changesdata[0]['data']['tag']
     assert data['id'] == 4294967296
     assert data['version'] == 3
 
@@ -401,8 +398,8 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
 
 def test_ChangesetUpload_invalid_response(auth_api, add_response):
     # setup mock
-    resp = add_response(PUT, '/changeset/create', body='4444')
-    resp = add_response(POST, '/changeset/4444/upload', body='4444')
+    add_response(PUT, '/changeset/create', body='4444')
+    add_response(POST, '/changeset/4444/upload', body='4444')
 
     changesdata = [
         {
@@ -441,8 +438,8 @@ def test_ChangesetUpload_invalid_response(auth_api, add_response):
 
 def test_ChangesetDownload(api, add_response):
     # Setup mock
-    resp = add_response(GET, '/changeset/23123/download')
-    
+    add_response(GET, '/changeset/23123/download')
+
     # Call
     result = api.ChangesetDownload(23123)
 
@@ -471,14 +468,14 @@ def test_ChangesetDownload(api, add_response):
 
 
 def test_ChangesetDownload_invalid_response(api, add_response):
-    resp = add_response(GET, '/changeset/23123/download')
+    add_response(GET, '/changeset/23123/download')
     with pytest.raises(osmapi.XmlResponseInvalidError) as execinfo:
         api.ChangesetDownload(23123)
     assert 'The XML response from the OSM API is invalid' in str(execinfo.value)
 
 
 def test_ChangesetDownloadContainingUnicode(api, add_response):
-    resp = add_response(GET, '/changeset/37393499/download')
+    add_response(GET, '/changeset/37393499/download')
 
     # This changeset contains unicode tag values
     # Note that the fixture data has been reduced from the
@@ -613,7 +610,7 @@ def test_ChangesetComment(auth_api, add_response):
 
 
 def test_ChangesetSubscribe(auth_api, add_response):
-    resp = add_response(POST, '/changeset/123/subscribe')
+    add_response(POST, '/changeset/123/subscribe')
 
     result = auth_api.ChangesetSubscribe(123)
 
@@ -637,7 +634,7 @@ def test_ChangesetSubscribe(auth_api, add_response):
 
 
 def test_ChangesetSubscribeWhenAlreadySubscribed(auth_api, add_response):
-    resp = add_response(POST, '/changeset/52924/subscribe', status=409)
+    add_response(POST, '/changeset/52924/subscribe', status=409)
 
     with pytest.raises(osmapi.AlreadySubscribedApiError) as execinfo:
         auth_api.ChangesetSubscribe(52924)
@@ -648,7 +645,7 @@ def test_ChangesetSubscribeWhenAlreadySubscribed(auth_api, add_response):
 
 
 def test_ChangesetUnsubscribe(auth_api, add_response):
-    resp = add_response(POST, '/changeset/123/unsubscribe')
+    add_response(POST, '/changeset/123/unsubscribe')
 
     result = auth_api.ChangesetUnsubscribe(123)
 
@@ -672,7 +669,7 @@ def test_ChangesetUnsubscribe(auth_api, add_response):
 
 
 def test_ChangesetUnsubscribeWhenNotSubscribed(auth_api, add_response):
-    resp = add_response(POST, '/changeset/52924/unsubscribe', status=404)
+    add_response(POST, '/changeset/52924/unsubscribe', status=404)
 
     with pytest.raises(osmapi.NotSubscribedApiError) as execinfo:
         auth_api.ChangesetUnsubscribe(52924)

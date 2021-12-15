@@ -42,8 +42,8 @@ def auth_api():
     api_base = "http://api06.dev.openstreetmap.org"
     api = osmapi.OsmApi(
         api=api_base,
-        username = 'testuser',
-        password = 'testpassword'
+        username='testuser',
+        password='testpassword'
     )
     api._session._sleep = mock.Mock()
 

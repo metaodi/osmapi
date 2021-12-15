@@ -147,10 +147,11 @@ class OsmApiSession:
     def _put(self, path, data, return_value=True):
         return self._http('PUT', path, True, data, return_value=return_value)
 
-    def _post(self, path, data, optionalAuth=False):
-        auth = True
+    def _post(self, path, data, optionalAuth=False, forceAuth=False):
         # the Notes API allows certain POSTs by non-authenticated users
         auth = (optionalAuth and self._auth)
+        if forceAuth:
+            auth = True
         return self._http('POST', path, auth, data)
 
     def _delete(self, path, data):

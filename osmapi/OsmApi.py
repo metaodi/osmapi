@@ -1325,7 +1325,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
-                data.encode("utf-8")
+                data.encode("utf-8"),
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
@@ -1466,7 +1467,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/comment" % (ChangesetId),
-                params
+                params,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1506,7 +1508,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
-                None
+                None,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1546,7 +1549,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
-                None
+                None,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 404:

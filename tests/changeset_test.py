@@ -436,6 +436,27 @@ def test_ChangesetUpload_invalid_response(auth_api, add_response):
     assert 'The XML response from the OSM API is invalid' in str(execinfo.value)
 
 
+def test_ChangesetUpload_no_auth(api):
+    changesdata = [
+        {
+            'type': 'node',
+            'action': 'create',
+            'data': {
+                'lat': 47.123,
+                'lon': 8.555,
+                'tag': {
+                    'amenity': 'place_of_worship',
+                    'religion': 'pastafarian'
+                }
+            }
+        }
+    ]
+
+    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+        api.ChangesetUpload(changesdata)
+    assert str(execinfo.value) == "Username/Password missing"
+
+
 def test_ChangesetDownload(api, add_response):
     # Setup mock
     add_response(GET, '/changeset/23123/download')
@@ -609,6 +630,15 @@ def test_ChangesetComment(auth_api, add_response):
     }
 
 
+def test_ChangesetComment_no_auth(api):
+    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+        api.ChangesetComment(
+            123,
+            comment="test comment"
+        )
+    assert str(execinfo.value) == "Username/Password missing"
+
+
 def test_ChangesetSubscribe(auth_api, add_response):
     add_response(POST, '/changeset/123/subscribe')
 
@@ -644,6 +674,12 @@ def test_ChangesetSubscribeWhenAlreadySubscribed(auth_api, add_response):
     assert execinfo.value.status == 409
 
 
+def test_ChangesetSubscribe_no_auth(api):
+    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+        api.ChangesetSubscribe(45627)
+    assert str(execinfo.value) == "Username/Password missing"
+
+
 def test_ChangesetUnsubscribe(auth_api, add_response):
     add_response(POST, '/changeset/123/unsubscribe')
 
@@ -677,3 +713,9 @@ def test_ChangesetUnsubscribeWhenNotSubscribed(auth_api, add_response):
     assert execinfo.value.payload == b"You are not subscribed to changeset 52924."
     assert execinfo.value.reason == 'Not Found'
     assert execinfo.value.status == 404
+
+
+def test_ChangesetUnsubscribe_no_auth(api):
+    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+        api.ChangesetUnsubscribe(45627)
+    assert str(execinfo.value) == "Username/Password missing"

@@ -3,13 +3,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add context manager `Changeset()` to open/close changesets
+- Add `session` parameter to provide a custom http session object
 
 ### Changed
 - Refactor code into several modules/files to improve maintainability
 - Use `logging` module to log debug information
 
 ### Removed
-- Remove `debug` parameter of OsmApi, replaced debug messages with `logging` module
+- **BC-Break**: Remove `debug` parameter of OsmApi, replaced debug messages with `logging` module
 
 ### Fixed
 - Added `python_requires` to setup.py to define Python 3.7 as minimum version

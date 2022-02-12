@@ -20,7 +20,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             52.4710193
         )
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
@@ -68,7 +68,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NoteGet(1111)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/notes/1111')
 
@@ -115,7 +115,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
@@ -152,7 +152,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         }
         result = self.api.NoteCreate(note)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)
@@ -184,7 +184,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NoteComment(812, 'This is a comment')
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -223,7 +223,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NoteComment(842, 'blubb')
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -262,7 +262,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NoteClose(814, 'Close this note!')
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -301,7 +301,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NoteReopen(815, 'Reopen this note!')
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
         self.assertEqual(
             args[1],
@@ -349,7 +349,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         result = self.api.NotesSearch('street')
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         urlParts = urlparse.urlparse(args[1])
         params = urlparse.parse_qs(urlParts.query)

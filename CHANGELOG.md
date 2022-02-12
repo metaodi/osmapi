@@ -4,6 +4,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [3.0.0] - 2022-02-12
+### Added
+- Add context manager `Changeset()` to open/close changesets
+- Add `session` parameter to provide a custom http session object
+
+### Changed
+- Refactor code into several modules/files to improve maintainability
+- Use `logging` module to log debug information
+
+### Removed
+- **BC-Break**: Remove `debug` parameter of OsmApi, replaced debug messages with `logging` module
+
+### Fixed
+- Added `python_requires` to setup.py to define Python 3.7 as minimum version
+
 ## [2.0.2] - 2021-11-24
 ### Changed
 - Set `long_description` format to markdown
@@ -299,7 +314,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/metaodi/osmapi/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/metaodi/osmapi/compare/v1.3.0...v2.0.0

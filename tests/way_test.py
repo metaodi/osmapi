@@ -11,7 +11,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayGet(321)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/way/321')
 
@@ -53,7 +53,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayGet(4294967296, 2)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -94,7 +94,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayCreate(test_way)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/way/create')
 
@@ -148,7 +148,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayUpdate(test_way)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/way/876')
 
@@ -210,7 +210,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayDelete(test_way)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'DELETE')
         self.assertEqual(args[1], self.api_base + '/api/0.6/way/876')
         self.assertEqual(result['id'], 876)
@@ -221,7 +221,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayHistory(4294967296)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -243,7 +243,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayRelations(4295032193)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -273,7 +273,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayRelations(4295032193)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -288,7 +288,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WayFull(321)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/way/321/full')
 
@@ -311,7 +311,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
         result = self.api.WaysGet([456, 678])
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],

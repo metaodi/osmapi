@@ -11,7 +11,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationGet(321)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/relation/321')
 
@@ -82,7 +82,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationGet(765, 2)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(args[1], self.api_base + '/api/0.6/relation/765/2')
 
@@ -125,7 +125,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationCreate(test_relation)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/relation/create')
 
@@ -195,7 +195,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationUpdate(test_relation)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'PUT')
         self.assertEqual(args[1], self.api_base + '/api/0.6/relation/8989')
 
@@ -224,7 +224,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationDelete(test_relation)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'DELETE')
         self.assertEqual(args[1], self.api_base + '/api/0.6/relation/8989')
 
@@ -236,7 +236,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationHistory(2470397)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -259,7 +259,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationRelations(1532552)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -281,7 +281,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationRelations(1532552)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -296,7 +296,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationFull(2470397)
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],
@@ -316,7 +316,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
         result = self.api.RelationsGet([1532552, 1532553])
 
-        args, kwargs = self.api._session.request.call_args
+        args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'GET')
         self.assertEqual(
             args[1],

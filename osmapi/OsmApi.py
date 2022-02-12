@@ -32,6 +32,7 @@ import xml.parsers.expat
 import urllib.parse
 import re
 import logging
+from contextlib import contextmanager
 
 from osmapi import __version__
 from . import dom
@@ -1130,6 +1131,43 @@ class OsmApi:
     # Changeset                                      #
     ##################################################
 
+    @contextmanager
+    def Changeset(self, ChangesetTags={}):
+        """
+        Context manager for a Changeset.
+
+        It opens a Changeset, uploads the changes and closes the changeset
+        when used with the `with` statement:
+
+            #!python
+            import osmapi
+
+            with osmapi.Changeset({"comment": "Import script XYZ"}) as changeset_id:
+                print(f"Part of changeset {changeset_id}")
+                api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+
+        If `ChangesetTags` are given, this tags are applied (key/value).
+
+        Returns `ChangesetId`
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If there is already an open changeset,
+        `OsmApi.ChangesetAlreadyOpenError` is raised.
+        """
+        # Create a new changeset
+        changeset_id = self.ChangesetCreate(ChangesetTags)
+        yield changeset_id
+
+        # upload data to changeset
+        autosize = self._changesetautosize
+        for i in range(0, len(self._changesetautodata), autosize):
+            chunk = self._changesetautodata[i:i+autosize]
+            self.ChangesetUpload(chunk)
+        self._changesetautodata = []
+        self.ChangesetClose()
+
     def ChangesetGet(self, ChangesetId, include_discussion=False):
         """
         Returns changeset with `ChangesetId` as a dict:
@@ -1287,7 +1325,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
-                data.encode("utf-8")
+                data.encode("utf-8"),
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
@@ -1428,7 +1467,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/comment" % (ChangesetId),
-                params
+                params,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1468,7 +1508,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
-                None
+                None,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1508,7 +1549,8 @@ class OsmApi:
         try:
             data = self._session._post(
                 "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
-                None
+                None,
+                forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 404:

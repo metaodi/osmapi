@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.0.0] - 2022-02-12
 ### Added
 - Add context manager `Changeset()` to open/close changesets
 - Add `session` parameter to provide a custom http session object
@@ -312,7 +314,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/metaodi/osmapi/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/metaodi/osmapi/compare/v1.3.0...v2.0.0

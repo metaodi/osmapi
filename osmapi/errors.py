@@ -112,7 +112,7 @@ class NoteClosedApiError(ApiError):
     """
 
 
-class NoteAlreadyClosedError(ApiError):
+class NoteAlreadyClosedApiError(ApiError):
     """
     Error if the the note in question has already been closed
     """

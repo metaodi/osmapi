@@ -312,7 +312,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
     def test_NoteAlreadyClosed(self):
         self._session_mock(auth=True, status=409)
 
-        with self.assertRaises(osmapi.NoteAlreadyClosedApiError ) as cm:
+        with self.assertRaises(osmapi.NoteAlreadyClosedApiError) as cm:
             self.api.NoteClose(819, 'Close this note!')
 
         self.assertEqual(cm.exception.status, 409)

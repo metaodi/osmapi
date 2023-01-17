@@ -108,6 +108,12 @@ class ChangesetClosedApiError(ApiError):
 
 class NoteClosedApiError(ApiError):
     """
+    Error if the the note in question is closed
+    """
+
+
+class NoteAlreadyClosedError(ApiError):
+    """
     Error if the the note in question has already been closed
     """
 

@@ -257,10 +257,23 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             ]
         })
 
+    def test_NoteCommentOnClosedNote(self):
+        self._session_mock(status=404)
+
+        with self.assertRaises(osmapi.NoteClosedApiError) as cm:
+            self.api.NoteClose(817, 'Close this note!')
+
+        self.assertEqual(cm.exception.status, 404)
+        self.assertEqual(
+            cm.exception.payload,
+            "The note 819 was closed at 2022-04-29 20:57:20 UTC"
+        )
+
+
     def test_NoteClose(self):
         self._session_mock(auth=True)
 
-        result = self.api.NoteClose(814, 'Close this note!')
+        result = self.api.NoteClose(819, 'Close this note!')
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], 'POST')
@@ -295,6 +308,19 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
                 }
             ]
         })
+    
+    def test_NoteAlreadyClosed(self):
+        self._session_mock(auth=True, status=409)
+
+        with self.assertRaises(osmapi.NoteAlreadyClosedApiError ) as cm:
+            self.api.NoteClose(819, 'Close this note!')
+
+        self.assertEqual(cm.exception.status, 409)
+        self.assertEqual(
+            cm.exception.payload,
+            "The note 819 was closed at 2022-04-29 20:57:20 UTC"
+        )
+
 
     def test_NoteReopen(self):
         self._session_mock(auth=True)

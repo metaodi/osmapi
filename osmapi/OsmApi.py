@@ -1712,6 +1712,8 @@ class OsmApi:
         except errors.ApiError as e:
             if e.status == 404:
                 raise errors.NoteClosedApiError(e.status, e.reason, e.payload)
+            elif e.status == 409:
+                    raise errors.NoteAlreadyClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
 

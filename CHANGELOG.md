@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Add new `NoteAlreadyClosedError` exception when you try to close an already closed note (see issue #135, , thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 
 ## [3.0.0] - 2022-02-12
 ### Added

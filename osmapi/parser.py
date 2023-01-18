@@ -113,7 +113,7 @@ def ParseNotes(data):
             { ... }
         ]
     """
-    noteElements = dom.OsmResponseToDom(data, tag="note")
+    noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
     result = []
     for noteElement in noteElements:
         note = dom.DomParseNote(noteElement)

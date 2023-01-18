@@ -257,6 +257,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = "/api/0.6/node/%s" % (NodeId)
         if NodeVersion != -1:
@@ -389,6 +392,9 @@ class OsmApi:
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         return self._do("delete", "node", NodeData)
 
@@ -538,6 +544,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = "/api/0.6/way/%s" % (WayId)
         if WayVersion != -1:
@@ -667,6 +676,9 @@ class OsmApi:
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         return self._do("delete", "way", WayData)
 
@@ -750,6 +762,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = "/api/0.6/way/%s/full" % (WayId)
         data = self._session._get(uri)
@@ -814,6 +829,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = "/api/0.6/relation/%s" % (RelationId)
         if RelationVersion != -1:
@@ -970,6 +988,9 @@ class OsmApi:
 
         If the requested element has already been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         return self._do("delete", "relation", RelationData)
 
@@ -1060,6 +1081,9 @@ class OsmApi:
 
         If any relation (on any level) has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         data = []
         todo = [RelationId]
@@ -1097,6 +1121,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = "/api/0.6/relation/%s/full" % (RelationId)
         data = self._session._get(uri)
@@ -1552,11 +1579,9 @@ class OsmApi:
                 None,
                 forceAuth=True
             )
-        except errors.ApiError as e:
-            if e.status == 404:
-                raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
-            else:
-                raise
+        except errors.ElementNotFoundApiError as e:
+            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
+
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.DomParseChangeset(changeset)
 
@@ -1631,9 +1656,37 @@ class OsmApi:
 
     def NoteCreate(self, NoteData):
         """
-        Creates a note.
+        Creates a note based on the supplied `NoteData` dict:
 
-        Returns updated NoteData (without timestamp).
+            #!python
+            {
+                'lat': latitude of note,
+                'lon': longitude of note,
+                'text': text of the note,
+            }
+
+        Returns updated `NoteData`:
+
+            #!python
+            {
+                'id': id of note,
+                'lat': latitude of note,
+                'lon': longitude of note,
+                'date_created': date when the note was created
+                'date_closed': date when the note was closed (or None if the note is open),
+                'status': status of the note (open or closed),
+                'comments': [
+                    {
+                        'date': date of the comment,
+                        'action': status of comment (opened, commented, closed),
+                        'text': text of the note,
+                        'html': html version of the text of the note,
+                        'uid': user id of the user creating this note or None
+                        'user': username of the user creating this note or None
+                    }
+                ]
+            }
+
         """
         uri = "/api/0.6/notes"
         uri += "?" + urllib.parse.urlencode(NoteData)
@@ -1671,6 +1724,9 @@ class OsmApi:
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
         """
         path = "/api/0.6/notes/%s/reopen" % NoteId
         return self._NoteAction(path, comment, optionalAuth=False)
@@ -1710,10 +1766,8 @@ class OsmApi:
         try:
             result = self._session._post(uri, None, optionalAuth=optionalAuth)
         except errors.ApiError as e:
-            if e.status == 404:
-                raise errors.NoteClosedApiError(e.status, e.reason, e.payload)
-            elif e.status == 409:
-                    raise errors.NoteAlreadyClosedApiError(e.status, e.reason, e.payload)
+            if e.status == 409:
+                raise errors.NoteAlreadyClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
 

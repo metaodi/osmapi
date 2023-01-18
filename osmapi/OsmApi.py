@@ -1276,6 +1276,14 @@ class OsmApi:
             raise errors.ChangesetAlreadyOpenError("Changeset already opened")
         if "created_by" not in ChangesetTags:
             ChangesetTags["created_by"] = self._created_by
+
+        # check if someone tries to create a test changeset to PROD
+        if (
+            self._api == "https://www.openstreetmap.org"
+            and ChangesetTags.get('comment') == "My first test"
+        ):
+            raise errors.OsmApiError("DO NOT CREATE test changesets on the production server")
+
         result = self._session._put(
             "/api/0.6/changeset/create",
             xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self)

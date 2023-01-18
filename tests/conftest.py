@@ -52,6 +52,20 @@ def auth_api():
 
 
 @pytest.fixture
+def prod_api():
+    api_base = "https://www.openstreetmap.org"
+    api = osmapi.OsmApi(
+        api=api_base,
+        username='testuser',
+        password='testpassword'
+    )
+    api._session._sleep = mock.Mock()
+
+    yield api
+    api.close()
+
+
+@pytest.fixture
 def mocked_responses():
     with responses.RequestsMock() as rsps:
         yield rsps

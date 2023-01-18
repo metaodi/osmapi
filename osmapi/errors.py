@@ -93,6 +93,12 @@ class ElementDeletedApiError(ApiError):
     pass
 
 
+class ElementNotFoundApiError(ApiError):
+    """
+    Error if the the requested element was not found
+    """
+
+
 class ResponseEmptyApiError(ApiError):
     """
     Error when the response to the request is empty
@@ -106,7 +112,7 @@ class ChangesetClosedApiError(ApiError):
     """
 
 
-class NoteClosedApiError(ApiError):
+class NoteAlreadyClosedApiError(ApiError):
     """
     Error if the the note in question has already been closed
     """

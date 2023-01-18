@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New `ElementNotFoundApiError` when a 404 response comes from the API
+
+### Changed
+- Add new `NoteAlreadyClosedApiError` exception when you try to close an already closed note (see issue #135, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
+
+### Fixed
+- `NoteGets` now allows empty results i.e. it returns an empty list if no notes were found (see issue #137, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 
 ## [3.0.0] - 2022-02-12
 ### Added

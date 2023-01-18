@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - New `ElementNotFoundApiError` when a 404 response comes from the API
+- Raise an exception if a user tries to create a test changeset on the PROD server (see issue #66, thanks [SomeoneElseOSM](https://github.com/SomeoneElseOSM))
 
 ### Changed
 - Add new `NoteAlreadyClosedApiError` exception when you try to close an already closed note (see issue #135, thanks [Mateusz Konieczny](https://github.com/matkoniecz))

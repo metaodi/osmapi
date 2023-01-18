@@ -179,6 +179,16 @@ def test_ChangesetCreate_with_open_changeset(auth_api, add_response):
     assert str(execinfo.value) == 'Changeset already opened'
 
 
+def test_ChangesetCreate_with_prod_api_and_test_comment(prod_api):
+    with pytest.raises(osmapi.OsmApiError) as execinfo:
+        prod_api.ChangesetCreate(
+            {
+                'comment': 'My first test',
+            }
+        )
+    assert str(execinfo.value) == 'DO NOT CREATE test changesets on the production server'
+
+
 def test_ChangesetClose(auth_api, add_response):
     # setup mock
     resp = add_response(PUT, '/changeset/create', filename='test_Changeset_create.xml')

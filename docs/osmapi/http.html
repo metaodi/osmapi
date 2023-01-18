@@ -113,6 +113,9 @@
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
 
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
+
 <span class="sd">        If the response status code indicates an error,</span>
 <span class="sd">        `OsmApi.ApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -135,7 +138,13 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">410</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span><span class="p">(</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
+                    <span class="n">payload</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">410</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementDeletedApiError</span><span class="p">(</span>
                     <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
                     <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
@@ -277,6 +286,9 @@
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
 
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
+
 <span class="sd">        If the response status code indicates an error,</span>
 <span class="sd">        `OsmApi.ApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -299,7 +311,13 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">410</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span><span class="p">(</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
+                    <span class="n">payload</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">410</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementDeletedApiError</span><span class="p">(</span>
                     <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
                     <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>

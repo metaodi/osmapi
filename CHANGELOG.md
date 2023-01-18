@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.1.0] - 2023-01-18
 ### Added
 - New `ElementNotFoundApiError` when a 404 response comes from the API
 - Raise an exception if a user tries to create a test changeset on the PROD server (see issue #66, thanks [SomeoneElseOSM](https://github.com/SomeoneElseOSM))
@@ -323,7 +325,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/metaodi/osmapi/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/metaodi/osmapi/compare/v2.0.0...v2.0.1

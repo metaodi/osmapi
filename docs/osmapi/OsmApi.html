@@ -488,6 +488,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/node/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">NodeId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">NodeVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -620,6 +623,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
@@ -769,6 +775,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">WayVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -898,6 +907,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
@@ -981,6 +993,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -1045,6 +1060,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">RelationVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -1201,6 +1219,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
@@ -1291,6 +1312,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If any relation (on any level) has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">RelationId</span><span class="p">]</span>
@@ -1328,6 +1352,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -1783,11 +1810,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
-        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span>
+        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
@@ -1862,9 +1887,37 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
     <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a note.</span>
+<span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
-<span class="sd">        Returns updated NoteData (without timestamp).</span>
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;text&#39;: text of the note,</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Returns updated `NoteData`:</span>
+
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;id&#39;: id of note,</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;date_created&#39;: date when the note was created</span>
+<span class="sd">                &#39;date_closed&#39;: date when the note was closed (or None if the note is open),</span>
+<span class="sd">                &#39;status&#39;: status of the note (open or closed),</span>
+<span class="sd">                &#39;comments&#39;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;date&#39;: date of the comment,</span>
+<span class="sd">                        &#39;action&#39;: status of comment (opened, commented, closed),</span>
+<span class="sd">                        &#39;text&#39;: text of the note,</span>
+<span class="sd">                        &#39;html&#39;: html version of the text of the note,</span>
+<span class="sd">                        &#39;uid&#39;: user id of the user creating this note or None</span>
+<span class="sd">                        &#39;user&#39;: username of the user creating this note or None</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes&quot;</span>
         <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">NoteData</span><span class="p">)</span>
@@ -1902,6 +1955,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes/</span><span class="si">%s</span><span class="s2">/reopen&quot;</span> <span class="o">%</span> <span class="n">NoteId</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1941,8 +1997,8 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="n">optionalAuth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
@@ -2317,6 +2373,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/node/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">NodeId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">NodeVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -2449,6 +2508,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
@@ -2598,6 +2660,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">WayVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -2727,6 +2792,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
@@ -2810,6 +2878,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -2874,6 +2945,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">RelationVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -3030,6 +3104,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
@@ -3120,6 +3197,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If any relation (on any level) has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">RelationId</span><span class="p">]</span>
@@ -3157,6 +3237,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -3612,11 +3695,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
-        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span>
+        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
@@ -3691,9 +3772,37 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
     <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a note.</span>
+<span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
-<span class="sd">        Returns updated NoteData (without timestamp).</span>
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;text&#39;: text of the note,</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Returns updated `NoteData`:</span>
+
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;id&#39;: id of note,</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;date_created&#39;: date when the note was created</span>
+<span class="sd">                &#39;date_closed&#39;: date when the note was closed (or None if the note is open),</span>
+<span class="sd">                &#39;status&#39;: status of the note (open or closed),</span>
+<span class="sd">                &#39;comments&#39;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;date&#39;: date of the comment,</span>
+<span class="sd">                        &#39;action&#39;: status of comment (opened, commented, closed),</span>
+<span class="sd">                        &#39;text&#39;: text of the note,</span>
+<span class="sd">                        &#39;html&#39;: html version of the text of the note,</span>
+<span class="sd">                        &#39;uid&#39;: user id of the user creating this note or None</span>
+<span class="sd">                        &#39;user&#39;: username of the user creating this note or None</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes&quot;</span>
         <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">NoteData</span><span class="p">)</span>
@@ -3731,6 +3840,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes/</span><span class="si">%s</span><span class="s2">/reopen&quot;</span> <span class="o">%</span> <span class="n">NoteId</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -3770,8 +3882,8 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="n">optionalAuth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
@@ -3935,7 +4047,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     password=None,
     passwordfile=None,
     appid=&#39;&#39;,
-    created_by=&#39;osmapi/3.0.0&#39;,
+    created_by=&#39;osmapi/3.1.0&#39;,
     api=&#39;https://www.openstreetmap.org&#39;,
     changesetauto=False,
     changesetautotags={},
@@ -4249,6 +4361,9 @@ gain insights of the server in use.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/node/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">NodeId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">NodeVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -4282,6 +4397,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -4530,6 +4648,9 @@ otherwise the latest version is returned.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 </pre></div>
@@ -4578,6 +4699,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has already been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -4877,6 +5001,9 @@ for multiple nodes.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">WayVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -4909,6 +5036,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -5153,6 +5283,9 @@ otherwise the latest version is returned.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 </pre></div>
@@ -5199,6 +5332,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has already been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -5368,6 +5504,9 @@ otherwise the latest version is returned.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/way/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">WayId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -5392,6 +5531,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -5490,6 +5632,9 @@ each way in <code>WayIdList</code>:</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">RelationVersion</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -5531,6 +5676,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -5820,6 +5968,9 @@ otherwise the latest version is returned.</p>
 
 <span class="sd">        If the requested element has already been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 </pre></div>
@@ -5875,6 +6026,9 @@ otherwise the latest version is returned.</p>
 
 <p>If the requested element has already been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -6052,6 +6206,9 @@ containing relation <code>RelationId</code>:</p>
 
 <span class="sd">        If any relation (on any level) has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">RelationId</span><span class="p">]</span>
@@ -6094,6 +6251,9 @@ instead, which return only 2 levels.</p>
 
 <p>If any relation (on any level) has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -6128,6 +6288,9 @@ instead, which return only 2 levels.</p>
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/relation/</span><span class="si">%s</span><span class="s2">/full&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">RelationId</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
@@ -6155,6 +6318,9 @@ instead, which return only 2 levels.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 
@@ -7000,11 +7166,9 @@ matching all criteria:</p>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
-        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span>
+        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 </pre></div>
@@ -7193,9 +7357,37 @@ The value 0 means only open bugs are returned,
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a note.</span>
+<span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
-<span class="sd">        Returns updated NoteData (without timestamp).</span>
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;text&#39;: text of the note,</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Returns updated `NoteData`:</span>
+
+<span class="sd">            #!python</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;id&#39;: id of note,</span>
+<span class="sd">                &#39;lat&#39;: latitude of note,</span>
+<span class="sd">                &#39;lon&#39;: longitude of note,</span>
+<span class="sd">                &#39;date_created&#39;: date when the note was created</span>
+<span class="sd">                &#39;date_closed&#39;: date when the note was closed (or None if the note is open),</span>
+<span class="sd">                &#39;status&#39;: status of the note (open or closed),</span>
+<span class="sd">                &#39;comments&#39;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;date&#39;: date of the comment,</span>
+<span class="sd">                        &#39;action&#39;: status of comment (opened, commented, closed),</span>
+<span class="sd">                        &#39;text&#39;: text of the note,</span>
+<span class="sd">                        &#39;html&#39;: html version of the text of the note,</span>
+<span class="sd">                        &#39;uid&#39;: user id of the user creating this note or None</span>
+<span class="sd">                        &#39;user&#39;: username of the user creating this note or None</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes&quot;</span>
         <span class="n">uri</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">NoteData</span><span class="p">)</span>
@@ -7204,9 +7396,38 @@ The value 0 means only open bugs are returned,
 
         </details>
 
-            <div class="docstring"><p>Creates a note.</p>
+            <div class="docstring"><p>Creates a note based on the supplied <code>NoteData</code> dict:</p>
 
-<p>Returns updated NoteData (without timestamp).</p>
+<pre><code>#!python
+{
+    'lat': latitude of note,
+    'lon': longitude of note,
+    'text': text of the note,
+}
+</code></pre>
+
+<p>Returns updated <code>NoteData</code>:</p>
+
+<pre><code>#!python
+{
+    'id': id of note,
+    'lat': latitude of note,
+    'lon': longitude of note,
+    'date_created': date when the note was created
+    'date_closed': date when the note was closed (or None if the note is open),
+    'status': status of the note (open or closed),
+    'comments': [
+        {
+            'date': date of the comment,
+            'action': status of comment (opened, commented, closed),
+            'text': text of the note,
+            'html': html version of the text of the note,
+            'uid': user id of the user creating this note or None
+            'user': username of the user creating this note or None
+        }
+    ]
+}
+</code></pre>
 </div>
 
 
@@ -7296,6 +7517,9 @@ The value 0 means only open bugs are returned,
 
 <span class="sd">        If the requested element has been deleted,</span>
 <span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
+
+<span class="sd">        If the requested element can not be found,</span>
+<span class="sd">        `OsmApi.ElementNotFoundApiError` is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/api/0.6/notes/</span><span class="si">%s</span><span class="s2">/reopen&quot;</span> <span class="o">%</span> <span class="n">NoteId</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -7312,6 +7536,9 @@ The value 0 means only open bugs are returned,
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>
+
+<p>If the requested element can not be found,
+<code>OsmApi.ElementNotFoundApiError</code> is raised.</p>
 </div>
 
 

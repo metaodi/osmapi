@@ -47,6 +47,9 @@ class OsmApiSession:
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
 
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+
         If the response status code indicates an error,
         `OsmApi.ApiError` is raised.
         """
@@ -69,7 +72,13 @@ class OsmApiSession:
         )
         if response.status_code != 200:
             payload = response.content.strip()
-            if response.status_code == 410:
+            if response.status_code == 404:
+                raise errors.ElementNotFoundApiError(
+                    response.status_code,
+                    response.reason,
+                    payload
+                )
+            elif response.status_code == 410:
                 raise errors.ElementDeletedApiError(
                     response.status_code,
                     response.reason,

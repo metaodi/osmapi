@@ -109,6 +109,12 @@
 
             </li>
             <li>
+                    <a class="class" href="#ElementNotFoundApiError">ElementNotFoundApiError</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#ResponseEmptyApiError">ResponseEmptyApiError</a>
                             <ul class="memberlist">
                 </ul>
@@ -121,7 +127,7 @@
 
             </li>
             <li>
-                    <a class="class" href="#NoteClosedApiError">NoteClosedApiError</a>
+                    <a class="class" href="#NoteAlreadyClosedApiError">NoteAlreadyClosedApiError</a>
                             <ul class="memberlist">
                 </ul>
 
@@ -252,6 +258,12 @@
     <span class="k">pass</span>
 
 
+<span class="k">class</span> <span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if the the requested element was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
 <span class="k">class</span> <span class="nc">ResponseEmptyApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when the response to the request is empty</span>
@@ -265,7 +277,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">NoteClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error if the the note in question has already been closed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -802,6 +814,47 @@ that he is not subscribed to</p>
                                 </dl>
                             </div>
                 </section>
+                <section id="ElementNotFoundApiError">
+                                <div class="attr class">
+        <a class="headerlink" href="#ElementNotFoundApiError">#&nbsp;&nbsp</a>
+
+        
+        <span class="def">class</span>
+        <span class="name">ElementNotFoundApiError</span><wbr>(<span class="base"><a href="#ApiError">ApiError</a></span>):
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if the the requested element was not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Error if the the requested element was not found</p>
+</div>
+
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ApiError">ApiError</a></dt>
+                                <dd id="ElementNotFoundApiError.__init__" class="function"><a href="#ApiError.__init__">ApiError</a></dd>
+                <dd id="ElementNotFoundApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
+                <dd id="ElementNotFoundApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
+                <dd id="ElementNotFoundApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+
+            </div>
+            <div><dt>builtins.BaseException</dt>
+                                <dd id="ElementNotFoundApiError.with_traceback" class="function">with_traceback</dd>
+                <dd id="ElementNotFoundApiError.args" class="variable">args</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="ResponseEmptyApiError">
                                 <div class="attr class">
         <a class="headerlink" href="#ResponseEmptyApiError">#&nbsp;&nbsp</a>
@@ -885,18 +938,18 @@ that he is not subscribed to</p>
                                 </dl>
                             </div>
                 </section>
-                <section id="NoteClosedApiError">
+                <section id="NoteAlreadyClosedApiError">
                                 <div class="attr class">
-        <a class="headerlink" href="#NoteClosedApiError">#&nbsp;&nbsp</a>
+        <a class="headerlink" href="#NoteAlreadyClosedApiError">#&nbsp;&nbsp</a>
 
         
         <span class="def">class</span>
-        <span class="name">NoteClosedApiError</span><wbr>(<span class="base"><a href="#ApiError">ApiError</a></span>):
+        <span class="name">NoteAlreadyClosedApiError</span><wbr>(<span class="base"><a href="#ApiError">ApiError</a></span>):
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">NoteClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error if the the note in question has already been closed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -912,15 +965,15 @@ that he is not subscribed to</p>
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="#ApiError">ApiError</a></dt>
-                                <dd id="NoteClosedApiError.__init__" class="function"><a href="#ApiError.__init__">ApiError</a></dd>
-                <dd id="NoteClosedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
-                <dd id="NoteClosedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
-                <dd id="NoteClosedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                                <dd id="NoteAlreadyClosedApiError.__init__" class="function"><a href="#ApiError.__init__">ApiError</a></dd>
+                <dd id="NoteAlreadyClosedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
+                <dd id="NoteAlreadyClosedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
+                <dd id="NoteAlreadyClosedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
-                                <dd id="NoteClosedApiError.with_traceback" class="function">with_traceback</dd>
-                <dd id="NoteClosedApiError.args" class="variable">args</dd>
+                                <dd id="NoteAlreadyClosedApiError.with_traceback" class="function">with_traceback</dd>
+                <dd id="NoteAlreadyClosedApiError.args" class="variable">args</dd>
 
             </div>
                                 </dl>

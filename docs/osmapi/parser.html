@@ -173,7 +173,7 @@
 <span class="sd">            { ... }</span>
 <span class="sd">        ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">noteElements</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">)</span>
+    <span class="n">noteElements</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">noteElement</span> <span class="ow">in</span> <span class="n">noteElements</span><span class="p">:</span>
         <span class="n">note</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNote</span><span class="p">(</span><span class="n">noteElement</span><span class="p">)</span>
@@ -355,7 +355,7 @@
 <span class="sd">            { ... }</span>
 <span class="sd">        ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">noteElements</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">)</span>
+    <span class="n">noteElements</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">noteElement</span> <span class="ow">in</span> <span class="n">noteElements</span><span class="p">:</span>
         <span class="n">note</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNote</span><span class="p">(</span><span class="n">noteElement</span><span class="p">)</span>

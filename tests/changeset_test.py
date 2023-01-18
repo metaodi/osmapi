@@ -76,10 +76,10 @@ def test_ChangesetUpdate(auth_api, add_response):
     result = auth_api.ChangesetUpdate({'test': 'foobar'})
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
-        b'    <tag k="created_by" v="osmapi/3.0.0"/>\n'
+        b'    <tag k="created_by" v="osmapi/3.1.0"/>\n'
         b'  </changeset>\n'
         b'</osm>\n'
     )
@@ -104,7 +104,7 @@ def test_ChangesetUpdate_with_created_by(auth_api, add_response):
     )
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
         b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -132,10 +132,10 @@ def test_ChangesetCreate(auth_api, add_response):
 
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
-        b'    <tag k="created_by" v="osmapi/3.0.0"/>\n'
+        b'    <tag k="created_by" v="osmapi/3.1.0"/>\n'
         b'  </changeset>\n'
         b'</osm>\n'
     )
@@ -155,7 +155,7 @@ def test_ChangesetCreate_with_created_by(auth_api, add_response):
 
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
         b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -177,6 +177,16 @@ def test_ChangesetCreate_with_open_changeset(auth_api, add_response):
     with pytest.raises(osmapi.ChangesetAlreadyOpenError) as execinfo:
         auth_api.ChangesetCreate({'test': 'foobar'})
     assert str(execinfo.value) == 'Changeset already opened'
+
+
+def test_ChangesetCreate_with_prod_api_and_test_comment(prod_api):
+    with pytest.raises(osmapi.OsmApiError) as execinfo:
+        prod_api.ChangesetCreate(
+            {
+                'comment': 'My first test',
+            }
+        )
+    assert str(execinfo.value) == 'DO NOT CREATE test changesets on the production server'
 
 
 def test_ChangesetClose(auth_api, add_response):
@@ -219,7 +229,7 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
         b'<create>\n'
         b'  <node lat="47.123" lon="8.555" visible="true" '
         b'changeset="4444">\n'
@@ -287,7 +297,7 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
         b'<modify>\n'
         b'  <way id="4294967296" version="2" visible="true" '
         b'changeset="4444">\n'
@@ -366,7 +376,7 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/3.0.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
         b'<delete>\n'
         b'  <relation id="676" version="2" visible="true" '
         b'changeset="4444">\n'

@@ -63,31 +63,21 @@ class OsmApiSession:
         if auth and not self._auth:
             raise errors.UsernamePasswordMissingError("Username/Password missing")
 
-        response = self._session.request(
-            method,
-            path,
-            data=send
-        )
+        response = self._session.request(method, path, data=send)
         if response.status_code != 200:
             payload = response.content.strip()
             if response.status_code == 404:
                 raise errors.ElementNotFoundApiError(
-                    response.status_code,
-                    response.reason,
-                    payload
+                    response.status_code, response.reason, payload
                 )
             elif response.status_code == 410:
                 raise errors.ElementDeletedApiError(
-                    response.status_code,
-                    response.reason,
-                    payload
+                    response.status_code, response.reason, payload
                 )
             raise errors.ApiError(response.status_code, response.reason, payload)
         if return_value and not response.content:
             raise errors.ResponseEmptyApiError(
-                response.status_code,
-                response.reason,
-                ''
+                response.status_code, response.reason, ""
             )
 
         logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
@@ -97,11 +87,7 @@ class OsmApiSession:
         for i in it.count(1):
             try:
                 return self._http_request(
-                    cmd,
-                    path,
-                    auth,
-                    send,
-                    return_value=return_value
+                    cmd, path, auth, send, return_value=return_value
                 )
             except errors.ApiError as e:
                 if e.status >= 500:
@@ -134,26 +120,24 @@ class OsmApiSession:
             session = requests.Session()
 
         session.auth = self._auth
-        session.headers.update({
-            'user-agent': self._created_by
-        })
+        session.headers.update({"user-agent": self._created_by})
         return session
 
     def _sleep(self):
         time.sleep(5)
 
     def _get(self, path):
-        return self._http('GET', path, False, None)
+        return self._http("GET", path, False, None)
 
     def _put(self, path, data, return_value=True):
-        return self._http('PUT', path, True, data, return_value=return_value)
+        return self._http("PUT", path, True, data, return_value=return_value)
 
     def _post(self, path, data, optionalAuth=False, forceAuth=False):
         # the Notes API allows certain POSTs by non-authenticated users
-        auth = (optionalAuth and self._auth)
+        auth = optionalAuth and self._auth
         if forceAuth:
             auth = True
-        return self._http('POST', path, auth, data)
+        return self._http("POST", path, auth, data)
 
     def _delete(self, path, data):
-        return self._http('DELETE', path, True, data)
+        return self._http("DELETE", path, True, data)

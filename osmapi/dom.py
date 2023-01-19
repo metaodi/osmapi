@@ -100,23 +100,23 @@ def _DomGetAttributes(DomElement):
     """
 
     def is_true(v):
-        return (v == "true")
+        return v == "true"
 
     attribute_mapping = {
-        'uid': int,
-        'changeset': int,
-        'version': int,
-        'id': int,
-        'lat': float,
-        'lon': float,
-        'open': is_true,
-        'visible': is_true,
-        'ref': int,
-        'comments_count': int,
-        'timestamp': _ParseDate,
-        'created_at': _ParseDate,
-        'closed_at': _ParseDate,
-        'date': _ParseDate,
+        "uid": int,
+        "changeset": int,
+        "version": int,
+        "id": int,
+        "lat": float,
+        "lon": float,
+        "open": is_true,
+        "visible": is_true,
+        "ref": int,
+        "comments_count": int,
+        "timestamp": _ParseDate,
+        "created_at": _ParseDate,
+        "closed_at": _ParseDate,
+        "date": _ParseDate,
     }
     result = {}
     for k, v in DomElement.attributes.items():
@@ -158,7 +158,7 @@ def _DomGetDiscussion(DomElement):
         discussion = DomElement.getElementsByTagName("discussion")[0]
         for t in discussion.getElementsByTagName("comment"):
             comment = _DomGetAttributes(t)
-            comment['text'] = xmlbuilder._GetXmlValue(t, "text")
+            comment["text"] = xmlbuilder._GetXmlValue(t, "text")
             result.append(comment)
     except IndexError:
         pass
@@ -172,12 +172,12 @@ def _DomGetComments(DomElement):
     result = []
     for t in DomElement.getElementsByTagName("comment"):
         comment = {}
-        comment['date'] = _ParseDate(xmlbuilder._GetXmlValue(t, "date"))
-        comment['action'] = xmlbuilder._GetXmlValue(t, "action")
-        comment['text'] = xmlbuilder._GetXmlValue(t, "text")
-        comment['html'] = xmlbuilder._GetXmlValue(t, "html")
-        comment['uid'] = xmlbuilder._GetXmlValue(t, "uid")
-        comment['user'] = xmlbuilder._GetXmlValue(t, "user")
+        comment["date"] = _ParseDate(xmlbuilder._GetXmlValue(t, "date"))
+        comment["action"] = xmlbuilder._GetXmlValue(t, "action")
+        comment["text"] = xmlbuilder._GetXmlValue(t, "text")
+        comment["html"] = xmlbuilder._GetXmlValue(t, "html")
+        comment["uid"] = xmlbuilder._GetXmlValue(t, "uid")
+        comment["user"] = xmlbuilder._GetXmlValue(t, "user")
         result.append(comment)
     return result
 

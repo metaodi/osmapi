@@ -12,17 +12,16 @@ def xmltosorteddict(xml):
 
 def test_Changeset_contextmanager(auth_api, add_response):
     # Setup mock
-    resp = add_response(PUT, '/changeset/create', filename='test_Changeset_create.xml')
-    resp = add_response(PUT, '/node/create', filename='test_Changeset_create_node.xml')
-    resp = add_response(PUT, '/changeset/1414/close', filename='test_Changeset_close.xml')
+    resp = add_response(PUT, "/changeset/create", filename="test_Changeset_create.xml")
+    resp = add_response(PUT, "/node/create", filename="test_Changeset_create_node.xml")
+    resp = add_response(
+        PUT, "/changeset/1414/close", filename="test_Changeset_close.xml"
+    )
 
     test_node = {
-        'lat': 47.123,
-        'lon': 8.555,
-        'tag': {
-            'amenity': 'place_of_worship',
-            'religion': 'pastafarian'
-        }
+        "lat": 47.123,
+        "lon": 8.555,
+        "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
     }
 
     # use context manager
@@ -31,7 +30,7 @@ def test_Changeset_contextmanager(auth_api, add_response):
 
         # add test node
         node = auth_api.NodeCreate(test_node)
-        assert node['id'] == 7272
+        assert node["id"] == 7272
 
     # check requests
     assert len(resp.calls) == 3
@@ -39,26 +38,26 @@ def test_Changeset_contextmanager(auth_api, add_response):
 
 def test_ChangesetGet(api, add_response):
     # Setup mock
-    add_response(GET, '/changeset/123')
+    add_response(GET, "/changeset/123")
 
     # Call
     result = api.ChangesetGet(123)
 
     test_changeset = {
-        'id': 123,
-        'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
-        'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
-        'discussion': [],
-        'max_lat': '52.4710193',
-        'max_lon': '-1.4831815',
-        'min_lat': '45.9667901',
-        'min_lon': '-1.4998534',
-        'open': False,
-        'user': 'randomjunk',
-        'uid': 3,
-        'tag': {
-            'comment': 'correct node bug',
-            'created_by': 'Potlatch 1.2a',
+        "id": 123,
+        "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
+        "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
+        "discussion": [],
+        "max_lat": "52.4710193",
+        "max_lon": "-1.4831815",
+        "min_lat": "45.9667901",
+        "min_lon": "-1.4998534",
+        "open": False,
+        "user": "randomjunk",
+        "uid": 3,
+        "tag": {
+            "comment": "correct node bug",
+            "created_by": "Potlatch 1.2a",
         },
     }
     assert result == test_changeset
@@ -66,22 +65,22 @@ def test_ChangesetGet(api, add_response):
 
 def test_ChangesetUpdate(auth_api, add_response):
     # Setup mock
-    resp = add_response(PUT, '/changeset/create', filename='test_ChangesetCreate.xml')
-    resp = add_response(PUT, '/changeset/4321', filename='test_ChangesetUpdate.xml')
+    resp = add_response(PUT, "/changeset/create", filename="test_ChangesetCreate.xml")
+    resp = add_response(PUT, "/changeset/4321", filename="test_ChangesetUpdate.xml")
 
     # Call
     result = auth_api.ChangesetCreate()
     assert result == 4321
 
-    result = auth_api.ChangesetUpdate({'test': 'foobar'})
+    result = auth_api.ChangesetUpdate({"test": "foobar"})
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
         b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
         b'    <tag k="created_by" v="osmapi/3.1.0"/>\n'
-        b'  </changeset>\n'
-        b'</osm>\n'
+        b"  </changeset>\n"
+        b"</osm>\n"
     )
     assert xmltosorteddict(resp.calls[1].request.body) == changeset_xml
     assert result == 4321
@@ -89,27 +88,22 @@ def test_ChangesetUpdate(auth_api, add_response):
 
 def test_ChangesetUpdate_with_created_by(auth_api, add_response):
     # Setup mock
-    resp = add_response(PUT, '/changeset/create', filename='test_ChangesetCreate.xml')
-    resp = add_response(PUT, '/changeset/4321', filename='test_ChangesetUpdate.xml')
+    resp = add_response(PUT, "/changeset/create", filename="test_ChangesetCreate.xml")
+    resp = add_response(PUT, "/changeset/4321", filename="test_ChangesetUpdate.xml")
 
     # Call
     result = auth_api.ChangesetCreate()
     assert result == 4321
 
-    result = auth_api.ChangesetUpdate(
-        {
-            'test': 'foobar',
-            'created_by': 'MyTestOSMApp'
-        }
-    )
+    result = auth_api.ChangesetUpdate({"test": "foobar", "created_by": "MyTestOSMApp"})
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
         b'<osm version="0.6" generator="osmapi/3.1.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
         b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
-        b'  </changeset>\n'
-        b'</osm>\n'
+        b"  </changeset>\n"
+        b"</osm>\n"
     )
     assert xmltosorteddict(resp.calls[1].request.body) == changeset_xml
     assert result == 4321
@@ -117,17 +111,13 @@ def test_ChangesetUpdate_with_created_by(auth_api, add_response):
 
 def test_ChangesetUpdate_wo_changeset(auth_api):
     with pytest.raises(osmapi.NoChangesetOpenError) as execinfo:
-        auth_api.ChangesetUpdate({'test': 'foobar'})
-    assert str(execinfo.value) == 'No changeset currently opened'
+        auth_api.ChangesetUpdate({"test": "foobar"})
+    assert str(execinfo.value) == "No changeset currently opened"
 
 
 def test_ChangesetCreate(auth_api, add_response):
-    resp = add_response(PUT, '/changeset/create')
-    result = auth_api.ChangesetCreate(
-        {
-            'foobar': 'A new test changeset'
-        }
-    )
+    resp = add_response(PUT, "/changeset/create")
+    result = auth_api.ChangesetCreate({"foobar": "A new test changeset"})
     assert result == 4321
 
     changeset_xml = xmltosorteddict(
@@ -136,19 +126,19 @@ def test_ChangesetCreate(auth_api, add_response):
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
         b'    <tag k="created_by" v="osmapi/3.1.0"/>\n'
-        b'  </changeset>\n'
-        b'</osm>\n'
+        b"  </changeset>\n"
+        b"</osm>\n"
     )
     assert xmltosorteddict(resp.calls[0].request.body) == changeset_xml
 
 
 def test_ChangesetCreate_with_created_by(auth_api, add_response):
-    resp = add_response(PUT, '/changeset/create')
+    resp = add_response(PUT, "/changeset/create")
 
     result = auth_api.ChangesetCreate(
         {
-            'foobar': 'A new test changeset',
-            'created_by': 'CoolTestApp',
+            "foobar": "A new test changeset",
+            "created_by": "CoolTestApp",
         }
     )
     assert result == 1234
@@ -159,85 +149,84 @@ def test_ChangesetCreate_with_created_by(auth_api, add_response):
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
         b'    <tag k="created_by" v="CoolTestApp"/>\n'
-        b'  </changeset>\n'
-        b'</osm>\n'
+        b"  </changeset>\n"
+        b"</osm>\n"
     )
     assert xmltosorteddict(resp.calls[0].request.body) == changeset_xml
 
 
 def test_ChangesetCreate_with_open_changeset(auth_api, add_response):
-    add_response(PUT, '/changeset/create')
+    add_response(PUT, "/changeset/create")
 
     auth_api.ChangesetCreate(
         {
-            'test': 'an already open changeset',
+            "test": "an already open changeset",
         }
     )
 
     with pytest.raises(osmapi.ChangesetAlreadyOpenError) as execinfo:
-        auth_api.ChangesetCreate({'test': 'foobar'})
-    assert str(execinfo.value) == 'Changeset already opened'
+        auth_api.ChangesetCreate({"test": "foobar"})
+    assert str(execinfo.value) == "Changeset already opened"
 
 
 def test_ChangesetCreate_with_prod_api_and_test_comment(prod_api):
     with pytest.raises(osmapi.OsmApiError) as execinfo:
         prod_api.ChangesetCreate(
             {
-                'comment': 'My first test',
+                "comment": "My first test",
             }
         )
-    assert str(execinfo.value) == 'DO NOT CREATE test changesets on the production server'
+    assert (
+        str(execinfo.value) == "DO NOT CREATE test changesets on the production server"
+    )
 
 
 def test_ChangesetClose(auth_api, add_response):
     # setup mock
-    resp = add_response(PUT, '/changeset/create', filename='test_Changeset_create.xml')
-    resp = add_response(PUT, '/changeset/1414/close')
+    resp = add_response(PUT, "/changeset/create", filename="test_Changeset_create.xml")
+    resp = add_response(PUT, "/changeset/1414/close")
 
     # Call
     auth_api.ChangesetCreate()
     auth_api.ChangesetClose()
 
-    assert '/api/0.6/changeset/1414/close' in resp.calls[1].request.url
+    assert "/api/0.6/changeset/1414/close" in resp.calls[1].request.url
 
 
 def test_ChangesetClose_with_no_changeset(auth_api):
     with pytest.raises(osmapi.NoChangesetOpenError) as execinfo:
         auth_api.ChangesetClose()
-    assert str(execinfo.value) == 'No changeset currently opened'
+    assert str(execinfo.value) == "No changeset currently opened"
 
 
 def test_ChangesetUpload_create_node(auth_api, add_response):
     # Setup
-    resp = add_response(PUT, '/changeset/create', body='4444')
-    resp = add_response(POST, '/changeset/4444/upload')
+    resp = add_response(PUT, "/changeset/create", body="4444")
+    resp = add_response(POST, "/changeset/4444/upload")
 
     changesdata = [
         {
-            'type': 'node',
-            'action': 'create',
-            'data': {
-                'lat': 47.123,
-                'lon': 8.555,
-                'tag': {
-                    'amenity': 'place_of_worship',
-                    'religion': 'pastafarian'
-                }
-            }
+            "type": "node",
+            "action": "create",
+            "data": {
+                "lat": 47.123,
+                "lon": 8.555,
+                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+            },
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
         b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
-        b'<create>\n'
+        b"<create>\n"
         b'  <node lat="47.123" lon="8.555" visible="true" '
         b'changeset="4444">\n'
         b'    <tag k="amenity" v="place_of_worship"/>\n'
         b'    <tag k="religion" v="pastafarian"/>\n'
-        b'  </node>\n'
-        b'</create>\n'
-        b'</osmChange>'
+        b"  </node>\n"
+        b"</create>\n"
+        b"</osmChange>"
     )
 
     # Call
@@ -246,30 +235,30 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
 
     # Assert
     assert xmltosorteddict(resp.calls[1].request.body) == upload_xml
-    assert result[0]['type'] == changesdata[0]['type']
-    assert result[0]['action'] == changesdata[0]['action']
+    assert result[0]["type"] == changesdata[0]["type"]
+    assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]['data']
-    assert data['lat'] == changesdata[0]['data']['lat']
-    assert data['lon'] == changesdata[0]['data']['lon']
-    assert data['tag'] == changesdata[0]['data']['tag']
-    assert data['id'] == 4295832900
-    assert result[0]['data']['version'] == 1
+    data = result[0]["data"]
+    assert data["lat"] == changesdata[0]["data"]["lat"]
+    assert data["lon"] == changesdata[0]["data"]["lon"]
+    assert data["tag"] == changesdata[0]["data"]["tag"]
+    assert data["id"] == 4295832900
+    assert result[0]["data"]["version"] == 1
 
 
 def test_ChangesetUpload_modify_way(auth_api, add_response):
     # setup mock
-    resp = add_response(PUT, '/changeset/create', body='4444')
-    resp = add_response(POST, '/changeset/4444/upload')
+    resp = add_response(PUT, "/changeset/create", body="4444")
+    resp = add_response(POST, "/changeset/4444/upload")
 
     changesdata = [
         {
-            'type': 'way',
-            'action': 'modify',
-            'data': {
-                'id': 4294967296,
-                'version': 2,
-                'nd': [
+            "type": "way",
+            "action": "modify",
+            "data": {
+                "id": 4294967296,
+                "version": 2,
+                "nd": [
                     4295832773,
                     4295832773,
                     4294967304,
@@ -285,20 +274,17 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
                     4294967306,
                     7855737,
                     4294967297,
-                    4294967299
+                    4294967299,
                 ],
-                'tag': {
-                    'highway': 'secondary',
-                    'name': 'Stansted Road'
-                }
-            }
+                "tag": {"highway": "secondary", "name": "Stansted Road"},
+            },
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
         b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
-        b'<modify>\n'
+        b"<modify>\n"
         b'  <way id="4294967296" version="2" visible="true" '
         b'changeset="4444">\n'
         b'    <tag k="highway" v="secondary"/>\n'
@@ -319,9 +305,9 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
         b'    <nd ref="7855737"/>\n'
         b'    <nd ref="4294967297"/>\n'
         b'    <nd ref="4294967299"/>\n'
-        b'  </way>\n'
-        b'</modify>\n'
-        b'</osmChange>'
+        b"  </way>\n"
+        b"</modify>\n"
+        b"</osmChange>"
     )
 
     # Call
@@ -331,53 +317,45 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
     # Assert
     assert xmltosorteddict(resp.calls[1].request.body) == upload_xml
 
-    assert result[0]['type'] == changesdata[0]['type']
-    assert result[0]['action'] == changesdata[0]['action']
+    assert result[0]["type"] == changesdata[0]["type"]
+    assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]['data']
-    assert data['nd'] == changesdata[0]['data']['nd']
-    assert data['tag'] == changesdata[0]['data']['tag']
-    assert data['id'] == 4294967296
-    assert data['version'] == 3
+    data = result[0]["data"]
+    assert data["nd"] == changesdata[0]["data"]["nd"]
+    assert data["tag"] == changesdata[0]["data"]["tag"]
+    assert data["id"] == 4294967296
+    assert data["version"] == 3
 
 
 def test_ChangesetUpload_delete_relation(auth_api, add_response):
     # setup mock
-    resp = add_response(PUT, '/changeset/create', body='4444')
-    resp = add_response(POST, '/changeset/4444/upload')
+    resp = add_response(PUT, "/changeset/create", body="4444")
+    resp = add_response(POST, "/changeset/4444/upload")
 
     changesdata = [
         {
-            'type': 'relation',
-            'action': 'delete',
-            'data': {
-                'id': 676,
-                'version': 2,
-                'member': [
-                    {
-                        'ref': 4799,
-                        'role': 'outer',
-                        'type': 'way'
-                    },
-                    {
-                        'ref': 9391,
-                        'role': 'outer',
-                        'type': 'way'
-                    },
+            "type": "relation",
+            "action": "delete",
+            "data": {
+                "id": 676,
+                "version": 2,
+                "member": [
+                    {"ref": 4799, "role": "outer", "type": "way"},
+                    {"ref": 9391, "role": "outer", "type": "way"},
                 ],
-                'tag': {
-                    'admin_level': '9',
-                    'boundary': 'administrative',
-                    'type': 'multipolygon'
-                }
-            }
+                "tag": {
+                    "admin_level": "9",
+                    "boundary": "administrative",
+                    "type": "multipolygon",
+                },
+            },
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
         b'<osmChange version="0.6" generator="osmapi/3.1.0">\n'
-        b'<delete>\n'
+        b"<delete>\n"
         b'  <relation id="676" version="2" visible="true" '
         b'changeset="4444">\n'
         b'    <tag k="admin_level" v="9"/>\n'
@@ -385,9 +363,9 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
         b'    <tag k="type" v="multipolygon"/>\n'
         b'    <member type="way" ref="4799" role="outer"/>\n'
         b'    <member type="way" ref="9391" role="outer"/>\n'
-        b'  </relation>\n'
-        b'</delete>\n'
-        b'</osmChange>'
+        b"  </relation>\n"
+        b"</delete>\n"
+        b"</osmChange>"
     )
 
     # Call
@@ -396,46 +374,38 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
 
     # Assert
     assert xmltosorteddict(resp.calls[1].request.body) == upload_xml
-    assert result[0]['type'] == changesdata[0]['type']
-    assert result[0]['action'] == changesdata[0]['action']
+    assert result[0]["type"] == changesdata[0]["type"]
+    assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]['data']
-    assert data['member'], changesdata[0]['data']['member']
-    assert data['tag'] == changesdata[0]['data']['tag']
-    assert data['id'] == 676
-    assert 'version' not in data
+    data = result[0]["data"]
+    assert data["member"], changesdata[0]["data"]["member"]
+    assert data["tag"] == changesdata[0]["data"]["tag"]
+    assert data["id"] == 676
+    assert "version" not in data
 
 
 def test_ChangesetUpload_invalid_response(auth_api, add_response):
     # setup mock
-    add_response(PUT, '/changeset/create', body='4444')
-    add_response(POST, '/changeset/4444/upload', body='4444')
+    add_response(PUT, "/changeset/create", body="4444")
+    add_response(POST, "/changeset/4444/upload", body="4444")
 
     changesdata = [
         {
-            'type': 'relation',
-            'action': 'delete',
-            'data': {
-                'id': 676,
-                'version': 2,
-                'member': [
-                    {
-                        'ref': 4799,
-                        'role': 'outer',
-                        'type': 'way'
-                    },
-                    {
-                        'ref': 9391,
-                        'role': 'outer',
-                        'type': 'way'
-                    },
+            "type": "relation",
+            "action": "delete",
+            "data": {
+                "id": 676,
+                "version": 2,
+                "member": [
+                    {"ref": 4799, "role": "outer", "type": "way"},
+                    {"ref": 9391, "role": "outer", "type": "way"},
                 ],
-                'tag': {
-                    'admin_level': '9',
-                    'boundary': 'administrative',
-                    'type': 'multipolygon'
-                }
-            }
+                "tag": {
+                    "admin_level": "9",
+                    "boundary": "administrative",
+                    "type": "multipolygon",
+                },
+            },
         }
     ]
 
@@ -443,22 +413,19 @@ def test_ChangesetUpload_invalid_response(auth_api, add_response):
     auth_api.ChangesetCreate()
     with pytest.raises(osmapi.XmlResponseInvalidError) as execinfo:
         auth_api.ChangesetUpload(changesdata)
-    assert 'The XML response from the OSM API is invalid' in str(execinfo.value)
+    assert "The XML response from the OSM API is invalid" in str(execinfo.value)
 
 
 def test_ChangesetUpload_no_auth(api):
     changesdata = [
         {
-            'type': 'node',
-            'action': 'create',
-            'data': {
-                'lat': 47.123,
-                'lon': 8.555,
-                'tag': {
-                    'amenity': 'place_of_worship',
-                    'religion': 'pastafarian'
-                }
-            }
+            "type": "node",
+            "action": "create",
+            "data": {
+                "lat": 47.123,
+                "lon": 8.555,
+                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+            },
         }
     ]
 
@@ -469,7 +436,7 @@ def test_ChangesetUpload_no_auth(api):
 
 def test_ChangesetDownload(api, add_response):
     # Setup mock
-    add_response(GET, '/changeset/23123/download')
+    add_response(GET, "/changeset/23123/download")
 
     # Call
     result = api.ChangesetDownload(23123)
@@ -478,35 +445,33 @@ def test_ChangesetDownload(api, add_response):
     assert len(result) == 16
     assert result[1] == (
         {
-            'action': 'create',
-            'type': 'node',
-            'data': {
-                'changeset': 23123,
-                'id': 4295668171,
-                'lat': 46.4909781,
-                'lon': 11.2743295,
-                'tag': {
-                    'highway': 'traffic_signals'
-                },
-                'timestamp': datetime.datetime(2013, 5, 14, 10, 33, 4),
-                'uid': 1178,
-                'user': 'tyrTester06',
-                'version': 1,
-                'visible': True
-            }
+            "action": "create",
+            "type": "node",
+            "data": {
+                "changeset": 23123,
+                "id": 4295668171,
+                "lat": 46.4909781,
+                "lon": 11.2743295,
+                "tag": {"highway": "traffic_signals"},
+                "timestamp": datetime.datetime(2013, 5, 14, 10, 33, 4),
+                "uid": 1178,
+                "user": "tyrTester06",
+                "version": 1,
+                "visible": True,
+            },
         }
     )
 
 
 def test_ChangesetDownload_invalid_response(api, add_response):
-    add_response(GET, '/changeset/23123/download')
+    add_response(GET, "/changeset/23123/download")
     with pytest.raises(osmapi.XmlResponseInvalidError) as execinfo:
         api.ChangesetDownload(23123)
-    assert 'The XML response from the OSM API is invalid' in str(execinfo.value)
+    assert "The XML response from the OSM API is invalid" in str(execinfo.value)
 
 
 def test_ChangesetDownloadContainingUnicode(api, add_response):
-    add_response(GET, '/changeset/37393499/download')
+    add_response(GET, "/changeset/37393499/download")
 
     # This changeset contains unicode tag values
     # Note that the fixture data has been reduced from the
@@ -516,171 +481,166 @@ def test_ChangesetDownloadContainingUnicode(api, add_response):
     assert len(result) == 2
     assert result[1] == (
         {
-            'action': 'create',
-            'type': 'way',
-            'data': {
-                'changeset': 37393499,
-                'id': 399491497,
-                'nd': [4022271571, 4022271567, 4022271565],
-                'tag': {'highway': 'service',
-                        # UTF-8 encoded 'LATIN SMALL LETTER O WITH STROKE'
-                        # Aka. 0xf8 in latin-1/ISO 8859-1
-                        'name': b'S\xc3\xb8nderskovvej'.decode('utf-8'),
-                        'service': 'driveway'},
-                'timestamp': datetime.datetime(2016, 2, 23, 16, 55, 35),
-                'uid': 328556,
-                'user': 'InternationalUser',
-                'version': 1,
-                'visible': True
-            }
+            "action": "create",
+            "type": "way",
+            "data": {
+                "changeset": 37393499,
+                "id": 399491497,
+                "nd": [4022271571, 4022271567, 4022271565],
+                "tag": {
+                    "highway": "service",
+                    # UTF-8 encoded 'LATIN SMALL LETTER O WITH STROKE'
+                    # Aka. 0xf8 in latin-1/ISO 8859-1
+                    "name": b"S\xc3\xb8nderskovvej".decode("utf-8"),
+                    "service": "driveway",
+                },
+                "timestamp": datetime.datetime(2016, 2, 23, 16, 55, 35),
+                "uid": 328556,
+                "user": "InternationalUser",
+                "version": 1,
+                "visible": True,
+            },
         }
     )
 
 
 def test_ChangesetsGet(api, add_response):
-    resp = add_response(GET, '/changesets')
+    resp = add_response(GET, "/changesets")
 
-    result = api.ChangesetsGet(
-        only_closed=True,
-        username='metaodi'
-    )
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
 
-    assert resp.calls[0].request.params == {'display_name': 'metaodi', 'closed': '1'}
+    assert resp.calls[0].request.params == {"display_name": "metaodi", "closed": "1"}
     assert len(result) == 10
-    assert result[41417] == ({
-        'closed_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
-        'created_at': datetime.datetime(2014, 4, 29, 20, 25, 1),
-        'id': 41417,
-        'discussion': [],
-        'max_lat': '58.8997467',
-        'max_lon': '22.7364427',
-        'min_lat': '58.8501594',
-        'min_lon': '22.6984333',
-        'open': False,
-        'tag': {
-            'comment': 'Test delete of relation',
-            'created_by': 'iD 1.3.9',
-            'imagery_used': 'Bing'
-        },
-        'uid': 1841,
-        'user': 'metaodi'
-    })
+    assert result[41417] == (
+        {
+            "closed_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
+            "created_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
+            "id": 41417,
+            "discussion": [],
+            "max_lat": "58.8997467",
+            "max_lon": "22.7364427",
+            "min_lat": "58.8501594",
+            "min_lon": "22.6984333",
+            "open": False,
+            "tag": {
+                "comment": "Test delete of relation",
+                "created_by": "iD 1.3.9",
+                "imagery_used": "Bing",
+            },
+            "uid": 1841,
+            "user": "metaodi",
+        }
+    )
 
 
 def test_ChangesetGetWithComment(api, add_response):
-    resp = add_response(GET, '/changeset/52924')
+    resp = add_response(GET, "/changeset/52924")
 
     result = api.ChangesetGet(52924, include_discussion=True)
 
-    assert resp.calls[0].request.params == {'include_discussion': 'true'}
+    assert resp.calls[0].request.params == {"include_discussion": "true"}
     assert result == {
-        'id': 52924,
-        'closed_at': datetime.datetime(2015, 1, 1, 14, 54, 2),
-        'created_at': datetime.datetime(2015, 1, 1, 14, 54, 1),
-        'comments_count': 3,
-        'max_lat': '58.3369242',
-        'max_lon': '25.8829107',
-        'min_lat': '58.336813',
-        'min_lon': '25.8823273',
-        'discussion': [
+        "id": 52924,
+        "closed_at": datetime.datetime(2015, 1, 1, 14, 54, 2),
+        "created_at": datetime.datetime(2015, 1, 1, 14, 54, 1),
+        "comments_count": 3,
+        "max_lat": "58.3369242",
+        "max_lon": "25.8829107",
+        "min_lat": "58.336813",
+        "min_lon": "25.8823273",
+        "discussion": [
             {
-                'date':  datetime.datetime(2015, 1, 1, 18, 56, 48),
-                'text': 'test',
-                'uid': 1841,
-                'user': 'metaodi',
+                "date": datetime.datetime(2015, 1, 1, 18, 56, 48),
+                "text": "test",
+                "uid": 1841,
+                "user": "metaodi",
             },
             {
-                'date':  datetime.datetime(2015, 1, 1, 18, 58, 3),
-                'text': 'another comment',
-                'uid': 1841,
-                'user': 'metaodi',
+                "date": datetime.datetime(2015, 1, 1, 18, 58, 3),
+                "text": "another comment",
+                "uid": 1841,
+                "user": "metaodi",
             },
             {
-                'date':  datetime.datetime(2015, 1, 1, 19, 16, 5),
-                'text': 'hello',
-                'uid': 1841,
-                'user': 'metaodi',
+                "date": datetime.datetime(2015, 1, 1, 19, 16, 5),
+                "text": "hello",
+                "uid": 1841,
+                "user": "metaodi",
             },
         ],
-        'open': False,
-        'user': 'metaodi',
-        'uid': 1841,
-        'tag': {
-            'comment': 'My test',
-            'created_by': 'osmapi/0.4.1',
+        "open": False,
+        "user": "metaodi",
+        "uid": 1841,
+        "tag": {
+            "comment": "My test",
+            "created_by": "osmapi/0.4.1",
         },
     }
 
 
 def test_ChangesetComment(auth_api, add_response):
-    resp = add_response(POST, '/changeset/123/comment')
+    resp = add_response(POST, "/changeset/123/comment")
 
-    result = auth_api.ChangesetComment(
-        123,
-        comment="test comment"
-    )
+    result = auth_api.ChangesetComment(123, comment="test comment")
 
     assert resp.calls[0].request.body == "text=test+comment"
     assert result == {
-        'id': 123,
-        'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
-        'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
-        'discussion': [],
-        'max_lat': '52.4710193',
-        'max_lon': '-1.4831815',
-        'min_lat': '45.9667901',
-        'min_lon': '-1.4998534',
-        'open': False,
-        'user': 'randomjunk',
-        'uid': 3,
-        'tag': {
-            'comment': 'correct node bug',
-            'created_by': 'Potlatch 1.2a',
+        "id": 123,
+        "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
+        "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
+        "discussion": [],
+        "max_lat": "52.4710193",
+        "max_lon": "-1.4831815",
+        "min_lat": "45.9667901",
+        "min_lon": "-1.4998534",
+        "open": False,
+        "user": "randomjunk",
+        "uid": 3,
+        "tag": {
+            "comment": "correct node bug",
+            "created_by": "Potlatch 1.2a",
         },
     }
 
 
 def test_ChangesetComment_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
-        api.ChangesetComment(
-            123,
-            comment="test comment"
-        )
+        api.ChangesetComment(123, comment="test comment")
     assert str(execinfo.value) == "Username/Password missing"
 
 
 def test_ChangesetSubscribe(auth_api, add_response):
-    add_response(POST, '/changeset/123/subscribe')
+    add_response(POST, "/changeset/123/subscribe")
 
     result = auth_api.ChangesetSubscribe(123)
 
     assert result == {
-        'id': 123,
-        'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
-        'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
-        'discussion': [],
-        'max_lat': '52.4710193',
-        'max_lon': '-1.4831815',
-        'min_lat': '45.9667901',
-        'min_lon': '-1.4998534',
-        'open': False,
-        'user': 'randomjunk',
-        'uid': 3,
-        'tag': {
-            'comment': 'correct node bug',
-            'created_by': 'Potlatch 1.2a',
+        "id": 123,
+        "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
+        "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
+        "discussion": [],
+        "max_lat": "52.4710193",
+        "max_lon": "-1.4831815",
+        "min_lat": "45.9667901",
+        "min_lon": "-1.4998534",
+        "open": False,
+        "user": "randomjunk",
+        "uid": 3,
+        "tag": {
+            "comment": "correct node bug",
+            "created_by": "Potlatch 1.2a",
         },
     }
 
 
 def test_ChangesetSubscribeWhenAlreadySubscribed(auth_api, add_response):
-    add_response(POST, '/changeset/52924/subscribe', status=409)
+    add_response(POST, "/changeset/52924/subscribe", status=409)
 
     with pytest.raises(osmapi.AlreadySubscribedApiError) as execinfo:
         auth_api.ChangesetSubscribe(52924)
 
     assert execinfo.value.payload == b"You are already subscribed to changeset 52924."
-    assert execinfo.value.reason == 'Conflict'
+    assert execinfo.value.reason == "Conflict"
     assert execinfo.value.status == 409
 
 
@@ -691,37 +651,37 @@ def test_ChangesetSubscribe_no_auth(api):
 
 
 def test_ChangesetUnsubscribe(auth_api, add_response):
-    add_response(POST, '/changeset/123/unsubscribe')
+    add_response(POST, "/changeset/123/unsubscribe")
 
     result = auth_api.ChangesetUnsubscribe(123)
 
     assert result == {
-        'id': 123,
-        'closed_at': datetime.datetime(2009, 9, 7, 22, 57, 37),
-        'created_at': datetime.datetime(2009, 9, 7, 21, 57, 36),
-        'discussion': [],
-        'max_lat': '52.4710193',
-        'max_lon': '-1.4831815',
-        'min_lat': '45.9667901',
-        'min_lon': '-1.4998534',
-        'open': False,
-        'user': 'randomjunk',
-        'uid': 3,
-        'tag': {
-            'comment': 'correct node bug',
-            'created_by': 'Potlatch 1.2a',
+        "id": 123,
+        "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
+        "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
+        "discussion": [],
+        "max_lat": "52.4710193",
+        "max_lon": "-1.4831815",
+        "min_lat": "45.9667901",
+        "min_lon": "-1.4998534",
+        "open": False,
+        "user": "randomjunk",
+        "uid": 3,
+        "tag": {
+            "comment": "correct node bug",
+            "created_by": "Potlatch 1.2a",
         },
     }
 
 
 def test_ChangesetUnsubscribeWhenNotSubscribed(auth_api, add_response):
-    add_response(POST, '/changeset/52924/unsubscribe', status=404)
+    add_response(POST, "/changeset/52924/unsubscribe", status=404)
 
     with pytest.raises(osmapi.NotSubscribedApiError) as execinfo:
         auth_api.ChangesetUnsubscribe(52924)
 
     assert execinfo.value.payload == b"You are not subscribed to changeset 52924."
-    assert execinfo.value.reason == 'Not Found'
+    assert execinfo.value.reason == "Not Found"
     assert execinfo.value.status == 404
 
 

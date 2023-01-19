@@ -47,19 +47,21 @@ class OsmApi:
     """
     Main class of osmapi, instanciate this class to use osmapi
     """
+
     def __init__(
-            self,
-            username=None,
-            password=None,
-            passwordfile=None,
-            appid="",
-            created_by=f"osmapi/{__version__}",
-            api="https://www.openstreetmap.org",
-            changesetauto=False,
-            changesetautotags={},
-            changesetautosize=500,
-            changesetautomulti=1,
-            session=None):
+        self,
+        username=None,
+        password=None,
+        passwordfile=None,
+        appid="",
+        created_by=f"osmapi/{__version__}",
+        api="https://www.openstreetmap.org",
+        changesetauto=False,
+        changesetautotags={},
+        changesetautosize=500,
+        changesetautomulti=1,
+        session=None,
+    ):
         """
         Initialized the OsmApi object.
 
@@ -129,7 +131,7 @@ class OsmApi:
         self._changesetautodata = []
 
         # Get API
-        self._api = api.strip('/')
+        self._api = api.strip("/")
 
         # Get created_by
         if not appid:
@@ -146,17 +148,12 @@ class OsmApi:
         if self._username and self._password:
             auth = (self._username, self._password)
         self._session = http.OsmApiSession(
-            self._api,
-            self._created_by,
-            auth=auth,
-            session=self.http_session
+            self._api, self._created_by, auth=auth, session=self.http_session
         )
 
     def __enter__(self):
         self._session = http.OsmApiSession(
-            self._api,
-            self._created_by,
-            session=self.http_session
+            self._api, self._created_by, session=self.http_session
         )
         return self
 
@@ -1188,7 +1185,7 @@ class OsmApi:
         # upload data to changeset
         autosize = self._changesetautosize
         for i in range(0, len(self._changesetautodata), autosize):
-            chunk = self._changesetautodata[i:i+autosize]
+            chunk = self._changesetautodata[i : i + autosize]
             self.ChangesetUpload(chunk)
         self._changesetautodata = []
         self.ChangesetClose()
@@ -1220,7 +1217,7 @@ class OsmApi:
         will be available in the result.
         """
         path = f"/api/0.6/changeset/{ChangesetId}"
-        if (include_discussion):
+        if include_discussion:
             path += "?include_discussion=true"
         data = self._session._get(path)
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
@@ -1247,7 +1244,7 @@ class OsmApi:
             self._session._put(
                 f"/api/0.6/changeset/{self._CurrentChangesetId}",
                 xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self),
-                return_value=False
+                return_value=False,
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1278,13 +1275,15 @@ class OsmApi:
         # check if someone tries to create a test changeset to PROD
         if (
             self._api == "https://www.openstreetmap.org"
-            and ChangesetTags.get('comment') == "My first test"
+            and ChangesetTags.get("comment") == "My first test"
         ):
-            raise errors.OsmApiError("DO NOT CREATE test changesets on the production server")
+            raise errors.OsmApiError(
+                "DO NOT CREATE test changesets on the production server"
+            )
 
         result = self._session._put(
             "/api/0.6/changeset/create",
-            xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self)
+            xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self),
         )
         self._CurrentChangesetId = int(result)
         return self._CurrentChangesetId
@@ -1310,7 +1309,7 @@ class OsmApi:
             self._session._put(
                 f"/api/0.6/changeset/{self._CurrentChangesetId}/close",
                 "",
-                return_value=False
+                return_value=False,
             )
             CurrentChangesetId = self._CurrentChangesetId
             self._CurrentChangesetId = 0
@@ -1341,17 +1340,14 @@ class OsmApi:
         `OsmApi.ChangesetClosedApiError` is raised.
         """
         data = ""
-        data += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        data += "<osmChange version=\"0.6\" generator=\""
-        data += self._created_by + "\">\n"
+        data += '<?xml version="1.0" encoding="UTF-8"?>\n'
+        data += '<osmChange version="0.6" generator="'
+        data += self._created_by + '">\n'
         for change in ChangesData:
             data += "<" + change["action"] + ">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
             data += xmlbuilder._XmlBuild(
-                change["type"],
-                change["data"],
-                False,
-                data=self
+                change["type"], change["data"], False, data=self
             ).decode("utf-8")
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
@@ -1359,10 +1355,12 @@ class OsmApi:
             data = self._session._post(
                 f"/api/0.6/changeset/{self._CurrentChangesetId}/upload",
                 data.encode("utf-8"),
-                forceAuth=True
+                forceAuth=True,
             )
         except errors.ApiError as e:
-            if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+            if e.status == 409 and re.search(
+                r"The changeset .* was closed at .*", e.payload
+            ):
                 raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
             else:
                 raise
@@ -1401,17 +1399,18 @@ class OsmApi:
         return parser.ParseOsc(data)
 
     def ChangesetsGet(  # noqa
-            self,
-            min_lon=None,
-            min_lat=None,
-            max_lon=None,
-            max_lat=None,
-            userid=None,
-            username=None,
-            closed_after=None,
-            created_before=None,
-            only_open=False,
-            only_closed=False):
+        self,
+        min_lon=None,
+        min_lat=None,
+        max_lon=None,
+        max_lat=None,
+        userid=None,
+        username=None,
+        closed_after=None,
+        created_before=None,
+        only_open=False,
+        only_closed=False,
+    ):
         """
         Returns a dict with the id of the changeset as key
         matching all criteria:
@@ -1487,12 +1486,10 @@ class OsmApi:
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
         """
-        params = urllib.parse.urlencode({'text': comment})
+        params = urllib.parse.urlencode({"text": comment})
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/comment",
-                params,
-                forceAuth=True
+                f"/api/0.6/changeset/{ChangesetId}/comment", params, forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1531,9 +1528,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/subscribe",
-                None,
-                forceAuth=True
+                f"/api/0.6/changeset/{ChangesetId}/subscribe", None, forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1572,9 +1567,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/unsubscribe",
-                None,
-                forceAuth=True
+                f"/api/0.6/changeset/{ChangesetId}/unsubscribe", None, forceAuth=True
             )
         except errors.ElementNotFoundApiError as e:
             raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
@@ -1586,14 +1579,7 @@ class OsmApi:
     # Notes                                          #
     ##################################################
 
-    def NotesGet(
-            self,
-            min_lon,
-            min_lat,
-            max_lon,
-            max_lat,
-            limit=100,
-            closed=7):
+    def NotesGet(self, min_lon, min_lat, max_lon, max_lat, limit=100, closed=7):
         """
         Returns a list of dicts of notes in the specified bounding box:
 
@@ -1742,9 +1728,9 @@ class OsmApi:
         """
         uri = "/api/0.6/notes/search"
         params = {}
-        params['q'] = query
-        params['limit'] = limit
-        params['closed'] = closed
+        params["q"] = query
+        params["limit"] = limit
+        params["closed"] = closed
         uri += "?" + urllib.parse.urlencode(params)
         data = self._session._get(uri)
 
@@ -1759,7 +1745,7 @@ class OsmApi:
         uri = path
         if comment is not None:
             params = {}
-            params['text'] = comment
+            params["text"] = comment
             uri += "?" + urllib.parse.urlencode(params)
         try:
             result = self._session._post(uri, None, optionalAuth=optionalAuth)
@@ -1789,9 +1775,7 @@ class OsmApi:
                 data: {}
             }
         """
-        uri = (
-            f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
-        )
+        uri = f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
         data = self._session._get(uri)
         return parser.ParseOsm(data)
 
@@ -1816,11 +1800,9 @@ class OsmApi:
 
     def _do(self, action, OsmType, OsmData):
         if self._changesetauto:
-            self._changesetautodata.append({
-                "action": action,
-                "type": OsmType,
-                "data": OsmData
-            })
+            self._changesetautodata.append(
+                {"action": action, "type": OsmType, "data": OsmData}
+            )
             self._changesetautoflush()
             return None
         else:
@@ -1836,21 +1818,23 @@ class OsmApi:
         OsmData["changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get("id", -1) > 0:
-                raise errors.OsmTypeAlreadyExistsError(
-                    f"This {OsmType} already exists"
-                )
+                raise errors.OsmTypeAlreadyExistsError(f"This {OsmType} already exists")
             try:
                 result = self._session._put(
                     f"/api/0.6/{OsmType}/create",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
                 )
             except errors.ApiError as e:
-                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                if e.status == 409 and re.search(
+                    r"The changeset .* was closed at .*", e.payload
+                ):
                     raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
                     raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(
+                        e.status, e.reason, e.payload
+                    )
                 else:
                     raise
             OsmData["id"] = int(result.strip())
@@ -1860,16 +1844,20 @@ class OsmApi:
             try:
                 result = self._session._put(
                     f"/api/0.6/{OsmType}/{OsmData['id']}",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
                 )
             except errors.ApiError as e:
                 logger.error(e.reason)
-                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                if e.status == 409 and re.search(
+                    r"The changeset .* was closed at .*", e.payload
+                ):
                     raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
                     raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(
+                        e.status, e.reason, e.payload
+                    )
                 else:
                     raise
             OsmData["version"] = int(result.strip())
@@ -1878,15 +1866,19 @@ class OsmApi:
             try:
                 result = self._session._delete(
                     f"/api/0.6/{OsmType}/{OsmData['id']}",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
+                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
                 )
             except errors.ApiError as e:
-                if e.status == 409 and re.search(r"The changeset .* was closed at .*", e.payload):
+                if e.status == 409 and re.search(
+                    r"The changeset .* was closed at .*", e.payload
+                ):
                     raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
                 elif e.status == 409:
                     raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
                 elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(e.status, e.reason, e.payload)
+                    raise errors.PreconditionFailedApiError(
+                        e.status, e.reason, e.payload
+                    )
                 else:
                     raise
             OsmData["version"] = int(result.strip())
@@ -1895,13 +1887,12 @@ class OsmApi:
 
     def _changesetautoflush(self, force=False):
         autosize = self._changesetautosize
-        while ((len(self._changesetautodata) >= autosize) or
-                (force and self._changesetautodata)):
+        while (len(self._changesetautodata) >= autosize) or (
+            force and self._changesetautodata
+        ):
             if self._changesetautocpt == 0:
                 self.ChangesetCreate(self._changesetautotags)
-            self.ChangesetUpload(
-                self._changesetautodata[:autosize]
-            )
+            self.ChangesetUpload(self._changesetautodata[:autosize])
             self._changesetautodata = self._changesetautodata[autosize:]
             self._changesetautocpt += 1
             if self._changesetautocpt == self._changesetautomulti:

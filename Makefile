@@ -14,7 +14,11 @@ deps:  ## Install dependencies
 docs:  ## Generate documentation
 	python -m pdoc -o docs osmapi
 
+format:  ## Format source code (black codestyle)
+	python -m black osmapi
+
 lint:  ## Linting of source code
+	python -m black --check osmapi
 	python -m flake8 --statistics --show-source .
 
 test:  ## Run tests

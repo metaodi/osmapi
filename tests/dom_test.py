@@ -1,6 +1,6 @@
 from . import osmapi_test
 import osmapi
-import mock
+from unittest import mock
 import datetime
 
 

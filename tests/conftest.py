@@ -1,6 +1,6 @@
 import osmapi
 import pytest
-import mock
+from unittest import mock
 import responses
 import os
 import re

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 The OsmApi module is a wrapper for the OpenStreetMap API.
 As such it provides an easy access to the functionality of the API.
@@ -137,7 +135,7 @@ class OsmApi:
         if not appid:
             self._created_by = created_by
         else:
-            self._created_by = "%s (%s)" % (appid, created_by)
+            self._created_by = "{} ({})".format(appid, created_by)
 
         # Initialisation
         self._CurrentChangesetId = 0
@@ -1450,7 +1448,7 @@ class OsmApi:
         if created_before:
             if not closed_after:
                 closed_after = "1970-01-01T00:00:00Z"
-            params["time"] = "%s,%s" % (closed_after, created_before)
+            params["time"] = "{},{}".format(closed_after, created_before)
         if only_open:
             params["open"] = 1
         if only_closed:
@@ -1870,7 +1868,7 @@ class OsmApi:
         elif action == "modify":
             try:
                 result = self._session._put(
-                    "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
+                    "/api/0.6/{}/{}".format(OsmType, OsmData["id"]),
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:
@@ -1888,7 +1886,7 @@ class OsmApi:
         elif action == "delete":
             try:
                 result = self._session._delete(
-                    "/api/0.6/%s/%s" % (OsmType, OsmData["id"]),
+                    "/api/0.6/{}/{}".format(OsmType, OsmData["id"]),
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:

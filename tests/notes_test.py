@@ -1,4 +1,3 @@
-from __future__ import (unicode_literals, absolute_import)
 from . import osmapi_test
 from datetime import datetime
 import osmapi

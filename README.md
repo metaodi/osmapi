@@ -6,7 +6,7 @@ osmapi
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
-Python wrapper for the OSM API (requires Python >= 3.7)
+Python wrapper for the OSM API (requires Python >= 3.8)
 
 ## Installation
 

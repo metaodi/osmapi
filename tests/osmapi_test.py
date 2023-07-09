@@ -1,6 +1,5 @@
-from __future__ import unicode_literals
 from osmapi import OsmApi
-import mock
+from unittest import mock
 import os
 import unittest
 

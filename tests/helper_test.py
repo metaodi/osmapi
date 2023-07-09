@@ -1,7 +1,6 @@
-from __future__ import (unicode_literals, absolute_import)
 from . import osmapi_test
 import osmapi
-import mock
+from unittest import mock
 import os
 
 __location__ = os.path.realpath(
@@ -14,7 +13,7 @@ __location__ = os.path.realpath(
 
 class TestOsmApiHelper(osmapi_test.TestOsmApi):
     def setUp(self):
-        super(TestOsmApiHelper, self).setUp()
+        super().setUp()
         self.setupMock()
 
     def setupMock(self, status=200):

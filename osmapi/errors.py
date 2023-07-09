@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 class OsmApiError(Exception):
     """
     General OsmApi error class to provide a superclass for all other errors

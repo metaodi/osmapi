@@ -1,7 +1,8 @@
 import datetime
-import time
+import itertools as it
 import logging
 import requests
+import time
 
 from . import errors
 
@@ -93,9 +94,7 @@ class OsmApiSession:
         return response.content
 
     def _http(self, cmd, path, auth, send, return_value=True):  # noqa
-        i = 0
-        while True:
-            i += 1
+        for i in it.count(1):
             try:
                 return self._http_request(
                     cmd,

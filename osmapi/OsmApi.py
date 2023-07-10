@@ -100,7 +100,7 @@ class OsmApi:
         elif passwordfile:
             with open(passwordfile) as f:
                 pass_line = f.readline()
-            self._username = pass_line.split(":")[0].strip()
+            self._username = pass_line.partition(":")[0].strip()
 
         # Get password
         self._password = None
@@ -109,9 +109,9 @@ class OsmApi:
         elif passwordfile:
             with open(passwordfile) as f:
                 for line in f:
-                    line = line.strip().split(":", 1)
-                    if line[0] == self._username:
-                        self._password = line[1]
+                    key, _, value = line.strip().partition(":")
+                    if key == self._username:
+                        self._password = value
 
         # Changest informations
         # auto create and close changesets
@@ -1375,14 +1375,12 @@ class OsmApi:
                 f"The XML response from the OSM API is invalid: {e!r}"
             )
 
-        for i in range(len(ChangesData)):
-            if ChangesData[i]["action"] == "delete":
-                ChangesData[i]["data"].pop("version")
+        for item, change in zip(data, ChangesData):
+            if change["action"] == "delete":
+                change["data"].pop("version")
             else:
-                new_id = int(data[i].getAttribute("new_id"))
-                ChangesData[i]["data"]["id"] = new_id
-                new_version = int(data[i].getAttribute("new_version"))
-                ChangesData[i]["data"]["version"] = new_version
+                change["data"]["id"] = int(item.getAttribute("new_id"))
+                change["data"]["version"] = int(item.getAttribute("new_version"))
         return ChangesData
 
     def ChangesetDownload(self, ChangesetId):

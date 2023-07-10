@@ -1,3 +1,4 @@
+import datetime
 import time
 import logging
 import requests
@@ -53,11 +54,7 @@ class OsmApiSession:
         If the response status code indicates an error,
         `OsmApi.ApiError` is raised.
         """
-        msg = (
-            "%s %s %s"
-            % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-        )
-        logger.debug(msg)
+        logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
 
         # Add API base URL to path
         path = self._api + path
@@ -92,11 +89,7 @@ class OsmApiSession:
                 ''
             )
 
-        msg = (
-            "%s %s %s"
-            % (time.strftime("%Y-%m-%d %H:%M:%S"), method, path)
-        )
-        logger.debug(msg)
+        logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
         return response.content
 
     def _http(self, cmd, path, auth, send, return_value=True):  # noqa
@@ -126,7 +119,7 @@ class OsmApiSession:
                     if isinstance(e, errors.OsmApiError):
                         raise
                     raise errors.MaximumRetryLimitReachedError(
-                        "Give up after %s retries" % i
+                        f"Give up after {i} retries"
                     )
                 if i != 1:
                     self._sleep()

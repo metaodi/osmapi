@@ -23,11 +23,11 @@ def OsmResponseToDom(response, tag, single=False, allow_empty=False):
         if allow_empty:
             return []
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
     except (xml.parsers.expat.ExpatError) as e:
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
 
     if single:

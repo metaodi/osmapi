@@ -1657,7 +1657,7 @@ class OsmApi:
                 'lat': latitude of note,
                 'lon': longitude of note,
                 'date_created': date when the note was created
-                'date_closed': date when the note was closed (or None if the note is open),
+                'date_closed': date when the note was closed or None if it's open,
                 'status': status of the note (open or closed),
                 'comments': [
                     {

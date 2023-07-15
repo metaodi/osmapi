@@ -19,7 +19,7 @@ setup(
     packages=find_packages(),
     version=version,
     install_requires=['requests'],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     description='Python wrapper for the OSM API',
     long_description=long_description,
     long_description_content_type='text/markdown',

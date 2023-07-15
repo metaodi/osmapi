@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.0.0] - 2023-07-15
 ### Added
 - Add Python 3.11 to build
 - Add pre-commit configuration for `flake8` and `black`
@@ -337,7 +339,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/metaodi/osmapi/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/metaodi/osmapi/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2

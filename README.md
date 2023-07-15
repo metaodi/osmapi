@@ -78,9 +78,17 @@ If you want to help with the development of `osmapi`, you should clone this repo
     pip install -r requirements.txt
     pip install -r test-requirements.txt
 
-After that, it is recommended to install the `flake8` pre-commit-hook:
+After that, it is recommended to install the pre-commit-hooks (flake8, black):
 
-    flake8 --install-hook
+    pre-commit install
+
+You can lint the source code using this command:
+
+    make lint
+
+And if you want to reformat the files (using the black code style) simply run:
+
+    make format
 
 ### Tests
 

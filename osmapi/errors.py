@@ -62,10 +62,7 @@ class ApiError(OsmApiError):
         """Payload of API when this error occured"""
 
     def __str__(self):
-        return (
-            "Request failed: %s - %s - %s"
-            % (str(self.status), self.reason, self.payload)
-        )
+        return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 
 
 class AlreadySubscribedApiError(ApiError):

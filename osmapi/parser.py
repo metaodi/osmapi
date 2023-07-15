@@ -22,7 +22,7 @@ def ParseOsm(data):
         data = data.getElementsByTagName("osm")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
 
     result = []
@@ -63,7 +63,7 @@ def ParseOsc(data):
         data = data.getElementsByTagName("osmChange")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
 
     result = []

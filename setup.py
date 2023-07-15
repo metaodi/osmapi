@@ -28,7 +28,7 @@ setup(
     maintainer='Stefan Oderbolz',
     maintainer_email='odi@metaodi.ch',
     url='https://github.com/metaodi/osmapi',
-    download_url='https://github.com/metaodi/osmapi/archive/v%s.zip' % version,
+    download_url=f'https://github.com/metaodi/osmapi/archive/v{version}.zip',
     keywords=['openstreetmap', 'osm', 'api'],
     license='GPLv3',
     classifiers=[

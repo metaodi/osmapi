@@ -53,7 +53,7 @@ class OsmApi:
             password=None,
             passwordfile=None,
             appid="",
-            created_by="osmapi/%s" % __version__,
+            created_by=f"osmapi/{__version__}",
             api="https://www.openstreetmap.org",
             changesetauto=False,
             changesetautotags={},
@@ -100,7 +100,7 @@ class OsmApi:
         elif passwordfile:
             with open(passwordfile) as f:
                 pass_line = f.readline()
-            self._username = pass_line.split(":")[0].strip()
+            self._username = pass_line.partition(":")[0].strip()
 
         # Get password
         self._password = None
@@ -109,9 +109,9 @@ class OsmApi:
         elif passwordfile:
             with open(passwordfile) as f:
                 for line in f:
-                    line = line.strip().split(":", 1)
-                    if line[0] == self._username:
-                        self._password = line[1]
+                    key, _, value = line.strip().partition(":")
+                    if key == self._username:
+                        self._password = value
 
         # Changest informations
         # auto create and close changesets
@@ -135,7 +135,7 @@ class OsmApi:
         if not appid:
             self._created_by = created_by
         else:
-            self._created_by = "{} ({})".format(appid, created_by)
+            self._created_by = f"{appid} ({created_by})"
 
         # Initialisation
         self._CurrentChangesetId = 0
@@ -259,9 +259,9 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        uri = "/api/0.6/node/%s" % (NodeId)
+        uri = f"/api/0.6/node/{NodeId}"
         if NodeVersion != -1:
-            uri += "/%s" % (NodeVersion)
+            uri += f"/{NodeVersion}"
         data = self._session._get(uri)
         data = dom.OsmResponseToDom(data, tag="node", single=True)
         return dom.DomParseNode(data)
@@ -409,7 +409,7 @@ class OsmApi:
 
         `NodeId` is the unique identifier of a node.
         """
-        uri = "/api/0.6/node/%s/history" % NodeId
+        uri = f"/api/0.6/node/{NodeId}/history"
         data = self._session._get(uri)
         nodes = dom.OsmResponseToDom(data, tag="node")
         result = {}
@@ -441,7 +441,7 @@ class OsmApi:
 
         The `NodeId` is a unique identifier for a node.
         """
-        uri = "/api/0.6/node/%d/ways" % NodeId
+        uri = f"/api/0.6/node/{NodeId}/ways"
         data = self._session._get(uri)
         ways = dom.OsmResponseToDom(data, tag="way", allow_empty=True)
         result = []
@@ -482,7 +482,7 @@ class OsmApi:
 
         The `NodeId` is a unique identifier for a node.
         """
-        uri = "/api/0.6/node/%d/relations" % NodeId
+        uri = f"/api/0.6/node/{NodeId}/relations"
         data = self._session._get(uri)
         relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
@@ -507,7 +507,7 @@ class OsmApi:
         for multiple nodes.
         """
         node_list = ",".join([str(x) for x in NodeIdList])
-        uri = "/api/0.6/nodes?nodes=%s" % node_list
+        uri = f"/api/0.6/nodes?nodes={node_list}"
         data = self._session._get(uri)
         nodes = dom.OsmResponseToDom(data, tag="node")
         result = {}
@@ -546,9 +546,9 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        uri = "/api/0.6/way/%s" % (WayId)
+        uri = f"/api/0.6/way/{WayId}"
         if WayVersion != -1:
-            uri += "/%s" % (WayVersion)
+            uri += f"/{WayVersion}"
         data = self._session._get(uri)
         way = dom.OsmResponseToDom(data, tag="way", single=True)
         return dom.DomParseWay(way)
@@ -693,7 +693,7 @@ class OsmApi:
 
         `WayId` is the unique identifier of a way.
         """
-        uri = "/api/0.6/way/%s/history" % (WayId)
+        uri = f"/api/0.6/way/{WayId}/history"
         data = self._session._get(uri)
         ways = dom.OsmResponseToDom(data, tag="way")
         result = {}
@@ -734,7 +734,7 @@ class OsmApi:
 
         The `WayId` is a unique identifier for a way.
         """
-        uri = "/api/0.6/way/%d/relations" % WayId
+        uri = f"/api/0.6/way/{WayId}/relations"
         data = self._session._get(uri)
         relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
@@ -764,7 +764,7 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        uri = "/api/0.6/way/%s/full" % (WayId)
+        uri = f"/api/0.6/way/{WayId}/full"
         data = self._session._get(uri)
         return parser.ParseOsm(data)
 
@@ -783,7 +783,7 @@ class OsmApi:
         `WayIdList` is a list containing unique identifiers for multiple ways.
         """
         way_list = ",".join([str(x) for x in WayIdList])
-        uri = "/api/0.6/ways?ways=%s" % way_list
+        uri = f"/api/0.6/ways?ways={way_list}"
         data = self._session._get(uri)
         ways = dom.OsmResponseToDom(data, tag="way")
         result = {}
@@ -831,9 +831,9 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        uri = "/api/0.6/relation/%s" % (RelationId)
+        uri = f"/api/0.6/relation/{RelationId}"
         if RelationVersion != -1:
-            uri += "/%s" % (RelationVersion)
+            uri += f"/{RelationVersion}"
         data = self._session._get(uri)
         relation = dom.OsmResponseToDom(data, tag="relation", single=True)
         return dom.DomParseRelation(relation)
@@ -1005,7 +1005,7 @@ class OsmApi:
 
         `RelationId` is the unique identifier of a relation.
         """
-        uri = "/api/0.6/relation/%s/history" % (RelationId)
+        uri = f"/api/0.6/relation/{RelationId}/history"
         data = self._session._get(uri)
         relations = dom.OsmResponseToDom(data, tag="relation")
         result = {}
@@ -1047,7 +1047,7 @@ class OsmApi:
 
         The `RelationId` is a unique identifier for a relation.
         """
-        uri = "/api/0.6/relation/%d/relations" % RelationId
+        uri = f"/api/0.6/relation/{RelationId}/relations"
         data = self._session._get(uri)
         relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result = []
@@ -1123,7 +1123,7 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        uri = "/api/0.6/relation/%s/full" % (RelationId)
+        uri = f"/api/0.6/relation/{RelationId}/full"
         data = self._session._get(uri)
         return parser.ParseOsm(data)
 
@@ -1143,7 +1143,7 @@ class OsmApi:
         for multiple relations.
         """
         relation_list = ",".join([str(x) for x in RelationIdList])
-        uri = "/api/0.6/relations?relations=%s" % relation_list
+        uri = f"/api/0.6/relations?relations={relation_list}"
         data = self._session._get(uri)
         relations = dom.OsmResponseToDom(data, tag="relation")
         result = {}
@@ -1219,7 +1219,7 @@ class OsmApi:
         If `include_discussion` is set to `True` the changeset discussion
         will be available in the result.
         """
-        path = "/api/0.6/changeset/%s" % (ChangesetId)
+        path = f"/api/0.6/changeset/{ChangesetId}"
         if (include_discussion):
             path += "?include_discussion=true"
         data = self._session._get(path)
@@ -1245,7 +1245,7 @@ class OsmApi:
             ChangesetTags["created_by"] = self._created_by
         try:
             self._session._put(
-                "/api/0.6/changeset/%s" % (self._CurrentChangesetId),
+                f"/api/0.6/changeset/{self._CurrentChangesetId}",
                 xmlbuilder._XmlBuild("changeset", {"tag": ChangesetTags}, data=self),
                 return_value=False
             )
@@ -1308,7 +1308,7 @@ class OsmApi:
             raise errors.NoChangesetOpenError("No changeset currently opened")
         try:
             self._session._put(
-                "/api/0.6/changeset/%s/close" % (self._CurrentChangesetId),
+                f"/api/0.6/changeset/{self._CurrentChangesetId}/close",
                 "",
                 return_value=False
             )
@@ -1357,7 +1357,7 @@ class OsmApi:
         data += "</osmChange>"
         try:
             data = self._session._post(
-                "/api/0.6/changeset/%s/upload" % (self._CurrentChangesetId),
+                f"/api/0.6/changeset/{self._CurrentChangesetId}/upload",
                 data.encode("utf-8"),
                 forceAuth=True
             )
@@ -1372,17 +1372,15 @@ class OsmApi:
             data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
         except (xml.parsers.expat.ExpatError, IndexError) as e:
             raise errors.XmlResponseInvalidError(
-                "The XML response from the OSM API is invalid: %r" % e
+                f"The XML response from the OSM API is invalid: {e!r}"
             )
 
-        for i in range(len(ChangesData)):
-            if ChangesData[i]["action"] == "delete":
-                ChangesData[i]["data"].pop("version")
+        for item, change in zip(data, ChangesData):
+            if change["action"] == "delete":
+                change["data"].pop("version")
             else:
-                new_id = int(data[i].getAttribute("new_id"))
-                ChangesData[i]["data"]["id"] = new_id
-                new_version = int(data[i].getAttribute("new_version"))
-                ChangesData[i]["data"]["version"] = new_version
+                change["data"]["id"] = int(item.getAttribute("new_id"))
+                change["data"]["version"] = int(item.getAttribute("new_version"))
         return ChangesData
 
     def ChangesetDownload(self, ChangesetId):
@@ -1398,7 +1396,7 @@ class OsmApi:
                 'data': {}
             }
         """
-        uri = "/api/0.6/changeset/%s/download" % (ChangesetId)
+        uri = f"/api/0.6/changeset/{ChangesetId}/download"
         data = self._session._get(uri)
         return parser.ParseOsc(data)
 
@@ -1431,14 +1429,7 @@ class OsmApi:
         uri = "/api/0.6/changesets"
         params = {}
         if min_lon or min_lat or max_lon or max_lat:
-            params["bbox"] = ",".join(
-                [
-                    str(min_lon),
-                    str(min_lat),
-                    str(max_lon),
-                    str(max_lat)
-                ]
-            )
+            params["bbox"] = f"{min_lon},{min_lat},{max_lon},{max_lat}"
         if userid:
             params["user"] = userid
         if username:
@@ -1448,7 +1439,7 @@ class OsmApi:
         if created_before:
             if not closed_after:
                 closed_after = "1970-01-01T00:00:00Z"
-            params["time"] = "{},{}".format(closed_after, created_before)
+            params["time"] = f"{closed_after},{created_before}"
         if only_open:
             params["open"] = 1
         if only_closed:
@@ -1499,7 +1490,7 @@ class OsmApi:
         params = urllib.parse.urlencode({'text': comment})
         try:
             data = self._session._post(
-                "/api/0.6/changeset/%s/comment" % (ChangesetId),
+                f"/api/0.6/changeset/{ChangesetId}/comment",
                 params,
                 forceAuth=True
             )
@@ -1540,7 +1531,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
+                f"/api/0.6/changeset/{ChangesetId}/subscribe",
                 None,
                 forceAuth=True
             )
@@ -1581,7 +1572,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
+                f"/api/0.6/changeset/{ChangesetId}/unsubscribe",
                 None,
                 forceAuth=True
             )
@@ -1631,8 +1622,9 @@ class OsmApi:
         All parameters are optional.
         """
         uri = (
-            "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
-            % (min_lon, min_lat, max_lon, max_lat, limit, closed)
+            f"/api/0.6/notes?bbox="
+            f"{min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
+            f"&limit={limit}&closed={closed}"
         )
         data = self._session._get(uri)
         return parser.ParseNotes(data)
@@ -1655,7 +1647,7 @@ class OsmApi:
 
         `id` is the unique identifier of the note.
         """
-        uri = "/api/0.6/notes/%s" % (id)
+        uri = f"/api/0.6/notes/{id}"
         data = self._session._get(uri)
         noteElement = dom.OsmResponseToDom(data, tag="note", single=True)
         return dom.DomParseNote(noteElement)
@@ -1704,7 +1696,7 @@ class OsmApi:
 
         Returns the updated note.
         """
-        path = "/api/0.6/notes/%s/comment" % NoteId
+        path = f"/api/0.6/notes/{NoteId}/comment"
         return self._NoteAction(path, comment)
 
     def NoteClose(self, NoteId, comment):
@@ -1716,7 +1708,7 @@ class OsmApi:
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
         """
-        path = "/api/0.6/notes/%s/close" % NoteId
+        path = f"/api/0.6/notes/{NoteId}/close"
         return self._NoteAction(path, comment, optionalAuth=False)
 
     def NoteReopen(self, NoteId, comment):
@@ -1734,7 +1726,7 @@ class OsmApi:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
-        path = "/api/0.6/notes/%s/reopen" % NoteId
+        path = f"/api/0.6/notes/{NoteId}/reopen"
         return self._NoteAction(path, comment, optionalAuth=False)
 
     def NotesSearch(self, query, limit=100, closed=7):
@@ -1798,8 +1790,7 @@ class OsmApi:
             }
         """
         uri = (
-            "/api/0.6/map?bbox=%f,%f,%f,%f"
-            % (min_lon, min_lat, max_lon, max_lat)
+            f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
         )
         data = self._session._get(uri)
         return parser.ParseOsm(data)
@@ -1846,11 +1837,11 @@ class OsmApi:
         if action == "create":
             if OsmData.get("id", -1) > 0:
                 raise errors.OsmTypeAlreadyExistsError(
-                    "This %s already exists" % OsmType
+                    f"This {OsmType} already exists"
                 )
             try:
                 result = self._session._put(
-                    "/api/0.6/%s/create" % OsmType,
+                    f"/api/0.6/{OsmType}/create",
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:
@@ -1868,7 +1859,7 @@ class OsmApi:
         elif action == "modify":
             try:
                 result = self._session._put(
-                    "/api/0.6/{}/{}".format(OsmType, OsmData["id"]),
+                    f"/api/0.6/{OsmType}/{OsmData['id']}",
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:
@@ -1886,7 +1877,7 @@ class OsmApi:
         elif action == "delete":
             try:
                 result = self._session._delete(
-                    "/api/0.6/{}/{}".format(OsmType, OsmData["id"]),
+                    f"/api/0.6/{OsmType}/{OsmData['id']}",
                     xmlbuilder._XmlBuild(OsmType, OsmData, data=self)
                 )
             except errors.ApiError as e:

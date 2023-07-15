@@ -5,11 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - Add Python 3.11 to build
+- Add pre-commit configuration for `flake8` and `black`
 
 ### Changed
 - Upgrade the code with `pyupgrade` (see PR #146, thanks [Miroslav Šedivý](https://github.com/eumiro))
 Miroslav Šedivý
 - Replace format with f-strings to resolve issue (see PR #147, thanks [Miroslav Šedivý](https://github.com/eumiro))
+- Use the `black` code style for this code base
 
 ### Removed
 - **BC-Break**: Remove support for Python 3.7, new minimum version for osmapi is Python 3.8

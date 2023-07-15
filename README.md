@@ -3,6 +3,7 @@ osmapi
 
 [![Build osmapi](https://github.com/metaodi/osmapi/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/osmapi/actions/workflows/build.yml)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
 [![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
 
@@ -77,9 +78,17 @@ If you want to help with the development of `osmapi`, you should clone this repo
     pip install -r requirements.txt
     pip install -r test-requirements.txt
 
-After that, it is recommended to install the `flake8` pre-commit-hook:
+After that, it is recommended to install the pre-commit-hooks (flake8, black):
 
-    flake8 --install-hook
+    pre-commit install
+
+You can lint the source code using this command:
+
+    make lint
+
+And if you want to reformat the files (using the black code style) simply run:
+
+    make format
 
 ### Tests
 

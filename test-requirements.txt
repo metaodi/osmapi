@@ -6,3 +6,5 @@ pytest
 pytest-cov
 responses
 coverage
+black
+pre-commit

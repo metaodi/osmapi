@@ -28,20 +28,11 @@ def ParseOsm(data):
     result = []
     for elem in data.childNodes:
         if elem.nodeName == "node":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseNode(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})
         elif elem.nodeName == "way":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseWay(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})
         elif elem.nodeName == "relation":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseRelation(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})
     return result
 
 
@@ -72,23 +63,29 @@ def ParseOsc(data):
             continue
         for elem in action.childNodes:
             if elem.nodeName == "node":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseNode(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseNode(elem),
+                    }
+                )
             elif elem.nodeName == "way":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseWay(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseWay(elem),
+                    }
+                )
             elif elem.nodeName == "relation":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseRelation(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseRelation(elem),
+                    }
+                )
     return result
 
 

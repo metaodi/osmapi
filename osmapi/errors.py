@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 class OsmApiError(Exception):
     """
     General OsmApi error class to provide a superclass for all other errors
@@ -16,6 +14,7 @@ class UsernamePasswordMissingError(OsmApiError):
     """
     Error when username or password is missing for an authenticated request
     """
+
     pass
 
 
@@ -24,6 +23,7 @@ class NoChangesetOpenError(OsmApiError):
     Error when an operation requires an open changeset, but currently
     no changeset _is_ open
     """
+
     pass
 
 
@@ -32,6 +32,7 @@ class ChangesetAlreadyOpenError(OsmApiError):
     Error when a user tries to open a changeset when there is already
     an open changeset
     """
+
     pass
 
 
@@ -39,6 +40,7 @@ class OsmTypeAlreadyExistsError(OsmApiError):
     """
     Error when a user tries to create an object that already exsits
     """
+
     pass
 
 
@@ -64,10 +66,7 @@ class ApiError(OsmApiError):
         """Payload of API when this error occured"""
 
     def __str__(self):
-        return (
-            "Request failed: %s - %s - %s"
-            % (str(self.status), self.reason, self.payload)
-        )
+        return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 
 
 class AlreadySubscribedApiError(ApiError):
@@ -75,6 +74,7 @@ class AlreadySubscribedApiError(ApiError):
     Error when a user tries to subscribe to a changeset
     that she is already subscribed to
     """
+
     pass
 
 
@@ -83,6 +83,7 @@ class NotSubscribedApiError(ApiError):
     Error when user tries to unsubscribe from a changeset
     that he is not subscribed to
     """
+
     pass
 
 
@@ -90,6 +91,7 @@ class ElementDeletedApiError(ApiError):
     """
     Error when the requested element is deleted
     """
+
     pass
 
 
@@ -103,6 +105,7 @@ class ResponseEmptyApiError(ApiError):
     """
     Error when the response to the request is empty
     """
+
     pass
 
 

@@ -22,26 +22,17 @@ def ParseOsm(data):
         data = data.getElementsByTagName("osm")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
 
     result = []
     for elem in data.childNodes:
         if elem.nodeName == "node":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseNode(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})
         elif elem.nodeName == "way":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseWay(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})
         elif elem.nodeName == "relation":
-            result.append({
-                "type": elem.nodeName,
-                "data": dom.DomParseRelation(elem)
-            })
+            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})
     return result
 
 
@@ -63,7 +54,7 @@ def ParseOsc(data):
         data = data.getElementsByTagName("osmChange")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
-            "The XML response from the OSM API is invalid: %r" % e
+            f"The XML response from the OSM API is invalid: {e!r}"
         )
 
     result = []
@@ -72,23 +63,29 @@ def ParseOsc(data):
             continue
         for elem in action.childNodes:
             if elem.nodeName == "node":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseNode(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseNode(elem),
+                    }
+                )
             elif elem.nodeName == "way":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseWay(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseWay(elem),
+                    }
+                )
             elif elem.nodeName == "relation":
-                result.append({
-                    "action": action.nodeName,
-                    "type": elem.nodeName,
-                    "data": dom.DomParseRelation(elem)
-                })
+                result.append(
+                    {
+                        "action": action.nodeName,
+                        "type": elem.nodeName,
+                        "data": dom.DomParseRelation(elem),
+                    }
+                )
     return result
 
 

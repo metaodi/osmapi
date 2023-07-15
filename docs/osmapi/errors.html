@@ -163,9 +163,7 @@
                 
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
-<span class="k">class</span> <span class="nc">OsmApiError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">OsmApiError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    General OsmApi error class to provide a superclass for all other errors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -181,6 +179,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when username or password is missing for an authenticated request</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -189,6 +188,7 @@
 <span class="sd">    Error when an operation requires an open changeset, but currently</span>
 <span class="sd">    no changeset _is_ open</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -197,6 +197,7 @@
 <span class="sd">    Error when a user tries to open a changeset when there is already</span>
 <span class="sd">    an open changeset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -204,6 +205,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when a user tries to create an object that already exsits</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -229,10 +231,7 @@
         <span class="sd">&quot;&quot;&quot;Payload of API when this error occured&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">&quot;Request failed: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span>
-            <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
@@ -240,6 +239,7 @@
 <span class="sd">    Error when a user tries to subscribe to a changeset</span>
 <span class="sd">    that she is already subscribed to</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -248,6 +248,7 @@
 <span class="sd">    Error when user tries to unsubscribe from a changeset</span>
 <span class="sd">    that he is not subscribed to</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -255,6 +256,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when the requested element is deleted</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -268,6 +270,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when the response to the request is empty</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 
 
@@ -393,6 +396,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when username or password is missing for an authenticated request</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -433,6 +437,7 @@
 <span class="sd">    Error when an operation requires an open changeset, but currently</span>
 <span class="sd">    no changeset _is_ open</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -474,6 +479,7 @@ no changeset _is_ open</p>
 <span class="sd">    Error when a user tries to open a changeset when there is already</span>
 <span class="sd">    an open changeset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -514,6 +520,7 @@ an open changeset</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when a user tries to create an object that already exsits</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -603,10 +610,7 @@ an open changeset</p>
         <span class="sd">&quot;&quot;&quot;Payload of API when this error occured&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">&quot;Request failed: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span>
-            <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
 </pre></div>
 
         </details>
@@ -700,6 +704,7 @@ an open changeset</p>
 <span class="sd">    Error when a user tries to subscribe to a changeset</span>
 <span class="sd">    that she is already subscribed to</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -744,6 +749,7 @@ that she is already subscribed to</p>
 <span class="sd">    Error when user tries to unsubscribe from a changeset</span>
 <span class="sd">    that he is not subscribed to</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -787,6 +793,7 @@ that he is not subscribed to</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when the requested element is deleted</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 
@@ -870,6 +877,7 @@ that he is not subscribed to</p>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error when the response to the request is empty</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">pass</span>
 </pre></div>
 

@@ -1,23 +1,15 @@
-from __future__ import unicode_literals
 from osmapi import OsmApi
-import mock
+from unittest import mock
 import os
 import unittest
 
-__location__ = os.path.realpath(
-    os.path.join(
-        os.getcwd(),
-        os.path.dirname(__file__)
-    )
-)
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
 class TestOsmApi(unittest.TestCase):
     def setUp(self):
         self.api_base = "http://api06.dev.openstreetmap.org"
-        self.api = OsmApi(
-            api=self.api_base
-        )
+        self.api = OsmApi(api=self.api_base)
         self.maxDiff = None
         print(self._testMethodName)
         print(self.api)
@@ -38,15 +30,12 @@ class TestOsmApi(unittest.TestCase):
         if auth:
             self.api = OsmApi(
                 api=self.api_base,
-                username='testuser',
-                password='testpassword',
-                session=self.session_mock
+                username="testuser",
+                password="testpassword",
+                session=self.session_mock,
             )
         else:
-            self.api = OsmApi(
-                api=self.api_base,
-                session=self.session_mock
-            )
+            self.api = OsmApi(api=self.api_base, session=self.session_mock)
 
         self.api._get_http_session = mock.Mock(return_value=self.session_mock)
         self.api._session._sleep = mock.Mock()
@@ -57,11 +46,7 @@ class TestOsmApi(unittest.TestCase):
 
         return_values = []
         for filename in filenames:
-            path = os.path.join(
-                __location__,
-                'fixtures',
-                filename
-            )
+            path = os.path.join(__location__, "fixtures", filename)
             try:
                 with open(path) as file:
                     return_values.append(file.read())

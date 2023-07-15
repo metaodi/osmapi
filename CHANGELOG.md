@@ -4,6 +4,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [4.0.0] - 2023-07-15
+### Added
+- Add Python 3.11 to build
+- Add pre-commit configuration for `flake8` and `black`
+
+### Changed
+- Upgrade the code with `pyupgrade` (see PR #146, thanks [Miroslav Šedivý](https://github.com/eumiro))
+Miroslav Šedivý
+- Replace format with f-strings to resolve issue (see PR #147, thanks [Miroslav Šedivý](https://github.com/eumiro))
+- Use the `black` code style for this code base
+
+### Removed
+- **BC-Break**: Remove support for Python 3.7, new minimum version for osmapi is Python 3.8
+
 ## [3.1.0] - 2023-01-18
 ### Added
 - New `ElementNotFoundApiError` when a 404 response comes from the API
@@ -325,7 +339,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/metaodi/osmapi/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/metaodi/osmapi/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/metaodi/osmapi/compare/v2.0.1...v2.0.2

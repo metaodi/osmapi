@@ -19,13 +19,13 @@ def OsmResponseToDom(response, tag, single=False, allow_empty=False):
         osm_dom = dom.getElementsByTagName("osm")[0]
         all_data = osm_dom.getElementsByTagName(tag)
         first_element = all_data[0]
-    except (IndexError) as e:
+    except IndexError as e:
         if allow_empty:
             return []
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         )
-    except (xml.parsers.expat.ExpatError) as e:
+    except xml.parsers.expat.ExpatError as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         )

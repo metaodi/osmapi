@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class OsmApiSession:
-
     MAX_RETRY_LIMIT = 5
     """Maximum retries if a call to the remote API fails (default: 5)"""
 

@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add Python 3.11 to build
+
+### Changed
+- Upgrade the code with `pyupgrade` (see PR #146, thanks [Miroslav Šedivý](https://github.com/eumiro))
+Miroslav Šedivý
+- Replace format with f-strings to resolve issue (see PR #147, thanks [Miroslav Šedivý](https://github.com/eumiro))
+
+### Removed
+- **BC-Break**: Remove support for Python 3.7, new minimum version for osmapi is Python 3.8
 
 ## [3.1.0] - 2023-01-18
 ### Added

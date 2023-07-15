@@ -18,7 +18,7 @@ format:  ## Format source code (black codestyle)
 	python -m black osmapi examples tests
 
 lint:  ## Linting of source code
-	python -m black --check osmapi examples tests
+	python -m black --check --diff osmapi examples tests
 	python -m flake8 --statistics --show-source .
 
 test:  ## Run tests

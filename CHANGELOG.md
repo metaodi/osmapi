@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- OAuth 2.0 example in README and in the `examples` directory
+
+### Changed
+- Check if a passed `session` is authenticated and use this instead of Username/Password, this enables OAuth 2.0 authentication
 
 ## [4.0.0] - 2023-07-15
 ### Added

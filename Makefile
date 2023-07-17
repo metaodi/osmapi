@@ -10,6 +10,7 @@ deps:  ## Install dependencies
 	python -m pip install --upgrade pip
 	python -m pip install -r requirements.txt
 	python -m pip install -r test-requirements.txt
+	pre-commit install
 
 docs:  ## Generate documentation
 	python -m pdoc -o docs osmapi

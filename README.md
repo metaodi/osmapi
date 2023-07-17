@@ -71,8 +71,8 @@ Note: Each line in the password file should have the format _user:password_
 
 ### OAuth authentication
 
-Username/Password authentication will be deprecated in 2024.
-In order to use this library, you'll need to use OAuth 2.0.
+Username/Password authentication will be deprecated in 2024 (see [official OWG announcemnt](https://www.openstreetmap.org/user/pnorman/diary/401157) for details).
+In order to use this library in the future, you'll need to use OAuth 2.0.
 
 To use OAuth 2.0, you must register an application with an OpenStreetMap account, either on the [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications) or on the [production server](https://www.openstreetmap.org/oauth2/applications).
 Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
@@ -99,7 +99,8 @@ oauth2client = OAuth2Client(
     token_endpoint=token_url,
     authorization_endpoint=authorization_base_url,
     redirect_uri=redirect_uri,
-    auth=(client_id, client_secret),
+    client_id=client_id,
+    client_secret=client_secret,
     code_challenge_method=None,
 )
 
@@ -130,18 +131,21 @@ with api.Changeset({"comment": "My first test"}) as changeset_id:
     print(node1)
 ```
 
-## Note
+## Note about imports / automated edits
 
 Scripted imports and automated edits should only be carried out by those with experience and understanding of the way the OpenStreetMap community creates maps, and only with careful **planning** and **consultation** with the local community.
 
 See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines) and [Automated Edits/Code of Conduct](http://wiki.openstreetmap.org/wiki/Automated_Edits/Code_of_Conduct) for more information.
 
-### Development
+## Development
 
 If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
 
     pip install -r requirements.txt
     pip install -r test-requirements.txt
+    pip install -e .
+
+Better yet use the provided `setup.sh` script to create a virtual env and install this package in it. 
 
 After that, it is recommended to install the pre-commit-hooks (flake8, black):
 
@@ -154,8 +158,6 @@ You can lint the source code using this command:
 And if you want to reformat the files (using the black code style) simply run:
 
     make format
-
-### Tests
 
 To run the tests use the following command:
 

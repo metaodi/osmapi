@@ -32,6 +32,8 @@ To update the online documentation, you need to re-generate the documentation wi
 
 To test this library, please create an account on the [development server of OpenStreetMap (https://api06.dev.openstreetmap.org)](https://api06.dev.openstreetmap.org).
 
+Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/examples) to find more example code.
+
 ### Read from OpenStreetMap
 
 ```python
@@ -65,6 +67,67 @@ Note: Each line in the password file should have the format _user:password_
 >>> print(api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}}))
 {u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
 >>> api.ChangesetClose()
+```
+
+### OAuth authentication
+
+Username/Password authentication will be deprecated in 2024.
+In order to use this library, you'll need to use OAuth 2.0.
+
+To use OAuth 2.0, you must register an application with an OpenStreetMap account, either on the [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications) or on the [production server](https://www.openstreetmap.org/oauth2/applications).
+Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
+
+Example code using [`requests-oauth2client`](https://pypi.org/project/requests-oauth2client/):
+
+```python
+from requests_oauth2client import OAuth2Client, OAuth2AuthorizationCodeAuth
+import requests
+import webbrowser
+import osmapi
+import os
+
+client_id = "<client_id>"
+client_secret = "<client_secret>"
+
+# special value for redirect_uri for non-web applications
+redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+
+authorization_base_url = "https://master.apis.dev.openstreetmap.org/oauth2/authorize"
+token_url = "https://master.apis.dev.openstreetmap.org/oauth2/token"
+
+oauth2client = OAuth2Client(
+    token_endpoint=token_url,
+    authorization_endpoint=authorization_base_url,
+    redirect_uri=redirect_uri,
+    auth=(client_id, client_secret),
+    code_challenge_method=None,
+)
+
+# open OSM website to authrorize user using the write_api and write_notes scope
+scope = ["write_api", "write_notes"]
+az_request = oauth2client.authorization_request(scope=scope)
+print(f"Authorize user using this URL: {az_request.uri}")
+webbrowser.open(az_request.uri)
+
+# create a new requests session using the OAuth authorization
+auth_code = input("Paste the authorization code here: ")
+auth = OAuth2AuthorizationCodeAuth(
+    oauth2client,
+    auth_code,
+    redirect_uri=redirect_uri,
+)
+oauth_session = requests.Session()
+oauth_session.auth = auth
+
+# use the custom session
+api = osmapi.OsmApi(
+    api="https://api06.dev.openstreetmap.org",
+    session=oauth_session
+)
+with api.Changeset({"comment": "My first test"}) as changeset_id:
+    print(f"Part of Changeset {changeset_id}")
+    node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    print(node1)
 ```
 
 ## Note

@@ -26,6 +26,7 @@ class TestOsmApi(unittest.TestCase):
 
         self.session_mock = mock.Mock()
         self.session_mock.request = mock.Mock(return_value=response_mock)
+        self.session_mock.auth = None
 
         if auth:
             self.api = OsmApi(

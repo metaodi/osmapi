@@ -143,7 +143,7 @@ If you want to help with the development of `osmapi`, you should clone this repo
 
     make deps
 
-Better yet use the provided `setup.sh` script to create a virtual env and install this package in it. 
+Better yet use the provided [`setup.sh`](https://github.com/metaodi/osmapi/blob/develop/setup.sh) script to create a virtual env and install this package in it. 
 
 You can lint the source code using this command:
 

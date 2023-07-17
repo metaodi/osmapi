@@ -141,15 +141,9 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 
 If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
 
-    pip install -r requirements.txt
-    pip install -r test-requirements.txt
-    pip install -e .
+    make deps
 
 Better yet use the provided `setup.sh` script to create a virtual env and install this package in it. 
-
-After that, it is recommended to install the pre-commit-hooks (flake8, black):
-
-    pre-commit install
 
 You can lint the source code using this command:
 

@@ -17,7 +17,10 @@ class OsmApiSession:
     def __init__(self, base_url, created_by, auth=None, session=None):
         self._api = base_url
         self._created_by = created_by
-        self._auth = auth
+        if auth:
+            self._auth = auth
+        elif session.auth:
+            self._auth = session.auth
 
         self._http_session = session
         self._session = self._get_http_session()

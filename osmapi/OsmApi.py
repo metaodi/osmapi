@@ -1380,20 +1380,6 @@ class OsmApi:
 
         return ChangesData
 
-    def _add_changeset_data(self, changeData, type):
-        data = ""
-        for changedElement in changeData:
-            changedElement["changeset"] = self._CurrentChangesetId
-            data += xmlbuilder._XmlBuild(type, changedElement, False, data=self).decode(
-                "utf-8"
-            )
-        return data
-
-    def _assign_id_and_version(self, ResponseData, RequestData):
-        for response, element in zip(ResponseData, RequestData):
-            element["id"] = int(response.getAttribute("new_id"))
-            element["version"] = int(response.getAttribute("new_version"))
-
     def ChangesetDownload(self, ChangesetId):
         """
         Download data from changeset `ChangesetId`.
@@ -1915,3 +1901,17 @@ class OsmApi:
             self.ChangesetClose()
             self._changesetautocpt = 0
         return None
+
+    def _add_changeset_data(self, changeData, type):
+        data = ""
+        for changedElement in changeData:
+            changedElement["changeset"] = self._CurrentChangesetId
+            data += xmlbuilder._XmlBuild(type, changedElement, False, data=self).decode(
+                "utf-8"
+            )
+        return data
+
+    def _assign_id_and_version(self, ResponseData, RequestData):
+        for response, element in zip(ResponseData, RequestData):
+            element["id"] = int(response.getAttribute("new_id"))
+            element["version"] = int(response.getAttribute("new_version"))

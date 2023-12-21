@@ -1345,10 +1345,8 @@ class OsmApi:
         data += self._created_by + '">\n'
         for change in ChangesData:
             data += "<" + change["action"] + ">\n"
-            change["data"]["changeset"] = self._CurrentChangesetId
-            data += xmlbuilder._XmlBuild(
-                change["type"], change["data"], False, data=self
-            ).decode("utf-8")
+            changeData = change["data"]
+            data += self._add_changeset_data(changeData, change["type"])
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
         try:
@@ -1373,13 +1371,28 @@ class OsmApi:
                 f"The XML response from the OSM API is invalid: {e!r}"
             )
 
-        for item, change in zip(data, ChangesData):
+        for change in ChangesData:
             if change["action"] == "delete":
-                change["data"].pop("version")
+                for changeElement in change["data"]:
+                    changeElement.pop("version")
             else:
-                change["data"]["id"] = int(item.getAttribute("new_id"))
-                change["data"]["version"] = int(item.getAttribute("new_version"))
+                self._assign_id_and_version(data, change["data"])
+
         return ChangesData
+
+    def _add_changeset_data(self, changeData, type):
+        data = ""
+        for changedElement in changeData:
+            changedElement["changeset"] = self._CurrentChangesetId
+            data += xmlbuilder._XmlBuild(type, changedElement, False, data=self).decode(
+                "utf-8"
+            )
+        return data
+
+    def _assign_id_and_version(self, ResponseData, RequestData):
+        for response, element in zip(ResponseData, RequestData):
+            element["id"] = int(response.getAttribute("new_id"))
+            element["version"] = int(response.getAttribute("new_version"))
 
     def ChangesetDownload(self, ChangesetId):
         """

@@ -69,6 +69,15 @@ class ApiError(OsmApiError):
         return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 
 
+class UnauthorizedApiError(ApiError):
+    """
+    Error when a user tries to subscribe to a changeset
+    that she is already subscribed to
+    """
+
+    pass
+
+
 class AlreadySubscribedApiError(ApiError):
     """
     Error when a user tries to subscribe to a changeset

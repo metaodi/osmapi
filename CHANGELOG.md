@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Check if a passed `session` is authenticated and use this instead of Username/Password, this enables OAuth 2.0 authentication
 
+### Removed
+- remove Python2 crumbs (see PR #159, thanks [Alexandre Detiste](https://github.com/a-detiste))
+
 ## [4.0.0] - 2023-07-15
 ### Added
 - Add Python 3.11 to build

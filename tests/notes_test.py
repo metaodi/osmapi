@@ -1,11 +1,7 @@
 from . import osmapi_test
 from datetime import datetime
 import osmapi
-
-try:
-    import urlparse
-except ImportError:
-    from urllib import parse as urlparse
+from urllib import parse as urlparse
 
 
 class TestOsmApiNotes(osmapi_test.TestOsmApi):

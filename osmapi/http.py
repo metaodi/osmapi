@@ -71,6 +71,10 @@ class OsmApiSession:
         response = self._session.request(method, path, data=send)
         if response.status_code != 200:
             payload = response.content.strip()
+            if response.status_code == 401:
+                raise errors.UnauthorizedApiError(
+                    response.status_code, response.reason, payload
+                )
             if response.status_code == 404:
                 raise errors.ElementNotFoundApiError(
                     response.status_code, response.reason, payload

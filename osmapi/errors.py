@@ -69,6 +69,15 @@ class ApiError(OsmApiError):
         return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 
 
+class UnauthorizedApiError(ApiError):
+    """
+    Error when the API returned an Unauthorized error,
+    e.g. when the provided OAuth token is expired
+    """
+
+    pass
+
+
 class AlreadySubscribedApiError(ApiError):
     """
     Error when a user tries to subscribe to a changeset

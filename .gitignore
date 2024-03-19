@@ -7,3 +7,4 @@ MANIFEST
 .pycache/*
 .pytest_cache/*
 .env
+pyenv

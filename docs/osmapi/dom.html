@@ -80,7 +80,7 @@
 
 
 <span class="k">def</span> <span class="nf">OsmResponseToDom</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the (sub-) DOM parsed from an OSM response</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -105,7 +105,7 @@
 
 
 <span class="k">def</span> <span class="nf">DomParseNode</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns NodeData for the node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -114,7 +114,7 @@
 
 
 <span class="k">def</span> <span class="nf">DomParseWay</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns WayData for the way.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -124,7 +124,7 @@
 
 
 <span class="k">def</span> <span class="nf">DomParseRelation</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns RelationData for the relation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -134,7 +134,7 @@
 
 
 <span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns ChangesetData for the changeset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -145,7 +145,7 @@
 
 
 <span class="k">def</span> <span class="nf">DomParseNote</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns NoteData for the note.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -164,7 +164,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a formated dictionnary of attributes of a DomElement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -197,7 +197,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetTag</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the dictionnary of tags of a DomElement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
@@ -209,7 +209,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetNd</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the list of nodes of a DomElement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -219,7 +219,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetDiscussion</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the dictionnary of comments of a DomElement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -235,7 +235,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetComments</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the list of comments of a DomElement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -252,7 +252,7 @@
 
 
 <span class="k">def</span> <span class="nf">_DomGetMember</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a list of relation members.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -287,7 +287,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">OsmResponseToDom</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the (sub-) DOM parsed from an OSM response</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -329,7 +329,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseNode</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns NodeData for the node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -355,7 +355,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseWay</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns WayData for the way.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -382,7 +382,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseRelation</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns RelationData for the relation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -409,7 +409,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns ChangesetData for the changeset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
@@ -437,7 +437,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseNote</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns NoteData for the note.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>

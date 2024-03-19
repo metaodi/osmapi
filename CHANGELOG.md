@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.1.0] - 2024-03-19
 ### Added
 - OAuth 2.0 example in README and in the `examples` directory
 
@@ -347,7 +349,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/metaodi/osmapi/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/metaodi/osmapi/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/metaodi/osmapi/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/metaodi/osmapi/compare/v2.0.2...v3.0.0

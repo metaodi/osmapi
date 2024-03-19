@@ -158,6 +158,21 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             osmapi.UsernamePasswordMissingError, "Username/Password missing"
         ):
             self.api.NodeCreate(test_node)
+    
+    def test_NodeCreate_unauthorized(self):
+        self._session_mock(auth=True, status=401)
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(return_value=1111)
+        self.api._CurrentChangesetId = 1111
+        test_node = {
+            "lat": 47.287,
+            "lon": 8.765,
+            "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+        }
+
+        with self.assertRaises(osmapi.UnauthorizedApiError):
+            self.api.NodeCreate(test_node)
 
     def test_NodeCreate_with_session_auth(self):
         self._session_mock()

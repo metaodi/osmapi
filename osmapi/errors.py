@@ -71,8 +71,8 @@ class ApiError(OsmApiError):
 
 class UnauthorizedApiError(ApiError):
     """
-    Error when a user tries to subscribe to a changeset
-    that she is already subscribed to
+    Error when the API returned an Unauthorized error,
+    e.g. when the provided OAuth token is expired
     """
 
     pass

@@ -1,5 +1,4 @@
 flake8
-mock
 virtualenv
 xmltodict
 pytest

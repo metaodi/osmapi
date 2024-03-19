@@ -1,4 +1,4 @@
 pdoc==8.0.1
-Pygments==2.10.0
+Pygments==2.15.0
 requests==2.31.0
 python-dotenv

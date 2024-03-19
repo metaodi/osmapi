@@ -10,6 +10,7 @@ deps:  ## Install dependencies
 	python -m pip install --upgrade pip
 	python -m pip install -r requirements.txt
 	python -m pip install -r test-requirements.txt
+	pre-commit install
 
 docs:  ## Generate documentation
 	python -m pdoc -o docs osmapi
@@ -21,8 +22,8 @@ lint:  ## Linting of source code
 	python -m black --check --diff osmapi examples tests *.py
 	python -m flake8 --statistics --show-source .
 
-test:  ## Run tests
-	python -m pytest --cov=osmapi tests/
+test:  ## Run tests (run in UTF-8 mode in Windows)
+	python -Xutf8 -m pytest --cov=osmapi tests/
 
 help: SHELL := /bin/bash
 help: ## Show help message

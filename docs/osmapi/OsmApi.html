@@ -275,7 +275,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 
 <span class="k">class</span> <span class="nc">OsmApi</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class of osmapi, instanciate this class to use osmapi</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -293,7 +293,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
 
 <span class="sd">        There are two different ways to authenticate a user.</span>
@@ -406,7 +406,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">Capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the API capabilities as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -461,7 +461,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">NodeGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">,</span> <span class="n">NodeVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns node with `NodeId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -495,7 +495,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a node based on the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -535,7 +535,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates node with the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -577,7 +577,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete node with `NodeData`:</span>
 
 <span class="sd">            #!python</span>
@@ -625,7 +625,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -647,7 +647,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodeWays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `WayData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -679,7 +679,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodeRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -720,7 +720,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the Node as a key</span>
 <span class="sd">        for each node in `NodeIdList`:</span>
 
@@ -749,7 +749,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">WayGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">,</span> <span class="n">WayVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns way with `WayId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -782,7 +782,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseWay</span><span class="p">(</span><span class="n">way</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a way based on the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -823,7 +823,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates way with the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -863,7 +863,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete way with `WayData`:</span>
 
 <span class="sd">            #!python</span>
@@ -909,7 +909,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -931,7 +931,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">WayRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing way `WayId`:</span>
 
 <span class="sd">            #!python</span>
@@ -972,7 +972,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">WayFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data for way `WayId` as list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -997,7 +997,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WaysGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the way as a key for</span>
 <span class="sd">        each way in `WayIdList`:</span>
 
@@ -1025,7 +1025,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">RelationGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">,</span> <span class="n">RelationVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns relation with `RelationId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1067,7 +1067,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseRelation</span><span class="p">(</span><span class="n">relation</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a relation based on the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1117,7 +1117,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates relation with the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1166,7 +1166,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete relation with `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1221,7 +1221,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -1243,7 +1243,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">RelationRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData`</span>
 <span class="sd">        containing relation `RelationId`:</span>
 
@@ -1285,7 +1285,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">RelationFullRecur</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (all levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -1328,7 +1328,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">data</span>
 
     <span class="k">def</span> <span class="nf">RelationFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (two levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -1356,7 +1356,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationsGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the relation as a key</span>
 <span class="sd">        for each relation in `RelationIdList`:</span>
 
@@ -1386,7 +1386,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">Changeset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Context manager for a Changeset.</span>
 
 <span class="sd">        It opens a Changeset, uploads the changes and closes the changeset</span>
@@ -1422,7 +1422,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">ChangesetClose</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">ChangesetGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns changeset with `ChangesetId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1455,7 +1455,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates current changeset with `ChangesetTags`.</span>
 
 <span class="sd">        If no authentication information are provided,</span>
@@ -1485,7 +1485,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a changeset.</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
@@ -1520,7 +1520,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes current changeset.</span>
 
 <span class="sd">        Returns `ChangesetId`.</span>
@@ -1552,7 +1552,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload data with the `ChangesData` list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -1613,7 +1613,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">ChangesData</span>
 
     <span class="k">def</span> <span class="nf">ChangesetDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data from changeset `ChangesetId`.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -1642,7 +1642,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">only_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">only_closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a dict with the id of the changeset as key</span>
 <span class="sd">        matching all criteria:</span>
 
@@ -1687,7 +1687,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">ChangesetComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a comment to the changeset `ChangesetId`</span>
 
 <span class="sd">        `comment` should be a string.</span>
@@ -1731,7 +1731,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetSubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -1770,7 +1770,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUnsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -1811,7 +1811,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">NotesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes in the specified bounding box:</span>
 
 <span class="sd">            #!python</span>
@@ -1847,7 +1847,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseNotes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a note as dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1870,7 +1870,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNote</span><span class="p">(</span><span class="n">noteElement</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -1908,7 +1908,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new comment to a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -1917,7 +1917,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteClose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -1929,7 +1929,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteReopen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reopens a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -1947,7 +1947,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NotesSearch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes that match the given search query.</span>
 
 <span class="sd">        The limit parameter defines how many results should be returned.</span>
@@ -1968,7 +1968,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseNotes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_NoteAction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs an action on a Note with a comment</span>
 
 <span class="sd">        Return the updated note</span>
@@ -1995,7 +1995,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">Map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data in bounding box.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -2011,7 +2011,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Force the changes to be uploaded to OSM and the changeset to be closed</span>
 
 <span class="sd">        If no authentication information are provided,</span>
@@ -2150,7 +2150,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">OsmApi</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class of osmapi, instanciate this class to use osmapi</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2168,7 +2168,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
 
 <span class="sd">        There are two different ways to authenticate a user.</span>
@@ -2281,7 +2281,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">Capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the API capabilities as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2336,7 +2336,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">NodeGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">,</span> <span class="n">NodeVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns node with `NodeId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2370,7 +2370,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a node based on the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2410,7 +2410,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates node with the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2452,7 +2452,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete node with `NodeData`:</span>
 
 <span class="sd">            #!python</span>
@@ -2500,7 +2500,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NodeHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -2522,7 +2522,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodeWays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `WayData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -2554,7 +2554,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodeRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -2595,7 +2595,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">NodesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the Node as a key</span>
 <span class="sd">        for each node in `NodeIdList`:</span>
 
@@ -2624,7 +2624,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">WayGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">,</span> <span class="n">WayVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns way with `WayId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2657,7 +2657,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseWay</span><span class="p">(</span><span class="n">way</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a way based on the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2698,7 +2698,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates way with the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2738,7 +2738,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete way with `WayData`:</span>
 
 <span class="sd">            #!python</span>
@@ -2784,7 +2784,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;way&quot;</span><span class="p">,</span> <span class="n">WayData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WayHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -2806,7 +2806,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">WayRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing way `WayId`:</span>
 
 <span class="sd">            #!python</span>
@@ -2847,7 +2847,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">WayFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data for way `WayId` as list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -2872,7 +2872,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">WaysGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the way as a key for</span>
 <span class="sd">        each way in `WayIdList`:</span>
 
@@ -2900,7 +2900,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">RelationGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">,</span> <span class="n">RelationVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns relation with `RelationId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2942,7 +2942,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseRelation</span><span class="p">(</span><span class="n">relation</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a relation based on the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -2992,7 +2992,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates relation with the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -3041,7 +3041,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete relation with `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -3096,7 +3096,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;relation&quot;</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -3118,7 +3118,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">RelationRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData`</span>
 <span class="sd">        containing relation `RelationId`:</span>
 
@@ -3160,7 +3160,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">RelationFullRecur</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (all levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -3203,7 +3203,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">data</span>
 
     <span class="k">def</span> <span class="nf">RelationFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (two levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -3231,7 +3231,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">RelationsGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the relation as a key</span>
 <span class="sd">        for each relation in `RelationIdList`:</span>
 
@@ -3261,7 +3261,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">Changeset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Context manager for a Changeset.</span>
 
 <span class="sd">        It opens a Changeset, uploads the changes and closes the changeset</span>
@@ -3297,7 +3297,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">ChangesetClose</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">ChangesetGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns changeset with `ChangesetId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -3330,7 +3330,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates current changeset with `ChangesetTags`.</span>
 
 <span class="sd">        If no authentication information are provided,</span>
@@ -3360,7 +3360,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a changeset.</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
@@ -3395,7 +3395,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes current changeset.</span>
 
 <span class="sd">        Returns `ChangesetId`.</span>
@@ -3427,7 +3427,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">CurrentChangesetId</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload data with the `ChangesData` list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -3488,7 +3488,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">ChangesData</span>
 
     <span class="k">def</span> <span class="nf">ChangesetDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data from changeset `ChangesetId`.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -3517,7 +3517,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">only_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">only_closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a dict with the id of the changeset as key</span>
 <span class="sd">        matching all criteria:</span>
 
@@ -3562,7 +3562,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">ChangesetComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a comment to the changeset `ChangesetId`</span>
 
 <span class="sd">        `comment` should be a string.</span>
@@ -3606,7 +3606,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetSubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -3645,7 +3645,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUnsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -3686,7 +3686,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">NotesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes in the specified bounding box:</span>
 
 <span class="sd">            #!python</span>
@@ -3722,7 +3722,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseNotes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a note as dict:</span>
 
 <span class="sd">            #!python</span>
@@ -3745,7 +3745,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseNote</span><span class="p">(</span><span class="n">noteElement</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -3783,7 +3783,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new comment to a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -3792,7 +3792,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteClose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -3804,7 +3804,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NoteReopen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reopens a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -3822,7 +3822,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NoteAction</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">NotesSearch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes that match the given search query.</span>
 
 <span class="sd">        The limit parameter defines how many results should be returned.</span>
@@ -3843,7 +3843,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseNotes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_NoteAction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs an action on a Note with a comment</span>
 
 <span class="sd">        Return the updated note</span>
@@ -3870,7 +3870,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     <span class="c1">##################################################</span>
 
     <span class="k">def</span> <span class="nf">Map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data in bounding box.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -3886,7 +3886,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">ParseOsm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Force the changes to be uploaded to OSM and the changeset to be closed</span>
 
 <span class="sd">        If no authentication information are provided,</span>
@@ -4025,7 +4025,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     password=None,
     passwordfile=None,
     appid=&#39;&#39;,
-    created_by=&#39;osmapi/4.0.0&#39;,
+    created_by=&#39;osmapi/4.1.0&#39;,
     api=&#39;https://www.openstreetmap.org&#39;,
     changesetauto=False,
     changesetautotags={},
@@ -4051,7 +4051,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
 
 <span class="sd">        There are two different ways to authenticate a user.</span>
@@ -4214,7 +4214,7 @@ one (default: 1).</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">Capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the API capabilities as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -4315,7 +4315,7 @@ gain insights of the server in use.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">,</span> <span class="n">NodeVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns node with `NodeId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -4391,7 +4391,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a node based on the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -4485,7 +4485,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates node with the supplied `NodeData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -4583,7 +4583,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete node with `NodeData`:</span>
 
 <span class="sd">            #!python</span>
@@ -4693,7 +4693,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -4743,7 +4743,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeWays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `WayData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -4813,7 +4813,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodeRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing node `NodeId`:</span>
 
 <span class="sd">            #!python</span>
@@ -4901,7 +4901,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NodesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NodeIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the Node as a key</span>
 <span class="sd">        for each node in `NodeIdList`:</span>
 
@@ -4956,7 +4956,7 @@ for multiple nodes.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">,</span> <span class="n">WayVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns way with `WayId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5030,7 +5030,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a way based on the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5126,7 +5126,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates way with the supplied `WayData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5220,7 +5220,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete way with `WayData`:</span>
 
 <span class="sd">            #!python</span>
@@ -5326,7 +5326,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -5376,7 +5376,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData` containing way `WayId`:</span>
 
 <span class="sd">            #!python</span>
@@ -5464,7 +5464,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WayFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data for way `WayId` as list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -5525,7 +5525,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">WaysGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">WayIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the way as a key for</span>
 <span class="sd">        each way in `WayIdList`:</span>
 
@@ -5578,7 +5578,7 @@ each way in <code>WayIdList</code>:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">,</span> <span class="n">RelationVersion</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns relation with `RelationId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5670,7 +5670,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a relation based on the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5784,7 +5784,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates relation with the supplied `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -5896,7 +5896,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete relation with `RelationData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -6020,7 +6020,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with version as key:</span>
 
 <span class="sd">            #!python</span>
@@ -6070,7 +6070,7 @@ otherwise the latest version is returned.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationRelations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of `RelationData`</span>
 <span class="sd">        containing relation `RelationId`:</span>
 
@@ -6160,7 +6160,7 @@ containing relation <code>RelationId</code>:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationFullRecur</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (all levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -6245,7 +6245,7 @@ instead, which return only 2 levels.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the full data (two levels) for relation</span>
 <span class="sd">        `RelationId` as list of dicts:</span>
 
@@ -6312,7 +6312,7 @@ instead, which return only 2 levels.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">RelationsGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RelationIdList</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns dict with the id of the relation as a key</span>
 <span class="sd">        for each relation in `RelationIdList`:</span>
 
@@ -6369,7 +6369,7 @@ for multiple relations.</p>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">Changeset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Context manager for a Changeset.</span>
 
 <span class="sd">        It opens a Changeset, uploads the changes and closes the changeset</span>
@@ -6444,7 +6444,7 @@ with <a href="../osmapi.html#Changeset">osmapi.Changeset</a>({"comment": "Import
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns changeset with `ChangesetId` as a dict:</span>
 
 <span class="sd">            #!python</span>
@@ -6518,7 +6518,7 @@ will be available in the result.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates current changeset with `ChangesetTags`.</span>
 
 <span class="sd">        If no authentication information are provided,</span>
@@ -6575,7 +6575,7 @@ will be available in the result.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a changeset.</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
@@ -6638,7 +6638,7 @@ will be available in the result.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetClose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes current changeset.</span>
 
 <span class="sd">        Returns `ChangesetId`.</span>
@@ -6699,7 +6699,7 @@ will be available in the result.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetUpload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload data with the `ChangesData` list of dicts:</span>
 
 <span class="sd">            #!python</span>
@@ -6794,7 +6794,7 @@ will be available in the result.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data from changeset `ChangesetId`.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -6863,7 +6863,7 @@ will be available in the result.</p>
         <span class="n">only_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">only_closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a dict with the id of the changeset as key</span>
 <span class="sd">        matching all criteria:</span>
 
@@ -6937,7 +6937,7 @@ matching all criteria:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a comment to the changeset `ChangesetId`</span>
 
 <span class="sd">        `comment` should be a string.</span>
@@ -7026,7 +7026,7 @@ matching all criteria:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetSubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -7107,7 +7107,7 @@ matching all criteria:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">ChangesetUnsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Subcribe to the changeset discussion of changeset `ChangesetId`.</span>
 
 <span class="sd">        The user will be informed about new comments (i.e. receive an email).</span>
@@ -7186,7 +7186,7 @@ matching all criteria:</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NotesGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes in the specified bounding box:</span>
 
 <span class="sd">            #!python</span>
@@ -7265,7 +7265,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteGet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a note as dict:</span>
 
 <span class="sd">            #!python</span>
@@ -7321,7 +7321,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteCreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteData</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a note based on the supplied `NoteData` dict:</span>
 
 <span class="sd">            #!python</span>
@@ -7408,7 +7408,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteComment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new comment to a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -7437,7 +7437,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteClose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -7472,7 +7472,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NoteReopen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NoteId</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reopens a note.</span>
 
 <span class="sd">        Returns the updated note.</span>
@@ -7519,7 +7519,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">NotesSearch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of dicts of notes that match the given search query.</span>
 
 <span class="sd">        The limit parameter defines how many results should be returned.</span>
@@ -7565,7 +7565,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">Map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download data in bounding box.</span>
 
 <span class="sd">        Returns list of dict:</span>
@@ -7608,7 +7608,7 @@ The value 0 means only open bugs are returned,
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Force the changes to be uploaded to OSM and the changeset to be closed</span>
 
 <span class="sd">        If no authentication information are provided,</span>

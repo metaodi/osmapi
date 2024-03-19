@@ -2,6 +2,7 @@ from osmapi import OsmApi
 from unittest import mock
 import os
 import unittest
+import codecs
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -26,6 +27,7 @@ class TestOsmApi(unittest.TestCase):
 
         self.session_mock = mock.Mock()
         self.session_mock.request = mock.Mock(return_value=response_mock)
+        self.session_mock.auth = None
 
         if auth:
             self.api = OsmApi(
@@ -48,7 +50,7 @@ class TestOsmApi(unittest.TestCase):
         for filename in filenames:
             path = os.path.join(__location__, "fixtures", filename)
             try:
-                with open(path) as file:
+                with codecs.open(path, "r", "utf-8") as file:
                     return_values.append(file.read())
             except Exception:
                 pass

@@ -17,7 +17,13 @@ class OsmApiSession:
     def __init__(self, base_url, created_by, auth=None, session=None):
         self._api = base_url
         self._created_by = created_by
-        self._auth = auth
+
+        try:
+            self._auth = auth
+            if not auth and session.auth:
+                self._auth = session.auth
+        except AttributeError:
+            pass
 
         self._http_session = session
         self._session = self._get_http_session()
@@ -65,6 +71,10 @@ class OsmApiSession:
         response = self._session.request(method, path, data=send)
         if response.status_code != 200:
             payload = response.content.strip()
+            if response.status_code == 401:
+                raise errors.UnauthorizedApiError(
+                    response.status_code, response.reason, payload
+                )
             if response.status_code == 404:
                 raise errors.ElementNotFoundApiError(
                     response.status_code, response.reason, payload

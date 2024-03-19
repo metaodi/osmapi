@@ -2,6 +2,7 @@ from . import osmapi_test
 import osmapi
 from unittest import mock
 import datetime
+from requests.auth import HTTPBasicAuth
 
 
 class TestOsmApiNode(osmapi_test.TestOsmApi):
@@ -157,6 +158,41 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             osmapi.UsernamePasswordMissingError, "Username/Password missing"
         ):
             self.api.NodeCreate(test_node)
+
+    def test_NodeCreate_unauthorized(self):
+        self._session_mock(auth=True, status=401)
+
+        # setup mock
+        self.api.ChangesetCreate = mock.Mock(return_value=1111)
+        self.api._CurrentChangesetId = 1111
+        test_node = {
+            "lat": 47.287,
+            "lon": 8.765,
+            "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+        }
+
+        with self.assertRaises(osmapi.UnauthorizedApiError):
+            self.api.NodeCreate(test_node)
+
+    def test_NodeCreate_with_session_auth(self):
+        self._session_mock()
+        self.session_mock.auth = HTTPBasicAuth("user", "pass")
+
+        api = osmapi.OsmApi(api=self.api_base, session=self.session_mock)
+
+        # setup mock
+        api.ChangesetCreate = mock.Mock(return_value=1111)
+        api._CurrentChangesetId = 1111
+        test_node = {
+            "lat": 47.287,
+            "lon": 8.765,
+            "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+        }
+
+        cs = api.ChangesetCreate({"comment": "This is a test dataset"})
+        self.assertEqual(cs, 1111)
+        result = api.NodeCreate(test_node)
+        self.assertEqual(result["id"], 3322)
 
     def test_NodeCreate_with_exception(self):
         self._session_mock(auth=True)

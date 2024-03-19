@@ -1,5 +1,6 @@
 # This script shows how to authenticate with OAuth2 with a backend application
-# The token is saved to disk in $HOME/.osmapi/token.json and can be reused until it's revoked or expired.
+# The token is saved to disk in $HOME/.osmapi/token.json
+# It can be reused until it's revoked or expired.
 
 # install oauthlib for requests:  pip install oauthlib requests-oauthlib
 from requests_oauthlib import OAuth2Session
@@ -37,7 +38,10 @@ def get_osmapi_path():
         base_dir = os.getenv("USERPROFILE")
 
     if not base_dir:
-        print("Unable to find home directory (check env vars HOME, HOMEDRIVE, HOMEPATH and USERPROFILE)", file=sys.stderr)
+        print(
+            "Unable to find home directory (check env vars HOME, HOMEDRIVE, HOMEPATH and USERPROFILE)",  # noqa
+            file=sys.stderr,
+        )
         raise Exception("Home directory not found")
 
     return os.path.join(base_dir, ".osmapi")
@@ -47,7 +51,7 @@ def token_saver(token):
     osmapi_path = get_osmapi_path()
     token_path = os.path.join(osmapi_path, "token.json")
 
-    with open(token_path, 'w') as f:
+    with open(token_path, "w") as f:
         print(f"Saving token {token} to {token_path}")
         f.write(json.dumps(token))
 
@@ -56,7 +60,7 @@ def token_loader():
     osmapi_path = get_osmapi_path()
     token_path = os.path.join(osmapi_path, "token.json")
 
-    with open(token_path, 'r') as f:
+    with open(token_path, "r") as f:
         token = json.loads(f.read())
         print(f"Loaded token {token} from {token_path}")
     return token

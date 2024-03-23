@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 from codecs import open
 from setuptools import setup, find_packages
 import re
 
-with open("osmapi/__init__.py", "r") as fd:
+with open("osmapi/__init__.py") as fd:
     version = re.search(
         r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE
     ).group(1)
@@ -12,7 +10,7 @@ with open("osmapi/__init__.py", "r") as fd:
 if not version:
     raise RuntimeError("Cannot find version information")
 
-with open("README.md", "r", encoding="utf-8") as f:
+with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(

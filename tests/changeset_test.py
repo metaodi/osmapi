@@ -208,11 +208,18 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
         {
             "type": "node",
             "action": "create",
-            "data": {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            },
+            "data": [
+                {
+                    "lat": 47.123,
+                    "lon": 8.555,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                },
+                {
+                    "lat": 47.125,
+                    "lon": 8.557,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                },
+            ],
         }
     ]
 
@@ -221,6 +228,11 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
         b'<osmChange version="0.6" generator="osmapi/4.1.0">\n'
         b"<create>\n"
         b'  <node lat="47.123" lon="8.555" visible="true" '
+        b'changeset="4444">\n'
+        b'    <tag k="amenity" v="place_of_worship"/>\n'
+        b'    <tag k="religion" v="pastafarian"/>\n'
+        b"  </node>\n"
+        b'  <node lat="47.125" lon="8.557" visible="true" '
         b'changeset="4444">\n'
         b'    <tag k="amenity" v="place_of_worship"/>\n'
         b'    <tag k="religion" v="pastafarian"/>\n'
@@ -239,11 +251,11 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
     assert result[0]["action"] == changesdata[0]["action"]
 
     data = result[0]["data"]
-    assert data["lat"] == changesdata[0]["data"]["lat"]
-    assert data["lon"] == changesdata[0]["data"]["lon"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
-    assert data["id"] == 4295832900
-    assert result[0]["data"]["version"] == 1
+    assert data[0]["lat"] == changesdata[0]["data"][0]["lat"]
+    assert data[0]["lon"] == changesdata[0]["data"][0]["lon"]
+    assert data[0]["tag"] == changesdata[0]["data"][0]["tag"]
+    assert data[0]["id"] == 4295832900
+    assert result[0]["data"][0]["version"] == 1
 
 
 def test_ChangesetUpload_modify_way(auth_api, add_response):
@@ -255,29 +267,31 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
         {
             "type": "way",
             "action": "modify",
-            "data": {
-                "id": 4294967296,
-                "version": 2,
-                "nd": [
-                    4295832773,
-                    4295832773,
-                    4294967304,
-                    4294967303,
-                    4294967300,
-                    4608751,
-                    4294967305,
-                    4294967302,
-                    8548430,
-                    4294967296,
-                    4294967301,
-                    4294967298,
-                    4294967306,
-                    7855737,
-                    4294967297,
-                    4294967299,
-                ],
-                "tag": {"highway": "secondary", "name": "Stansted Road"},
-            },
+            "data": [
+                {
+                    "id": 4294967296,
+                    "version": 2,
+                    "nd": [
+                        4295832773,
+                        4295832773,
+                        4294967304,
+                        4294967303,
+                        4294967300,
+                        4608751,
+                        4294967305,
+                        4294967302,
+                        8548430,
+                        4294967296,
+                        4294967301,
+                        4294967298,
+                        4294967306,
+                        7855737,
+                        4294967297,
+                        4294967299,
+                    ],
+                    "tag": {"highway": "secondary", "name": "Stansted Road"},
+                }
+            ],
         }
     ]
 
@@ -313,16 +327,16 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
     # Call
     auth_api.ChangesetCreate()
     result = auth_api.ChangesetUpload(changesdata)
-
     # Assert
     assert xmltosorteddict(resp.calls[1].request.body) == upload_xml
 
     assert result[0]["type"] == changesdata[0]["type"]
     assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]["data"]
-    assert data["nd"] == changesdata[0]["data"]["nd"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
+    data = result[0]["data"][0]
+    print(data)
+    assert data["nd"] == changesdata[0]["data"][0]["nd"]
+    assert data["tag"] == changesdata[0]["data"][0]["tag"]
     assert data["id"] == 4294967296
     assert data["version"] == 3
 
@@ -336,19 +350,21 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
         {
             "type": "relation",
             "action": "delete",
-            "data": {
-                "id": 676,
-                "version": 2,
-                "member": [
-                    {"ref": 4799, "role": "outer", "type": "way"},
-                    {"ref": 9391, "role": "outer", "type": "way"},
-                ],
-                "tag": {
-                    "admin_level": "9",
-                    "boundary": "administrative",
-                    "type": "multipolygon",
-                },
-            },
+            "data": [
+                {
+                    "id": 676,
+                    "version": 2,
+                    "member": [
+                        {"ref": 4799, "role": "outer", "type": "way"},
+                        {"ref": 9391, "role": "outer", "type": "way"},
+                    ],
+                    "tag": {
+                        "admin_level": "9",
+                        "boundary": "administrative",
+                        "type": "multipolygon",
+                    },
+                }
+            ],
         }
     ]
 
@@ -377,9 +393,9 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
     assert result[0]["type"] == changesdata[0]["type"]
     assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]["data"]
-    assert data["member"], changesdata[0]["data"]["member"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
+    data = result[0]["data"][0]
+    assert data["member"], changesdata[0]["data"][0]["member"]
+    assert data["tag"] == changesdata[0]["data"][0]["tag"]
     assert data["id"] == 676
     assert "version" not in data
 
@@ -393,19 +409,21 @@ def test_ChangesetUpload_invalid_response(auth_api, add_response):
         {
             "type": "relation",
             "action": "delete",
-            "data": {
-                "id": 676,
-                "version": 2,
-                "member": [
-                    {"ref": 4799, "role": "outer", "type": "way"},
-                    {"ref": 9391, "role": "outer", "type": "way"},
-                ],
-                "tag": {
-                    "admin_level": "9",
-                    "boundary": "administrative",
-                    "type": "multipolygon",
-                },
-            },
+            "data": [
+                {
+                    "id": 676,
+                    "version": 2,
+                    "member": [
+                        {"ref": 4799, "role": "outer", "type": "way"},
+                        {"ref": 9391, "role": "outer", "type": "way"},
+                    ],
+                    "tag": {
+                        "admin_level": "9",
+                        "boundary": "administrative",
+                        "type": "multipolygon",
+                    },
+                }
+            ],
         }
     ]
 
@@ -421,11 +439,13 @@ def test_ChangesetUpload_no_auth(api):
         {
             "type": "node",
             "action": "create",
-            "data": {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            },
+            "data": [
+                {
+                    "lat": 47.123,
+                    "lon": 8.555,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                }
+            ],
         }
     ]
 

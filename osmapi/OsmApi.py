@@ -25,6 +25,8 @@ Find all information about changes of the different versions of this module
 
 """
 
+from typing import Union
+from typing_extensions import Self
 import xml.dom.minidom
 import xml.parsers.expat
 import urllib.parse
@@ -37,6 +39,7 @@ from . import dom
 from . import errors
 from . import http
 from . import parser
+from . import types
 from . import xmlbuilder
 
 
@@ -61,7 +64,7 @@ class OsmApi:
         changesetautosize=500,
         changesetautomulti=1,
         session=None,
-    ):
+    ) -> None:
         """
         Initialized the OsmApi object.
 
@@ -151,13 +154,13 @@ class OsmApi:
             self._api, self._created_by, auth=auth, session=self.http_session
         )
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         self._session = http.OsmApiSession(
             self._api, self._created_by, session=self.http_session
         )
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args) -> None:
         self.close()
 
     def close(self):
@@ -174,7 +177,7 @@ class OsmApi:
     # Capabilities                                   #
     ##################################################
 
-    def Capabilities(self):
+    def Capabilities(self) -> types.CapabilitiesDict:
         """
         Returns the API capabilities as a dict:
 
@@ -229,7 +232,7 @@ class OsmApi:
     # Node                                           #
     ##################################################
 
-    def NodeGet(self, NodeId, NodeVersion=-1):
+    def NodeGet(self, NodeId: Union[str, int], NodeVersion: int = -1):
         """
         Returns node with `NodeId` as a dict:
 

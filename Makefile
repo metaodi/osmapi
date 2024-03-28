@@ -21,6 +21,7 @@ format:  ## Format source code (black codestyle)
 lint:  ## Linting of source code
 	python -m black --check --diff osmapi examples tests *.py
 	python -m flake8 --statistics --show-source .
+	python -m mypy --strict
 
 test:  ## Run tests (run in UTF-8 mode in Windows)
 	python -Xutf8 -m pytest --cov=osmapi tests/

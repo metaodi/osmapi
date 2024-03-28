@@ -25,3 +25,11 @@ repos:
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: python
+        pass_filenames: false
+        files: '.*\.py$'

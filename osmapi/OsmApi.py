@@ -25,7 +25,7 @@ Find all information about changes of the different versions of this module
 
 """
 
-from typing import Union
+from typing import Union, List
 from typing_extensions import Self
 import xml.dom.minidom
 import xml.parsers.expat
@@ -53,7 +53,7 @@ class OsmApi:
 
     def __init__(
         self,
-        username=None,
+        username: str | None = None,
         password=None,
         passwordfile=None,
         appid="",
@@ -131,7 +131,7 @@ class OsmApi:
         self._changesetautomulti = changesetautomulti
         self._changesetautocpt = 0
         # data to upload for auto group
-        self._changesetautodata = []
+        self._changesetautodata: List[types.ChangesetDataDict] = []
 
         # Get API
         self._api = api.strip("/")

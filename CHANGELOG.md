@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Only include `discussion` key in result of `ChangesetGet` if `include_discussion=True` (see issue #163, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 
 ## [4.1.0] - 2024-03-19
 ### Added

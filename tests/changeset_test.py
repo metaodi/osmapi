@@ -586,7 +586,6 @@ def test_ChangesetGetWithoutDiscussion(api, add_response):
         "id": 52924,
         "closed_at": datetime.datetime(2015, 1, 1, 14, 54, 2),
         "created_at": datetime.datetime(2015, 1, 1, 14, 54, 1),
-        "comments_count": 3,
         "max_lat": "58.3369242",
         "max_lon": "25.8829107",
         "min_lat": "58.336813",

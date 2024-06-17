@@ -1218,10 +1218,10 @@ class OsmApi:
         """
         path = f"/api/0.6/changeset/{ChangesetId}"
         if include_discussion:
-            path += "?include_discussion=true"
+            path = f"{path}?include_discussion=true"
         data = self._session._get(path)
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-        return dom.DomParseChangeset(changeset)
+        return dom.DomParseChangeset(changeset, include_discussion=include_discussion)
 
     def ChangesetUpdate(self, ChangesetTags={}):
         """

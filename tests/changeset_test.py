@@ -47,7 +47,6 @@ def test_ChangesetGet(api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -536,7 +535,6 @@ def test_ChangesetsGet(api, add_response):
             "closed_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
             "created_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
             "id": 41417,
-            "discussion": [],
             "max_lat": "58.8997467",
             "max_lon": "22.7364427",
             "min_lat": "58.8501594",
@@ -598,6 +596,30 @@ def test_ChangesetGetWithComment(api, add_response):
     }
 
 
+def test_ChangesetGetWithoutDiscussion(api, add_response):
+    resp = add_response(GET, "/changeset/52924")
+
+    result = api.ChangesetGet(52924, include_discussion=False)
+
+    assert resp.calls[0].request.params == {}
+    assert result == {
+        "id": 52924,
+        "closed_at": datetime.datetime(2015, 1, 1, 14, 54, 2),
+        "created_at": datetime.datetime(2015, 1, 1, 14, 54, 1),
+        "max_lat": "58.3369242",
+        "max_lon": "25.8829107",
+        "min_lat": "58.336813",
+        "min_lon": "25.8823273",
+        "open": False,
+        "user": "metaodi",
+        "uid": 1841,
+        "tag": {
+            "comment": "My test",
+            "created_by": "osmapi/0.4.1",
+        },
+    }
+
+
 def test_ChangesetComment(auth_api, add_response):
     resp = add_response(POST, "/changeset/123/comment")
 
@@ -608,7 +630,6 @@ def test_ChangesetComment(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -638,7 +659,6 @@ def test_ChangesetSubscribe(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -679,7 +699,6 @@ def test_ChangesetUnsubscribe(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",

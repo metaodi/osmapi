@@ -19,6 +19,11 @@ load_dotenv(find_dotenv())
 client_id = os.getenv("OSM_OAUTH_CLIENT_ID")
 client_secret = os.getenv("OSM_OAUTH_CLIENT_SECRET")
 
+if client_id is None:
+    raise
+if client_secret is None:
+    raise
+
 # special value for redirect_uri for non-web applications
 redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
 

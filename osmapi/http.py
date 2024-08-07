@@ -14,9 +14,10 @@ class OsmApiSession:
     MAX_RETRY_LIMIT = 5
     """Maximum retries if a call to the remote API fails (default: 5)"""
 
-    def __init__(self, base_url, created_by, auth=None, session=None):
+    def __init__(self, base_url, created_by, auth=None, session=None, timeout=30):
         self._api = base_url
         self._created_by = created_by
+        self._timeout = timeout
 
         try:
             self._auth = auth
@@ -68,7 +69,17 @@ class OsmApiSession:
         if auth and not self._auth:
             raise errors.UsernamePasswordMissingError("Username/Password missing")
 
-        response = self._session.request(method, path, data=send)
+        try:
+            response = self._session.request(
+                method, path, data=send, timeout=self._timeout
+            )
+        except requests.exceptions.Timeout:
+            raise errors.TimeoutApiError(
+                0, f"Request timed out (timeout={self._timeout})", ""
+            )
+        except requests.exceptions.RequestException as e:
+            raise errors.ApiError(0, str(e), "")
+
         if response.status_code != 200:
             payload = response.content.strip()
             if response.status_code == 401:
@@ -106,9 +117,10 @@ class OsmApiSession:
                         self._sleep()
                     self._session = self._get_http_session()
                 else:
+                    logger.exception("ApiError Exception occured")
                     raise
             except Exception as e:
-                logger.error(e)
+                logger.exception("General exception occured")
                 if i == self.MAX_RETRY_LIMIT:
                     if isinstance(e, errors.OsmApiError):
                         raise

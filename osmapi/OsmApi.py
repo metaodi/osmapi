@@ -61,6 +61,7 @@ class OsmApi:
         changesetautosize=500,
         changesetautomulti=1,
         session=None,
+        timeout=30,
     ):
         """
         Initialized the OsmApi object.
@@ -93,6 +94,14 @@ class OsmApi:
         upload (default: 500) and `changesetautomulti` defines how many
         uploads should be made before closing a changeset and opening a new
         one (default: 1).
+
+        The `session` parameter can be used to provide a custom requests
+        http session object (requests.Session). This might be useful for
+        OAuth authentication, custom adapters, hooks etc.
+
+        Finally the `timeout` parameter is used by the http session to
+        throw an expcetion if the the timeout (in seconds) has passed without
+        an answer from the server.
         """
 
         # Get username
@@ -144,16 +153,24 @@ class OsmApi:
 
         # Http connection
         self.http_session = session
+        self._timeout = timeout
         auth = None
         if self._username and self._password:
             auth = (self._username, self._password)
         self._session = http.OsmApiSession(
-            self._api, self._created_by, auth=auth, session=self.http_session
+            self._api,
+            self._created_by,
+            auth=auth,
+            session=self.http_session,
+            timeout=self._timeout,
         )
 
     def __enter__(self):
         self._session = http.OsmApiSession(
-            self._api, self._created_by, session=self.http_session
+            self._api,
+            self._created_by,
+            session=self.http_session,
+            timeout=self._timeout,
         )
         return self
 

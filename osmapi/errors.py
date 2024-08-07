@@ -144,3 +144,9 @@ class PreconditionFailedApiError(ApiError):
     - When a relation has elements that do not exist or are not visible
     - When a node/way/relation is still used in a way/relation
     """
+
+
+class TimeoutApiError(ApiError):
+    """
+    Error if the http request ran into a timeout
+    """

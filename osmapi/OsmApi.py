@@ -61,6 +61,7 @@ class OsmApi:
         changesetautosize=500,
         changesetautomulti=1,
         session=None,
+        timeout=30,
     ):
         """
         Initialized the OsmApi object.
@@ -93,6 +94,14 @@ class OsmApi:
         upload (default: 500) and `changesetautomulti` defines how many
         uploads should be made before closing a changeset and opening a new
         one (default: 1).
+
+        The `session` parameter can be used to provide a custom requests
+        http session object (requests.Session). This might be useful for
+        OAuth authentication, custom adapters, hooks etc.
+
+        Finally the `timeout` parameter is used by the http session to
+        throw an expcetion if the the timeout (in seconds) has passed without
+        an answer from the server.
         """
 
         # Get username
@@ -144,16 +153,24 @@ class OsmApi:
 
         # Http connection
         self.http_session = session
+        self._timeout = timeout
         auth = None
         if self._username and self._password:
             auth = (self._username, self._password)
         self._session = http.OsmApiSession(
-            self._api, self._created_by, auth=auth, session=self.http_session
+            self._api,
+            self._created_by,
+            auth=auth,
+            session=self.http_session,
+            timeout=self._timeout,
         )
 
     def __enter__(self):
         self._session = http.OsmApiSession(
-            self._api, self._created_by, session=self.http_session
+            self._api,
+            self._created_by,
+            session=self.http_session,
+            timeout=self._timeout,
         )
         return self
 
@@ -1218,10 +1235,10 @@ class OsmApi:
         """
         path = f"/api/0.6/changeset/{ChangesetId}"
         if include_discussion:
-            path += "?include_discussion=true"
+            path = f"{path}?include_discussion=true"
         data = self._session._get(path)
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-        return dom.DomParseChangeset(changeset)
+        return dom.DomParseChangeset(changeset, include_discussion=include_discussion)
 
     def ChangesetUpdate(self, ChangesetTags={}):
         """
@@ -1345,10 +1362,8 @@ class OsmApi:
         data += self._created_by + '">\n'
         for change in ChangesData:
             data += "<" + change["action"] + ">\n"
-            change["data"]["changeset"] = self._CurrentChangesetId
-            data += xmlbuilder._XmlBuild(
-                change["type"], change["data"], False, data=self
-            ).decode("utf-8")
+            changeData = change["data"]
+            data += self._add_changeset_data(changeData, change["type"])
             data += "</" + change["action"] + ">\n"
         data += "</osmChange>"
         try:
@@ -1373,12 +1388,13 @@ class OsmApi:
                 f"The XML response from the OSM API is invalid: {e!r}"
             )
 
-        for item, change in zip(data, ChangesData):
+        for change in ChangesData:
             if change["action"] == "delete":
-                change["data"].pop("version")
+                for changeElement in change["data"]:
+                    changeElement.pop("version")
             else:
-                change["data"]["id"] = int(item.getAttribute("new_id"))
-                change["data"]["version"] = int(item.getAttribute("new_version"))
+                self._assign_id_and_version(data, change["data"])
+
         return ChangesData
 
     def ChangesetDownload(self, ChangesetId):
@@ -1902,3 +1918,17 @@ class OsmApi:
             self.ChangesetClose()
             self._changesetautocpt = 0
         return None
+
+    def _add_changeset_data(self, changeData, type):
+        data = ""
+        for changedElement in changeData:
+            changedElement["changeset"] = self._CurrentChangesetId
+            data += xmlbuilder._XmlBuild(type, changedElement, False, data=self).decode(
+                "utf-8"
+            )
+        return data
+
+    def _assign_id_and_version(self, ResponseData, RequestData):
+        for response, element in zip(ResponseData, RequestData):
+            element["id"] = int(response.getAttribute("new_id"))
+            element["version"] = int(response.getAttribute("new_version"))

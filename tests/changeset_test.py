@@ -3,6 +3,7 @@ import xmltodict
 import datetime
 import pytest
 from responses import GET, PUT, POST
+import requests
 
 
 def xmltosorteddict(xml):
@@ -47,7 +48,6 @@ def test_ChangesetGet(api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -63,6 +63,18 @@ def test_ChangesetGet(api, add_response):
     assert result == test_changeset
 
 
+def test_ChangesetGet_with_timeout(api, add_response):
+    # Setup mock
+    add_response(GET, "/changeset/123", body=requests.exceptions.Timeout())
+
+    # Call
+    with pytest.raises(osmapi.TimeoutApiError) as execinfo:
+        api.ChangesetGet(123)
+    assert (
+        str(execinfo.value) == "Request failed: 0 - Request timed out (timeout=30) - "
+    )
+
+
 def test_ChangesetUpdate(auth_api, add_response):
     # Setup mock
     resp = add_response(PUT, "/changeset/create", filename="test_ChangesetCreate.xml")
@@ -75,10 +87,10 @@ def test_ChangesetUpdate(auth_api, add_response):
     result = auth_api.ChangesetUpdate({"test": "foobar"})
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osm version="0.6" generator="osmapi/4.2.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
-        b'    <tag k="created_by" v="osmapi/4.1.0"/>\n'
+        b'    <tag k="created_by" v="osmapi/4.2.0"/>\n'
         b"  </changeset>\n"
         b"</osm>\n"
     )
@@ -98,7 +110,7 @@ def test_ChangesetUpdate_with_created_by(auth_api, add_response):
     result = auth_api.ChangesetUpdate({"test": "foobar", "created_by": "MyTestOSMApp"})
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osm version="0.6" generator="osmapi/4.2.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="test" v="foobar"/>\n'
         b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
@@ -122,10 +134,10 @@ def test_ChangesetCreate(auth_api, add_response):
 
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osm version="0.6" generator="osmapi/4.2.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
-        b'    <tag k="created_by" v="osmapi/4.1.0"/>\n'
+        b'    <tag k="created_by" v="osmapi/4.2.0"/>\n'
         b"  </changeset>\n"
         b"</osm>\n"
     )
@@ -145,7 +157,7 @@ def test_ChangesetCreate_with_created_by(auth_api, add_response):
 
     changeset_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osm version="0.6" generator="osmapi/4.2.0">\n'
         b'  <changeset visible="true">\n'
         b'    <tag k="foobar" v="A new test changeset"/>\n'
         b'    <tag k="created_by" v="CoolTestApp"/>\n'
@@ -208,19 +220,31 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
         {
             "type": "node",
             "action": "create",
-            "data": {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            },
+            "data": [
+                {
+                    "lat": 47.123,
+                    "lon": 8.555,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                },
+                {
+                    "lat": 47.125,
+                    "lon": 8.557,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                },
+            ],
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/4.2.0">\n'
         b"<create>\n"
         b'  <node lat="47.123" lon="8.555" visible="true" '
+        b'changeset="4444">\n'
+        b'    <tag k="amenity" v="place_of_worship"/>\n'
+        b'    <tag k="religion" v="pastafarian"/>\n'
+        b"  </node>\n"
+        b'  <node lat="47.125" lon="8.557" visible="true" '
         b'changeset="4444">\n'
         b'    <tag k="amenity" v="place_of_worship"/>\n'
         b'    <tag k="religion" v="pastafarian"/>\n'
@@ -239,11 +263,11 @@ def test_ChangesetUpload_create_node(auth_api, add_response):
     assert result[0]["action"] == changesdata[0]["action"]
 
     data = result[0]["data"]
-    assert data["lat"] == changesdata[0]["data"]["lat"]
-    assert data["lon"] == changesdata[0]["data"]["lon"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
-    assert data["id"] == 4295832900
-    assert result[0]["data"]["version"] == 1
+    assert data[0]["lat"] == changesdata[0]["data"][0]["lat"]
+    assert data[0]["lon"] == changesdata[0]["data"][0]["lon"]
+    assert data[0]["tag"] == changesdata[0]["data"][0]["tag"]
+    assert data[0]["id"] == 4295832900
+    assert result[0]["data"][0]["version"] == 1
 
 
 def test_ChangesetUpload_modify_way(auth_api, add_response):
@@ -255,35 +279,37 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
         {
             "type": "way",
             "action": "modify",
-            "data": {
-                "id": 4294967296,
-                "version": 2,
-                "nd": [
-                    4295832773,
-                    4295832773,
-                    4294967304,
-                    4294967303,
-                    4294967300,
-                    4608751,
-                    4294967305,
-                    4294967302,
-                    8548430,
-                    4294967296,
-                    4294967301,
-                    4294967298,
-                    4294967306,
-                    7855737,
-                    4294967297,
-                    4294967299,
-                ],
-                "tag": {"highway": "secondary", "name": "Stansted Road"},
-            },
+            "data": [
+                {
+                    "id": 4294967296,
+                    "version": 2,
+                    "nd": [
+                        4295832773,
+                        4295832773,
+                        4294967304,
+                        4294967303,
+                        4294967300,
+                        4608751,
+                        4294967305,
+                        4294967302,
+                        8548430,
+                        4294967296,
+                        4294967301,
+                        4294967298,
+                        4294967306,
+                        7855737,
+                        4294967297,
+                        4294967299,
+                    ],
+                    "tag": {"highway": "secondary", "name": "Stansted Road"},
+                }
+            ],
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/4.2.0">\n'
         b"<modify>\n"
         b'  <way id="4294967296" version="2" visible="true" '
         b'changeset="4444">\n'
@@ -313,16 +339,16 @@ def test_ChangesetUpload_modify_way(auth_api, add_response):
     # Call
     auth_api.ChangesetCreate()
     result = auth_api.ChangesetUpload(changesdata)
-
     # Assert
     assert xmltosorteddict(resp.calls[1].request.body) == upload_xml
 
     assert result[0]["type"] == changesdata[0]["type"]
     assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]["data"]
-    assert data["nd"] == changesdata[0]["data"]["nd"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
+    data = result[0]["data"][0]
+    print(data)
+    assert data["nd"] == changesdata[0]["data"][0]["nd"]
+    assert data["tag"] == changesdata[0]["data"][0]["tag"]
     assert data["id"] == 4294967296
     assert data["version"] == 3
 
@@ -336,25 +362,27 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
         {
             "type": "relation",
             "action": "delete",
-            "data": {
-                "id": 676,
-                "version": 2,
-                "member": [
-                    {"ref": 4799, "role": "outer", "type": "way"},
-                    {"ref": 9391, "role": "outer", "type": "way"},
-                ],
-                "tag": {
-                    "admin_level": "9",
-                    "boundary": "administrative",
-                    "type": "multipolygon",
-                },
-            },
+            "data": [
+                {
+                    "id": 676,
+                    "version": 2,
+                    "member": [
+                        {"ref": 4799, "role": "outer", "type": "way"},
+                        {"ref": 9391, "role": "outer", "type": "way"},
+                    ],
+                    "tag": {
+                        "admin_level": "9",
+                        "boundary": "administrative",
+                        "type": "multipolygon",
+                    },
+                }
+            ],
         }
     ]
 
     upload_xml = xmltosorteddict(
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/4.1.0">\n'
+        b'<osmChange version="0.6" generator="osmapi/4.2.0">\n'
         b"<delete>\n"
         b'  <relation id="676" version="2" visible="true" '
         b'changeset="4444">\n'
@@ -377,9 +405,9 @@ def test_ChangesetUpload_delete_relation(auth_api, add_response):
     assert result[0]["type"] == changesdata[0]["type"]
     assert result[0]["action"] == changesdata[0]["action"]
 
-    data = result[0]["data"]
-    assert data["member"], changesdata[0]["data"]["member"]
-    assert data["tag"] == changesdata[0]["data"]["tag"]
+    data = result[0]["data"][0]
+    assert data["member"], changesdata[0]["data"][0]["member"]
+    assert data["tag"] == changesdata[0]["data"][0]["tag"]
     assert data["id"] == 676
     assert "version" not in data
 
@@ -393,19 +421,21 @@ def test_ChangesetUpload_invalid_response(auth_api, add_response):
         {
             "type": "relation",
             "action": "delete",
-            "data": {
-                "id": 676,
-                "version": 2,
-                "member": [
-                    {"ref": 4799, "role": "outer", "type": "way"},
-                    {"ref": 9391, "role": "outer", "type": "way"},
-                ],
-                "tag": {
-                    "admin_level": "9",
-                    "boundary": "administrative",
-                    "type": "multipolygon",
-                },
-            },
+            "data": [
+                {
+                    "id": 676,
+                    "version": 2,
+                    "member": [
+                        {"ref": 4799, "role": "outer", "type": "way"},
+                        {"ref": 9391, "role": "outer", "type": "way"},
+                    ],
+                    "tag": {
+                        "admin_level": "9",
+                        "boundary": "administrative",
+                        "type": "multipolygon",
+                    },
+                }
+            ],
         }
     ]
 
@@ -421,11 +451,13 @@ def test_ChangesetUpload_no_auth(api):
         {
             "type": "node",
             "action": "create",
-            "data": {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            },
+            "data": [
+                {
+                    "lat": 47.123,
+                    "lon": 8.555,
+                    "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
+                }
+            ],
         }
     ]
 
@@ -516,7 +548,6 @@ def test_ChangesetsGet(api, add_response):
             "closed_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
             "created_at": datetime.datetime(2014, 4, 29, 20, 25, 1),
             "id": 41417,
-            "discussion": [],
             "max_lat": "58.8997467",
             "max_lon": "22.7364427",
             "min_lat": "58.8501594",
@@ -578,6 +609,30 @@ def test_ChangesetGetWithComment(api, add_response):
     }
 
 
+def test_ChangesetGetWithoutDiscussion(api, add_response):
+    resp = add_response(GET, "/changeset/52924")
+
+    result = api.ChangesetGet(52924, include_discussion=False)
+
+    assert resp.calls[0].request.params == {}
+    assert result == {
+        "id": 52924,
+        "closed_at": datetime.datetime(2015, 1, 1, 14, 54, 2),
+        "created_at": datetime.datetime(2015, 1, 1, 14, 54, 1),
+        "max_lat": "58.3369242",
+        "max_lon": "25.8829107",
+        "min_lat": "58.336813",
+        "min_lon": "25.8823273",
+        "open": False,
+        "user": "metaodi",
+        "uid": 1841,
+        "tag": {
+            "comment": "My test",
+            "created_by": "osmapi/0.4.1",
+        },
+    }
+
+
 def test_ChangesetComment(auth_api, add_response):
     resp = add_response(POST, "/changeset/123/comment")
 
@@ -588,7 +643,6 @@ def test_ChangesetComment(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -618,7 +672,6 @@ def test_ChangesetSubscribe(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",
@@ -659,7 +712,6 @@ def test_ChangesetUnsubscribe(auth_api, add_response):
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
         "created_at": datetime.datetime(2009, 9, 7, 21, 57, 36),
-        "discussion": [],
         "max_lat": "52.4710193",
         "max_lon": "-1.4831815",
         "min_lat": "45.9667901",

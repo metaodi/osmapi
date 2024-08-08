@@ -64,13 +64,14 @@ def DomParseRelation(DomElement):
     return result
 
 
-def DomParseChangeset(DomElement):
+def DomParseChangeset(DomElement, include_discussion=False):
     """
     Returns ChangesetData for the changeset.
     """
     result = _DomGetAttributes(DomElement)
     result["tag"] = _DomGetTag(DomElement)
-    result["discussion"] = _DomGetDiscussion(DomElement)
+    if include_discussion:
+        result["discussion"] = _DomGetDiscussion(DomElement)
 
     return result
 

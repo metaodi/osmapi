@@ -133,13 +133,14 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
-<span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns ChangesetData for the changeset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
     <span class="n">result</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetTag</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;discussion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetDiscussion</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">include_discussion</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;discussion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetDiscussion</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span>
 
@@ -403,18 +404,19 @@
 
         
             <span class="def">def</span>
-            <span class="name">DomParseChangeset</span><span class="signature">(DomElement)</span>:
+            <span class="name">DomParseChangeset</span><span class="signature">(DomElement, include_discussion=False)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">DomParseChangeset</span><span class="p">(</span><span class="n">DomElement</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns ChangesetData for the changeset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">_DomGetAttributes</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
     <span class="n">result</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetTag</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;discussion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetDiscussion</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">include_discussion</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;discussion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_DomGetDiscussion</span><span class="p">(</span><span class="n">DomElement</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span>
 </pre></div>

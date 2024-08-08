@@ -292,6 +292,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautosize</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
@@ -324,6 +325,14 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 <span class="sd">        upload (default: 500) and `changesetautomulti` defines how many</span>
 <span class="sd">        uploads should be made before closing a changeset and opening a new</span>
 <span class="sd">        one (default: 1).</span>
+
+<span class="sd">        The `session` parameter can be used to provide a custom requests</span>
+<span class="sd">        http session object (requests.Session). This might be useful for</span>
+<span class="sd">        OAuth authentication, custom adapters, hooks etc.</span>
+
+<span class="sd">        Finally the `timeout` parameter is used by the http session to</span>
+<span class="sd">        throw an expcetion if the the timeout (in seconds) has passed without</span>
+<span class="sd">        an answer from the server.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get username</span>
@@ -375,16 +384,24 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
         <span class="c1"># Http connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">http_session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">:</span>
             <span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">OsmApiSession</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span>
+            <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">OsmApiSession</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -1449,10 +1466,10 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">include_discussion</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">+=</span> <span class="s2">&quot;?include_discussion=true&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">?include_discussion=true&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="n">include_discussion</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1576,10 +1593,8 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;changeset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
-            <span class="n">data</span> <span class="o">+=</span> <span class="n">xmlbuilder</span><span class="o">.</span><span class="n">_XmlBuild</span><span class="p">(</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">changeData</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_changeset_data</span><span class="p">(</span><span class="n">changeData</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/osmChange&gt;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1604,12 +1619,13 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">change</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">changeElement</span> <span class="ow">in</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+                    <span class="n">changeElement</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_id&quot;</span><span class="p">))</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_version&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_assign_id_and_version</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">ChangesData</span>
 
     <span class="k">def</span> <span class="nf">ChangesetDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
@@ -2133,6 +2149,20 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">ChangesetClose</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_changesetautocpt</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_add_changeset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">changeData</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">changedElement</span> <span class="ow">in</span> <span class="n">changeData</span><span class="p">:</span>
+            <span class="n">changedElement</span><span class="p">[</span><span class="s2">&quot;changeset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="n">xmlbuilder</span><span class="o">.</span><span class="n">_XmlBuild</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">changedElement</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+                <span class="s2">&quot;utf-8&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_assign_id_and_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ResponseData</span><span class="p">,</span> <span class="n">RequestData</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">response</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ResponseData</span><span class="p">,</span> <span class="n">RequestData</span><span class="p">):</span>
+            <span class="n">element</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_id&quot;</span><span class="p">))</span>
+            <span class="n">element</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_version&quot;</span><span class="p">))</span>
 </pre></div>
 
         </details>
@@ -2167,6 +2197,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautosize</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
@@ -2199,6 +2230,14 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 <span class="sd">        upload (default: 500) and `changesetautomulti` defines how many</span>
 <span class="sd">        uploads should be made before closing a changeset and opening a new</span>
 <span class="sd">        one (default: 1).</span>
+
+<span class="sd">        The `session` parameter can be used to provide a custom requests</span>
+<span class="sd">        http session object (requests.Session). This might be useful for</span>
+<span class="sd">        OAuth authentication, custom adapters, hooks etc.</span>
+
+<span class="sd">        Finally the `timeout` parameter is used by the http session to</span>
+<span class="sd">        throw an expcetion if the the timeout (in seconds) has passed without</span>
+<span class="sd">        an answer from the server.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get username</span>
@@ -2250,16 +2289,24 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
         <span class="c1"># Http connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">http_session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">:</span>
             <span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">OsmApiSession</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span>
+            <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">OsmApiSession</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -3324,10 +3371,10 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">include_discussion</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">+=</span> <span class="s2">&quot;?include_discussion=true&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">?include_discussion=true&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="n">include_discussion</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ChangesetUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetTags</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3451,10 +3498,8 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;changeset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
-            <span class="n">data</span> <span class="o">+=</span> <span class="n">xmlbuilder</span><span class="o">.</span><span class="n">_XmlBuild</span><span class="p">(</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">changeData</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_changeset_data</span><span class="p">(</span><span class="n">changeData</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/osmChange&gt;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -3479,12 +3524,13 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">change</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">changeElement</span> <span class="ow">in</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+                    <span class="n">changeElement</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_id&quot;</span><span class="p">))</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_version&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_assign_id_and_version</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">ChangesData</span>
 
     <span class="k">def</span> <span class="nf">ChangesetDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChangesetId</span><span class="p">):</span>
@@ -4008,6 +4054,20 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">ChangesetClose</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_changesetautocpt</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_add_changeset_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">changeData</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">changedElement</span> <span class="ow">in</span> <span class="n">changeData</span><span class="p">:</span>
+            <span class="n">changedElement</span><span class="p">[</span><span class="s2">&quot;changeset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="n">xmlbuilder</span><span class="o">.</span><span class="n">_XmlBuild</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">changedElement</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+                <span class="s2">&quot;utf-8&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_assign_id_and_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ResponseData</span><span class="p">,</span> <span class="n">RequestData</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">response</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ResponseData</span><span class="p">,</span> <span class="n">RequestData</span><span class="p">):</span>
+            <span class="n">element</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_id&quot;</span><span class="p">))</span>
+            <span class="n">element</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_version&quot;</span><span class="p">))</span>
 </pre></div>
 
         </details>
@@ -4025,13 +4085,14 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     password=None,
     passwordfile=None,
     appid=&#39;&#39;,
-    created_by=&#39;osmapi/4.1.0&#39;,
+    created_by=&#39;osmapi/4.2.0&#39;,
     api=&#39;https://www.openstreetmap.org&#39;,
     changesetauto=False,
     changesetautotags={},
     changesetautosize=500,
     changesetautomulti=1,
-    session=None
+    session=None,
+    timeout=30
 )</span>
     </div>
 
@@ -4050,6 +4111,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="n">changesetautosize</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
         <span class="n">changesetautomulti</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialized the OsmApi object.</span>
@@ -4082,6 +4144,14 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 <span class="sd">        upload (default: 500) and `changesetautomulti` defines how many</span>
 <span class="sd">        uploads should be made before closing a changeset and opening a new</span>
 <span class="sd">        one (default: 1).</span>
+
+<span class="sd">        The `session` parameter can be used to provide a custom requests</span>
+<span class="sd">        http session object (requests.Session). This might be useful for</span>
+<span class="sd">        OAuth authentication, custom adapters, hooks etc.</span>
+
+<span class="sd">        Finally the `timeout` parameter is used by the http session to</span>
+<span class="sd">        throw an expcetion if the the timeout (in seconds) has passed without</span>
+<span class="sd">        an answer from the server.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get username</span>
@@ -4133,11 +4203,16 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
         <span class="c1"># Http connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">http_session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">:</span>
             <span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_username</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">OsmApiSession</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span><span class="p">,</span>
+            <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span>
+            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_session</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">,</span>
         <span class="p">)</span>
 </pre></div>
 
@@ -4173,6 +4248,14 @@ The option <code>changesetautosize</code> defines the size of each
 upload (default: 500) and <code>changesetautomulti</code> defines how many
 uploads should be made before closing a changeset and opening a new
 one (default: 1).</p>
+
+<p>The <code>session</code> parameter can be used to provide a custom requests
+http session object (requests.Session). This might be useful for
+OAuth authentication, custom adapters, hooks etc.</p>
+
+<p>Finally the <code>timeout</code> parameter is used by the http session to
+throw an expcetion if the the timeout (in seconds) has passed without
+an answer from the server.</p>
 </div>
 
 
@@ -6471,10 +6554,10 @@ with <a href="../osmapi.html#Changeset">osmapi.Changeset</a>({"comment": "Import
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">include_discussion</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">+=</span> <span class="s2">&quot;?include_discussion=true&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">?include_discussion=true&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">,</span> <span class="n">include_discussion</span><span class="o">=</span><span class="n">include_discussion</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -6723,10 +6806,8 @@ will be available in the result.</p>
         <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_by</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;changeset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
-            <span class="n">data</span> <span class="o">+=</span> <span class="n">xmlbuilder</span><span class="o">.</span><span class="n">_XmlBuild</span><span class="p">(</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">changeData</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_changeset_data</span><span class="p">(</span><span class="n">changeData</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
             <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/&quot;</span> <span class="o">+</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/osmChange&gt;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -6751,12 +6832,13 @@ will be available in the result.</p>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">change</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ChangesData</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">changeElement</span> <span class="ow">in</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+                    <span class="n">changeElement</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_id&quot;</span><span class="p">))</span>
-                <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;new_version&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_assign_id_and_version</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">ChangesData</span>
 </pre></div>
 

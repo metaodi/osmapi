@@ -84,14 +84,14 @@ Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2):
 
 ```python
 import osmapi
-from oauthcli import OpenStreetMapAuth
+from oauthcli import OpenStreetMapDevAuth
 
 client_id = "<client_id>"
 client_secret = "<client_secret>"
 
 auth = OpenStreetMapDevAuth(
     client_id, client_secret, ['read_prefs', 'write_map']
-).auth_server()
+).auth_code()
 
 api = osmapi.OsmApi(
     api="https://api06.dev.openstreetmap.org",

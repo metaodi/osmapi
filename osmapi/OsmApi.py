@@ -25,6 +25,8 @@ Find all information about changes of the different versions of this module
 
 """
 
+from typing import Union, List
+from typing_extensions import Self
 import xml.dom.minidom
 import xml.parsers.expat
 import urllib.parse
@@ -37,6 +39,7 @@ from . import dom
 from . import errors
 from . import http
 from . import parser
+from . import types
 from . import xmlbuilder
 
 
@@ -49,19 +52,19 @@ class OsmApi:
     """
 
     def __init__(
-        self,
-        username=None,
-        password=None,
-        passwordfile=None,
-        appid="",
-        created_by=f"osmapi/{__version__}",
-        api="https://www.openstreetmap.org",
-        changesetauto=False,
-        changesetautotags={},
-        changesetautosize=500,
-        changesetautomulti=1,
-        session=None,
-    ):
+        self: Self,
+        username: str | None = None,
+        password: str | None = None,
+        passwordfile: str | None = None,
+        appid: str = "",
+        created_by: str = f"osmapi/{__version__}",
+        api: str = "https://www.openstreetmap.org",
+        changesetauto: bool = False,
+        changesetautotags: dict = {},
+        changesetautosize: int = 500,
+        changesetautomulti: int = 1,
+        session: types.SessionLike | None = None,
+    ) -> None:
         """
         Initialized the OsmApi object.
 
@@ -128,7 +131,7 @@ class OsmApi:
         self._changesetautomulti = changesetautomulti
         self._changesetautocpt = 0
         # data to upload for auto group
-        self._changesetautodata = []
+        self._changesetautodata: List[types.ChangesetDataDict] = []
 
         # Get API
         self._api = api.strip("/")
@@ -151,13 +154,13 @@ class OsmApi:
             self._api, self._created_by, auth=auth, session=self.http_session
         )
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         self._session = http.OsmApiSession(
             self._api, self._created_by, session=self.http_session
         )
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args) -> None:
         self.close()
 
     def close(self):
@@ -174,7 +177,7 @@ class OsmApi:
     # Capabilities                                   #
     ##################################################
 
-    def Capabilities(self):
+    def Capabilities(self) -> types.CapabilitiesDict:
         """
         Returns the API capabilities as a dict:
 
@@ -229,7 +232,7 @@ class OsmApi:
     # Node                                           #
     ##################################################
 
-    def NodeGet(self, NodeId, NodeVersion=-1):
+    def NodeGet(self, NodeId: Union[str, int], NodeVersion: int = -1):
         """
         Returns node with `NodeId` as a dict:
 

@@ -150,6 +150,12 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#TimeoutApiError">TimeoutApiError</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -314,6 +320,12 @@
 <span class="sd">    - When a way has nodes that do not exist or are not visible</span>
 <span class="sd">    - When a relation has elements that do not exist or are not visible</span>
 <span class="sd">    - When a node/way/relation is still used in a way/relation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if the http request ran into a timeout</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 
@@ -1153,6 +1165,48 @@ of the element</p>
                                 <dd id="PreconditionFailedApiError.with_traceback" class="function">with_traceback</dd>
                 <dd id="PreconditionFailedApiError.add_note" class="function">add_note</dd>
                 <dd id="PreconditionFailedApiError.args" class="variable">args</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="TimeoutApiError">
+                                <div class="attr class">
+        <a class="headerlink" href="#TimeoutApiError">#&nbsp;&nbsp</a>
+
+        
+        <span class="def">class</span>
+        <span class="name">TimeoutApiError</span><wbr>(<span class="base"><a href="#ApiError">ApiError</a></span>):
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if the http request ran into a timeout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Error if the http request ran into a timeout</p>
+</div>
+
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ApiError">ApiError</a></dt>
+                                <dd id="TimeoutApiError.__init__" class="function"><a href="#ApiError.__init__">ApiError</a></dd>
+                <dd id="TimeoutApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
+                <dd id="TimeoutApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
+                <dd id="TimeoutApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+
+            </div>
+            <div><dt>builtins.BaseException</dt>
+                                <dd id="TimeoutApiError.with_traceback" class="function">with_traceback</dd>
+                <dd id="TimeoutApiError.add_note" class="function">add_note</dd>
+                <dd id="TimeoutApiError.args" class="variable">args</dd>
 
             </div>
                                 </dl>

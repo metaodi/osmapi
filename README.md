@@ -80,7 +80,7 @@ To use OAuth 2.0, you must register an application with an OpenStreetMap account
 or on the [production server](https://www.openstreetmap.org/oauth2/applications).
 Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
 
-Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2):
+Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2) on the development server, replace `OpenStreetMapDevAuth` with `OpenStreetMapAuth` to use the production server:
 
 ```python
 import osmapi

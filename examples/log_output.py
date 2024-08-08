@@ -1,4 +1,3 @@
-# install cli-oauth2 for requests:  pip install cli-oauth2
 import osmapi
 import logging
 from pprint import pformat

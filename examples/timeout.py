@@ -17,18 +17,14 @@ auth = OpenStreetMapDevAuth(
 
 # Use a normal timeout (30s is the default value)
 normal_timeout_api = osmapi.OsmApi(
-    api="https://api06.dev.openstreetmap.org",
-    session=auth.session,
-    timeout=30
+    api="https://api06.dev.openstreetmap.org", session=auth.session, timeout=30
 )
 changeset_id = normal_timeout_api.ChangesetCreate({"comment": "My first test"})
 print(f"Create new changeset {changeset_id}")
 
 # Deliberatly using a very small timeout to show what happens when a timeout occurs
 low_timeout_api = osmapi.OsmApi(
-    api="https://api06.dev.openstreetmap.org",
-    session=auth.session,
-    timeout=0.00001
+    api="https://api06.dev.openstreetmap.org", session=auth.session, timeout=0.00001
 )
 try:
     changeset_id = low_timeout_api.ChangesetCreate({"comment": "My first test"})

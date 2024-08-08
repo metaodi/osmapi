@@ -3,6 +3,7 @@ import xmltodict
 import datetime
 import pytest
 from responses import GET, PUT, POST
+import requests
 
 
 def xmltosorteddict(xml):
@@ -60,6 +61,18 @@ def test_ChangesetGet(api, add_response):
         },
     }
     assert result == test_changeset
+
+
+def test_ChangesetGet_with_timeout(api, add_response):
+    # Setup mock
+    add_response(GET, "/changeset/123", body=requests.exceptions.Timeout())
+
+    # Call
+    with pytest.raises(osmapi.TimeoutApiError) as execinfo:
+        api.ChangesetGet(123)
+    assert (
+        str(execinfo.value) == "Request failed: 0 - Request timed out (timeout=30) - "
+    )
 
 
 def test_ChangesetUpdate(auth_api, add_response):

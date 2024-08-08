@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add a new `timeout` parameter to `OsmApi` which allows to set a timeout in seconds (default is 30s) for the API requests (see issue #170, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
+
 ### Changed
 - Only include `discussion` key in result of `ChangesetGet` if `include_discussion=True` (see issue #163, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
 - Update OAuth example in README using [cli-oauth2](https://github.com/Zverik/cli-oauth2) (see PR #169, thanks [Ilya Zverev](https://github.com/Zverik)

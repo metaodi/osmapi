@@ -103,7 +103,7 @@ To credit the application that supplies changes to OSM, an `appid` can be provid
 This is a string identifying the application.
 If this is omitted "osmapi" is used.
 
-```
+```python
 api = osmapi.OsmApi(
     api="https://api06.dev.openstreetmap.org",
     appid="MyOSM Script"

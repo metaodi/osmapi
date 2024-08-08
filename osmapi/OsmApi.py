@@ -52,18 +52,18 @@ class OsmApi:
     """
 
     def __init__(
-        self,
+        self: Self,
         username: str | None = None,
-        password=None,
-        passwordfile=None,
-        appid="",
-        created_by=f"osmapi/{__version__}",
-        api="https://www.openstreetmap.org",
-        changesetauto=False,
-        changesetautotags={},
-        changesetautosize=500,
-        changesetautomulti=1,
-        session=None,
+        password: str | None = None,
+        passwordfile: str | None = None,
+        appid: str = "",
+        created_by: str = f"osmapi/{__version__}",
+        api: str = "https://www.openstreetmap.org",
+        changesetauto: bool = False,
+        changesetautotags: dict = {},
+        changesetautosize: int = 500,
+        changesetautomulti: int = 1,
+        session: types.SessionLike | None = None,
     ) -> None:
         """
         Initialized the OsmApi object.

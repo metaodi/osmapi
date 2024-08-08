@@ -1,4 +1,4 @@
-from typing import Literal, TypedDict, List, Dict
+from typing import Literal, TypedDict, List, Dict, Any, Protocol
 
 # from typing import Literal, List, Optional, TypedDict, Dict
 
@@ -70,3 +70,20 @@ class ChangesetDataDict(TypedDict):
     action: Literal["delete", "", ""]
     type: OsmType
     data: OsmData
+
+
+class ChangesetTagsDict(TypedDict):
+    str: str
+
+
+class HttpResponse:
+    status_code: int
+    content: str
+    reason: str
+
+
+class SessionLike(Protocol):
+    auth: Any
+    headers: dict
+
+    def request(method: str, path: str, data: dict) -> HttpResponse: ...

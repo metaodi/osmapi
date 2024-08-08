@@ -47,17 +47,6 @@ u'version': 1, u'user': u'Mede',
 u'lat': 59.9503044, u'tag': {}, u'id': 123}
 ```
 
-### Constructor
-
-```python
-import osmapi
-api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "you", password = "***")
-api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
-api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # if only the passwordfile is specified, the credentials on the first line of the file will be used
-```
-
-Note: Each line in the password file should have the format _user:password_
-
 ### Write to OpenStreetMap
 
 ```python
@@ -106,6 +95,24 @@ with api.Changeset({"comment": "My first test"}) as changeset_id:
 
 An alternative way using the `requests-oauthlib` library can be found
 [in the examples](https://github.com/metaodi/osmapi/blob/develop/examples/oauth2.py).
+
+
+### User agent / credit for application
+
+To credit the application that supplies changes to OSM, an `appid` can be provided.
+This is a string identifying the application.
+If this is omitted "osmapi" is used.
+
+```
+api = osmapi.OsmApi(
+    api="https://api06.dev.openstreetmap.org",
+    appid="MyOSM Script"
+)
+```
+
+ If then changesets are made using this osmapi instance, they get a tag `created_by` with the following content: `MyOSM Script (osmapi/<version>)` 
+ 
+ [Example changeset of `Kort` using osmapi](https://www.openstreetmap.org/changeset/55197785)
 
 ## Note about imports / automated edits
 

@@ -1172,9 +1172,17 @@ class OsmApi:
     # User                                           #
     ##################################################
 
-    def UserHistory(self, UserId, TimeFrom="1990-01-01"):
+    def UserHistory(self,
+                    UserId: str,
+                    TimeFrom: str = "1990-01-01",
+                    limit: int = 0) -> dict[dict]:
         """
         Returns a dict of dicts of changesets for user.
+
+        Limits and defaults (changesets `maximum_elements` and changesets
+        `default_query_limit`) can be received by `capabilities()` method from
+        `/api/capabilities`.
+
         Structure example:
 
             #!python
@@ -1220,6 +1228,8 @@ class OsmApi:
                     if created_at > newest_time_from:
                         newest_time_from = created_at
                         need_fetch = True
+            if limit and len(result) >= limit:
+                need_fetch = False
             time.sleep(0.2)
         return result
 

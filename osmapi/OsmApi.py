@@ -1174,7 +1174,7 @@ class OsmApi:
 
     def UserHistory(self,
                     UserId: str,
-                    TimeFrom: str = "1990-01-01",
+                    TimeFrom: datetime.datetime = datetime.datetime(2005, 1, 1, 0, 0, 0),
                     limit: int = 0) -> dict[dict]:
         """
         Returns a dict of dicts of changesets for user.
@@ -1207,7 +1207,7 @@ class OsmApi:
                 },
             }
         """
-        newest_time_from = datetime.datetime.fromisoformat(TimeFrom)
+        newest_time_from = TimeFrom
         result = {}
         need_fetch = True
         while need_fetch:

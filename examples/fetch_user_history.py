@@ -15,6 +15,7 @@ import datetime
 import argparse
 import logging
 import json
+import pickle
 import osmapi
 
 
@@ -27,7 +28,10 @@ def parse_args():
         required=True,
         help="OpenStreetMap username. Should be url-encoded if has special characters.",
     )
-    parser.add_argument("--filename", help="JSON file to store.")
+    parser.add_argument(
+        "--filename",
+        help="File to store, supported formats: JSON and pickle (selected by extension).",
+    )
     parser.add_argument(
         "--api",
         default="https://api.openstreetmap.org/api/0.6/",
@@ -65,6 +69,27 @@ def parse_args():
     return args
 
 
+def save_file(filename: str, history: dict[dict]):
+    """
+    Handle storing a file in different formats, depending on filename extension.
+    If no filename provided, print to STDOUT.
+    """
+    logging.info("Items in history: %s", len(history))
+    if not filename:
+        for k, v in history.items():
+            print(k, ":", v)
+    elif filename.endswith(".json"):
+        with open(filename, encoding="utf-8", mode="w") as f:
+            # `default=str` — to avoid an error
+            # "Object of type datetime is not JSON serializable"
+            json.dump(history, f, indent=4, default=str)
+    elif filename.endswith(".pickle"):
+        with open(filename, mode="wb") as f:
+            pickle.dump(history, f)
+    else:
+        logging.error("Use known file extension to save the file.")
+
+
 def main():
     config = parse_args()
     logging.debug("Script started!")
@@ -76,14 +101,7 @@ def main():
         )
     else:
         history = api.UserHistory(UserId=config.username, limit=config.limit)
-    if config.filename:
-        with open(config.filename, encoding="utf-8", mode="w") as f:
-            # `default=str` — to avoid an error
-            # "Object of type datetime is not JSON serializable"
-            json.dump(history, f, indent=4, default=str)
-    else:
-        for k, v in history.items():
-            print(k, ":", v)
+    save_file(config.filename, history)
     logging.debug("Script finished!")
 
 

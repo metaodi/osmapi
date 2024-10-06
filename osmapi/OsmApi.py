@@ -25,7 +25,6 @@ Find all information about changes of the different versions of this module
 
 """
 
-import time
 import datetime
 import xml.dom.minidom
 import xml.parsers.expat
@@ -1230,7 +1229,6 @@ class OsmApi:
                         need_fetch = True
             if limit and len(result) >= limit:
                 need_fetch = False
-            time.sleep(0.2)
         return result
 
     ##################################################

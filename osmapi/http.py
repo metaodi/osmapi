@@ -121,6 +121,8 @@ class OsmApiSession:
                 else:
                     logger.exception("ApiError Exception occured")
                     raise
+            except errors.UsernamePasswordMissingError:
+                raise
             except Exception as e:
                 logger.exception("General exception occured")
                 if i == self.MAX_RETRY_LIMIT:
@@ -128,7 +130,7 @@ class OsmApiSession:
                         raise
                     raise errors.MaximumRetryLimitReachedError(
                         f"Give up after {i} retries"
-                    )
+                    ) from e
                 if i != 1:
                     self._sleep()
                 self._session = self._get_http_session()

@@ -150,3 +150,10 @@ class TimeoutApiError(ApiError):
     """
     Error if the http request ran into a timeout
     """
+
+
+class ConnectionApiError(ApiError):
+    """
+    Error if there was a network error (e.g. DNS failure, refused connection)
+    while connecting to the remote server.
+    """

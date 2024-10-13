@@ -73,12 +73,14 @@ class OsmApiSession:
             response = self._session.request(
                 method, path, data=send, timeout=self._timeout
             )
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as e:
             raise errors.TimeoutApiError(
                 0, f"Request timed out (timeout={self._timeout})", ""
-            )
+            ) from e
+        except requests.exceptions.ConnectionError as e:
+            raise errors.ConnectionApiError(0, f"Connection error: {str(e)}", "") from e
         except requests.exceptions.RequestException as e:
-            raise errors.ApiError(0, str(e), "")
+            raise errors.ApiError(0, str(e), "") from e
 
         if response.status_code != 200:
             payload = response.content.strip()

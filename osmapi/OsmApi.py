@@ -1183,7 +1183,7 @@ class OsmApi:
 
             with osmapi.Changeset({"comment": "Import script XYZ"}) as changeset_id:
                 print(f"Part of changeset {changeset_id}")
-                api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+                api.NodeCreate({"lon":1, "lat":1, "tag": {}})
 
         If `ChangesetTags` are given, this tags are applied (key/value).
 

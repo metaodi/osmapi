@@ -6500,7 +6500,7 @@ import osmapi
 
 with <a href="../osmapi.html#Changeset">osmapi.Changeset</a>({"comment": "Import script XYZ"}) as changeset_id:
     print(f"Part of changeset {changeset_id}")
-    api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+    api.NodeCreate({"lon":1, "lat":1, "tag": {}})
 </code></pre>
 
 <p>If <code>ChangesetTags</code> are given, this tags are applied (key/value).</p>

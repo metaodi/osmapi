@@ -40,21 +40,21 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 >>> import osmapi
 >>> api = osmapi.OsmApi()
 >>> print(api.NodeGet(123))
-{u'changeset': 532907, u'uid': 14298,
-u'timestamp': u'2007-09-29T09:19:17Z',
-u'lon': 10.790009299999999, u'visible': True,
-u'version': 1, u'user': u'Mede',
-u'lat': 59.9503044, u'tag': {}, u'id': 123}
+{'changeset': 532907, 'uid': 14298,
+'timestamp': '2007-09-29T09:19:17Z',
+'lon': 10.790009299999999, 'visible': True,
+'version': 1, 'user': 'Mede',
+'lat': 59.9503044, 'tag': {}, 'id': 123}
 ```
 
 ### Write to OpenStreetMap
 
 ```python
 >>> import osmapi
->>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
->>> api.ChangesetCreate({u"comment": u"My first test"})
->>> print(api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}}))
-{u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
+>>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "metaodi", password = "*******")
+>>> api.ChangesetCreate({"comment": "My first test"})
+>>> print(api.NodeCreate({"lon":1, "lat":1, "tag": {}}))
+{'changeset': 532907, 'lon': 1, 'version': 1, 'lat': 1, 'tag': {}, 'id': 164684}
 >>> api.ChangesetClose()
 ```
 

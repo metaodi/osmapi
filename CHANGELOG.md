@@ -4,6 +4,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [4.3.0] - 2025-01-21
+### Added
+- New `ConnectionApiError` when a connection or network error occurs (see issue #176, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
+- 
+### Changed
+- Use the pattern `raise XYError from e` to explicitly add the original exceptions as the cause for a new (wrapped) exception.
+
+### Removed
+- Remove u string prefix (see PR #180, thanks [Boris Verkhovskiy](https://github.com/verhovsky))
+
 ## [4.2.0] - 2024-08-08
 ### Added
 - Add a new `timeout` parameter to `OsmApi` which allows to set a timeout in seconds (default is 30s) for the API requests (see issue #170, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
@@ -357,7 +367,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/metaodi/osmapi/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metaodi/osmapi/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/metaodi/osmapi/compare/v3.1.0...v4.0.0

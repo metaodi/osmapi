@@ -1414,7 +1414,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">            with osmapi.Changeset({&quot;comment&quot;: &quot;Import script XYZ&quot;}) as changeset_id:</span>
 <span class="sd">                print(f&quot;Part of changeset {changeset_id}&quot;)</span>
-<span class="sd">                api.NodeCreate({u&quot;lon&quot;:1, u&quot;lat&quot;:1, u&quot;tag&quot;: {}})</span>
+<span class="sd">                api.NodeCreate({&quot;lon&quot;:1, &quot;lat&quot;:1, &quot;tag&quot;: {}})</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
 
@@ -1496,7 +1496,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
@@ -1563,7 +1565,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="n">CurrentChangesetId</span>
@@ -1607,7 +1611,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
             <span class="p">):</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1617,7 +1623,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">except</span> <span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">expat</span><span class="o">.</span><span class="n">ExpatError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">XmlResponseInvalidError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
@@ -1740,7 +1746,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1779,7 +1787,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1817,7 +1827,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">/unsubscribe&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
@@ -1998,7 +2008,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="n">optionalAuth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
@@ -2075,13 +2087,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -2098,13 +2114,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -2119,13 +2139,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -3319,7 +3343,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
 
 <span class="sd">            with osmapi.Changeset({&quot;comment&quot;: &quot;Import script XYZ&quot;}) as changeset_id:</span>
 <span class="sd">                print(f&quot;Part of changeset {changeset_id}&quot;)</span>
-<span class="sd">                api.NodeCreate({u&quot;lon&quot;:1, u&quot;lat&quot;:1, u&quot;tag&quot;: {}})</span>
+<span class="sd">                api.NodeCreate({&quot;lon&quot;:1, &quot;lat&quot;:1, &quot;tag&quot;: {}})</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
 
@@ -3401,7 +3425,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
@@ -3468,7 +3494,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="n">CurrentChangesetId</span>
@@ -3512,7 +3540,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
             <span class="p">):</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">try</span><span class="p">:</span>
@@ -3522,7 +3552,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
         <span class="k">except</span> <span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">expat</span><span class="o">.</span><span class="n">ExpatError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">XmlResponseInvalidError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
@@ -3645,7 +3675,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3684,7 +3716,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3722,7 +3756,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">/unsubscribe&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>
@@ -3903,7 +3937,9 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">optionalAuth</span><span class="o">=</span><span class="n">optionalAuth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NoteAlreadyClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
 
@@ -3980,13 +4016,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -4003,13 +4043,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -4024,13 +4068,17 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
                 <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
                 <span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">VersionMismatchApiError</span><span class="p">(</span>
+                        <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">412</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">PreconditionFailedApiError</span><span class="p">(</span>
                         <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
-                    <span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span>
             <span class="n">OsmData</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -4085,7 +4133,7 @@ or <a href="https://github.com/metaodi/osmapi">on GitHub</a>.</p>
     password=None,
     passwordfile=None,
     appid=&#39;&#39;,
-    created_by=&#39;osmapi/4.2.0&#39;,
+    created_by=&#39;osmapi/4.3.0&#39;,
     api=&#39;https://www.openstreetmap.org&#39;,
     changesetauto=False,
     changesetautotags={},
@@ -6463,7 +6511,7 @@ for multiple relations.</p>
 
 <span class="sd">            with osmapi.Changeset({&quot;comment&quot;: &quot;Import script XYZ&quot;}) as changeset_id:</span>
 <span class="sd">                print(f&quot;Part of changeset {changeset_id}&quot;)</span>
-<span class="sd">                api.NodeCreate({u&quot;lon&quot;:1, u&quot;lat&quot;:1, u&quot;tag&quot;: {}})</span>
+<span class="sd">                api.NodeCreate({&quot;lon&quot;:1, &quot;lat&quot;:1, &quot;tag&quot;: {}})</span>
 
 <span class="sd">        If `ChangesetTags` are given, this tags are applied (key/value).</span>
 
@@ -6500,7 +6548,7 @@ import osmapi
 
 with <a href="../osmapi.html#Changeset">osmapi.Changeset</a>({"comment": "Import script XYZ"}) as changeset_id:
     print(f"Part of changeset {changeset_id}")
-    api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+    api.NodeCreate({"lon":1, "lat":1, "tag": {}})
 </code></pre>
 
 <p>If <code>ChangesetTags</code> are given, this tags are applied (key/value).</p>
@@ -6625,7 +6673,9 @@ will be available in the result.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span>
@@ -6747,7 +6797,9 @@ will be available in the result.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_CurrentChangesetId</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">return</span> <span class="n">CurrentChangesetId</span>
@@ -6820,7 +6872,9 @@ will be available in the result.</p>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="sa">r</span><span class="s2">&quot;The changeset .* was closed at .*&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
             <span class="p">):</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="k">try</span><span class="p">:</span>
@@ -6830,7 +6884,7 @@ will be available in the result.</p>
         <span class="k">except</span> <span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">expat</span><span class="o">.</span><span class="n">ExpatError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">XmlResponseInvalidError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The XML response from the OSM API is invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">!r}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">ChangesData</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
@@ -7056,7 +7110,9 @@ matching all criteria:</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ChangesetClosedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -7140,7 +7196,9 @@ matching all criteria:</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">AlreadySubscribedApiError</span><span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span>
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -7220,7 +7278,7 @@ matching all criteria:</p>
                 <span class="sa">f</span><span class="s2">&quot;/api/0.6/changeset/</span><span class="si">{</span><span class="n">ChangesetId</span><span class="si">}</span><span class="s2">/unsubscribe&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">forceAuth</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">ElementNotFoundApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotSubscribedApiError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">changeset</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">OsmResponseToDom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;changeset&quot;</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">DomParseChangeset</span><span class="p">(</span><span class="n">changeset</span><span class="p">)</span>

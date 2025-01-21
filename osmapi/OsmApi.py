@@ -1183,7 +1183,7 @@ class OsmApi:
 
             with osmapi.Changeset({"comment": "Import script XYZ"}) as changeset_id:
                 print(f"Part of changeset {changeset_id}")
-                api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}})
+                api.NodeCreate({"lon":1, "lat":1, "tag": {}})
 
         If `ChangesetTags` are given, this tags are applied (key/value).
 
@@ -1265,7 +1265,9 @@ class OsmApi:
             )
         except errors.ApiError as e:
             if e.status == 409:
-                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
         return self._CurrentChangesetId
@@ -1332,7 +1334,9 @@ class OsmApi:
             self._CurrentChangesetId = 0
         except errors.ApiError as e:
             if e.status == 409:
-                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
         return CurrentChangesetId
@@ -1376,7 +1380,9 @@ class OsmApi:
             if e.status == 409 and re.search(
                 r"The changeset .* was closed at .*", e.payload
             ):
-                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
         try:
@@ -1386,7 +1392,7 @@ class OsmApi:
         except (xml.parsers.expat.ExpatError, IndexError) as e:
             raise errors.XmlResponseInvalidError(
                 f"The XML response from the OSM API is invalid: {e!r}"
-            )
+            ) from e
 
         for change in ChangesData:
             if change["action"] == "delete":
@@ -1509,7 +1515,9 @@ class OsmApi:
             )
         except errors.ApiError as e:
             if e.status == 409:
-                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                raise errors.ChangesetClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
@@ -1548,7 +1556,9 @@ class OsmApi:
             )
         except errors.ApiError as e:
             if e.status == 409:
-                raise errors.AlreadySubscribedApiError(e.status, e.reason, e.payload)
+                raise errors.AlreadySubscribedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
@@ -1586,7 +1596,7 @@ class OsmApi:
                 f"/api/0.6/changeset/{ChangesetId}/unsubscribe", None, forceAuth=True
             )
         except errors.ElementNotFoundApiError as e:
-            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
+            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload) from e
 
         changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.DomParseChangeset(changeset)
@@ -1767,7 +1777,9 @@ class OsmApi:
             result = self._session._post(uri, None, optionalAuth=optionalAuth)
         except errors.ApiError as e:
             if e.status == 409:
-                raise errors.NoteAlreadyClosedApiError(e.status, e.reason, e.payload)
+                raise errors.NoteAlreadyClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
             else:
                 raise
 
@@ -1844,13 +1856,17 @@ class OsmApi:
                 if e.status == 409 and re.search(
                     r"The changeset .* was closed at .*", e.payload
                 ):
-                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 409:
-                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 412:
                     raise errors.PreconditionFailedApiError(
                         e.status, e.reason, e.payload
-                    )
+                    ) from e
                 else:
                     raise
             OsmData["id"] = int(result.strip())
@@ -1867,13 +1883,17 @@ class OsmApi:
                 if e.status == 409 and re.search(
                     r"The changeset .* was closed at .*", e.payload
                 ):
-                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 409:
-                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 412:
                     raise errors.PreconditionFailedApiError(
                         e.status, e.reason, e.payload
-                    )
+                    ) from e
                 else:
                     raise
             OsmData["version"] = int(result.strip())
@@ -1888,13 +1908,17 @@ class OsmApi:
                 if e.status == 409 and re.search(
                     r"The changeset .* was closed at .*", e.payload
                 ):
-                    raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+                    raise errors.ChangesetClosedApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 409:
-                    raise errors.VersionMismatchApiError(e.status, e.reason, e.payload)
+                    raise errors.VersionMismatchApiError(
+                        e.status, e.reason, e.payload
+                    ) from e
                 elif e.status == 412:
                     raise errors.PreconditionFailedApiError(
                         e.status, e.reason, e.payload
-                    )
+                    ) from e
                 else:
                     raise
             OsmData["version"] = int(result.strip())

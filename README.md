@@ -3,7 +3,7 @@ osmapi
 
 [![Build osmapi](https://github.com/metaodi/osmapi/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/osmapi/actions/workflows/build.yml)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
-[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/develop/LICENSE.txt)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
@@ -26,7 +26,7 @@ The build the documentation locally, you can use
     make docs
 
 This project uses GitHub Pages to publish its documentation.
-To update the online documentation, you need to re-generate the documentation with the above command and update the `master` branch of this repository.
+To update the online documentation, you need to re-generate the documentation with the above command and update the `main` branch of this repository.
 
 ## Examples
 
@@ -40,32 +40,21 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 >>> import osmapi
 >>> api = osmapi.OsmApi()
 >>> print(api.NodeGet(123))
-{u'changeset': 532907, u'uid': 14298,
-u'timestamp': u'2007-09-29T09:19:17Z',
-u'lon': 10.790009299999999, u'visible': True,
-u'version': 1, u'user': u'Mede',
-u'lat': 59.9503044, u'tag': {}, u'id': 123}
+{'changeset': 532907, 'uid': 14298,
+'timestamp': '2007-09-29T09:19:17Z',
+'lon': 10.790009299999999, 'visible': True,
+'version': 1, 'user': 'Mede',
+'lat': 59.9503044, 'tag': {}, 'id': 123}
 ```
-
-### Constructor
-
-```python
-import osmapi
-api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "you", password = "***")
-api = osmapi.OsmApi(username = "you", passwordfile = "/etc/mypasswords")
-api = osmapi.OsmApi(passwordfile = "/etc/mypasswords") # if only the passwordfile is specified, the credentials on the first line of the file will be used
-```
-
-Note: Each line in the password file should have the format _user:password_
 
 ### Write to OpenStreetMap
 
 ```python
 >>> import osmapi
->>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = u"metaodi", password = u"*******")
->>> api.ChangesetCreate({u"comment": u"My first test"})
->>> print(api.NodeCreate({u"lon":1, u"lat":1, u"tag": {}}))
-{u'changeset': 532907, u'lon': 1, u'version': 1, u'lat': 1, u'tag': {}, u'id': 164684}
+>>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "metaodi", password = "*******")
+>>> api.ChangesetCreate({"comment": "My first test"})
+>>> print(api.NodeCreate({"lon":1, "lat":1, "tag": {}}))
+{'changeset': 532907, 'lon': 1, 'version': 1, 'lat': 1, 'tag': {}, 'id': 164684}
 >>> api.ChangesetClose()
 ```
 
@@ -107,6 +96,24 @@ with api.Changeset({"comment": "My first test"}) as changeset_id:
 An alternative way using the `requests-oauthlib` library can be found
 [in the examples](https://github.com/metaodi/osmapi/blob/develop/examples/oauth2.py).
 
+
+### User agent / credit for application
+
+To credit the application that supplies changes to OSM, an `appid` can be provided.
+This is a string identifying the application.
+If this is omitted "osmapi" is used.
+
+```python
+api = osmapi.OsmApi(
+    api="https://api06.dev.openstreetmap.org",
+    appid="MyOSM Script"
+)
+```
+
+ If then changesets are made using this osmapi instance, they get a tag `created_by` with the following content: `MyOSM Script (osmapi/<version>)` 
+ 
+ [Example changeset of `Kort` using osmapi](https://www.openstreetmap.org/changeset/55197785)
+
 ## Note about imports / automated edits
 
 Scripted imports and automated edits should only be carried out by those with experience and understanding of the way the OpenStreetMap community creates maps, and only with careful **planning** and **consultation** with the local community.
@@ -140,8 +147,8 @@ To create a new release, follow these steps (please respect [Semantic Versioning
 1. Adapt the version number in `osmapi/__init__.py`
 1. Update the CHANGELOG with the version
 1. Re-build the documentation (`make docs`)
-1. Create a pull request to merge develop into master (make sure the tests pass!)
-1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the master branch)
+1. Create a [pull request to merge develop into main](https://github.com/metaodi/osmapi/compare/main...develop) (make sure the tests pass!)
+1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the main branch)
 1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_python.yml) on every tagged commit
 
 ## Attribution

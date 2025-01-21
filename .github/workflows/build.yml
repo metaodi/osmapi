@@ -2,7 +2,7 @@ name: Test osmapi package
 on:
   pull_request:
   push:
-    branches: [master, develop]
+    branches: [main, develop]
 jobs:
   test:
     runs-on: ubuntu-latest

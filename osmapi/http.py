@@ -73,12 +73,14 @@ class OsmApiSession:
             response = self._session.request(
                 method, path, data=send, timeout=self._timeout
             )
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as e:
             raise errors.TimeoutApiError(
                 0, f"Request timed out (timeout={self._timeout})", ""
-            )
+            ) from e
+        except requests.exceptions.ConnectionError as e:
+            raise errors.ConnectionApiError(0, f"Connection error: {str(e)}", "") from e
         except requests.exceptions.RequestException as e:
-            raise errors.ApiError(0, str(e), "")
+            raise errors.ApiError(0, str(e), "") from e
 
         if response.status_code != 200:
             payload = response.content.strip()
@@ -119,6 +121,8 @@ class OsmApiSession:
                 else:
                     logger.exception("ApiError Exception occured")
                     raise
+            except errors.UsernamePasswordMissingError:
+                raise
             except Exception as e:
                 logger.exception("General exception occured")
                 if i == self.MAX_RETRY_LIMIT:
@@ -126,7 +130,7 @@ class OsmApiSession:
                         raise
                     raise errors.MaximumRetryLimitReachedError(
                         f"Give up after {i} retries"
-                    )
+                    ) from e
                 if i != 1:
                     self._sleep()
                 self._session = self._get_http_session()

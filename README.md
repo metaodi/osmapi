@@ -3,7 +3,7 @@ osmapi
 
 [![Build osmapi](https://github.com/metaodi/osmapi/actions/workflows/build.yml/badge.svg)](https://github.com/metaodi/osmapi/actions/workflows/build.yml)
 [![Version](https://img.shields.io/pypi/v/osmapi.svg)](https://pypi.python.org/pypi/osmapi/)
-[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/pypi/l/osmapi.svg)](https://github.com/metaodi/osmapi/blob/develop/LICENSE.txt)
 [![Coverage](https://img.shields.io/coveralls/metaodi/osmapi/develop.svg)](https://coveralls.io/r/metaodi/osmapi?branch=develop)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
@@ -26,7 +26,7 @@ The build the documentation locally, you can use
     make docs
 
 This project uses GitHub Pages to publish its documentation.
-To update the online documentation, you need to re-generate the documentation with the above command and update the `master` branch of this repository.
+To update the online documentation, you need to re-generate the documentation with the above command and update the `main` branch of this repository.
 
 ## Examples
 

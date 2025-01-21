@@ -156,6 +156,12 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#ConnectionApiError">ConnectionApiError</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -326,6 +332,13 @@
 <span class="k">class</span> <span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Error if the http request ran into a timeout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
+<span class="sd">    while connecting to the remote server.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 
@@ -1207,6 +1220,50 @@ of the element</p>
                                 <dd id="TimeoutApiError.with_traceback" class="function">with_traceback</dd>
                 <dd id="TimeoutApiError.add_note" class="function">add_note</dd>
                 <dd id="TimeoutApiError.args" class="variable">args</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="ConnectionApiError">
+                                <div class="attr class">
+        <a class="headerlink" href="#ConnectionApiError">#&nbsp;&nbsp</a>
+
+        
+        <span class="def">class</span>
+        <span class="name">ConnectionApiError</span><wbr>(<span class="base"><a href="#ApiError">ApiError</a></span>):
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
+<span class="sd">    while connecting to the remote server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Error if there was a network error (e.g. DNS failure, refused connection)
+while connecting to the remote server.</p>
+</div>
+
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ApiError">ApiError</a></dt>
+                                <dd id="ConnectionApiError.__init__" class="function"><a href="#ApiError.__init__">ApiError</a></dd>
+                <dd id="ConnectionApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
+                <dd id="ConnectionApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
+                <dd id="ConnectionApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+
+            </div>
+            <div><dt>builtins.BaseException</dt>
+                                <dd id="ConnectionApiError.with_traceback" class="function">with_traceback</dd>
+                <dd id="ConnectionApiError.add_note" class="function">add_note</dd>
+                <dd id="ConnectionApiError.args" class="variable">args</dd>
 
             </div>
                                 </dl>

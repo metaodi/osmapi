@@ -23,7 +23,7 @@ def ParseOsm(data):
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
-        )
+        ) from e
 
     result = []
     for elem in data.childNodes:
@@ -55,7 +55,7 @@ def ParseOsc(data):
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
-        )
+        ) from e
 
     result = []
     for action in data.childNodes:

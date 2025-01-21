@@ -63,6 +63,23 @@ def test_ChangesetGet(api, add_response):
     assert result == test_changeset
 
 
+def test_ChangesetGet_with_connection_error(api, add_response):
+    # Setup mock
+    add_response(
+        GET,
+        "/changeset/123",
+        body=requests.exceptions.ConnectionError("Connection aborted."),
+    ),
+
+    # Call
+    with pytest.raises(osmapi.ConnectionApiError) as execinfo:
+        api.ChangesetGet(123)
+    assert (
+        str(execinfo.value)
+        == "Request failed: 0 - Connection error: Connection aborted. - "
+    )
+
+
 def test_ChangesetGet_with_timeout(api, add_response):
     # Setup mock
     add_response(GET, "/changeset/123", body=requests.exceptions.Timeout())

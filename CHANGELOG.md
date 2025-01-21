@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New `ConnectionApiError` when a connection or network error occurs (see issue #176, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
+- 
+### Changed
+- Use the pattern `raise XYError from e` to explicitly add the original exceptions as the cause for a new (wrapped) exception.
+
 ### Removed
 - Remove u string prefix (see PR #180, thanks [Boris Verkhovskiy](https://github.com/verhovsky))
 

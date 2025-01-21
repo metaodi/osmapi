@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Removed
+- Remove u string prefix (see PR #180, thanks [Boris Verkhovskiy](https://github.com/verhovsky))
 
 ## [4.2.0] - 2024-08-08
 ### Added

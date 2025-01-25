@@ -25,6 +25,7 @@ Find all information about changes of the different versions of this module
 
 """
 
+import datetime
 import xml.dom.minidom
 import xml.parsers.expat
 import urllib.parse
@@ -1164,6 +1165,70 @@ class OsmApi:
         for relation in relations:
             data = dom.DomParseRelation(relation)
             result[data["id"]] = data
+        return result
+
+    ##################################################
+    # User                                           #
+    ##################################################
+
+    def UserHistory(self,
+                    UserId: str,
+                    TimeFrom: datetime.datetime = datetime.datetime(2005, 1, 1, 0, 0, 0),
+                    limit: int = 0) -> dict[dict]:
+        """
+        Returns a dict of dicts of changesets for user.
+
+        Limits and defaults (changesets `maximum_elements` and changesets
+        `default_query_limit`) can be received by `capabilities()` method from
+        `/api/capabilities`.
+
+        Structure example:
+
+            #!python
+            {
+                3325270: {'changes_count': '28',
+                          'closed_at': datetime.datetime(2009, 12, 8, 14, 39, 50),
+                          'comments_count': 0,
+                          'created_at': datetime.datetime(2009, 12, 8, 14, 39, 47),
+                          'discussion': [],
+                          'id': 3325270,
+                          'max_lat': '54.3280590',
+                          'max_lon': '59.3791874',
+                          'min_lat': '54.3241120',
+                          'min_lon': '59.3739293',
+                          'open': False,
+                          'tag': {'comment': 'text',
+                                  'created_by': 'text'},
+                          'uid': 91771,
+                          'user': 'Alexey Vazhnov'}},
+                {
+                    ...
+                },
+            }
+        """
+        newest_time_from = TimeFrom
+        result = {}
+        need_fetch = True
+        while need_fetch:
+            need_fetch = False
+            time_str_ruby = newest_time_from.isoformat()
+            uri = f"/api/0.6/changesets?from={time_str_ruby}&order=oldest&display_name={UserId}"
+            data = self._session._get(uri)
+            changes = dom.OsmResponseToDom(data, tag="changeset")
+            for change in changes:
+                data = dom.DomParseChangeset(change, include_discussion=True)
+                change_id = data["id"]
+                logger.debug("id: %s", change_id)
+                if change_id in result:
+                    logger.debug("Ignoring id %s (already in result)", change_id)
+                else:
+                    result[change_id] = data
+                    created_at = data["created_at"]
+                    if created_at > newest_time_from:
+                        newest_time_from = created_at
+                        need_fetch = True
+            if limit and len(result) >= limit:
+                need_fetch = False
         return result
 
     ##################################################

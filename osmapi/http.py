@@ -66,8 +66,10 @@ class OsmApiSession:
         # Add API base URL to path
         path = self._api + path
 
-        if auth and not self._auth:
-            raise errors.UsernamePasswordMissingError("Username/Password missing")
+        if auth and not (self._auth or self._session.headers.get("Authorization")):
+            raise errors.UsernamePasswordMissingError(
+                "No username/password or 'Authorization' header provided"
+            )
 
         try:
             response = self._session.request(

@@ -143,8 +143,6 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             self.api.NodeCreate(test_node)
 
     def test_NodeCreate_wo_auth(self):
-        self._session_mock()
-
         # setup mock
         self.api.ChangesetCreate = mock.Mock(return_value=1111)
         self.api._CurrentChangesetId = 1111
@@ -155,7 +153,8 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         }
 
         with self.assertRaisesRegex(
-            osmapi.UsernamePasswordMissingError, "Username/Password missing"
+            osmapi.UsernamePasswordMissingError,
+            "No username/password or 'Authorization' header provided",
         ):
             self.api.NodeCreate(test_node)
 

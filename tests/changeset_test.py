@@ -480,7 +480,9 @@ def test_ChangesetUpload_no_auth(api):
 
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetUpload(changesdata)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert (
+        str(execinfo.value) == "No username/password or 'Authorization' header provided"
+    )
 
 
 def test_ChangesetDownload(api, add_response):
@@ -677,7 +679,9 @@ def test_ChangesetComment(auth_api, add_response):
 def test_ChangesetComment_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetComment(123, comment="test comment")
-    assert str(execinfo.value) == "Username/Password missing"
+    assert (
+        str(execinfo.value) == "No username/password or 'Authorization' header provided"
+    )
 
 
 def test_ChangesetSubscribe(auth_api, add_response):
@@ -717,7 +721,9 @@ def test_ChangesetSubscribeWhenAlreadySubscribed(auth_api, add_response):
 def test_ChangesetSubscribe_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetSubscribe(45627)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert (
+        str(execinfo.value) == "No username/password or 'Authorization' header provided"
+    )
 
 
 def test_ChangesetUnsubscribe(auth_api, add_response):
@@ -757,4 +763,6 @@ def test_ChangesetUnsubscribeWhenNotSubscribed(auth_api, add_response):
 def test_ChangesetUnsubscribe_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetUnsubscribe(45627)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert (
+        str(execinfo.value) == "No username/password or 'Authorization' header provided"
+    )

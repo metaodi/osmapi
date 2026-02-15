@@ -3,7 +3,7 @@ import itertools as it
 import logging
 import requests
 import time
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 
 from . import errors
 

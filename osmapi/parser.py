@@ -1,12 +1,12 @@
 import xml.dom.minidom
 import xml.parsers.expat
-from typing import List, Dict, Any
+from typing import Any
 
 from . import errors
 from . import dom
 
 
-def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
+def ParseOsm(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osm data.
 
@@ -26,7 +26,7 @@ def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     for elem in data_parsed.childNodes:
         if elem.nodeName == "node":
             result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})  # type: ignore[arg-type]  # noqa: E501
@@ -37,7 +37,7 @@ def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
     return result
 
 
-def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
+def ParseOsc(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osc data.
 
@@ -58,7 +58,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     for action in data_parsed.childNodes:
         if action.nodeName == "#text":
             continue
@@ -90,7 +90,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
     return result
 
 
-def ParseNotes(data: bytes) -> List[Dict[str, Any]]:
+def ParseNotes(data: bytes) -> list[dict[str, Any]]:
     """
     Parse notes data.
 
@@ -112,7 +112,7 @@ def ParseNotes(data: bytes) -> List[Dict[str, Any]]:
         ]
     """
     noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     for noteElement in noteElements:  # type: ignore[union-attr]
         note = dom.DomParseNote(noteElement)
         result.append(note)

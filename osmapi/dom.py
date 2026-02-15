@@ -2,7 +2,7 @@ from datetime import datetime
 import xml.dom.minidom
 import xml.parsers.expat
 import logging
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Union, Optional
 from xml.dom.minidom import Element
 
 from . import errors
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def OsmResponseToDom(
     response: bytes, tag: str, single: bool = False, allow_empty: bool = False
-) -> Union[Element, List[Element]]:
+) -> Union[Element, list[Element]]:
     """
     Returns the (sub-) DOM parsed from an OSM response
     """
@@ -38,7 +38,7 @@ def OsmResponseToDom(
     return list(all_data)
 
 
-def DomParseNode(DomElement: Element) -> Dict[str, Any]:
+def DomParseNode(DomElement: Element) -> dict[str, Any]:
     """
     Returns NodeData for the node.
     """
@@ -47,7 +47,7 @@ def DomParseNode(DomElement: Element) -> Dict[str, Any]:
     return result
 
 
-def DomParseWay(DomElement: Element) -> Dict[str, Any]:
+def DomParseWay(DomElement: Element) -> dict[str, Any]:
     """
     Returns WayData for the way.
     """
@@ -57,7 +57,7 @@ def DomParseWay(DomElement: Element) -> Dict[str, Any]:
     return result
 
 
-def DomParseRelation(DomElement: Element) -> Dict[str, Any]:
+def DomParseRelation(DomElement: Element) -> dict[str, Any]:
     """
     Returns RelationData for the relation.
     """
@@ -69,7 +69,7 @@ def DomParseRelation(DomElement: Element) -> Dict[str, Any]:
 
 def DomParseChangeset(
     DomElement: Element, include_discussion: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Returns ChangesetData for the changeset.
     """
@@ -81,7 +81,7 @@ def DomParseChangeset(
     return result
 
 
-def DomParseNote(DomElement: Element) -> Dict[str, Any]:
+def DomParseNote(DomElement: Element) -> dict[str, Any]:
     """
     Returns NoteData for the note.
     """
@@ -100,7 +100,7 @@ def DomParseNote(DomElement: Element) -> Dict[str, Any]:
     return result
 
 
-def _DomGetAttributes(DomElement: Element) -> Dict[str, Any]:
+def _DomGetAttributes(DomElement: Element) -> dict[str, Any]:
     """
     Returns a formated dictionnary of attributes of a DomElement.
     """
@@ -108,7 +108,7 @@ def _DomGetAttributes(DomElement: Element) -> Dict[str, Any]:
     def is_true(v: str) -> bool:
         return v == "true"
 
-    attribute_mapping: Dict[str, Any] = {
+    attribute_mapping: dict[str, Any] = {
         "uid": int,
         "changeset": int,
         "version": int,
@@ -124,7 +124,7 @@ def _DomGetAttributes(DomElement: Element) -> Dict[str, Any]:
         "closed_at": _ParseDate,
         "date": _ParseDate,
     }
-    result: Dict[str, Any] = {}
+    result: dict[str, Any] = {}
     for k, v in DomElement.attributes.items():
         try:
             result[k] = attribute_mapping[k](v)
@@ -133,11 +133,11 @@ def _DomGetAttributes(DomElement: Element) -> Dict[str, Any]:
     return result
 
 
-def _DomGetTag(DomElement: Element) -> Dict[str, str]:
+def _DomGetTag(DomElement: Element) -> dict[str, str]:
     """
     Returns the dictionnary of tags of a DomElement.
     """
-    result: Dict[str, str] = {}
+    result: dict[str, str] = {}
     for t in DomElement.getElementsByTagName("tag"):
         k = t.attributes["k"].value
         v = t.attributes["v"].value
@@ -145,21 +145,21 @@ def _DomGetTag(DomElement: Element) -> Dict[str, str]:
     return result
 
 
-def _DomGetNd(DomElement: Element) -> List[int]:
+def _DomGetNd(DomElement: Element) -> list[int]:
     """
     Returns the list of nodes of a DomElement.
     """
-    result: List[int] = []
+    result: list[int] = []
     for t in DomElement.getElementsByTagName("nd"):
         result.append(int(int(t.attributes["ref"].value)))
     return result
 
 
-def _DomGetDiscussion(DomElement: Element) -> List[Dict[str, Any]]:
+def _DomGetDiscussion(DomElement: Element) -> list[dict[str, Any]]:
     """
     Returns the dictionnary of comments of a DomElement.
     """
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     try:
         discussion = DomElement.getElementsByTagName("discussion")[0]
         for t in discussion.getElementsByTagName("comment"):
@@ -171,13 +171,13 @@ def _DomGetDiscussion(DomElement: Element) -> List[Dict[str, Any]]:
     return result
 
 
-def _DomGetComments(DomElement: Element) -> List[Dict[str, Any]]:
+def _DomGetComments(DomElement: Element) -> list[dict[str, Any]]:
     """
     Returns the list of comments of a DomElement.
     """
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     for t in DomElement.getElementsByTagName("comment"):
-        comment: Dict[str, Any] = {}
+        comment: dict[str, Any] = {}
         comment["date"] = _ParseDate(xmlbuilder._GetXmlValue(t, "date"))
         comment["action"] = xmlbuilder._GetXmlValue(t, "action")
         comment["text"] = xmlbuilder._GetXmlValue(t, "text")
@@ -188,11 +188,11 @@ def _DomGetComments(DomElement: Element) -> List[Dict[str, Any]]:
     return result
 
 
-def _DomGetMember(DomElement: Element) -> List[Dict[str, Any]]:
+def _DomGetMember(DomElement: Element) -> list[dict[str, Any]]:
     """
     Returns a list of relation members.
     """
-    result: List[Dict[str, Any]] = []
+    result: list[dict[str, Any]] = []
     for m in DomElement.getElementsByTagName("member"):
         result.append(_DomGetAttributes(m))
     return result

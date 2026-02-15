@@ -31,7 +31,7 @@ import urllib.parse
 import re
 import logging
 from contextlib import contextmanager
-from typing import Any, cast
+from typing import Any, Optional, cast
 from xml.dom.minidom import Element
 import requests
 
@@ -52,17 +52,17 @@ class OsmApi:
 
     def __init__(
         self,
-        username: str | None = None,
-        password: str | None = None,
-        passwordfile: str | None = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        passwordfile: Optional[str] = None,
         appid: str = "",
         created_by: str = f"osmapi/{__version__}",
         api: str = "https://www.openstreetmap.org",
         changesetauto: bool = False,
-        changesetautotags: dict[str, str] | None = None,
+        changesetautotags: Optional[dict[str, str]] = None,
         changesetautosize: int = 500,
         changesetautomulti: int = 1,
-        session: requests.Session | None = None,
+        session: Optional[requests.Session] = None,
         timeout: int = 30,
     ) -> None:
         """
@@ -109,7 +109,7 @@ class OsmApi:
             changesetautotags = {}
 
         # Get username
-        self._username: str | None = None
+        self._username: Optional[str] = None
         if username:
             self._username = username
         elif passwordfile:
@@ -118,7 +118,7 @@ class OsmApi:
             self._username = pass_line.partition(":")[0].strip()
 
         # Get password
-        self._password: str | None = None
+        self._password: Optional[str] = None
         if password:
             self._password = password
         elif passwordfile:
@@ -154,9 +154,9 @@ class OsmApi:
         self._CurrentChangesetId: int = 0
 
         # Http connection
-        self.http_session: requests.Session | None = session
+        self.http_session: Optional[requests.Session] = session
         self._timeout: int = timeout
-        auth: tuple[str, str] | None = None
+        auth: Optional[tuple[str, str]] = None
         if self._username and self._password:
             auth = (self._username, self._password)
         self._session: http.OsmApiSession = http.OsmApiSession(
@@ -284,7 +284,7 @@ class OsmApi:
         )
         return dom.DomParseNode(node_element)
 
-    def NodeCreate(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
+    def NodeCreate(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Creates a node based on the supplied `NodeData` dict:
 
@@ -324,7 +324,7 @@ class OsmApi:
         """
         return self._do("create", "node", NodeData)
 
-    def NodeUpdate(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
+    def NodeUpdate(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Updates node with the supplied `NodeData` dict:
 
@@ -366,7 +366,7 @@ class OsmApi:
         """
         return self._do("modify", "node", NodeData)
 
-    def NodeDelete(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
+    def NodeDelete(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Delete node with `NodeData`:
 
@@ -575,7 +575,7 @@ class OsmApi:
         way = cast(Element, dom.OsmResponseToDom(data, tag="way", single=True))
         return dom.DomParseWay(way)
 
-    def WayCreate(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
+    def WayCreate(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Creates a way based on the supplied `WayData` dict:
 
@@ -616,7 +616,7 @@ class OsmApi:
         """
         return self._do("create", "way", WayData)
 
-    def WayUpdate(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
+    def WayUpdate(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Updates way with the supplied `WayData` dict:
 
@@ -656,7 +656,7 @@ class OsmApi:
         """
         return self._do("modify", "way", WayData)
 
-    def WayDelete(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
+    def WayDelete(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Delete way with `WayData`:
 
@@ -864,7 +864,7 @@ class OsmApi:
         )
         return dom.DomParseRelation(relation)
 
-    def RelationCreate(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
+    def RelationCreate(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Creates a relation based on the supplied `RelationData` dict:
 
@@ -914,7 +914,7 @@ class OsmApi:
         """
         return self._do("create", "relation", RelationData)
 
-    def RelationUpdate(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
+    def RelationUpdate(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Updates relation with the supplied `RelationData` dict:
 
@@ -963,7 +963,7 @@ class OsmApi:
         """
         return self._do("modify", "relation", RelationData)
 
-    def RelationDelete(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
+    def RelationDelete(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
         """
         Delete relation with `RelationData` dict:
 
@@ -1185,7 +1185,7 @@ class OsmApi:
     ##################################################
 
     @contextmanager
-    def Changeset(self, ChangesetTags: dict[str, str] | None = None) -> Any:
+    def Changeset(self, ChangesetTags: Optional[dict[str, str]] = None) -> Any:
         """
         Context manager for a Changeset.
 
@@ -1260,7 +1260,7 @@ class OsmApi:
         )
         return dom.DomParseChangeset(changeset, include_discussion=include_discussion)
 
-    def ChangesetUpdate(self, ChangesetTags: dict[str, str] | None = None) -> int:
+    def ChangesetUpdate(self, ChangesetTags: Optional[dict[str, str]] = None) -> int:
         """
         Updates current changeset with `ChangesetTags`.
 
@@ -1294,7 +1294,7 @@ class OsmApi:
                 raise
         return self._CurrentChangesetId
 
-    def ChangesetCreate(self, ChangesetTags: dict[str, str] | None = None) -> int:
+    def ChangesetCreate(self, ChangesetTags: Optional[dict[str, str]] = None) -> int:
         """
         Opens a changeset.
 
@@ -1450,14 +1450,14 @@ class OsmApi:
 
     def ChangesetsGet(  # noqa
         self,
-        min_lon: float | None = None,
-        min_lat: float | None = None,
-        max_lon: float | None = None,
-        max_lat: float | None = None,
-        userid: int | None = None,
-        username: str | None = None,
-        closed_after: str | None = None,
-        created_before: str | None = None,
+        min_lon: Optional[float] = None,
+        min_lat: Optional[float] = None,
+        max_lon: Optional[float] = None,
+        max_lat: Optional[float] = None,
+        userid: Optional[int] = None,
+        username: Optional[str] = None,
+        closed_after: Optional[str] = None,
+        created_before: Optional[str] = None,
         only_open: bool = False,
         only_closed: bool = False,
     ) -> dict[int, dict[str, Any]]:
@@ -1755,7 +1755,7 @@ class OsmApi:
         path = f"/api/0.6/notes/{NoteId}/comment"
         return self._NoteAction(path, comment)
 
-    def NoteClose(self, NoteId: int, comment: str | None = None) -> dict[str, Any]:
+    def NoteClose(self, NoteId: int, comment: Optional[str] = None) -> dict[str, Any]:
         """
         Closes a note.
 
@@ -1767,7 +1767,7 @@ class OsmApi:
         path = f"/api/0.6/notes/{NoteId}/close"
         return self._NoteAction(path, comment, optionalAuth=False)
 
-    def NoteReopen(self, NoteId: int, comment: str | None = None) -> dict[str, Any]:
+    def NoteReopen(self, NoteId: int, comment: Optional[str] = None) -> dict[str, Any]:
         """
         Reopens a note.
 
@@ -1809,7 +1809,7 @@ class OsmApi:
         return parser.ParseNotes(data)
 
     def _NoteAction(
-        self, path: str, comment: str | None = None, optionalAuth: bool = True
+        self, path: str, comment: Optional[str] = None, optionalAuth: bool = True
     ) -> dict[str, Any]:
         """
         Performs an action on a Note with a comment
@@ -1880,7 +1880,7 @@ class OsmApi:
 
     def _do(
         self, action: str, OsmType: str, OsmData: dict[str, Any]
-    ) -> dict[str, Any] | None:
+    ) -> Optional[dict[str, Any]]:
         if self._changesetauto:
             self._changesetautodata.append(
                 {"action": action, "type": OsmType, "data": OsmData}

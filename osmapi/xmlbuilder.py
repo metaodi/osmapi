@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING
 from xml.dom.minidom import Element
 
 if TYPE_CHECKING:
@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 def _XmlBuild(
     ElementType: str,
-    ElementData: Dict[str, Any],
+    ElementData: dict[str, Any],
     WithHeaders: bool = True,
     data: Optional["OsmApi"] = None,
 ) -> bytes:  # noqa

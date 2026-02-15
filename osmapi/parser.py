@@ -1,11 +1,12 @@
 import xml.dom.minidom
 import xml.parsers.expat
+from typing import List, Dict, Any
 
 from . import errors
 from . import dom
 
 
-def ParseOsm(data):
+def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
     """
     Parse osm data.
 
@@ -18,15 +19,15 @@ def ParseOsm(data):
         }
     """
     try:
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
+        data_parsed = xml.dom.minidom.parseString(data)
+        data_parsed = data_parsed.getElementsByTagName("osm")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result = []
-    for elem in data.childNodes:
+    result: List[Dict[str, Any]] = []
+    for elem in data_parsed.childNodes:
         if elem.nodeName == "node":
             result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})
         elif elem.nodeName == "way":
@@ -36,7 +37,7 @@ def ParseOsm(data):
     return result
 
 
-def ParseOsc(data):
+def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
     """
     Parse osc data.
 
@@ -50,15 +51,15 @@ def ParseOsc(data):
         }
     """
     try:
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osmChange")[0]
+        data_parsed = xml.dom.minidom.parseString(data)
+        data_parsed = data_parsed.getElementsByTagName("osmChange")[0]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result = []
-    for action in data.childNodes:
+    result: List[Dict[str, Any]] = []
+    for action in data_parsed.childNodes:
         if action.nodeName == "#text":
             continue
         for elem in action.childNodes:
@@ -89,7 +90,7 @@ def ParseOsc(data):
     return result
 
 
-def ParseNotes(data):
+def ParseNotes(data: bytes) -> List[Dict[str, Any]]:
     """
     Parse notes data.
 
@@ -111,7 +112,7 @@ def ParseNotes(data):
         ]
     """
     noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
-    result = []
+    result: List[Dict[str, Any]] = []
     for noteElement in noteElements:
         note = dom.DomParseNote(noteElement)
         result.append(note)

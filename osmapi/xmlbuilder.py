@@ -1,9 +1,22 @@
-def _XmlBuild(ElementType, ElementData, WithHeaders=True, data=None):  # noqa
+from typing import Any, Optional, Dict, TYPE_CHECKING
+from xml.dom.minidom import Element
+
+if TYPE_CHECKING:
+    from .OsmApi import OsmApi
+
+
+def _XmlBuild(
+    ElementType: str,
+    ElementData: Dict[str, Any],
+    WithHeaders: bool = True,
+    data: Optional["OsmApi"] = None,
+) -> bytes:  # noqa
     xml = ""
     if WithHeaders:
         xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<osm version="0.6" generator="'
-        xml += data._created_by + '">\n'
+        xml += data._created_by + '">'  # type: ignore[union-attr]
+        xml += "\n"
 
     # <element attr="val">
     xml += "  <" + ElementType
@@ -18,7 +31,7 @@ def _XmlBuild(ElementType, ElementData, WithHeaders=True, data=None):  # noqa
     visible_str = str(ElementData.get("visible", True)).lower()
     xml += ' visible="' + visible_str + '"'
     if ElementType in ["node", "way", "relation"]:
-        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'
+        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'  # type: ignore[union-attr]
     xml += ">\n"
 
     # <tag... />
@@ -46,7 +59,7 @@ def _XmlBuild(ElementType, ElementData, WithHeaders=True, data=None):  # noqa
     return xml.encode("utf8")
 
 
-def _XmlEncode(text):
+def _XmlEncode(text: str) -> str:
     return (
         text.replace("&", "&amp;")
         .replace('"', "&quot;")
@@ -55,9 +68,9 @@ def _XmlEncode(text):
     )
 
 
-def _GetXmlValue(DomElement, tag):
+def _GetXmlValue(DomElement: Element, tag: str) -> Optional[str]:
     try:
         elem = DomElement.getElementsByTagName(tag)[0]
-        return elem.firstChild.nodeValue
+        return elem.firstChild.nodeValue  # type: ignore[union-attr]
     except Exception:
         return None

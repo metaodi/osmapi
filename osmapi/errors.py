@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class OsmApiError(Exception):
     """
     General OsmApi error class to provide a superclass for all other errors
@@ -55,7 +58,7 @@ class ApiError(OsmApiError):
     Error class, is thrown when an API request fails
     """
 
-    def __init__(self, status, reason, payload):
+    def __init__(self, status: int, reason: str, payload: Any) -> None:
         self.status = status
         """HTTP error code"""
 
@@ -65,7 +68,7 @@ class ApiError(OsmApiError):
         self.payload = payload
         """Payload of API when this error occured"""
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 
 

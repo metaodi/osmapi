@@ -175,13 +175,15 @@ class OsmApiSession:
     def _get(self, path: str) -> bytes:
         return self._http("GET", path, False, None)
 
-    def _put(self, path: str, data: bytes, return_value: bool = True) -> bytes:
+    def _put(
+        self, path: str, data: Optional[bytes], return_value: bool = True
+    ) -> bytes:
         return self._http("PUT", path, True, data, return_value=return_value)
 
     def _post(
         self,
         path: str,
-        data: bytes,
+        data: Optional[bytes],
         optionalAuth: bool = False,
         forceAuth: bool = False,
     ) -> bytes:
@@ -191,5 +193,5 @@ class OsmApiSession:
             auth = True
         return self._http("POST", path, bool(auth), data)
 
-    def _delete(self, path: str, data: bytes) -> bytes:
+    def _delete(self, path: str, data: Optional[bytes]) -> bytes:
         return self._http("DELETE", path, True, data)

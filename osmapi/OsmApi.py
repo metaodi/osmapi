@@ -1351,7 +1351,7 @@ class OsmApi:
         try:
             self._session._put(
                 f"/api/0.6/changeset/{self._CurrentChangesetId}/close",
-                b"",
+                None,
                 return_value=False,
             )
             CurrentChangesetId = self._CurrentChangesetId
@@ -1584,7 +1584,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/subscribe", b"", forceAuth=True
+                f"/api/0.6/changeset/{ChangesetId}/subscribe", None, forceAuth=True
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1627,7 +1627,7 @@ class OsmApi:
         """
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/unsubscribe", b"", forceAuth=True
+                f"/api/0.6/changeset/{ChangesetId}/unsubscribe", None, forceAuth=True
             )
         except errors.ElementNotFoundApiError as e:
             raise errors.NotSubscribedApiError(e.status, e.reason, e.payload) from e
@@ -1822,7 +1822,7 @@ class OsmApi:
             params["text"] = comment
             uri += "?" + urllib.parse.urlencode(params)
         try:
-            result = self._session._post(uri, b"", optionalAuth=optionalAuth)
+            result = self._session._post(uri, None, optionalAuth=optionalAuth)
         except errors.ApiError as e:
             if e.status == 409:
                 raise errors.NoteAlreadyClosedApiError(

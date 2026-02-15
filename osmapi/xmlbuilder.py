@@ -5,12 +5,12 @@ if TYPE_CHECKING:
     from .OsmApi import OsmApi
 
 
-def _XmlBuild(
+def _XmlBuild(  # noqa: C901
     ElementType: str,
     ElementData: dict[str, Any],
     WithHeaders: bool = True,
     data: Optional["OsmApi"] = None,
-) -> bytes:  # noqa
+) -> bytes:
     xml = ""
     if WithHeaders:
         xml += '<?xml version="1.0" encoding="UTF-8"?>\n'

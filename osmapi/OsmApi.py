@@ -1890,9 +1890,9 @@ class OsmApi:
         else:
             return self._do_manu(action, OsmType, OsmData)
 
-    def _do_manu(  # type: ignore[return-value]
+    def _do_manu(  # type: ignore[return-value]  # noqa: C901
         self, action: str, OsmType: str, OsmData: dict[str, Any]
-    ) -> dict[str, Any]:  # noqa
+    ) -> dict[str, Any]:
         if not self._CurrentChangesetId:
             raise errors.NoChangesetOpenError(
                 "You need to open a changeset before uploading data"

@@ -7,7 +7,6 @@ from typing import Optional, Tuple, Any
 
 from . import errors
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -120,7 +119,7 @@ class OsmApiSession:
         logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
         return response.content
 
-    def _http(  # type: ignore[return]
+    def _http(  # type: ignore[return-value]
         self,
         cmd: str,
         path: str,
@@ -180,7 +179,11 @@ class OsmApiSession:
         return self._http("PUT", path, True, data, return_value=return_value)
 
     def _post(
-        self, path: str, data: bytes, optionalAuth: bool = False, forceAuth: bool = False
+        self,
+        path: str,
+        data: bytes,
+        optionalAuth: bool = False,
+        forceAuth: bool = False,
     ) -> bytes:
         # the Notes API allows certain POSTs by non-authenticated users
         auth = optionalAuth and self._auth

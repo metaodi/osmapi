@@ -31,7 +31,7 @@ def _XmlBuild(
     visible_str = str(ElementData.get("visible", True)).lower()
     xml += ' visible="' + visible_str + '"'
     if ElementType in ["node", "way", "relation"]:
-        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'  # type: ignore[union-attr]
+        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'  # type: ignore[union-attr]  # noqa: E501
     xml += ">\n"
 
     # <tag... />

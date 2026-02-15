@@ -8,7 +8,6 @@ from xml.dom.minidom import Element
 from . import errors
 from . import xmlbuilder
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -203,7 +202,7 @@ def _ParseDate(DateString: Optional[str]) -> Union[datetime, str, None]:
     date_formats = ["%Y-%m-%d %H:%M:%S UTC", "%Y-%m-%dT%H:%M:%SZ"]
     for date_format in date_formats:
         try:
-            result = datetime.strptime(DateString, date_format)  # type: ignore[arg-type]
+            result = datetime.strptime(DateString, date_format)  # type: ignore[arg-type]  # noqa: E501
             return result
         except (ValueError, TypeError):
             logger.debug(f"{DateString} does not match {date_format}")

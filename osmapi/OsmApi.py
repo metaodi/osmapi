@@ -279,7 +279,9 @@ class OsmApi:
         if NodeVersion != -1:
             uri += f"/{NodeVersion}"
         data = self._session._get(uri)
-        node_element = cast(Element, dom.OsmResponseToDom(data, tag="node", single=True))
+        node_element = cast(
+            Element, dom.OsmResponseToDom(data, tag="node", single=True)
+        )
         return dom.DomParseNode(node_element)
 
     def NodeCreate(self, NodeData: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -459,7 +461,9 @@ class OsmApi:
         """
         uri = f"/api/0.6/node/{NodeId}/ways"
         data = self._session._get(uri)
-        ways = cast(List[Element], dom.OsmResponseToDom(data, tag="way", allow_empty=True))
+        ways = cast(
+            List[Element], dom.OsmResponseToDom(data, tag="way", allow_empty=True)
+        )
         result: List[Dict[str, Any]] = []
         for way in ways:
             way_data = dom.DomParseWay(way)
@@ -500,7 +504,9 @@ class OsmApi:
         """
         uri = f"/api/0.6/node/{NodeId}/relations"
         data = self._session._get(uri)
-        relations = cast(List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True))
+        relations = cast(
+            List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
+        )
         result: List[Dict[str, Any]] = []
         for relation in relations:
             relation_data = dom.DomParseRelation(relation)
@@ -752,7 +758,9 @@ class OsmApi:
         """
         uri = f"/api/0.6/way/{WayId}/relations"
         data = self._session._get(uri)
-        relations = cast(List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True))
+        relations = cast(
+            List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
+        )
         result: List[Dict[str, Any]] = []
         for relation in relations:
             relation_data = dom.DomParseRelation(relation)
@@ -851,7 +859,9 @@ class OsmApi:
         if RelationVersion != -1:
             uri += f"/{RelationVersion}"
         data = self._session._get(uri)
-        relation = cast(Element, dom.OsmResponseToDom(data, tag="relation", single=True))
+        relation = cast(
+            Element, dom.OsmResponseToDom(data, tag="relation", single=True)
+        )
         return dom.DomParseRelation(relation)
 
     def RelationCreate(self, RelationData: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -1065,7 +1075,9 @@ class OsmApi:
         """
         uri = f"/api/0.6/relation/{RelationId}/relations"
         data = self._session._get(uri)
-        relations = cast(List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True))
+        relations = cast(
+            List[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
+        )
         result: List[Dict[str, Any]] = []
         for relation in relations:
             relation_data = dom.DomParseRelation(relation)
@@ -1243,12 +1255,12 @@ class OsmApi:
         if include_discussion:
             path = f"{path}?include_discussion=true"
         data = self._session._get(path)
-        changeset = cast(Element, dom.OsmResponseToDom(data, tag="changeset", single=True))
+        changeset = cast(
+            Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
+        )
         return dom.DomParseChangeset(changeset, include_discussion=include_discussion)
 
-    def ChangesetUpdate(
-        self, ChangesetTags: Optional[Dict[str, str]] = None
-    ) -> int:
+    def ChangesetUpdate(self, ChangesetTags: Optional[Dict[str, str]] = None) -> int:
         """
         Updates current changeset with `ChangesetTags`.
 
@@ -1402,7 +1414,9 @@ class OsmApi:
         try:
             result_dom = xml.dom.minidom.parseString(response_data)
             diff_result = result_dom.getElementsByTagName("diffResult")[0]
-            result_elements = [x for x in diff_result.childNodes if x.nodeType == x.ELEMENT_NODE]
+            result_elements = [
+                x for x in diff_result.childNodes if x.nodeType == x.ELEMENT_NODE
+            ]
         except (xml.parsers.expat.ExpatError, IndexError) as e:
             raise errors.XmlResponseInvalidError(
                 f"The XML response from the OSM API is invalid: {e!r}"
@@ -1525,7 +1539,9 @@ class OsmApi:
         params = urllib.parse.urlencode({"text": comment})
         try:
             data = self._session._post(
-                f"/api/0.6/changeset/{ChangesetId}/comment", params, forceAuth=True  # type: ignore[arg-type]
+                f"/api/0.6/changeset/{ChangesetId}/comment",
+                params,  # type: ignore[arg-type]
+                forceAuth=True,
             )
         except errors.ApiError as e:
             if e.status == 409:
@@ -1534,7 +1550,9 @@ class OsmApi:
                 ) from e
             else:
                 raise
-        changeset = cast(Element, dom.OsmResponseToDom(data, tag="changeset", single=True))
+        changeset = cast(
+            Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
+        )
         return dom.DomParseChangeset(changeset)
 
     def ChangesetSubscribe(self, ChangesetId: int) -> Dict[str, Any]:
@@ -1575,7 +1593,9 @@ class OsmApi:
                 ) from e
             else:
                 raise
-        changeset = cast(Element, dom.OsmResponseToDom(data, tag="changeset", single=True))
+        changeset = cast(
+            Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
+        )
         return dom.DomParseChangeset(changeset)
 
     def ChangesetUnsubscribe(self, ChangesetId: int) -> Dict[str, Any]:
@@ -1612,7 +1632,9 @@ class OsmApi:
         except errors.ElementNotFoundApiError as e:
             raise errors.NotSubscribedApiError(e.status, e.reason, e.payload) from e
 
-        changeset = cast(Element, dom.OsmResponseToDom(data, tag="changeset", single=True))
+        changeset = cast(
+            Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
+        )
         return dom.DomParseChangeset(changeset)
 
     ##################################################
@@ -1810,7 +1832,9 @@ class OsmApi:
                 raise
 
         # parse the result
-        noteElement = cast(Element, dom.OsmResponseToDom(result, tag="note", single=True))
+        noteElement = cast(
+            Element, dom.OsmResponseToDom(result, tag="note", single=True)
+        )
         return dom.DomParseNote(noteElement)
 
     ##################################################
@@ -1854,7 +1878,9 @@ class OsmApi:
     # Internal method                                #
     ##################################################
 
-    def _do(self, action: str, OsmType: str, OsmData: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _do(
+        self, action: str, OsmType: str, OsmData: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
         if self._changesetauto:
             self._changesetautodata.append(
                 {"action": action, "type": OsmType, "data": OsmData}
@@ -1864,7 +1890,7 @@ class OsmApi:
         else:
             return self._do_manu(action, OsmType, OsmData)
 
-    def _do_manu(  # type: ignore[return]
+    def _do_manu(  # type: ignore[return-value]
         self, action: str, OsmType: str, OsmData: Dict[str, Any]
     ) -> Dict[str, Any]:  # noqa
         if not self._CurrentChangesetId:

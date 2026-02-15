@@ -2010,8 +2010,7 @@ class OsmApi:
 
     def _assign_id_and_version(
         self, ResponseData: List[Element], RequestData: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    ) -> None:
         for response, element in zip(ResponseData, RequestData):
             element["id"] = int(response.getAttribute("new_id"))
             element["version"] = int(response.getAttribute("new_version"))
-        return RequestData

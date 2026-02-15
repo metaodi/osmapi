@@ -120,7 +120,7 @@ class OsmApiSession:
         logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
         return response.content
 
-    def _http(
+    def _http(  # type: ignore[return]
         self,
         cmd: str,
         path: str,

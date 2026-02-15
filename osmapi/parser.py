@@ -20,7 +20,7 @@ def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
     """
     try:
         data_parsed = xml.dom.minidom.parseString(data)
-        data_parsed = data_parsed.getElementsByTagName("osm")[0]
+        data_parsed = data_parsed.getElementsByTagName("osm")[0]  # type: ignore[assignment]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
@@ -29,11 +29,11 @@ def ParseOsm(data: bytes) -> List[Dict[str, Any]]:
     result: List[Dict[str, Any]] = []
     for elem in data_parsed.childNodes:
         if elem.nodeName == "node":
-            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})  # type: ignore[arg-type]
         elif elem.nodeName == "way":
-            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})  # type: ignore[arg-type]
         elif elem.nodeName == "relation":
-            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})  # type: ignore[arg-type]
     return result
 
 
@@ -52,7 +52,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
     """
     try:
         data_parsed = xml.dom.minidom.parseString(data)
-        data_parsed = data_parsed.getElementsByTagName("osmChange")[0]
+        data_parsed = data_parsed.getElementsByTagName("osmChange")[0]  # type: ignore[assignment]
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
@@ -68,7 +68,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseNode(elem),
+                        "data": dom.DomParseNode(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "way":
@@ -76,7 +76,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseWay(elem),
+                        "data": dom.DomParseWay(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "relation":
@@ -84,7 +84,7 @@ def ParseOsc(data: bytes) -> List[Dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseRelation(elem),
+                        "data": dom.DomParseRelation(elem),  # type: ignore[arg-type]
                     }
                 )
     return result
@@ -113,7 +113,7 @@ def ParseNotes(data: bytes) -> List[Dict[str, Any]]:
     """
     noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
     result: List[Dict[str, Any]] = []
-    for noteElement in noteElements:
+    for noteElement in noteElements:  # type: ignore[union-attr]
         note = dom.DomParseNote(noteElement)
         result.append(note)
     return result

@@ -48,7 +48,7 @@ class CapabilitiesMixin:
         Returns list of dict with type and data.
         """
         uri = (
-            f"/api/0.6/map?bbox={min_lon: f}, {min_lat: f}, {max_lon: f}, {max_lat: f}"
+            f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
         )
         data = self._session._get(uri)
         return parser.ParseOsm(data)

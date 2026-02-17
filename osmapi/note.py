@@ -40,7 +40,7 @@ class NoteMixin:
         """
         uri = (
             f"/api/0.6/notes?bbox="
-            f"{min_lon: f}, {min_lat: f}, {max_lon: f}, {max_lat: f}"
+            f"{min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
             f"&limit={limit}&closed={closed}"
         )
         data = self._session._get(uri)

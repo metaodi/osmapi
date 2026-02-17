@@ -38,11 +38,7 @@ class NoteMixin:
 
         All parameters are optional.
         """
-        uri = (
-            f"/api/0.6/notes?bbox="
-            f"{min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
-            f"&limit={limit}&closed={closed}"
-        )
+        uri = f"/api/0.6/notes?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}&limit={limit}&closed={closed}"
         data = self._session._get(uri)
         return parser.ParseNotes(data)
 

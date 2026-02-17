@@ -39,7 +39,6 @@ from . import http
 from . import parser
 from . import xmlbuilder
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -56,10 +55,6 @@ class OsmApi:
         appid="",
         created_by=f"osmapi/{__version__}",
         api="https://www.openstreetmap.org",
-        changesetauto=False,
-        changesetautotags={},
-        changesetautosize=500,
-        changesetautomulti=1,
         session=None,
         timeout=30,
     ):
@@ -82,18 +77,6 @@ class OsmApi:
         OSM-API. To use an encrypted connection (HTTPS) simply add 'https://'
         in front of the hostname of the `api` parameter (e.g.
         https://api.openstreetmap.com).
-
-        There are several options to control the changeset behaviour. By
-        default, a programmer has to take care to open and close a changeset
-        prior to make changes to OSM.
-        By setting `changesetauto` to `True`, osmapi automatically opens
-        changesets.
-        The `changesetautotags` parameter takes a `dict`, where each key/value
-        pair is applied as tags to the changeset.
-        The option `changesetautosize` defines the size of each
-        upload (default: 500) and `changesetautomulti` defines how many
-        uploads should be made before closing a changeset and opening a new
-        one (default: 1).
 
         The `session` parameter can be used to provide a custom requests
         http session object (requests.Session). This might be useful for
@@ -123,21 +106,6 @@ class OsmApi:
                     key, _, value = line.strip().partition(":")
                     if key == self._username:
                         self._password = value
-
-        # Changest informations
-        # auto create and close changesets
-        self._changesetauto = changesetauto
-        # tags for automatic created changesets
-        self._changesetautotags = changesetautotags
-        # change count for auto changeset
-        self._changesetautosize = changesetautosize
-        # change count for auto changeset
-        self._changesetautosize = changesetautosize
-        # close a changeset every # upload
-        self._changesetautomulti = changesetautomulti
-        self._changesetautocpt = 0
-        # data to upload for auto group
-        self._changesetautodata = []
 
         # Get API
         self._api = api.strip("/")
@@ -178,12 +146,6 @@ class OsmApi:
         self.close()
 
     def close(self):
-        try:
-            if self._changesetauto:
-                self._changesetautoflush(True)
-        except errors.ResponseEmptyApiError:
-            pass
-
         if self._session:
             self._session.close()
 
@@ -1198,13 +1160,6 @@ class OsmApi:
         # Create a new changeset
         changeset_id = self.ChangesetCreate(ChangesetTags)
         yield changeset_id
-
-        # upload data to changeset
-        autosize = self._changesetautosize
-        for i in range(0, len(self._changesetautodata), autosize):
-            chunk = self._changesetautodata[i : i + autosize]
-            self.ChangesetUpload(chunk)
-        self._changesetautodata = []
         self.ChangesetClose()
 
     def ChangesetGet(self, ChangesetId, include_discussion=False):
@@ -1807,34 +1762,12 @@ class OsmApi:
         data = self._session._get(uri)
         return parser.ParseOsm(data)
 
-    def flush(self):
-        """
-        Force the changes to be uploaded to OSM and the changeset to be closed
-
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
-
-        If there is no open changeset,
-        `OsmApi.NoChangesetOpenError` is raised.
-
-        If there is already an open changeset,
-        `OsmApi.ChangesetAlreadyOpenError` is raised.
-        """
-        return self._changesetautoflush(True)
-
     ##################################################
     # Internal method                                #
     ##################################################
 
     def _do(self, action, OsmType, OsmData):
-        if self._changesetauto:
-            self._changesetautodata.append(
-                {"action": action, "type": OsmType, "data": OsmData}
-            )
-            self._changesetautoflush()
-            return None
-        else:
-            return self._do_manu(action, OsmType, OsmData)
+        return self._do_manu(action, OsmType, OsmData)
 
     def _do_manu(self, action, OsmType, OsmData):  # noqa
         if not self._CurrentChangesetId:
@@ -1924,24 +1857,6 @@ class OsmApi:
             OsmData["version"] = int(result.strip())
             OsmData["visible"] = False
             return OsmData
-
-    def _changesetautoflush(self, force=False):
-        autosize = self._changesetautosize
-        while (len(self._changesetautodata) >= autosize) or (
-            force and self._changesetautodata
-        ):
-            if self._changesetautocpt == 0:
-                self.ChangesetCreate(self._changesetautotags)
-            self.ChangesetUpload(self._changesetautodata[:autosize])
-            self._changesetautodata = self._changesetautodata[autosize:]
-            self._changesetautocpt += 1
-            if self._changesetautocpt == self._changesetautomulti:
-                self.ChangesetClose()
-                self._changesetautocpt = 0
-        if self._changesetautocpt and force:
-            self.ChangesetClose()
-            self._changesetautocpt = 0
-        return None
 
     def _add_changeset_data(self, changeData, type):
         data = ""

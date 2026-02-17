@@ -6,7 +6,6 @@ import logging
 from . import errors
 from . import xmlbuilder
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -38,6 +38,7 @@ from . import errors
 from . import http
 from . import parser
 from . import xmlbuilder
+from . import response
 
 
 logger = logging.getLogger(__name__)
@@ -1432,9 +1433,10 @@ class OsmApi:
         created_before=None,
         only_open=False,
         only_closed=False,
+        lazy_load=True,
     ):
         """
-        Returns a dict with the id of the changeset as key
+        Returns a dict-like object with the id of the changeset as key
         matching all criteria:
 
             #!python
@@ -1445,37 +1447,67 @@ class OsmApi:
             }
 
         All parameters are optional.
+
+        If lazy_load is True (default), returns a ChangesetsResponse object that
+        loads data from the API on demand. This is useful when there are more than
+        100 changesets, as the API limits responses to 100 items per request.
+
+        If lazy_load is False, returns a regular dict with all changesets loaded
+        immediately (backward compatible behavior, but limited to first 100 results).
         """
 
-        uri = "/api/0.6/changesets"
-        params = {}
+        base_params = {}
         if min_lon or min_lat or max_lon or max_lat:
-            params["bbox"] = f"{min_lon},{min_lat},{max_lon},{max_lat}"
+            base_params["bbox"] = f"{min_lon},{min_lat},{max_lon},{max_lat}"
         if userid:
-            params["user"] = userid
+            base_params["user"] = userid
         if username:
-            params["display_name"] = username
+            base_params["display_name"] = username
         if closed_after and not created_before:
-            params["time"] = closed_after
+            base_params["time"] = closed_after
         if created_before:
             if not closed_after:
                 closed_after = "1970-01-01T00:00:00Z"
-            params["time"] = f"{closed_after},{created_before}"
+            base_params["time"] = f"{closed_after},{created_before}"
         if only_open:
-            params["open"] = 1
+            base_params["open"] = 1
         if only_closed:
-            params["closed"] = 1
+            base_params["closed"] = 1
 
-        if params:
-            uri += "?" + urllib.parse.urlencode(params)
+        if lazy_load:
+            # Return a lazy loading response object
+            def uri_builder(next_timestamp=None):
+                uri = "/api/0.6/changesets"
+                params = base_params.copy()
 
-        data = self._session._get(uri)
-        changesets = dom.OsmResponseToDom(data, tag="changeset")
-        result = {}
-        for curChangeset in changesets:
-            tmpCS = dom.DomParseChangeset(curChangeset)
-            result[tmpCS["id"]] = tmpCS
-        return result
+                if next_timestamp:
+                    # For pagination, we need to get changesets after this timestamp
+                    params["time"] = f"{next_timestamp},"
+                    # Request oldest first to properly paginate
+                    params["order"] = "oldest"
+
+                if params:
+                    uri += "?" + urllib.parse.urlencode(params)
+                return uri
+
+            return response.ChangesetsResponse(
+                session=self._session,
+                uri_builder=uri_builder,
+                params=base_params,
+            )
+        else:
+            # Original implementation: load once and return dict
+            uri = "/api/0.6/changesets"
+            if base_params:
+                uri += "?" + urllib.parse.urlencode(base_params)
+
+            data = self._session._get(uri)
+            changesets = dom.OsmResponseToDom(data, tag="changeset")
+            result = {}
+            for curChangeset in changesets:
+                tmpCS = dom.DomParseChangeset(curChangeset)
+                result[tmpCS["id"]] = tmpCS
+            return result
 
     def ChangesetComment(self, ChangesetId, comment):
         """

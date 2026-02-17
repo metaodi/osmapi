@@ -758,3 +758,101 @@ def test_ChangesetUnsubscribe_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetUnsubscribe(45627)
     assert str(execinfo.value) == "Username/Password missing"
+
+
+def test_ChangesetsGet_lazy_loading_disabled(api, add_response):
+    """Test that lazy_load=False returns a regular dict."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi", lazy_load=False)
+
+    # Should be a regular dict, not a ChangesetsResponse
+    assert isinstance(result, dict)
+    assert not isinstance(result, osmapi.response.ChangesetsResponse)
+    assert len(result) == 10
+
+
+def test_ChangesetsGet_lazy_loading_enabled(api, add_response):
+    """Test that lazy_load=True returns a ChangesetsResponse object."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi", lazy_load=True)
+
+    # Should be a ChangesetsResponse instance
+    assert isinstance(result, osmapi.response.ChangesetsResponse)
+    # But should act like a dict
+    assert len(result) == 10
+    assert 41417 in result
+    assert result[41417]["user"] == "metaodi"
+
+
+def test_ChangesetsGet_lazy_loading_default(api, add_response):
+    """Test that lazy loading is enabled by default."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
+
+    # By default, should use lazy loading
+    assert isinstance(result, osmapi.response.ChangesetsResponse)
+    assert len(result) == 10
+
+
+def test_ChangesetsResponse_iteration(api, add_response):
+    """Test that ChangesetsResponse can be iterated like a dict."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
+
+    ids = list(result)
+    assert len(ids) == 10
+    assert 41417 in ids
+
+
+def test_ChangesetsResponse_keys_values_items(api, add_response):
+    """Test dict methods: keys(), values(), items()."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
+
+    keys = list(result.keys())
+    assert len(keys) == 10
+    assert 41417 in keys
+
+    values = list(result.values())
+    assert len(values) == 10
+    assert any(v["user"] == "metaodi" for v in values)
+
+    items = list(result.items())
+    assert len(items) == 10
+    assert any(k == 41417 and v["user"] == "metaodi" for k, v in items)
+
+
+def test_ChangesetsResponse_get_method(api, add_response):
+    """Test dict-like get() method."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
+
+    # Existing key
+    assert result.get(41417) is not None
+    assert result.get(41417)["user"] == "metaodi"
+
+    # Non-existing key with default
+    assert result.get(99999, "default") == "default"
+
+    # Non-existing key without default
+    assert result.get(99999) is None
+
+
+def test_ChangesetsResponse_as_dict(api, add_response):
+    """Test as_dict() method returns a regular dict."""
+    resp = add_response(GET, "/changesets", filename="test_ChangesetsGet.xml")
+
+    result = api.ChangesetsGet(only_closed=True, username="metaodi")
+
+    regular_dict = result.as_dict()
+    assert isinstance(regular_dict, dict)
+    assert not isinstance(regular_dict, osmapi.response.ChangesetsResponse)
+    assert len(regular_dict) == 10
+    assert 41417 in regular_dict
+

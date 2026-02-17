@@ -1,0 +1,175 @@
+"""
+Note operations for the OpenStreetMap API.
+
+This module provides pythonic (snake_case) methods for working with OSM notes.
+"""
+
+import urllib.parse
+from typing import Any, Optional, TYPE_CHECKING, cast
+from xml.dom.minidom import Element
+
+from . import dom, errors, parser
+
+if TYPE_CHECKING:
+    from .OsmApi import OsmApi
+
+
+class NoteMixin:
+    """Mixin providing note-related operations with pythonic method names."""
+
+    def notes_get(
+        self: "OsmApi",
+        min_lon: float,
+        min_lat: float,
+        max_lon: float,
+        max_lat: float,
+        limit: int = 100,
+        closed: int = 7,
+    ) -> list[dict[str, Any]]:
+        """
+        Returns a list of dicts of notes in the specified bounding box.
+
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+
+        All parameters are optional.
+        """
+        uri = (
+            f"/api/0.6/notes?bbox="
+            f"{min_lon: f}, {min_lat: f}, {max_lon: f}, {max_lat: f}"
+            f"&limit={limit}&closed={closed}"
+        )
+        data = self._session._get(uri)
+        return parser.ParseNotes(data)
+
+    def note_get(self: "OsmApi", note_id: int) -> dict[str, Any]:
+        """
+        Returns a note as dict.
+
+        `note_id` is the unique identifier of the note.
+        """
+        uri = f"/api/0.6/notes/{note_id}"
+        data = self._session._get(uri)
+        note_element = cast(
+            Element, dom.OsmResponseToDom(data, tag="note", single=True)
+        )
+        return dom.DomParseNote(note_element)
+
+    def note_create(self: "OsmApi", note_data: dict[str, Any]) -> dict[str, Any]:
+        """
+        Creates a note based on the supplied `note_data` dict:
+
+            #!python
+            {
+                'lat': latitude of note,
+                'lon': longitude of note,
+                'text': text of the note,
+            }
+
+        Returns updated note data.
+        """
+        uri = "/api/0.6/notes"
+        uri += "?" + urllib.parse.urlencode(note_data)
+        return self._note_action(uri)
+
+    def note_comment(self: "OsmApi", note_id: int, comment: str) -> dict[str, Any]:
+        """
+        Adds a new comment to a note.
+
+        Returns the updated note.
+        """
+        path = f"/api/0.6/notes/{note_id}/comment"
+        return self._note_action(path, comment)
+
+    def note_close(
+        self: "OsmApi", note_id: int, comment: Optional[str] = None
+    ) -> dict[str, Any]:
+        """
+        Closes a note.
+
+        Returns the updated note.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+        """
+        path = f"/api/0.6/notes/{note_id}/close"
+        return self._note_action(path, comment, optional_auth=False)
+
+    def note_reopen(
+        self: "OsmApi", note_id: int, comment: Optional[str] = None
+    ) -> dict[str, Any]:
+        """
+        Reopens a note.
+
+        Returns the updated note.
+
+        If no authentication information are provided,
+        `OsmApi.UsernamePasswordMissingError` is raised.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+        """
+        path = f"/api/0.6/notes/{note_id}/reopen"
+        return self._note_action(path, comment, optional_auth=False)
+
+    def notes_search(
+        self: "OsmApi", query: str, limit: int = 100, closed: int = 7
+    ) -> list[dict[str, Any]]:
+        """
+        Returns a list of dicts of notes that match the given search query.
+
+        The limit parameter defines how many results should be returned.
+
+        closed specifies the number of days a bug needs to be closed
+        to no longer be returned.
+        The value 0 means only open bugs are returned,
+        -1 means all bugs are returned.
+        """
+        uri = "/api/0.6/notes/search"
+        params: dict[str, Any] = {}
+        params["q"] = query
+        params["limit"] = limit
+        params["closed"] = closed
+        uri += "?" + urllib.parse.urlencode(params)
+        data = self._session._get(uri)
+
+        return parser.ParseNotes(data)
+
+    def _note_action(
+        self: "OsmApi",
+        path: str,
+        comment: Optional[str] = None,
+        optional_auth: bool = True,
+    ) -> dict[str, Any]:
+        """
+        Performs an action on a Note with a comment
+
+        Return the updated note
+        """
+        uri = path
+        if comment is not None:
+            params = {}
+            params["text"] = comment
+            uri += "?" + urllib.parse.urlencode(params)
+        try:
+            result = self._session._post(uri, None, optionalAuth=optional_auth)
+        except errors.ApiError as e:
+            if e.status == 409:
+                raise errors.NoteAlreadyClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
+            else:
+                raise
+
+        # parse the result
+        note_element = cast(
+            Element, dom.OsmResponseToDom(result, tag="note", single=True)
+        )
+        return dom.DomParseNote(note_element)

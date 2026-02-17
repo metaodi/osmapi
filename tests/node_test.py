@@ -64,29 +64,6 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         with self.assertRaises(osmapi.XmlResponseInvalidError):
             self.api.NodeGet(987)
 
-    def test_NodeCreate_changesetauto(self):
-        for filename in [
-            "test_NodeCreate_changesetauto.xml",
-            "test_ChangesetUpload_create_node.xml",
-            "test_ChangesetClose.xml",
-        ]:
-            # setup mock
-            self._session_mock(auth=True, filenames=[filename])
-            self.api = osmapi.OsmApi(
-                api="api06.dev.openstreetmap.org",
-                changesetauto=True,
-                session=self.session_mock,
-            )
-            self.api._session._sleep = mock.Mock()
-
-            test_node = {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            }
-
-            self.assertIsNone(self.api.NodeCreate(test_node))
-
     def test_NodeCreate(self):
         self._session_mock(auth=True)
 

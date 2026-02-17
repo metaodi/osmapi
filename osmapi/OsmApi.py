@@ -89,9 +89,6 @@ class OsmApi:
         throw an expcetion if the the timeout (in seconds) has passed without
         an answer from the server.
         """
-        if changesetautotags is None:
-            changesetautotags = {}
-
         # Get username
         self._username: Optional[str] = None
         if username:
@@ -1494,11 +1491,11 @@ class OsmApi:
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
         """
-        params = urllib.parse.urlencode({"text": comment})
+        params = urllib.parse.urlencode({"text": comment}).encode("utf-8")
         try:
             data = self._session._post(
                 f"/api/0.6/changeset/{ChangesetId}/comment",
-                params,  # type: ignore[arg-type]
+                params,
                 forceAuth=True,
             )
         except errors.ApiError as e:

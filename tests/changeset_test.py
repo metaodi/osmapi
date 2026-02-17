@@ -655,7 +655,7 @@ def test_ChangesetComment(auth_api, add_response):
 
     result = auth_api.ChangesetComment(123, comment="test comment")
 
-    assert resp.calls[0].request.body == "text=test+comment"
+    assert resp.calls[0].request.body == b"text=test+comment"
     assert result == {
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),

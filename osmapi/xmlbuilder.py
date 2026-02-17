@@ -9,13 +9,14 @@ def _XmlBuild(  # noqa: C901
     ElementType: str,
     ElementData: dict[str, Any],
     WithHeaders: bool = True,
-    data: Optional["OsmApi"] = None,
+    *,
+    data: "OsmApi",
 ) -> bytes:
     xml = ""
     if WithHeaders:
         xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<osm version="0.6" generator="'
-        xml += data._created_by + '">'  # type: ignore[union-attr]
+        xml += data._created_by + '">'
         xml += "\n"
 
     # <element attr="val">
@@ -31,7 +32,7 @@ def _XmlBuild(  # noqa: C901
     visible_str = str(ElementData.get("visible", True)).lower()
     xml += ' visible="' + visible_str + '"'
     if ElementType in ["node", "way", "relation"]:
-        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'  # type: ignore[union-attr]  # noqa: E501
+        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'
     xml += ">\n"
 
     # <tag... />

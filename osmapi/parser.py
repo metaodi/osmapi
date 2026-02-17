@@ -1,6 +1,7 @@
 import xml.dom.minidom
 import xml.parsers.expat
-from typing import Any
+from typing import Any, cast
+from xml.dom.minidom import Element
 
 from . import errors
 from . import dom
@@ -111,9 +112,11 @@ def ParseNotes(data: bytes) -> list[dict[str, Any]]:
             { ... }
         ]
     """
-    noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
+    noteElements = cast(
+        list[Element], dom.OsmResponseToDom(data, tag="note", allow_empty=True)
+    )
     result: list[dict[str, Any]] = []
-    for noteElement in noteElements:  # type: ignore[union-attr]
+    for noteElement in noteElements:
         note = dom.DomParseNote(noteElement)
         result.append(note)
     return result

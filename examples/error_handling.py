@@ -9,7 +9,6 @@ import subprocess
 import sys
 import urllib3
 
-
 load_dotenv(find_dotenv())
 
 # logging setup

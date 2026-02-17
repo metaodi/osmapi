@@ -31,7 +31,7 @@ import urllib.parse
 import re
 import logging
 from contextlib import contextmanager
-from typing import Any, Optional, cast
+from typing import Any, Optional, cast, Generator
 from xml.dom.minidom import Element
 import requests
 
@@ -147,7 +147,7 @@ class OsmApi:
     def __exit__(self, *args: Any) -> None:
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         if self._session:
             self._session.close()
 
@@ -1147,7 +1147,9 @@ class OsmApi:
     ##################################################
 
     @contextmanager
-    def Changeset(self, ChangesetTags: Optional[dict[str, str]] = None) -> Any:
+    def Changeset(
+        self, ChangesetTags: Optional[dict[str, str]] = None
+    ) -> Generator[int, None, None]:
         """
         Context manager for a Changeset.
 

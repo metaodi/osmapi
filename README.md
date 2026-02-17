@@ -9,7 +9,7 @@ osmapi
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
-Python wrapper for the OSM API (requires Python >= 3.8)
+Python wrapper for the OSM API (requires Python >= 3.9)
 
 ## Installation
 

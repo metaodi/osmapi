@@ -1491,7 +1491,7 @@ class OsmApi:
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
         """
-        params = urllib.parse.urlencode({"text": comment}).encode("utf-8")
+        params = urllib.parse.urlencode({"text": comment})
         try:
             data = self._session._post(
                 f"/api/0.6/changeset/{ChangesetId}/comment",

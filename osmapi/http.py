@@ -3,7 +3,7 @@ import itertools as it
 import logging
 import requests
 import time
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 from . import errors
 
@@ -45,7 +45,7 @@ class OsmApiSession:
         method: str,
         path: str,
         auth: bool,
-        send: Optional[bytes],
+        send: Optional[Union[str, bytes]],
         return_value: bool = True,
     ) -> bytes:
         """
@@ -124,7 +124,7 @@ class OsmApiSession:
         cmd: str,
         path: str,
         auth: bool,
-        send: Optional[bytes],
+        send: Optional[Union[str, bytes]],
         return_value: bool = True,
     ) -> bytes:
         for i in it.count(1):
@@ -176,14 +176,14 @@ class OsmApiSession:
         return self._http("GET", path, False, None)
 
     def _put(
-        self, path: str, data: Optional[bytes], return_value: bool = True
+        self, path: str, data: Optional[Union[str, bytes]], return_value: bool = True
     ) -> bytes:
         return self._http("PUT", path, True, data, return_value=return_value)
 
     def _post(
         self,
         path: str,
-        data: Optional[bytes],
+        data: Optional[Union[str, bytes]],
         optionalAuth: bool = False,
         forceAuth: bool = False,
     ) -> bytes:
@@ -193,5 +193,5 @@ class OsmApiSession:
             auth = True
         return self._http("POST", path, bool(auth), data)
 
-    def _delete(self, path: str, data: Optional[bytes]) -> bytes:
+    def _delete(self, path: str, data: Optional[Union[str, bytes]]) -> bytes:
         return self._http("DELETE", path, True, data)

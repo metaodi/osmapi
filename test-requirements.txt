@@ -7,3 +7,5 @@ responses
 coverage
 black
 pre-commit
+mypy
+types-requests

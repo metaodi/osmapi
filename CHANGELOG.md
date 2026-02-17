@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- **BC-Break**: Remove support for Python 3.8, new minimum version for osmapi is Python 3.9
+
+### Added
+- Add type hints and mypy checking to osmapi #186
+
 ### Removed
 - Remove autochangeset feature in favor of Changeset context manager #187
 

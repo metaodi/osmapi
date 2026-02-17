@@ -1,11 +1,13 @@
 import xml.dom.minidom
 import xml.parsers.expat
+from typing import Any, cast
+from xml.dom.minidom import Element
 
 from . import errors
 from . import dom
 
 
-def ParseOsm(data):
+def ParseOsm(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osm data.
 
@@ -18,25 +20,25 @@ def ParseOsm(data):
         }
     """
     try:
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osm")[0]
+        data_parsed = xml.dom.minidom.parseString(data)
+        data_parsed = data_parsed.getElementsByTagName("osm")[0]  # type: ignore[assignment]  # noqa: E501
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result = []
-    for elem in data.childNodes:
+    result: list[dict[str, Any]] = []
+    for elem in data_parsed.childNodes:
         if elem.nodeName == "node":
-            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})  # type: ignore[arg-type]  # noqa: E501
         elif elem.nodeName == "way":
-            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})  # type: ignore[arg-type]  # noqa: E501
         elif elem.nodeName == "relation":
-            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})
+            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})  # type: ignore[arg-type]  # noqa: E501
     return result
 
 
-def ParseOsc(data):
+def ParseOsc(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osc data.
 
@@ -50,15 +52,15 @@ def ParseOsc(data):
         }
     """
     try:
-        data = xml.dom.minidom.parseString(data)
-        data = data.getElementsByTagName("osmChange")[0]
+        data_parsed = xml.dom.minidom.parseString(data)
+        data_parsed = data_parsed.getElementsByTagName("osmChange")[0]  # type: ignore[assignment]  # noqa: E501
     except (xml.parsers.expat.ExpatError, IndexError) as e:
         raise errors.XmlResponseInvalidError(
             f"The XML response from the OSM API is invalid: {e!r}"
         ) from e
 
-    result = []
-    for action in data.childNodes:
+    result: list[dict[str, Any]] = []
+    for action in data_parsed.childNodes:
         if action.nodeName == "#text":
             continue
         for elem in action.childNodes:
@@ -67,7 +69,7 @@ def ParseOsc(data):
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseNode(elem),
+                        "data": dom.DomParseNode(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "way":
@@ -75,7 +77,7 @@ def ParseOsc(data):
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseWay(elem),
+                        "data": dom.DomParseWay(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "relation":
@@ -83,13 +85,13 @@ def ParseOsc(data):
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseRelation(elem),
+                        "data": dom.DomParseRelation(elem),  # type: ignore[arg-type]
                     }
                 )
     return result
 
 
-def ParseNotes(data):
+def ParseNotes(data: bytes) -> list[dict[str, Any]]:
     """
     Parse notes data.
 
@@ -110,8 +112,10 @@ def ParseNotes(data):
             { ... }
         ]
     """
-    noteElements = dom.OsmResponseToDom(data, tag="note", allow_empty=True)
-    result = []
+    noteElements = cast(
+        list[Element], dom.OsmResponseToDom(data, tag="note", allow_empty=True)
+    )
+    result: list[dict[str, Any]] = []
     for noteElement in noteElements:
         note = dom.DomParseNote(noteElement)
         result.append(note)

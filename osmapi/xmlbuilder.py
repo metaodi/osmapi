@@ -1,9 +1,23 @@
-def _XmlBuild(ElementType, ElementData, WithHeaders=True, data=None):  # noqa
+from typing import Any, Optional, TYPE_CHECKING
+from xml.dom.minidom import Element
+
+if TYPE_CHECKING:
+    from .OsmApi import OsmApi
+
+
+def _XmlBuild(  # noqa: C901
+    ElementType: str,
+    ElementData: dict[str, Any],
+    WithHeaders: bool = True,
+    *,
+    data: "OsmApi",
+) -> bytes:
     xml = ""
     if WithHeaders:
         xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<osm version="0.6" generator="'
-        xml += data._created_by + '">\n'
+        xml += data._created_by + '">'
+        xml += "\n"
 
     # <element attr="val">
     xml += "  <" + ElementType
@@ -46,7 +60,7 @@ def _XmlBuild(ElementType, ElementData, WithHeaders=True, data=None):  # noqa
     return xml.encode("utf8")
 
 
-def _XmlEncode(text):
+def _XmlEncode(text: str) -> str:
     return (
         text.replace("&", "&amp;")
         .replace('"', "&quot;")
@@ -55,9 +69,9 @@ def _XmlEncode(text):
     )
 
 
-def _GetXmlValue(DomElement, tag):
+def _GetXmlValue(DomElement: Element, tag: str) -> Optional[str]:
     try:
         elem = DomElement.getElementsByTagName(tag)[0]
-        return elem.firstChild.nodeValue
+        return elem.firstChild.nodeValue  # type: ignore[union-attr]
     except Exception:
         return None

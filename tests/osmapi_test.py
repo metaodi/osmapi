@@ -25,7 +25,9 @@ class TestOsmApi(unittest.TestCase):
         if return_values:
             response_mock.content = return_values[0]
         else:
-            response_mock.content = "default mock response from TestOsmApi".encode("utf-8")
+            response_mock.content = "default mock response from TestOsmApi".encode(
+                "utf-8"
+            )
 
         self.session_mock = mock.Mock()
         self.session_mock.request = mock.Mock(return_value=response_mock)

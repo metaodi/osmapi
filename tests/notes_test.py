@@ -1,7 +1,6 @@
 from . import osmapi_test
 from datetime import datetime
 import osmapi
-from urllib import parse as urlparse
 
 
 class TestOsmApiNotes(osmapi_test.TestOsmApi):
@@ -11,7 +10,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
 
-        params = kwargs["params"] 
+        params = kwargs["params"]
         self.assertEqual(params["bbox"], "-1.499853,45.966790,-1.483181,52.471019")
         self.assertEqual(params["limit"], 100)
         self.assertEqual(params["closed"], 7)
@@ -60,7 +59,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
-        params = kwargs["params"] 
+        params = kwargs["params"]
         self.assertEqual(params["limit"], 1)
         self.assertEqual(params["closed"], 0)
         self.assertEqual(len(result), 0)
@@ -125,7 +124,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
 
-        params = kwargs["params"] 
+        params = kwargs["params"]
         self.assertEqual(params["lat"], 47.123)
         self.assertEqual(params["lon"], 8.432)
         self.assertEqual(params["text"], "This is a test")
@@ -165,7 +164,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
 
-        params = kwargs["params"] 
+        params = kwargs["params"]
         self.assertEqual(params["lat"], 47.123)
         self.assertEqual(params["lon"], 8.432)
         self.assertEqual(params["text"], "test 123")
@@ -251,9 +250,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         self.assertEqual(args[0], "POST")
 
         params = kwargs["params"]
-        self.assertEqual(
-            args[1], self.api_base + "/api/0.6/notes/842/comment"
-        )
+        self.assertEqual(args[1], self.api_base + "/api/0.6/notes/842/comment")
         self.assertEqual(params["text"], "blubb")
 
         self.assertEqual(
@@ -312,9 +309,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
-        self.assertEqual(
-            args[1], self.api_base + "/api/0.6/notes/819/close"
-        )
+        self.assertEqual(args[1], self.api_base + "/api/0.6/notes/819/close")
         params = kwargs["params"]
         self.assertEqual(params["text"], "Close this note!")
 
@@ -425,7 +420,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
 
-        params = kwargs["params"]        
+        params = kwargs["params"]
         self.assertEqual(params["q"], "street")
         self.assertEqual(params["limit"], 100)
         self.assertEqual(params["closed"], 7)

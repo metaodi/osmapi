@@ -737,7 +737,9 @@ def test_changeset_subscribe(auth_api, add_response):
 
 
 def test_ChangesetSubscribe_deprecated(auth_api, add_response):
-    add_response(POST, "/changeset/123/subscribe", filename="test_changeset_subscribe.xml")
+    add_response(
+        POST, "/changeset/123/subscribe", filename="test_changeset_subscribe.xml"
+    )
 
     import warnings
 

@@ -70,7 +70,11 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
             "PUT", "/api/0.6/testput", False, data
         )
         self.mock_session.request.assert_called_with(
-            "PUT", self.api_base + "/api/0.6/testput", data="data", timeout=30, params=None
+            "PUT",
+            self.api_base + "/api/0.6/testput",
+            data="data",
+            timeout=30,
+            params=None,
         )
         self.assertEqual(response, "test response")
 
@@ -80,7 +84,11 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
             "PUT", "/api/0.6/testdelete", False, data
         )
         self.mock_session.request.assert_called_with(
-            "PUT", self.api_base + "/api/0.6/testdelete", data="delete data", timeout=30, params=None
+            "PUT",
+            self.api_base + "/api/0.6/testdelete",
+            data="delete data",
+            timeout=30,
+            params=None,
         )
         self.assertEqual(response, "test response")
 
@@ -89,7 +97,11 @@ class TestOsmApiHelper(osmapi_test.TestOsmApi):
             "PUT", "/api/0.6/testauth", True, None
         )
         self.mock_session.request.assert_called_with(
-            "PUT", self.api_base + "/api/0.6/testauth", data=None, timeout=30, params=None
+            "PUT",
+            self.api_base + "/api/0.6/testauth",
+            data=None,
+            timeout=30,
+            params=None,
         )
         self.assertEqual(self.mock_session.auth, ("testuser", "testpassword"))
         self.assertEqual(response, "test response")

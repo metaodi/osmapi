@@ -75,7 +75,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_way_create(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {
             "nd": [11949, 11950],
             "tag": {"highway": "unclassified", "name": "Osmapi Street"},
@@ -93,7 +93,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_WayCreate_deprecated(self):
         self._session_mock(auth=True, filenames=["test_way_create.xml"])
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {
             "nd": [11949, 11950],
             "tag": {"highway": "unclassified", "name": "Osmapi Street"},
@@ -103,7 +103,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
 
     def test_way_create_existing_node(self):
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_way = {
             "id": 456,
             "nd": [11949, 11950],
@@ -117,7 +117,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_way_update(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {
             "id": 876,
             "nd": [11949, 11950],
@@ -137,7 +137,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_WayUpdate_deprecated(self):
         self._session_mock(auth=True, filenames=["test_way_update.xml"])
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {
             "id": 876,
             "nd": [11949, 11950],
@@ -149,7 +149,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_way_update_precondition_failed(self):
         self._session_mock(auth=True, status=412)
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_way = {
             "id": 876,
             "nd": [11949, 11950],
@@ -170,7 +170,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_way_delete(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {"id": 876}
         cs = self.api.changeset_create({"comment": "This is a test way delete"})
         self.assertEqual(cs, 2222)
@@ -184,7 +184,7 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
     def test_WayDelete_deprecated(self):
         self._session_mock(auth=True, filenames=["test_way_delete.xml"])
         self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._CurrentChangesetId = 2222
+        self.api._current_changeset_id = 2222
         test_way = {"id": 876}
         with self.assertWarns(DeprecationWarning):
             self.api.WayDelete(test_way)

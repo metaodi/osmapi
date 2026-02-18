@@ -64,7 +64,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_relation_create(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {
             "tag": {"type": "test"},
             "member": [
@@ -86,7 +86,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_RelationCreate_deprecated(self):
         self._session_mock(auth=True, filenames=["test_relation_create.xml"])
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {
             "tag": {"type": "test"},
             "member": [
@@ -99,7 +99,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
 
     def test_relation_create_existing_node(self):
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_relation = {
             "id": 456,
             "tag": {"type": "test"},
@@ -116,7 +116,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_relation_update(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {
             "id": 8989,
             "tag": {"type": "test update"},
@@ -136,7 +136,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_RelationUpdate_deprecated(self):
         self._session_mock(auth=True, filenames=["test_relation_update.xml"])
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {
             "id": 8989,
             "tag": {"type": "test update"},
@@ -148,7 +148,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_relation_delete(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {"id": 8989}
         cs = self.api.changeset_create({"comment": "This is a test relation"})
         self.assertEqual(cs, 3333)
@@ -162,7 +162,7 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
     def test_RelationDelete_deprecated(self):
         self._session_mock(auth=True, filenames=["test_relation_delete.xml"])
         self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._CurrentChangesetId = 3333
+        self.api._current_changeset_id = 3333
         test_relation = {"id": 8989}
         with self.assertWarns(DeprecationWarning):
             self.api.RelationDelete(test_relation)

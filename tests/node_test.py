@@ -68,7 +68,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "lat": 47.287,
@@ -104,7 +104,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
     def test_node_create_existing_node(self):
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 123,
@@ -123,7 +123,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -140,7 +140,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -158,7 +158,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         api.changeset_create = mock.Mock(return_value=1111)
-        api._CurrentChangesetId = 1111
+        api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -176,7 +176,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -193,7 +193,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -220,7 +220,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self._session_mock(auth=True, status=409)
 
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -244,7 +244,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self._session_mock(auth=True, status=409)
 
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -269,7 +269,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
 
         # setup mock
         self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api._current_changeset_id = 1111
 
         test_node = {"id": 7676}
 

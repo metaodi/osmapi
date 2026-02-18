@@ -7,7 +7,7 @@ from . import errors
 from . import dom
 
 
-def ParseOsm(data: bytes) -> list[dict[str, Any]]:
+def parse_osm(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osm data.
 
@@ -38,7 +38,7 @@ def ParseOsm(data: bytes) -> list[dict[str, Any]]:
     return result
 
 
-def ParseOsc(data: bytes) -> list[dict[str, Any]]:
+def parse_osc(data: bytes) -> list[dict[str, Any]]:
     """
     Parse osc data.
 
@@ -91,7 +91,7 @@ def ParseOsc(data: bytes) -> list[dict[str, Any]]:
     return result
 
 
-def ParseNotes(data: bytes) -> list[dict[str, Any]]:
+def parse_notes(data: bytes) -> list[dict[str, Any]]:
     """
     Parse notes data.
 

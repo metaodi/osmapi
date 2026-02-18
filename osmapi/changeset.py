@@ -90,14 +90,14 @@ class ChangesetMixin:
         """
         if changeset_tags is None:
             changeset_tags = {}
-        if not self._CurrentChangesetId:
+        if not self._current_changeset_id:
             raise errors.NoChangesetOpenError("No changeset currently opened")
         if "created_by" not in changeset_tags:
             changeset_tags["created_by"] = self._created_by
         try:
             self._session._put(
-                f"/api/0.6/changeset/{self._CurrentChangesetId}",
-                xmlbuilder._XmlBuild("changeset", {"tag": changeset_tags}, data=self),
+                f"/api/0.6/changeset/{self._current_changeset_id}",
+                xmlbuilder._xml_build("changeset", {"tag": changeset_tags}, data=self),
                 return_value=False,
             )
         except errors.ApiError as e:
@@ -107,7 +107,7 @@ class ChangesetMixin:
                 ) from e
             else:
                 raise
-        return self._CurrentChangesetId
+        return self._current_changeset_id
 
     def changeset_create(
         self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
@@ -127,7 +127,7 @@ class ChangesetMixin:
         """
         if changeset_tags is None:
             changeset_tags = {}
-        if self._CurrentChangesetId:
+        if self._current_changeset_id:
             raise errors.ChangesetAlreadyOpenError("Changeset already opened")
         if "created_by" not in changeset_tags:
             changeset_tags["created_by"] = self._created_by
@@ -143,10 +143,10 @@ class ChangesetMixin:
 
         result = self._session._put(
             "/api/0.6/changeset/create",
-            xmlbuilder._XmlBuild("changeset", {"tag": changeset_tags}, data=self),
+            xmlbuilder._xml_build("changeset", {"tag": changeset_tags}, data=self),
         )
-        self._CurrentChangesetId = int(result)
-        return self._CurrentChangesetId
+        self._current_changeset_id = int(result)
+        return self._current_changeset_id
 
     def changeset_close(self: "OsmApi") -> int:
         """
@@ -163,16 +163,16 @@ class ChangesetMixin:
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
         """
-        if not self._CurrentChangesetId:
+        if not self._current_changeset_id:
             raise errors.NoChangesetOpenError("No changeset currently opened")
         try:
             self._session._put(
-                f"/api/0.6/changeset/{self._CurrentChangesetId}/close",
+                f"/api/0.6/changeset/{self._current_changeset_id}/close",
                 None,
                 return_value=False,
             )
-            current_changeset_id = self._CurrentChangesetId
-            self._CurrentChangesetId = 0
+            current_changeset_id = self._current_changeset_id
+            self._current_changeset_id = 0
         except errors.ApiError as e:
             if e.status == 409:
                 raise errors.ChangesetClosedApiError(
@@ -208,7 +208,7 @@ class ChangesetMixin:
         data += "</osmChange>"
         try:
             response_data = self._session._post(
-                f"/api/0.6/changeset/{self._CurrentChangesetId}/upload",
+                f"/api/0.6/changeset/{self._current_changeset_id}/upload",
                 data.encode("utf-8"),
                 forceAuth=True,
             )
@@ -249,7 +249,7 @@ class ChangesetMixin:
         """
         uri = f"/api/0.6/changeset/{changeset_id}/download"
         data = self._session._get(uri)
-        return parser.ParseOsc(data)
+        return parser.parse_osc(data)
 
     def changesets_get(  # noqa: C901
         self: "OsmApi",

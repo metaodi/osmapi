@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Changed
 - **BC-Break**: Remove support for Python 3.8, new minimum version for osmapi is Python 3.9
+- **BC-Break**: Renamed all methods as `snake_case` instead of `CamelCase`(eg. `osmapi.node_get` instead of `osmapi.NodeGet`). The previous methods are still there, but all issue a `DeprecationWarning` when called.
+- While changing the public API of osmapi, the large `OsmApi.py` file was split into several smaller files.
 
 ### Added
 - Add type hints and mypy checking to osmapi #186

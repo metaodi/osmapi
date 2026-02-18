@@ -14,9 +14,7 @@ auth = OpenStreetMapDevAuth(
     client_id, client_secret, ["write_api", "write_notes"]
 ).auth_code()
 
-api = osmapi.OsmApi(
-    api="https://api06.dev.openstreetmap.org", session=auth.session
-)
+api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
 empty_notes = api.notes_get(
     -93.8472901, 35.9763601, -80, 36.176360100000004, limit=1, closed=0
 )
@@ -34,11 +32,8 @@ note = api.note_create(
 test_notes = api.notes_get(8.527504, 47.337063, 8.540679, 47.341673, limit=1, closed=0)
 pprint(test_notes)
 
-
 api.note_comment(note["id"], "Another comment")
 api.note_close(note["id"], "Close this test note")
-
-
 
 # try to close an already closed note
 try:
@@ -47,8 +42,6 @@ except osmapi.NoteAlreadyClosedApiError:
     print("")
     print(f"The note {note['id']} has already been closed")
 
-#import sys
-#sys.exit(0)
 
 # try to comment on closed note
 try:

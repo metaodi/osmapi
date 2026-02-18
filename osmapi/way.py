@@ -262,7 +262,7 @@ class WayMixin:
         """
         uri = f"/api/0.6/way/{way_id}/full"
         data = self._session._get(uri)
-        return parser.ParseOsm(data)
+        return parser.parse_osm(data)
 
     def ways_get(self: "OsmApi", way_id_list: list[int]) -> dict[int, dict[str, Any]]:
         """

@@ -42,7 +42,7 @@ class NoteMixin:
             "closed": closed,
         }
         data = self._session._get(path, params=params)
-        return parser.ParseNotes(data)
+        return parser.parse_notes(data)
 
     def note_get(self: "OsmApi", note_id: int) -> dict[str, Any]:
         """
@@ -136,7 +136,7 @@ class NoteMixin:
             "closed": closed,
         }
         data = self._session._get(uri, params=params)
-        return parser.ParseNotes(data)
+        return parser.parse_notes(data)
 
     def _note_action(
         self: "OsmApi",

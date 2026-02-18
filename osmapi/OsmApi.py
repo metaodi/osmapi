@@ -129,7 +129,7 @@ class OsmApi(
             self._created_by = f"{appid} ({created_by})"
 
         # Initialisation
-        self._CurrentChangesetId: int = 0
+        self._current_changeset_id: int = 0
 
         # Http connection
         self.http_session: Optional[requests.Session] = session
@@ -592,32 +592,32 @@ class OsmApi(
         )
         return self.note_create(NoteData)
 
-    def NoteComment(self, NoteId: int, comment: str) -> dict[str, Any]:
+    def NoteComment(self, note_id: int, comment: str) -> dict[str, Any]:
         """.. deprecated:: Use :meth:`note_comment` instead."""
         warnings.warn(
             "NoteComment() is deprecated, use note_comment() instead",
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.note_comment(NoteId, comment)
+        return self.note_comment(note_id, comment)
 
-    def NoteClose(self, NoteId: int, comment: Optional[str] = None) -> dict[str, Any]:
+    def NoteClose(self, note_id: int, comment: Optional[str] = None) -> dict[str, Any]:
         """.. deprecated:: Use :meth:`note_close` instead."""
         warnings.warn(
             "NoteClose() is deprecated, use note_close() instead",
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.note_close(NoteId, comment)
+        return self.note_close(note_id, comment)
 
-    def NoteReopen(self, NoteId: int, comment: Optional[str] = None) -> dict[str, Any]:
+    def NoteReopen(self, note_id: int, comment: Optional[str] = None) -> dict[str, Any]:
         """.. deprecated:: Use :meth:`note_reopen` instead."""
         warnings.warn(
             "NoteReopen() is deprecated, use note_reopen() instead",
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.note_reopen(NoteId, comment)
+        return self.note_reopen(note_id, comment)
 
     def NotesSearch(
         self, query: str, limit: int = 100, closed: int = 7
@@ -656,22 +656,22 @@ class OsmApi(
     ##################################################
 
     def _do(  # type: ignore[return-value]  # noqa: C901
-        self, action: str, OsmType: str, OsmData: dict[str, Any]
+        self, action: str, osm_type: str, osm_data: dict[str, Any]
     ) -> dict[str, Any]:
-        if not self._CurrentChangesetId:
+        if not self._current_changeset_id:
             raise errors.NoChangesetOpenError(
                 "You need to open a changeset before uploading data"
             )
-        if "timestamp" in OsmData:
-            OsmData.pop("timestamp")
-        OsmData["changeset"] = self._CurrentChangesetId
+        if "timestamp" in osm_data:
+            osm_data.pop("timestamp")
+        osm_data["changeset"] = self._current_changeset_id
         if action == "create":
-            if OsmData.get("id", -1) > 0:
-                raise errors.OsmTypeAlreadyExistsError(f"This {OsmType} already exists")
+            if osm_data.get("id", -1) > 0:
+                raise errors.OsmTypeAlreadyExistsError(f"This {osm_type} already exists")
             try:
                 result = self._session._put(
-                    f"/api/0.6/{OsmType}/create",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
+                    f"/api/0.6/{osm_type}/create",
+                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
                 )
             except errors.ApiError as e:
                 if e.status == 409 and re.search(
@@ -690,14 +690,14 @@ class OsmApi(
                     ) from e
                 else:
                     raise
-            OsmData["id"] = int(result.strip())
-            OsmData["version"] = 1
-            return OsmData
+            osm_data["id"] = int(result.strip())
+            osm_data["version"] = 1
+            return osm_data
         elif action == "modify":
             try:
                 result = self._session._put(
-                    f"/api/0.6/{OsmType}/{OsmData['id']}",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
+                    f"/api/0.6/{osm_type}/{osm_data['id']}",
+                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
                 )
             except errors.ApiError as e:
                 logger.error(e.reason)
@@ -717,13 +717,13 @@ class OsmApi(
                     ) from e
                 else:
                     raise
-            OsmData["version"] = int(result.strip())
-            return OsmData
+            osm_data["version"] = int(result.strip())
+            return osm_data
         elif action == "delete":
             try:
                 result = self._session._delete(
-                    f"/api/0.6/{OsmType}/{OsmData['id']}",
-                    xmlbuilder._XmlBuild(OsmType, OsmData, data=self),
+                    f"/api/0.6/{osm_type}/{osm_data['id']}",
+                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
                 )
             except errors.ApiError as e:
                 if e.status == 409 and re.search(
@@ -742,22 +742,22 @@ class OsmApi(
                     ) from e
                 else:
                     raise
-            OsmData["version"] = int(result.strip())
-            OsmData["visible"] = False
-            return OsmData
+            osm_data["version"] = int(result.strip())
+            osm_data["visible"] = False
+            return osm_data
 
-    def _add_changeset_data(self, changeData: list[dict[str, Any]], type: str) -> str:
+    def _add_changeset_data(self, change_data: list[dict[str, Any]], type: str) -> str:
         data = ""
-        for changedElement in changeData:
-            changedElement["changeset"] = self._CurrentChangesetId
-            data += xmlbuilder._XmlBuild(type, changedElement, False, data=self).decode(
+        for changed_element in change_data:
+            changed_element["changeset"] = self._current_changeset_id
+            data += xmlbuilder._xml_build(type, changed_element, False, data=self).decode(
                 "utf-8"
             )
         return data
 
     def _assign_id_and_version(
-        self, ResponseData: list[Element], RequestData: list[dict[str, Any]]
+        self, response_data: list[Element], request_data: list[dict[str, Any]]
     ) -> None:
-        for response, element in zip(ResponseData, RequestData):
+        for response, element in zip(response_data, request_data):
             element["id"] = int(response.getAttribute("new_id"))
             element["version"] = int(response.getAttribute("new_version"))

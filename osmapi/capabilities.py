@@ -47,4 +47,4 @@ class CapabilitiesMixin:
         """
         uri = f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
         data = self._session._get(uri)
-        return parser.ParseOsm(data)
+        return parser.parse_osm(data)

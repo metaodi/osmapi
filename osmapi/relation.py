@@ -173,7 +173,7 @@ class RelationMixin:
         """
         uri = f"/api/0.6/relation/{relation_id}/full"
         data = self._session._get(uri)
-        return parser.ParseOsm(data)
+        return parser.parse_osm(data)
 
     def relations_get(
         self: "OsmApi", relation_id_list: list[int]

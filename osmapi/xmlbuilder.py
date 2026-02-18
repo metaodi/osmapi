@@ -5,62 +5,62 @@ if TYPE_CHECKING:
     from .OsmApi import OsmApi
 
 
-def _XmlBuild(  # noqa: C901
-    ElementType: str,
-    ElementData: dict[str, Any],
-    WithHeaders: bool = True,
+def _xml_build(  # noqa: C901
+    element_type: str,
+    element_data: dict[str, Any],
+    with_headers: bool = True,
     *,
     data: "OsmApi",
 ) -> bytes:
     xml = ""
-    if WithHeaders:
+    if with_headers:
         xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<osm version="0.6" generator="'
         xml += data._created_by + '">'
         xml += "\n"
 
     # <element attr="val">
-    xml += "  <" + ElementType
-    if "id" in ElementData:
-        xml += ' id="' + str(ElementData["id"]) + '"'
-    if "lat" in ElementData:
-        xml += ' lat="' + str(ElementData["lat"]) + '"'
-    if "lon" in ElementData:
-        xml += ' lon="' + str(ElementData["lon"]) + '"'
-    if "version" in ElementData:
-        xml += ' version="' + str(ElementData["version"]) + '"'
-    visible_str = str(ElementData.get("visible", True)).lower()
+    xml += "  <" + element_type
+    if "id" in element_data:
+        xml += ' id="' + str(element_data["id"]) + '"'
+    if "lat" in element_data:
+        xml += ' lat="' + str(element_data["lat"]) + '"'
+    if "lon" in element_data:
+        xml += ' lon="' + str(element_data["lon"]) + '"'
+    if "version" in element_data:
+        xml += ' version="' + str(element_data["version"]) + '"'
+    visible_str = str(element_data.get("visible", True)).lower()
     xml += ' visible="' + visible_str + '"'
-    if ElementType in ["node", "way", "relation"]:
-        xml += ' changeset="' + str(data._CurrentChangesetId) + '"'
+    if element_type in ["node", "way", "relation"]:
+        xml += ' changeset="' + str(data._current_changeset_id) + '"'
     xml += ">\n"
 
     # <tag... />
-    for k, v in ElementData.get("tag", {}).items():
-        xml += '    <tag k="' + _XmlEncode(k)
-        xml += '" v="' + _XmlEncode(v) + '"/>\n'
+    for k, v in element_data.get("tag", {}).items():
+        xml += '    <tag k="' + _xml_encode(k)
+        xml += '" v="' + _xml_encode(v) + '"/>\n'
 
     # <member... />
-    for member in ElementData.get("member", []):
+    for member in element_data.get("member", []):
         xml += '    <member type="' + member["type"]
         xml += '" ref="' + str(member["ref"])
-        xml += '" role="' + _XmlEncode(member["role"])
+        xml += '" role="' + _xml_encode(member["role"])
         xml += '"/>\n'
 
     # <nd... />
-    for ref in ElementData.get("nd", []):
+    for ref in element_data.get("nd", []):
         xml += '    <nd ref="' + str(ref) + '"/>\n'
 
     # </element>
-    xml += "  </" + ElementType + ">\n"
+    xml += "  </" + element_type + ">\n"
 
-    if WithHeaders:
+    if with_headers:
         xml += "</osm>\n"
 
     return xml.encode("utf8")
 
 
-def _XmlEncode(text: str) -> str:
+def _xml_encode(text: str) -> str:
     return (
         text.replace("&", "&amp;")
         .replace('"', "&quot;")
@@ -69,9 +69,9 @@ def _XmlEncode(text: str) -> str:
     )
 
 
-def _GetXmlValue(DomElement: Element, tag: str) -> Optional[str]:
+def _get_xml_value(dom_element: Element, tag: str) -> Optional[str]:
     try:
-        elem = DomElement.getElementsByTagName(tag)[0]
+        elem = dom_element.getElementsByTagName(tag)[0]
         return elem.firstChild.nodeValue  # type: ignore[union-attr]
     except Exception:
         return None

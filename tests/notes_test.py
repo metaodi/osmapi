@@ -10,11 +10,11 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         result = self.api.notes_get(-1.4998534, 45.9667901, -1.4831815, 52.4710193)
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
-        urlParts = urlparse.urlparse(args[1])
-        params = urlparse.parse_qs(urlParts.query)
-        self.assertEqual(params["bbox"][0], "-1.499853,45.966790,-1.483181,52.471019")
-        self.assertEqual(params["limit"][0], "100")
-        self.assertEqual(params["closed"][0], "7")
+
+        params = kwargs["params"] 
+        self.assertEqual(params["bbox"], "-1.499853,45.966790,-1.483181,52.471019")
+        self.assertEqual(params["limit"], 100)
+        self.assertEqual(params["closed"], 7)
         self.assertEqual(len(result), 14)
         self.assertEqual(
             result[2],
@@ -49,7 +49,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NotesGet_deprecated(self):
-        self._session_mock()
+        self._session_mock(filenames=["test_notes_get.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NotesGet(-1.4998534, 45.9667901, -1.4831815, 52.4710193)
 
@@ -60,9 +60,9 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
-        params = args[2]
-        self.assertEqual(params["limit"], "1")
-        self.assertEqual(params["closed"], "0")
+        params = kwargs["params"] 
+        self.assertEqual(params["limit"], 1)
+        self.assertEqual(params["closed"], 0)
         self.assertEqual(len(result), 0)
         self.assertEqual(result, [])
 
@@ -103,7 +103,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NoteGet_deprecated(self):
-        self._session_mock()
+        self._session_mock(filenames=["test_note_get.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NoteGet(1111)
 
@@ -113,7 +113,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             self.api.note_get(1111)
 
     def test_NoteCreate_deprecated(self):
-        self._session_mock(auth=True)
+        self._session_mock(auth=True, filenames=["test_note_create.xml"])
         note = {"lat": 47.123, "lon": 8.432, "text": "This is a test"}
         with self.assertWarns(DeprecationWarning):
             self.api.NoteCreate(note)
@@ -124,9 +124,10 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         result = self.api.note_create(note)
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
-        params = args[2]
-        self.assertEqual(params["lat"], "47.123")
-        self.assertEqual(params["lon"], "8.432")
+
+        params = kwargs["params"] 
+        self.assertEqual(params["lat"], 47.123)
+        self.assertEqual(params["lon"], 8.432)
         self.assertEqual(params["text"], "This is a test")
 
         self.assertEqual(
@@ -152,7 +153,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NoteCreateAnonymous_deprecated(self):
-        self._session_mock()
+        self._session_mock(filenames=["test_note_create.xml"])
         note = {"lat": 47.123, "lon": 8.432, "text": "test 123"}
         with self.assertWarns(DeprecationWarning):
             self.api.NoteCreate(note)
@@ -163,9 +164,10 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         result = self.api.note_create(note)
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
-        params = args[2]
-        self.assertEqual(params["lat"], "47.123")
-        self.assertEqual(params["lon"], "8.432")
+
+        params = kwargs["params"] 
+        self.assertEqual(params["lat"], 47.123)
+        self.assertEqual(params["lon"], 8.432)
         self.assertEqual(params["text"], "test 123")
 
         self.assertEqual(
@@ -190,19 +192,21 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             },
         )
 
+    def test_NoteComment_deprecated(self):
+        self._session_mock(auth=True, filenames=["test_note_comment.xml"])
+        with self.assertWarns(DeprecationWarning):
+            self.api.NoteComment(812, "This is a comment")
+
     def test_note_comment(self):
         self._session_mock(auth=True)
         result = self.api.note_comment(812, "This is a comment")
 
-    def test_NoteComment_deprecated(self):
-        self._session_mock(auth=True)
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteComment(812, "This is a comment")
-
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
         self.assertEqual(args[1], self.api_base + "/api/0.6/notes/812/comment")
-        self.assertEqual(args[2]["text"], "This is a comment")
+
+        params = kwargs["params"]
+        self.assertEqual(params["text"], "This is a comment")
 
         self.assertEqual(
             result,
@@ -235,7 +239,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NoteCommentAnonymous_deprecated(self):
-        self._session_mock()
+        self._session_mock(filenames=["test_note_comment.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NoteComment(842, "blubb")
 
@@ -245,9 +249,12 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
+
+        params = kwargs["params"]
         self.assertEqual(
-            args[1], self.api_base + "/api/0.6/notes/842/comment?text=blubb"
+            args[1], self.api_base + "/api/0.6/notes/842/comment"
         )
+        self.assertEqual(params["text"], "blubb")
 
         self.assertEqual(
             result,
@@ -295,7 +302,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         self.assertEqual(cm.exception.status, 404)
 
     def test_NoteClose_deprecated(self):
-        self._session_mock(auth=True)
+        self._session_mock(auth=True, filenames=["test_note_close.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NoteClose(819, "Close this note!")
 
@@ -306,8 +313,10 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
         self.assertEqual(
-            args[1], self.api_base + "/api/0.6/notes/819/close?text=Close+this+note%21"
+            args[1], self.api_base + "/api/0.6/notes/819/close"
         )
+        params = kwargs["params"]
+        self.assertEqual(params["text"], "Close this note!")
 
         self.assertEqual(
             result,
@@ -349,7 +358,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NoteReopen_deprecated(self):
-        self._session_mock(auth=True)
+        self._session_mock(auth=True, filenames=["test_note_reopen.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NoteReopen(815, "Reopen this note!")
 
@@ -359,10 +368,13 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "POST")
+
+        params = kwargs["params"]
         self.assertEqual(
             args[1],
-            (self.api_base + "/api/0.6/notes/815/reopen?text=Reopen+this+note%21"),
+            (self.api_base + "/api/0.6/notes/815/reopen"),
         )
+        self.assertEqual(params["text"], "Reopen this note!")
 
         self.assertEqual(
             result,
@@ -403,7 +415,7 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         )
 
     def test_NotesSearch_deprecated(self):
-        self._session_mock()
+        self._session_mock(filenames=["test_notes_search.xml"])
         with self.assertWarns(DeprecationWarning):
             self.api.NotesSearch("street")
 
@@ -412,11 +424,11 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         result = self.api.notes_search("street")
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
-        urlParts = urlparse.urlparse(args[1])
-        params = urlparse.parse_qs(urlParts.query)
-        self.assertEqual(params["q"][0], "street")
-        self.assertEqual(params["limit"][0], "100")
-        self.assertEqual(params["closed"][0], "7")
+
+        params = kwargs["params"]        
+        self.assertEqual(params["q"], "street")
+        self.assertEqual(params["limit"], 100)
+        self.assertEqual(params["closed"], 7)
 
         self.assertEqual(len(result), 3)
         self.assertEqual(

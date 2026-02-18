@@ -25,6 +25,7 @@ Find all information about changes of the different versions of this module
 * Since version 5.0 of this library, all method names are in snake_case,
 the CamelCase versions are deprecated and will be removed in version 6.0.
 """
+
 import re
 import logging
 import warnings

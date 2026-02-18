@@ -22,11 +22,9 @@ Find all information about changes of the different versions of this module
 * way **nd** is list of _integers_
 * relation **member** is a _list of dictionaries_ like
 `{"role": "", "ref":123, "type": "node"}`
-* Since version 5.0 of this library, all method names are in snake_case, 
+* Since version 5.0 of this library, all method names are in snake_case,
 the CamelCase versions are deprecated and will be removed in version 6.0.
-
 """
-
 import re
 import logging
 import warnings

@@ -17,7 +17,6 @@ empty_notes = api.notes_get(
 pprint(empty_notes)
 
 
-
 # create note and then search for it
 note = api.note_create(
     {
@@ -32,7 +31,6 @@ pprint(test_notes)
 
 api.note_comment(note["id"], "Another comment")
 api.note_close(note["id"], "Close this test note")
-
 
 
 # try to close an already closed note

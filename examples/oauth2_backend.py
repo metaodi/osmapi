@@ -90,7 +90,6 @@ def save_and_get_access_token(client_id, client_secret, redirect_uri, scope):
     return token
 
 
-
 def make_osm_change(oauth_session):
     api = osmapi.OsmApi(
         api="https://api06.dev.openstreetmap.org", session=oauth_session

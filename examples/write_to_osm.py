@@ -15,7 +15,6 @@ auth = OpenStreetMapDevAuth(
 ).auth_code()
 
 
-
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
 with api.changeset({"comment": "My first test"}) as changeset_id:
     print(f"Part of Changeset {changeset_id}")

@@ -22,6 +22,8 @@ Find all information about changes of the different versions of this module
 * way **nd** is list of _integers_
 * relation **member** is a _list of dictionaries_ like
 `{"role": "", "ref":123, "type": "node"}`
+* Since version 5.0 of this library, all method names are in snake_case, 
+the CamelCase versions are deprecated and will be removed in version 6.0.
 
 """
 
@@ -654,12 +656,7 @@ class OsmApi(
     # Internal method                                #
     ##################################################
 
-    def _do(
-        self, action: str, OsmType: str, OsmData: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
-        return self._do_manu(action, OsmType, OsmData)
-
-    def _do_manu(  # type: ignore[return-value]  # noqa: C901
+    def _do(  # type: ignore[return-value]  # noqa: C901
         self, action: str, OsmType: str, OsmData: dict[str, Any]
     ) -> dict[str, Any]:
         if not self._CurrentChangesetId:

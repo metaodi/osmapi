@@ -1,3 +1,6 @@
+"""
+Error classes for the OpenStreetMap API."""
+
 from typing import Any
 
 

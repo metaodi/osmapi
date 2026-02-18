@@ -1,7 +1,5 @@
 """
 Node operations for the OpenStreetMap API.
-
-This module provides pythonic (snake_case) methods for working with OSM nodes.
 """
 
 from typing import Any, Optional, TYPE_CHECKING, cast

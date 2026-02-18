@@ -1,3 +1,7 @@
+"""
+HTTP session management for the OpenStreetMap API.
+"""
+
 import datetime
 import itertools as it
 import logging

@@ -1,7 +1,5 @@
 """
 Capabilities and miscellaneous operations for the OpenStreetMap API.
-
-This module provides pythonic (snake_case) methods for capabilities and map download.
 """
 
 from typing import Any, TYPE_CHECKING, cast

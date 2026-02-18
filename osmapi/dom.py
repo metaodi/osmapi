@@ -1,3 +1,7 @@
+"""
+DOM parsing for the OpenStreetMap API.
+"""
+
 from datetime import datetime
 import xml.dom.minidom
 import xml.parsers.expat

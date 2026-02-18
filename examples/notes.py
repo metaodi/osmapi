@@ -1,15 +1,21 @@
 import osmapi
+from oauthcli import OpenStreetMapDevAuth
 from dotenv import load_dotenv, find_dotenv
 import os
 from pprint import pprint
 
 load_dotenv(find_dotenv())
-user = os.getenv("OSM_USER")
-pw = os.getenv("OSM_PASS")
 
+# load secrets for OAuth
+client_id = os.getenv("OSM_OAUTH_CLIENT_ID")
+client_secret = os.getenv("OSM_OAUTH_CLIENT_SECRET")
+
+auth = OpenStreetMapDevAuth(
+    client_id, client_secret, ["write_api", "write_notes"]
+).auth_code()
 
 api = osmapi.OsmApi(
-    api="https://api06.dev.openstreetmap.org", username=user, password=pw
+    api="https://api06.dev.openstreetmap.org", session=auth.session
 )
 empty_notes = api.notes_get(
     -93.8472901, 35.9763601, -80, 36.176360100000004, limit=1, closed=0
@@ -33,6 +39,7 @@ api.note_comment(note["id"], "Another comment")
 api.note_close(note["id"], "Close this test note")
 
 
+
 # try to close an already closed note
 try:
     api.note_close(note["id"], "Close the note again")
@@ -40,9 +47,12 @@ except osmapi.NoteAlreadyClosedApiError:
     print("")
     print(f"The note {note['id']} has already been closed")
 
+#import sys
+#sys.exit(0)
+
 # try to comment on closed note
 try:
     api.note_comment(note["id"], "Just a comment")
-except osmapi.NoteAlreadyClosedApiError:
+except (osmapi.NoteAlreadyClosedApiError, osmapi.errors.ApiError):
     print("")
     print(f"The note {note['id']} is closed, comment no longer possible")

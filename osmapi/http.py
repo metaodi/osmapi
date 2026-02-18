@@ -146,7 +146,7 @@ class OsmApiSession:
                         self._sleep()
                     self._session = self._get_http_session()
                 else:
-                    logger.exception("ApiError Exception occured")
+                    logger.debug("ApiError Exception occured")
                     raise
             except errors.UsernamePasswordMissingError:
                 raise

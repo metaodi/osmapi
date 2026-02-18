@@ -38,7 +38,7 @@ class RelationMixin:
         relation = cast(
             Element, dom.OsmResponseToDom(data, tag="relation", single=True)
         )
-        return dom.DomParseRelation(relation)
+        return dom.dom_parse_relation(relation)
 
     def relation_create(
         self: "OsmApi", relation_data: dict[str, Any]
@@ -106,7 +106,7 @@ class RelationMixin:
         relations = cast(list[Element], dom.OsmResponseToDom(data, tag="relation"))
         result: dict[int, dict[str, Any]] = {}
         for relation in relations:
-            relation_data = dom.DomParseRelation(relation)
+            relation_data = dom.dom_parse_relation(relation)
             result[relation_data["version"]] = relation_data
         return result
 
@@ -124,7 +124,7 @@ class RelationMixin:
         )
         result: list[dict[str, Any]] = []
         for relation in relations:
-            relation_data = dom.DomParseRelation(relation)
+            relation_data = dom.dom_parse_relation(relation)
             result.append(relation_data)
         return result
 
@@ -191,6 +191,6 @@ class RelationMixin:
         relations = cast(list[Element], dom.OsmResponseToDom(data, tag="relation"))
         result: dict[int, dict[str, Any]] = {}
         for relation in relations:
-            relation_data = dom.DomParseRelation(relation)
+            relation_data = dom.dom_parse_relation(relation)
             result[relation_data["id"]] = relation_data
         return result

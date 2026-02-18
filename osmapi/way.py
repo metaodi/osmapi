@@ -47,7 +47,7 @@ class WayMixin:
             uri += f"/{way_version}"
         data = self._session._get(uri)
         way = cast(Element, dom.OsmResponseToDom(data, tag="way", single=True))
-        return dom.DomParseWay(way)
+        return dom.dom_parse_way(way)
 
     def way_create(
         self: "OsmApi", way_data: dict[str, Any]
@@ -192,7 +192,7 @@ class WayMixin:
         ways = cast(list[Element], dom.OsmResponseToDom(data, tag="way"))
         result: dict[int, dict[str, Any]] = {}
         for way in ways:
-            way_data = dom.DomParseWay(way)
+            way_data = dom.dom_parse_way(way)
             result[way_data["version"]] = way_data
         return result
 
@@ -235,7 +235,7 @@ class WayMixin:
         )
         result: list[dict[str, Any]] = []
         for relation in relations:
-            relation_data = dom.DomParseRelation(relation)
+            relation_data = dom.dom_parse_relation(relation)
             result.append(relation_data)
         return result
 
@@ -284,6 +284,6 @@ class WayMixin:
         ways = cast(list[Element], dom.OsmResponseToDom(data, tag="way"))
         result: dict[int, dict[str, Any]] = {}
         for way in ways:
-            way_data = dom.DomParseWay(way)
+            way_data = dom.dom_parse_way(way)
             result[way_data["id"]] = way_data
         return result

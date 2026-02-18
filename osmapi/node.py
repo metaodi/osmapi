@@ -50,7 +50,7 @@ class NodeMixin:
         node_element = cast(
             Element, dom.OsmResponseToDom(data, tag="node", single=True)
         )
-        return dom.DomParseNode(node_element)
+        return dom.dom_parse_node(node_element)
 
     def node_create(
         self: "OsmApi", node_data: dict[str, Any]
@@ -198,7 +198,7 @@ class NodeMixin:
         node_list = cast(list[Element], dom.OsmResponseToDom(data, tag="node"))
         result = {}
         for node in node_list:
-            node_data = dom.DomParseNode(node)
+            node_data = dom.dom_parse_node(node)
             result[node_data["version"]] = node_data
         return result
 
@@ -230,7 +230,7 @@ class NodeMixin:
         way_list = cast(
             list[Element], dom.OsmResponseToDom(data, tag="way", allow_empty=True)
         )
-        return [dom.DomParseWay(way) for way in way_list]
+        return [dom.dom_parse_way(way) for way in way_list]
 
     def node_relations(self: "OsmApi", node_id: int) -> list[dict[str, Any]]:
         """
@@ -267,7 +267,7 @@ class NodeMixin:
         relation_list = cast(
             list[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         )
-        return [dom.DomParseRelation(rel) for rel in relation_list]
+        return [dom.dom_parse_relation(rel) for rel in relation_list]
 
     def nodes_get(self: "OsmApi", node_id_list: list[int]) -> dict[int, dict[str, Any]]:
         """
@@ -288,6 +288,6 @@ class NodeMixin:
         node_list = cast(list[Element], dom.OsmResponseToDom(data, tag="node"))
         result = {}
         for node in node_list:
-            node_data = dom.DomParseNode(node)
+            node_data = dom.dom_parse_node(node)
             result[node_data["id"]] = node_data
         return result

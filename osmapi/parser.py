@@ -30,11 +30,11 @@ def parse_osm(data: bytes) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for elem in data_parsed.childNodes:
         if elem.nodeName == "node":
-            result.append({"type": elem.nodeName, "data": dom.DomParseNode(elem)})  # type: ignore[arg-type]  # noqa: E501
+            result.append({"type": elem.nodeName, "data": dom.dom_parse_node(elem)})  # type: ignore[arg-type]  # noqa: E501
         elif elem.nodeName == "way":
-            result.append({"type": elem.nodeName, "data": dom.DomParseWay(elem)})  # type: ignore[arg-type]  # noqa: E501
+            result.append({"type": elem.nodeName, "data": dom.dom_parse_way(elem)})  # type: ignore[arg-type]  # noqa: E501
         elif elem.nodeName == "relation":
-            result.append({"type": elem.nodeName, "data": dom.DomParseRelation(elem)})  # type: ignore[arg-type]  # noqa: E501
+            result.append({"type": elem.nodeName, "data": dom.dom_parse_relation(elem)})  # type: ignore[arg-type]  # noqa: E501
     return result
 
 
@@ -69,7 +69,7 @@ def parse_osc(data: bytes) -> list[dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseNode(elem),  # type: ignore[arg-type]
+                        "data": dom.dom_parse_node(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "way":
@@ -77,7 +77,7 @@ def parse_osc(data: bytes) -> list[dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseWay(elem),  # type: ignore[arg-type]
+                        "data": dom.dom_parse_way(elem),  # type: ignore[arg-type]
                     }
                 )
             elif elem.nodeName == "relation":
@@ -85,7 +85,7 @@ def parse_osc(data: bytes) -> list[dict[str, Any]]:
                     {
                         "action": action.nodeName,
                         "type": elem.nodeName,
-                        "data": dom.DomParseRelation(elem),  # type: ignore[arg-type]
+                        "data": dom.dom_parse_relation(elem),  # type: ignore[arg-type]
                     }
                 )
     return result
@@ -117,6 +117,6 @@ def parse_notes(data: bytes) -> list[dict[str, Any]]:
     )
     result: list[dict[str, Any]] = []
     for noteElement in noteElements:
-        note = dom.DomParseNote(noteElement)
+        note = dom.dom_parse_note(noteElement)
         result.append(note)
     return result

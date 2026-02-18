@@ -55,7 +55,7 @@ class NoteMixin:
         note_element = cast(
             Element, dom.OsmResponseToDom(data, tag="note", single=True)
         )
-        return dom.DomParseNote(note_element)
+        return dom.dom_parse_note(note_element)
 
     def note_create(self: "OsmApi", note_data: dict[str, Any]) -> dict[str, Any]:
         """
@@ -173,4 +173,4 @@ class NoteMixin:
         note_element = cast(
             Element, dom.OsmResponseToDom(result, tag="note", single=True)
         )
-        return dom.DomParseNote(note_element)
+        return dom.dom_parse_note(note_element)

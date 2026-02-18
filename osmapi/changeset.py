@@ -71,7 +71,7 @@ class ChangesetMixin:
         changeset = cast(
             Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
         )
-        return dom.DomParseChangeset(changeset, include_discussion=include_discussion)
+        return dom.dom_parse_changeset(changeset, include_discussion=include_discussion)
 
     def changeset_update(
         self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
@@ -295,7 +295,7 @@ class ChangesetMixin:
         changesets = cast(list[Element], dom.OsmResponseToDom(data, tag="changeset"))
         result: dict[int, dict[str, Any]] = {}
         for cur_changeset in changesets:
-            tmp_cs = dom.DomParseChangeset(cur_changeset)
+            tmp_cs = dom.dom_parse_changeset(cur_changeset)
             result[tmp_cs["id"]] = tmp_cs
         return result
 
@@ -333,7 +333,7 @@ class ChangesetMixin:
             Element,
             dom.OsmResponseToDom(data, tag="changeset", single=True),
         )
-        return dom.DomParseChangeset(changeset, include_discussion=False)
+        return dom.dom_parse_changeset(changeset, include_discussion=False)
 
     def changeset_subscribe(self: "OsmApi", changeset_id: int) -> dict[str, Any]:
         """
@@ -364,7 +364,7 @@ class ChangesetMixin:
             Element,
             dom.OsmResponseToDom(data, tag="changeset", single=True),
         )
-        return dom.DomParseChangeset(changeset, include_discussion=False)
+        return dom.dom_parse_changeset(changeset, include_discussion=False)
 
     def changeset_unsubscribe(self: "OsmApi", changeset_id: int) -> dict[str, Any]:
         """
@@ -393,4 +393,4 @@ class ChangesetMixin:
             Element,
             dom.OsmResponseToDom(data, tag="changeset", single=True),
         )
-        return dom.DomParseChangeset(changeset, include_discussion=False)
+        return dom.dom_parse_changeset(changeset, include_discussion=False)

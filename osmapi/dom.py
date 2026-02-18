@@ -42,69 +42,69 @@ def OsmResponseToDom(
     return list(all_data)
 
 
-def DomParseNode(dom_element: Element) -> dict[str, Any]:
+def dom_parse_node(dom_element: Element) -> dict[str, Any]:
     """
     Returns NodeData for the node.
     """
-    result = _DomGetAttributes(dom_element)
-    result["tag"] = _DomGetTag(dom_element)
+    result = _dom_get_attributes(dom_element)
+    result["tag"] = _dom_get_tag(dom_element)
     return result
 
 
-def DomParseWay(dom_element: Element) -> dict[str, Any]:
+def dom_parse_way(dom_element: Element) -> dict[str, Any]:
     """
     Returns WayData for the way.
     """
-    result = _DomGetAttributes(dom_element)
-    result["tag"] = _DomGetTag(dom_element)
-    result["nd"] = _DomGetNd(dom_element)
+    result = _dom_get_attributes(dom_element)
+    result["tag"] = _dom_get_tag(dom_element)
+    result["nd"] = _dom_get_nd(dom_element)
     return result
 
 
-def DomParseRelation(dom_element: Element) -> dict[str, Any]:
+def dom_parse_relation(dom_element: Element) -> dict[str, Any]:
     """
     Returns RelationData for the relation.
     """
-    result = _DomGetAttributes(dom_element)
-    result["tag"] = _DomGetTag(dom_element)
-    result["member"] = _DomGetMember(dom_element)
+    result = _dom_get_attributes(dom_element)
+    result["tag"] = _dom_get_tag(dom_element)
+    result["member"] = _dom_get_member(dom_element)
     return result
 
 
-def DomParseChangeset(
+def dom_parse_changeset(
     dom_element: Element, include_discussion: bool = False
 ) -> dict[str, Any]:
     """
     Returns ChangesetData for the changeset.
     """
-    result = _DomGetAttributes(dom_element)
-    result["tag"] = _DomGetTag(dom_element)
+    result = _dom_get_attributes(dom_element)
+    result["tag"] = _dom_get_tag(dom_element)
     if include_discussion:
-        result["discussion"] = _DomGetDiscussion(dom_element)
+        result["discussion"] = _dom_get_discussion(dom_element)
 
     return result
 
 
-def DomParseNote(dom_element: Element) -> dict[str, Any]:
+def dom_parse_note(dom_element: Element) -> dict[str, Any]:
     """
     Returns NoteData for the note.
     """
-    result = _DomGetAttributes(dom_element)
+    result = _dom_get_attributes(dom_element)
     result["id"] = xmlbuilder._get_xml_value(dom_element, "id")
     result["status"] = xmlbuilder._get_xml_value(dom_element, "status")
 
-    result["date_created"] = _ParseDate(
+    result["date_created"] = _parse_date(
         xmlbuilder._get_xml_value(dom_element, "date_created")
     )
-    result["date_closed"] = _ParseDate(
+    result["date_closed"] = _parse_date(
         xmlbuilder._get_xml_value(dom_element, "date_closed")
     )
-    result["comments"] = _DomGetComments(dom_element)
+    result["comments"] = _dom_get_comments(dom_element)
 
     return result
 
 
-def _DomGetAttributes(dom_element: Element) -> dict[str, Any]:
+def _dom_get_attributes(dom_element: Element) -> dict[str, Any]:
     """
     Returns a formated dictionnary of attributes of a dom_element.
     """
@@ -123,10 +123,10 @@ def _DomGetAttributes(dom_element: Element) -> dict[str, Any]:
         "visible": is_true,
         "ref": int,
         "comments_count": int,
-        "timestamp": _ParseDate,
-        "created_at": _ParseDate,
-        "closed_at": _ParseDate,
-        "date": _ParseDate,
+        "timestamp": _parse_date,
+        "created_at": _parse_date,
+        "closed_at": _parse_date,
+        "date": _parse_date,
     }
     result: dict[str, Any] = {}
     for k, v in dom_element.attributes.items():
@@ -137,7 +137,7 @@ def _DomGetAttributes(dom_element: Element) -> dict[str, Any]:
     return result
 
 
-def _DomGetTag(dom_element: Element) -> dict[str, str]:
+def _dom_get_tag(dom_element: Element) -> dict[str, str]:
     """
     Returns the dictionnary of tags of a dom_element.
     """
@@ -149,7 +149,7 @@ def _DomGetTag(dom_element: Element) -> dict[str, str]:
     return result
 
 
-def _DomGetNd(dom_element: Element) -> list[int]:
+def _dom_get_nd(dom_element: Element) -> list[int]:
     """
     Returns the list of nodes of a dom_element.
     """
@@ -159,7 +159,7 @@ def _DomGetNd(dom_element: Element) -> list[int]:
     return result
 
 
-def _DomGetDiscussion(dom_element: Element) -> list[dict[str, Any]]:
+def _dom_get_discussion(dom_element: Element) -> list[dict[str, Any]]:
     """
     Returns the dictionnary of comments of a dom_element.
     """
@@ -167,7 +167,7 @@ def _DomGetDiscussion(dom_element: Element) -> list[dict[str, Any]]:
     try:
         discussion = dom_element.getElementsByTagName("discussion")[0]
         for t in discussion.getElementsByTagName("comment"):
-            comment = _DomGetAttributes(t)
+            comment = _dom_get_attributes(t)
             comment["text"] = xmlbuilder._get_xml_value(t, "text")
             result.append(comment)
     except IndexError:
@@ -175,14 +175,14 @@ def _DomGetDiscussion(dom_element: Element) -> list[dict[str, Any]]:
     return result
 
 
-def _DomGetComments(dom_element: Element) -> list[dict[str, Any]]:
+def _dom_get_comments(dom_element: Element) -> list[dict[str, Any]]:
     """
     Returns the list of comments of a dom_element.
     """
     result: list[dict[str, Any]] = []
     for t in dom_element.getElementsByTagName("comment"):
         comment: dict[str, Any] = {}
-        comment["date"] = _ParseDate(xmlbuilder._get_xml_value(t, "date"))
+        comment["date"] = _parse_date(xmlbuilder._get_xml_value(t, "date"))
         comment["action"] = xmlbuilder._get_xml_value(t, "action")
         comment["text"] = xmlbuilder._get_xml_value(t, "text")
         comment["html"] = xmlbuilder._get_xml_value(t, "html")
@@ -192,23 +192,23 @@ def _DomGetComments(dom_element: Element) -> list[dict[str, Any]]:
     return result
 
 
-def _DomGetMember(dom_element: Element) -> list[dict[str, Any]]:
+def _dom_get_member(dom_element: Element) -> list[dict[str, Any]]:
     """
     Returns a list of relation members.
     """
     result: list[dict[str, Any]] = []
     for m in dom_element.getElementsByTagName("member"):
-        result.append(_DomGetAttributes(m))
+        result.append(_dom_get_attributes(m))
     return result
 
 
-def _ParseDate(DateString: Optional[str]) -> Union[datetime, str, None]:
+def _parse_date(date_string: Optional[str]) -> Union[datetime, str, None]:
     date_formats = ["%Y-%m-%d %H:%M:%S UTC", "%Y-%m-%dT%H:%M:%SZ"]
     for date_format in date_formats:
         try:
-            result = datetime.strptime(DateString, date_format)  # type: ignore[arg-type]  # noqa: E501
+            result = datetime.strptime(date_string, date_format)  # type: ignore[arg-type]  # noqa: E501
             return result
         except (ValueError, TypeError):
-            logger.debug(f"{DateString} does not match {date_format}")
+            logger.debug(f"{date_string} does not match {date_format}")
 
-    return DateString
+    return date_string

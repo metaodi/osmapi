@@ -667,7 +667,9 @@ class OsmApi(
         osm_data["changeset"] = self._current_changeset_id
         if action == "create":
             if osm_data.get("id", -1) > 0:
-                raise errors.OsmTypeAlreadyExistsError(f"This {osm_type} already exists")
+                raise errors.OsmTypeAlreadyExistsError(
+                    f"This {osm_type} already exists"
+                )
             try:
                 result = self._session._put(
                     f"/api/0.6/{osm_type}/create",
@@ -750,9 +752,8 @@ class OsmApi(
         data = ""
         for changed_element in change_data:
             changed_element["changeset"] = self._current_changeset_id
-            data += xmlbuilder._xml_build(type, changed_element, False, data=self).decode(
-                "utf-8"
-            )
+            xml_data = xmlbuilder._xml_build(type, changed_element, False, data=self)
+            data += xml_data.decode("utf-8")
         return data
 
     def _assign_id_and_version(

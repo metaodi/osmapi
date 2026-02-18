@@ -2,7 +2,6 @@
 Note operations for the OpenStreetMap API.
 """
 
-import urllib.parse
 from typing import Any, Optional, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
@@ -36,8 +35,13 @@ class NoteMixin:
 
         All parameters are optional.
         """
-        uri = f"/api/0.6/notes?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}&limit={limit}&closed={closed}"
-        data = self._session._get(uri)
+        path = "/api/0.6/notes"
+        params = {
+            "bbox": f"{min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}",
+            "limit": limit,
+            "closed": closed,
+        }
+        data = self._session._get(path, params=params)
         return parser.ParseNotes(data)
 
     def note_get(self: "OsmApi", note_id: int) -> dict[str, Any]:
@@ -67,8 +71,7 @@ class NoteMixin:
         Returns updated note data.
         """
         uri = "/api/0.6/notes"
-        uri += "?" + urllib.parse.urlencode(note_data)
-        return self._note_action(uri)
+        return self._note_action(uri, params=note_data)
 
     def note_comment(self: "OsmApi", note_id: int, comment: str) -> dict[str, Any]:
         """
@@ -127,13 +130,12 @@ class NoteMixin:
         -1 means all bugs are returned.
         """
         uri = "/api/0.6/notes/search"
-        params: dict[str, Any] = {}
-        params["q"] = query
-        params["limit"] = limit
-        params["closed"] = closed
-        uri += "?" + urllib.parse.urlencode(params)
-        data = self._session._get(uri)
-
+        params: dict[str, Any] = {
+            "q": query,
+            "limit": limit,
+            "closed": closed,
+        }
+        data = self._session._get(uri, params=params)
         return parser.ParseNotes(data)
 
     def _note_action(
@@ -141,6 +143,7 @@ class NoteMixin:
         path: str,
         comment: Optional[str] = None,
         optional_auth: bool = True,
+        params: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """
         Performs an action on a Note with a comment
@@ -148,12 +151,16 @@ class NoteMixin:
         Return the updated note
         """
         uri = path
+        final_params = params.copy() if params else {}
         if comment is not None:
-            params = {}
-            params["text"] = comment
-            uri += "?" + urllib.parse.urlencode(params)
+            final_params["text"] = comment
         try:
-            result = self._session._post(uri, None, optionalAuth=optional_auth)
+            result = self._session._post(
+                uri,
+                None,
+                optionalAuth=optional_auth,
+                params=final_params if final_params else None,
+            )
         except errors.ApiError as e:
             if e.status == 409:
                 raise errors.NoteAlreadyClosedApiError(

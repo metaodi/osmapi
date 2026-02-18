@@ -5,7 +5,7 @@ import datetime
 
 
 class TestOsmApiDom(osmapi_test.TestOsmApi):
-    def test_DomGetAttributes(self):
+    def test_dom_get_attributes(self):
         mock_domelement = mock.Mock()
         mock_domelement.attributes = {
             "uid": "12345",
@@ -16,7 +16,7 @@ class TestOsmApiDom(osmapi_test.TestOsmApi):
             "new_attribute": "Test 123",
         }
 
-        result = osmapi.dom._DomGetAttributes(mock_domelement)
+        result = osmapi.dom._dom_get_attributes(mock_domelement)
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result["uid"], 12345)
@@ -26,19 +26,19 @@ class TestOsmApiDom(osmapi_test.TestOsmApi):
         self.assertEqual(result["date"], datetime.datetime(2021, 12, 10, 21, 28, 3))
         self.assertEqual(result["new_attribute"], "Test 123")
 
-    def test_ParseDate(self):
+    def test_parse_date(self):
         self.assertEqual(
-            osmapi.dom._ParseDate("2021-02-25T09:49:33Z"),
+            osmapi.dom._parse_date("2021-02-25T09:49:33Z"),
             datetime.datetime(2021, 2, 25, 9, 49, 33),
         )
         self.assertEqual(
-            osmapi.dom._ParseDate("2021-02-25 09:49:33 UTC"),
+            osmapi.dom._parse_date("2021-02-25 09:49:33 UTC"),
             datetime.datetime(2021, 2, 25, 9, 49, 33),
         )
         with self.assertLogs("osmapi.dom", level="DEBUG") as cm:
-            self.assertEqual(osmapi.dom._ParseDate("2021-02-25"), "2021-02-25")
-            self.assertEqual(osmapi.dom._ParseDate(""), "")
-            self.assertIsNone(osmapi.dom._ParseDate(None))
+            self.assertEqual(osmapi.dom._parse_date("2021-02-25"), "2021-02-25")
+            self.assertEqual(osmapi.dom._parse_date(""), "")
+            self.assertIsNone(osmapi.dom._parse_date(None))
 
             # test logging output
             self.assertEqual(

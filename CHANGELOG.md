@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [5.0.0] - 2026-02-18
 ### Changed
 - **BC-Break**: Remove support for Python 3.8, new minimum version for osmapi is Python 3.9
 - **BC-Break**: Renamed all methods as `snake_case` instead of `CamelCase`(eg. `osmapi.node_get` instead of `osmapi.NodeGet`). The previous methods are still there, but all issue a `DeprecationWarning` when called.
@@ -377,7 +379,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.0.0...HEAD
+[5.0.0]: https://github.com/metaodi/osmapi/compare/v4.3.0...v5.0.0
 [4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/metaodi/osmapi/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metaodi/osmapi/compare/v4.0.0...v4.1.0

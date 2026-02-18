@@ -1,4 +1,4 @@
-__version__ = "4.3.0"
+__version__ = "5.0.0"
 
 from .OsmApi import *  # noqa
 from .errors import *  # noqa

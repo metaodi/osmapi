@@ -24,6 +24,8 @@ class TestOsmApi(unittest.TestCase):
         assert len(return_values) < 2
         if return_values:
             response_mock.content = return_values[0]
+        else:
+            response_mock.content = ""
 
         self.session_mock = mock.Mock()
         self.session_mock.request = mock.Mock(return_value=response_mock)
@@ -53,7 +55,46 @@ class TestOsmApi(unittest.TestCase):
                 with codecs.open(path, "r", "utf-8") as file:
                     return_values.append(file.read())
             except Exception:
-                pass
+                # Try case-insensitive match for backward compatibility
+                # Also try converting snake_case to CamelCase
+                # (e.g., test_way_get -> test_WayGet)
+                try:
+                    fixture_dir = os.path.join(__location__, "fixtures")
+                    available_files = os.listdir(fixture_dir)
+
+                    # First try exact case-insensitive match
+                    for available_file in available_files:
+                        if available_file.lower() == filename.lower():
+                            path = os.path.join(fixture_dir, available_file)
+                            with codecs.open(path, "r", "utf-8") as file:
+                                return_values.append(file.read())
+                            break
+                    else:
+                        # Try snake_case to CamelCase conversion
+                        # e.g., test_way_get.xml -> test_WayGet.xml
+                        # Split on underscore, then capitalize each word
+                        # except the first
+                        base_name, ext = os.path.splitext(filename)
+                        parts = base_name.split("_")
+                        if len(parts) > 1:
+                            # Keep first part as-is, capitalize the rest
+                            camel_case_base = (
+                                parts[0]
+                                + "_"
+                                + "".join(p.capitalize() for p in parts[1:])
+                            )
+                            camel_case_filename = camel_case_base + ext
+                            for available_file in available_files:
+                                if (
+                                    available_file.lower()
+                                    == camel_case_filename.lower()
+                                ):
+                                    path = os.path.join(fixture_dir, available_file)
+                                    with codecs.open(path, "r", "utf-8") as file:
+                                        return_values.append(file.read())
+                                    break
+                except Exception:
+                    pass
         return return_values
 
     def teardown(self):

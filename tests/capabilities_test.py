@@ -2,10 +2,9 @@ from . import osmapi_test
 
 
 class TestOsmApiNode(osmapi_test.TestOsmApi):
-    def test_Capabilities(self):
+    def test_capabilities(self):
         self._session_mock()
-
-        result = self.api.Capabilities()
+        result = self.api.capabilities()
         self.assertEqual(
             result,
             {
@@ -18,3 +17,8 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
                 "waynodes": {"maximum": 2000.0},
             },
         )
+
+    def test_Capabilities_deprecation_warning(self):
+        self._session_mock()
+        with self.assertWarns(DeprecationWarning):
+            self.api.Capabilities()

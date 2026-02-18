@@ -40,10 +40,8 @@ def test_Changeset_contextmanager(auth_api, add_response):
 def test_ChangesetGet(api, add_response):
     # Setup mock
     add_response(GET, "/changeset/123")
-
     # Call
-    result = api.ChangesetGet(123)
-
+    result = api.changeset_get(123)
     test_changeset = {
         "id": 123,
         "closed_at": datetime.datetime(2009, 9, 7, 22, 57, 37),
@@ -61,6 +59,16 @@ def test_ChangesetGet(api, add_response):
         },
     }
     assert result == test_changeset
+
+
+def test_ChangesetGet_deprecated(api, add_response):
+    add_response(GET, "/changeset/123")
+    import warnings
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        api.ChangesetGet(123)
+        assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
 
 
 def test_ChangesetGet_with_connection_error(api, add_response):
@@ -555,9 +563,7 @@ def test_ChangesetDownloadContainingUnicode(api, add_response):
 
 def test_ChangesetsGet(api, add_response):
     resp = add_response(GET, "/changesets")
-
-    result = api.ChangesetsGet(only_closed=True, username="metaodi")
-
+    result = api.changesets_get(only_closed=True, username="metaodi")
     assert resp.calls[0].request.params == {"display_name": "metaodi", "closed": "1"}
     assert len(result) == 10
     assert result[41417] == (
@@ -579,6 +585,16 @@ def test_ChangesetsGet(api, add_response):
             "user": "metaodi",
         }
     )
+
+
+def test_ChangesetsGet_deprecated(api, add_response):
+    add_response(GET, "/changesets")
+    import warnings
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        api.ChangesetsGet(only_closed=True, username="metaodi")
+        assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
 
 
 def test_ChangesetGetWithComment(api, add_response):

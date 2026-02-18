@@ -39,7 +39,7 @@ class TestOsmApi(unittest.TestCase):
         else:
             self.api = OsmApi(api=self.api_base, session=self.session_mock)
 
-        self.api._get_http_session = mock.Mock(return_value=self.session_mock)
+        self.api._http_session = self.session_mock
         self.api._session._sleep = mock.Mock()
 
     def _return_values(self, filenames):

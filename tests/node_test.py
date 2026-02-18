@@ -6,15 +6,12 @@ from requests.auth import HTTPBasicAuth
 
 
 class TestOsmApiNode(osmapi_test.TestOsmApi):
-    def test_NodeGet(self):
+    def test_node_get(self):
         self._session_mock()
-
-        result = self.api.NodeGet(123)
-
+        result = self.api.node_get(123)
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
         self.assertEqual(args[1], self.api_base + "/api/0.6/node/123")
-
         self.assertEqual(
             result,
             {
@@ -31,15 +28,17 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NodeGet_with_version(self):
+    def test_node_get_deprecation_warning(self):
+        self._session_mock(filenames=["test_node_get.xml"])
+        with self.assertWarns(DeprecationWarning):
+            self.api.NodeGet(123)
+
+    def test_node_get_with_version(self):
         self._session_mock()
-
-        result = self.api.NodeGet(123, NodeVersion=2)
-
+        result = self.api.node_get(123, node_version=2)
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
         self.assertEqual(args[1], self.api_base + "/api/0.6/node/123/2")
-
         self.assertEqual(
             result,
             {
@@ -58,41 +57,18 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NodeGet_invalid_response(self):
+    def test_node_get_invalid_response(self):
         self._session_mock()
 
         with self.assertRaises(osmapi.XmlResponseInvalidError):
-            self.api.NodeGet(987)
+            self.api.node_get(987)
 
-    def test_NodeCreate_changesetauto(self):
-        for filename in [
-            "test_NodeCreate_changesetauto.xml",
-            "test_ChangesetUpload_create_node.xml",
-            "test_ChangesetClose.xml",
-        ]:
-            # setup mock
-            self._session_mock(auth=True, filenames=[filename])
-            self.api = osmapi.OsmApi(
-                api="api06.dev.openstreetmap.org",
-                changesetauto=True,
-                session=self.session_mock,
-            )
-            self.api._session._sleep = mock.Mock()
-
-            test_node = {
-                "lat": 47.123,
-                "lon": 8.555,
-                "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
-            }
-
-            self.assertIsNone(self.api.NodeCreate(test_node))
-
-    def test_NodeCreate(self):
+    def test_node_create(self):
         self._session_mock(auth=True)
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "lat": 47.287,
@@ -100,9 +76,9 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
         }
 
-        cs = self.api.ChangesetCreate({"comment": "This is a test dataset"})
+        cs = self.api.changeset_create({"comment": "This is a test dataset"})
         self.assertEqual(cs, 1111)
-        result = self.api.NodeCreate(test_node)
+        result = self.api.node_create(test_node)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "PUT")
@@ -113,7 +89,7 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self.assertEqual(result["lon"], test_node["lon"])
         self.assertEqual(result["tag"], test_node["tag"])
 
-    def test_NodeCreate_wo_changeset(self):
+    def test_node_create_wo_changeset(self):
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -123,12 +99,12 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         with self.assertRaisesRegex(
             osmapi.NoChangesetOpenError, "need to open a changeset"
         ):
-            self.api.NodeCreate(test_node)
+            self.api.node_create(test_node)
 
-    def test_NodeCreate_existing_node(self):
+    def test_node_create_existing_node(self):
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 123,
@@ -140,14 +116,14 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         with self.assertRaisesRegex(
             osmapi.OsmTypeAlreadyExistsError, "This node already exists"
         ):
-            self.api.NodeCreate(test_node)
+            self.api.node_create(test_node)
 
-    def test_NodeCreate_wo_auth(self):
+    def test_node_create_wo_auth(self):
         self._session_mock()
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -157,14 +133,14 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         with self.assertRaisesRegex(
             osmapi.UsernamePasswordMissingError, "Username/Password missing"
         ):
-            self.api.NodeCreate(test_node)
+            self.api.node_create(test_node)
 
-    def test_NodeCreate_unauthorized(self):
+    def test_node_create_unauthorized(self):
         self._session_mock(auth=True, status=401)
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -172,35 +148,35 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         }
 
         with self.assertRaises(osmapi.UnauthorizedApiError):
-            self.api.NodeCreate(test_node)
+            self.api.node_create(test_node)
 
-    def test_NodeCreate_with_session_auth(self):
+    def test_node_create_with_session_auth(self):
         self._session_mock()
         self.session_mock.auth = HTTPBasicAuth("user", "pass")
 
         api = osmapi.OsmApi(api=self.api_base, session=self.session_mock)
 
         # setup mock
-        api.ChangesetCreate = mock.Mock(return_value=1111)
-        api._CurrentChangesetId = 1111
+        api.changeset_create = mock.Mock(return_value=1111)
+        api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
             "tag": {"amenity": "place_of_worship", "religion": "pastafarian"},
         }
 
-        cs = api.ChangesetCreate({"comment": "This is a test dataset"})
+        cs = api.changeset_create({"comment": "This is a test dataset"})
         self.assertEqual(cs, 1111)
-        result = api.NodeCreate(test_node)
+        result = api.node_create(test_node)
         self.assertEqual(result["id"], 3322)
 
-    def test_NodeCreate_with_exception(self):
+    def test_node_create_with_exception(self):
         self._session_mock(auth=True)
         self.api._session._http_request = mock.Mock(side_effect=Exception)
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
         test_node = {
             "lat": 47.287,
             "lon": 8.765,
@@ -210,14 +186,14 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         with self.assertRaisesRegex(
             osmapi.MaximumRetryLimitReachedError, "Give up after 5 retries"
         ):
-            self.api.NodeCreate(test_node)
+            self.api.node_create(test_node)
 
-    def test_NodeUpdate(self):
+    def test_node_update(self):
         self._session_mock(auth=True)
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -226,9 +202,9 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "tag": {"amenity": "place_of_worship", "name": "christian"},
         }
 
-        cs = self.api.ChangesetCreate({"comment": "This is a test dataset"})
+        cs = self.api.changeset_create({"comment": "This is a test dataset"})
         self.assertEqual(cs, 1111)
-        result = self.api.NodeUpdate(test_node)
+        result = self.api.node_update(test_node)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "PUT")
@@ -240,11 +216,11 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self.assertEqual(result["lon"], test_node["lon"])
         self.assertEqual(result["tag"], test_node["tag"])
 
-    def test_NodeUpdateWhenChangesetIsClosed(self):
+    def test_node_update_when_changeset_is_closed(self):
         self._session_mock(auth=True, status=409)
 
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -253,10 +229,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "tag": {"amenity": "place_of_worship", "name": "christian"},
         }
 
-        self.api.ChangesetCreate({"comment": "This is a test dataset"})
+        self.api.changeset_create({"comment": "This is a test dataset"})
 
         with self.assertRaises(osmapi.ChangesetClosedApiError) as cm:
-            self.api.NodeUpdate(test_node)
+            self.api.node_update(test_node)
 
         self.assertEqual(cm.exception.status, 409)
         self.assertEqual(
@@ -264,11 +240,11 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "The changeset 2222 was closed at 2021-11-20 09:42:47 UTC.",
         )
 
-    def test_NodeUpdateConflict(self):
+    def test_node_update_conflict(self):
         self._session_mock(auth=True, status=409)
 
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {
             "id": 7676,
@@ -277,10 +253,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "tag": {"amenity": "place_of_worship", "name": "christian"},
         }
 
-        self.api.ChangesetCreate({"comment": "This is a test dataset"})
+        self.api.changeset_create({"comment": "This is a test dataset"})
 
         with self.assertRaises(osmapi.VersionMismatchApiError) as cm:
-            self.api.NodeUpdate(test_node)
+            self.api.node_update(test_node)
 
         self.assertEqual(cm.exception.status, 409)
         self.assertEqual(
@@ -288,19 +264,19 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             "Version does not match the current database version of the element",
         )
 
-    def test_NodeDelete(self):
+    def test_node_delete(self):
         self._session_mock(auth=True)
 
         # setup mock
-        self.api.ChangesetCreate = mock.Mock(return_value=1111)
-        self.api._CurrentChangesetId = 1111
+        self.api.changeset_create = mock.Mock(return_value=1111)
+        self.api._current_changeset_id = 1111
 
         test_node = {"id": 7676}
 
-        cs = self.api.ChangesetCreate({"comment": "This is a test dataset"})
+        cs = self.api.changeset_create({"comment": "This is a test dataset"})
         self.assertEqual(cs, 1111)
 
-        result = self.api.NodeDelete(test_node)
+        result = self.api.node_delete(test_node)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "DELETE")
@@ -308,10 +284,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self.assertEqual(result["id"], 7676)
         self.assertEqual(result["version"], 4)
 
-    def test_NodeHistory(self):
+    def test_node_history(self):
         self._session_mock()
 
-        result = self.api.NodeHistory(123)
+        result = self.api.node_history(123)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
@@ -330,10 +306,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NodeWays(self):
+    def test_node_ways(self):
         self._session_mock()
 
-        result = self.api.NodeWays(234)
+        result = self.api.node_ways(234)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
@@ -350,10 +326,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NodeWaysNotExists(self):
+    def test_node_ways_not_exists(self):
         self._session_mock()
 
-        result = self.api.NodeWays(404)
+        result = self.api.node_ways(404)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
@@ -362,10 +338,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self.assertEqual(len(result), 0)
         self.assertIsInstance(result, list)
 
-    def test_NodeRelations(self):
+    def test_node_relations(self):
         self._session_mock()
 
-        result = self.api.NodeRelations(4295668179)
+        result = self.api.node_relations(4295668179)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
@@ -389,10 +365,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NodeRelationsUnusedElement(self):
+    def test_node_relations_unused_element(self):
         self._session_mock()
 
-        result = self.api.NodeRelations(4295668179)
+        result = self.api.node_relations(4295668179)
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")
@@ -401,10 +377,10 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
         self.assertEqual(len(result), 0)
         self.assertIsInstance(result, list)
 
-    def test_NodesGet(self):
+    def test_nodes_get(self):
         self._session_mock()
 
-        result = self.api.NodesGet([123, 345])
+        result = self.api.nodes_get([123, 345])
 
         args, kwargs = self.session_mock.request.call_args
         self.assertEqual(args[0], "GET")

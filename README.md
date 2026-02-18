@@ -9,7 +9,9 @@ osmapi
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
-Python wrapper for the OSM API (requires Python >= 3.8)
+Python wrapper for the OSM API (requires Python >= 3.9).
+
+**NOTE**: Since version 5.0 of this library, all method names are in `snake_case`, the `CamelCase` versions are deprecated and will be removed in version 6.0.
 
 ## Installation
 
@@ -36,10 +38,11 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### Read from OpenStreetMap
 
+
 ```python
 >>> import osmapi
 >>> api = osmapi.OsmApi()
->>> print(api.NodeGet(123))
+>>> print(api.node_get(123))
 {'changeset': 532907, 'uid': 14298,
 'timestamp': '2007-09-29T09:19:17Z',
 'lon': 10.790009299999999, 'visible': True,
@@ -49,13 +52,14 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### Write to OpenStreetMap
 
+
 ```python
 >>> import osmapi
 >>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "metaodi", password = "*******")
->>> api.ChangesetCreate({"comment": "My first test"})
->>> print(api.NodeCreate({"lon":1, "lat":1, "tag": {}}))
+>>> api.changeset_create({"comment": "My first test"})
+>>> print(api.node_create({"lon":1, "lat":1, "tag": {}}))
 {'changeset': 532907, 'lon': 1, 'version': 1, 'lat': 1, 'tag': {}, 'id': 164684}
->>> api.ChangesetClose()
+>>> api.changeset_close()
 ```
 
 ### OAuth authentication
@@ -68,6 +72,8 @@ To use OAuth 2.0, you must register an application with an OpenStreetMap account
 [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications)
 or on the [production server](https://www.openstreetmap.org/oauth2/applications).
 Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
+
+auth = OpenStreetMapDevAuth(
 
 Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2) on the development server, replace `OpenStreetMapDevAuth` with `OpenStreetMapAuth` to use the production server:
 
@@ -87,9 +93,9 @@ api = osmapi.OsmApi(
     session=auth.session
 )
 
-with api.Changeset({"comment": "My first test"}) as changeset_id:
+with api.changeset({"comment": "My first test"}) as changeset_id:
     print(f"Part of Changeset {changeset_id}")
-    node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
     print(node1)
 ```
 
@@ -102,6 +108,7 @@ An alternative way using the `requests-oauthlib` library can be found
 To credit the application that supplies changes to OSM, an `appid` can be provided.
 This is a string identifying the application.
 If this is omitted "osmapi" is used.
+
 
 ```python
 api = osmapi.OsmApi(

@@ -1,4 +1,4 @@
 pdoc==14.5.1
 Pygments==2.15.0
-requests==2.32.0
+requests==2.32.4
 python-dotenv

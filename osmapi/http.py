@@ -49,7 +49,8 @@ class OsmApiSession:
         `return_value` indicates wheter this request should return
         any data or not.
 
-        If the username or password is missing,
+        If the username or password is missing
+        and no Authorization header is present,
         `OsmApi.UsernamePasswordMissingError` is raised.
 
         If the requested element has been deleted,

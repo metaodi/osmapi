@@ -676,6 +676,27 @@ def test_ChangesetComment(auth_api, add_response):
     }
 
 
+def test_changeset_comment_with_session_authorization_header(add_response):
+    resp = add_response(
+        POST,
+        "/changeset/123/comment",
+        filename="test_ChangesetComment.xml",
+    )
+    
+    session = requests.Session()
+    session.headers.update({"Authorization": "Bearer test-token"})
+    api = osmapi.OsmApi(api="http://api06.dev.openstreetmap.org", session=session)
+
+    try:
+        result = api.ChangesetComment(123, comment="test comment")
+    finally:
+        api.close()
+
+    assert len(resp.calls) == 1
+    assert resp.calls[0].request.body == "text=test+comment"
+    assert result["id"] == 123
+
+
 def test_ChangesetComment_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.ChangesetComment(123, comment="test comment")

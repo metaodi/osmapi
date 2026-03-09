@@ -4,6 +4,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [5.0.0] - 2026-02-18
+### Changed
+- **BC-Break**: Remove support for Python 3.8, new minimum version for osmapi is Python 3.9
+- **BC-Break**: Renamed all methods as `snake_case` instead of `CamelCase`(eg. `osmapi.node_get` instead of `osmapi.NodeGet`). The previous methods are still there, but all issue a `DeprecationWarning` when called.
+- While changing the public API of osmapi, the large `OsmApi.py` file was split into several smaller files.
+
+### Added
+- Add type hints and mypy checking to osmapi #186
+
+### Removed
+- Remove autochangeset feature in favor of Changeset context manager #187
+
 ## [4.3.0] - 2025-01-21
 ### Added
 - New `ConnectionApiError` when a connection or network error occurs (see issue #176, thanks [Mateusz Konieczny](https://github.com/matkoniecz))
@@ -367,7 +379,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.0.0...HEAD
+[5.0.0]: https://github.com/metaodi/osmapi/compare/v4.3.0...v5.0.0
 [4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/metaodi/osmapi/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metaodi/osmapi/compare/v4.0.0...v4.1.0

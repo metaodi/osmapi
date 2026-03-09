@@ -9,7 +9,6 @@ import subprocess
 import sys
 import urllib3
 
-
 load_dotenv(find_dotenv())
 
 # logging setup
@@ -43,7 +42,7 @@ def clear_screen():
 log.debug("Try to write data to OSM without a changeset")
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
 try:
-    node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
 except osmapi.NoChangesetOpenError as e:
     log.exception(e)
     log.debug("There is no open changeset")
@@ -55,7 +54,7 @@ clear_screen()
 log.debug("Connect to wrong server...")
 api = osmapi.OsmApi(api="https://invalid.server.name")
 try:
-    api.ChangesetGet(123)
+    api.changeset_get(123)
 except osmapi.ConnectionApiError as e:
     log.exception(e)
     log.debug("Error connecting to server")
@@ -67,7 +66,7 @@ clear_screen()
 log.debug("Request non-existent changeset id...")
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
 try:
-    api.ChangesetGet(111111111111)
+    api.changeset_get(111111111111)
 except osmapi.ElementNotFoundApiError as e:
     log.exception(e)
     log.debug("Changeset not found")
@@ -81,8 +80,8 @@ try:
     s = requests.Session()
     s.auth = ("user", "pass")
     api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=s)
-    with api.Changeset({"comment": "My first test"}) as changeset_id:
-        node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    with api.changeset({"comment": "My first test"}) as changeset_id:
+        node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
 except osmapi.UnauthorizedApiError as e:
     log.exception(e)
     log.debug("Unauthorized to make this request")
@@ -93,8 +92,8 @@ clear_screen()
 log.debug("Try to add data without authorization")
 try:
     api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
-    with api.Changeset({"comment": "My first test"}) as changeset_id:
-        node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    with api.changeset({"comment": "My first test"}) as changeset_id:
+        node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
 except osmapi.UsernamePasswordMissingError as e:
     log.exception(e)
     log.debug("Username/Password or authorization missing")
@@ -117,13 +116,13 @@ except OAuth2Error as e:
 
 try:
     api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
-    with api.Changeset({"comment": "My first test"}) as changeset_id:
+    with api.changeset({"comment": "My first test"}) as changeset_id:
         log.debug(f"Part of Changeset {changeset_id}")
-        node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+        node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
         log.debug(node1)
 
     # get all the info from the closed changeset
-    changeset = api.ChangesetGet(changeset_id)
+    changeset = api.changeset_get(changeset_id)
     log.debug(changeset)
     exit_code = 0
 except osmapi.ConnectionApiError as e:

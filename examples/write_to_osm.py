@@ -16,13 +16,13 @@ auth = OpenStreetMapDevAuth(
 
 
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
-with api.Changeset({"comment": "My first test"}) as changeset_id:
+with api.changeset({"comment": "My first test"}) as changeset_id:
     print(f"Part of Changeset {changeset_id}")
-    node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
     print(node1)
-    node2 = api.NodeCreate({"lon": 2, "lat": 2, "tag": {}})
+    node2 = api.node_create({"lon": 2, "lat": 2, "tag": {}})
     print(node2)
-    way = api.WayCreate(
+    way = api.way_create(
         {
             "nd": [
                 node1["id"],

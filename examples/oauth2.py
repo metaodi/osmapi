@@ -45,8 +45,9 @@ oauth_session = requests.Session()
 oauth_session.auth = auth
 
 # use the custom session
+
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=oauth_session)
-with api.Changeset({"comment": "My first test"}) as changeset_id:
+with api.changeset({"comment": "My first test"}) as changeset_id:
     print(f"Part of Changeset {changeset_id}")
-    node1 = api.NodeCreate({"lon": 1, "lat": 1, "tag": {}})
+    node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
     print(node1)

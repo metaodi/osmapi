@@ -24,6 +24,10 @@ class TestOsmApi(unittest.TestCase):
         assert len(return_values) < 2
         if return_values:
             response_mock.content = return_values[0]
+        else:
+            response_mock.content = "default mock response from TestOsmApi".encode(
+                "utf-8"
+            )
 
         self.session_mock = mock.Mock()
         self.session_mock.request = mock.Mock(return_value=response_mock)
@@ -40,7 +44,7 @@ class TestOsmApi(unittest.TestCase):
         else:
             self.api = OsmApi(api=self.api_base, session=self.session_mock)
 
-        self.api._get_http_session = mock.Mock(return_value=self.session_mock)
+        self.api._http_session = self.session_mock
         self.api._session._sleep = mock.Mock()
 
     def _return_values(self, filenames):

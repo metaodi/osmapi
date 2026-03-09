@@ -19,5 +19,5 @@ logging.getLogger(urllib3.__name__).setLevel(logging.INFO)
 
 
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
-node1 = api.NodeGet("1111")
+node1 = api.node_get("1111")
 log.debug(pformat(node1))

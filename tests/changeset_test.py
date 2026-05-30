@@ -508,6 +508,54 @@ def test_changeset_upload_no_auth(api):
     assert str(execinfo.value) == "Username/Password missing"
 
 
+def test_changeset_upload_version_mismatch_raises_api_error(auth_api, add_response):
+    """HTTP 409 version mismatch must raise ApiError, not TypeError."""
+    add_response(PUT, "/changeset/create", body="4444")
+    add_response(
+        POST,
+        "/changeset/4444/upload",
+        body=b"Version mismatch: Provided 3, server had: 4",
+        status=409,
+    )
+
+    changesdata = [
+        {
+            "type": "node",
+            "action": "modify",
+            "data": [{"id": 1, "version": 3, "lat": 47.0, "lon": 8.0, "tag": {}}],
+        }
+    ]
+
+    auth_api.changeset_create()
+    with pytest.raises(osmapi.errors.ApiError) as execinfo:
+        auth_api.changeset_upload(changesdata)
+    assert execinfo.value.status == 409
+    assert b"Version mismatch" in execinfo.value.payload
+
+
+def test_changeset_upload_closed_changeset_raises_correct_error(auth_api, add_response):
+    """HTTP 409 'changeset closed' must raise ChangesetClosedApiError."""
+    add_response(PUT, "/changeset/create", body="4444")
+    add_response(
+        POST,
+        "/changeset/4444/upload",
+        body=b"The changeset 4444 was closed at 2024-01-01T00:00:00Z",
+        status=409,
+    )
+
+    changesdata = [
+        {
+            "type": "node",
+            "action": "modify",
+            "data": [{"id": 1, "version": 1, "lat": 47.0, "lon": 8.0, "tag": {}}],
+        }
+    ]
+
+    auth_api.changeset_create()
+    with pytest.raises(osmapi.errors.ChangesetClosedApiError):
+        auth_api.changeset_upload(changesdata)
+
+
 def test_changeset_download(api, add_response):
     # Setup mock
     add_response(GET, "/changeset/23123/download")

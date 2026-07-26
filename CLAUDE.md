@@ -7,7 +7,7 @@ Guidance for AI assistants working in this repository.
 `osmapi` is a pure-Python wrapper around the [OpenStreetMap API v0.6](https://wiki.openstreetmap.org/wiki/API_v0.6).
 It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org/pypi/osmapi) and documented at
 <http://osmapi.metaodi.ch> (GitHub Pages, built from the docstrings and deployed by the `publish_docs.yml`
-workflow on every push to `main`; the custom domain comes from the root `CNAME`, which the workflow copies
+workflow on `release: published`; the custom domain comes from the root `CNAME`, which the workflow copies
 into the published site).
 
 - Packaging: PEP 621 `pyproject.toml` (setuptools backend), dependencies and virtual env managed with
@@ -19,8 +19,8 @@ into the published site).
 - Version constraints: runtime deps get a **lower bound only** — never cap a dependency (`<`) in a library,
   the cap propagates into every downstream resolver. Dev tools get `>=` floors at the versions currently
   locked, except `black`, `pdoc` and `Pygments`, which are pinned exactly because a bump reformats the whole
-  code base / restyles the whole published documentation. Constraints also matter for Dependabot: it skips dependencies declared
-  without any specifier, so a new dependency needs at least a floor to be tracked.
+  code base / restyles the whole published documentation. Constraints also matter for Dependabot: it skips
+  dependencies declared without any specifier, so a new dependency needs at least a floor to be tracked.
 - Supported Python: **>= 3.10** (CI matrix: 3.10, 3.11, 3.12, 3.13, 3.14).
 - License: GPLv3. Originally written by Etienne Chové, maintained by Stefan Oderbolz (metaodi).
 
@@ -176,8 +176,8 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 - Release steps (see README): bump `__version__` in `osmapi/__init__.py`, update `CHANGELOG.md`,
   PR `develop` -> `main`, then publish a GitHub release/tag — `publish_python.yml`
   builds and uploads to PyPI via trusted publishing on `release: published` (or manual `workflow_dispatch`
-  with a tag). The merge to `main` also triggers `publish_docs.yml`, which redeploys the documentation;
-  there is nothing to regenerate by hand.
+  with a tag). The same release event triggers `publish_docs.yml`, which rebuilds the documentation from
+  the tag and deploys it to GitHub Pages; there is nothing to regenerate by hand.
 - The project follows [Semantic Versioning](http://semver.org/) and
   [Keep a Changelog](http://keepachangelog.com/); add an entry under `## [Unreleased]` for user-visible changes.
 

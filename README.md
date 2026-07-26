@@ -32,8 +32,8 @@ The build the documentation locally, you can use
 This writes the HTML to `docs/`, which is *not* committed to the repository (it is git-ignored).
 
 This project uses GitHub Pages to publish its documentation.
-The online documentation is built and deployed by the [`publish_docs.yml` GitHub Action](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml) on every push to the `main` branch, so it is updated automatically with each release.
-The workflow can also be started manually from the Actions tab.
+The online documentation is built and deployed by the [`publish_docs.yml` GitHub Action](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml) whenever a new release is published, so it always describes the latest released version.
+The workflow can also be started manually from the Actions tab, optionally with a tag to build the documentation from.
 
 ## Examples
 
@@ -170,7 +170,7 @@ To create a new release, follow these steps (please respect [Semantic Versioning
 1. Create a [pull request to merge develop into main](https://github.com/metaodi/osmapi/compare/main...develop) (make sure the tests pass!)
 1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the main branch)
 1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_python.yml) on every tagged commit
-1. The [documentation](http://osmapi.metaodi.ch) is re-generated and published by [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml) as soon as the merge to `main` lands
+1. The [documentation](http://osmapi.metaodi.ch) is re-generated from the tag and published to GitHub Pages by [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml), triggered by the same release
 
 ## Attribution
 

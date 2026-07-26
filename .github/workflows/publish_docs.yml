@@ -1,9 +1,14 @@
 name: Publish documentation
 
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build the documentation from (e.g. v5.1.0), defaults to the selected branch'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -21,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        ref: ${{ inputs.tag || github.ref }}
 
     - name: Set up uv
       uses: astral-sh/setup-uv@v9.0.0

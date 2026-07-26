@@ -28,7 +28,7 @@ Find all information about changes of the different versions of this module
 
 import re
 import logging
-from typing import Any
+from typing import Any, NoReturn
 from xml.dom.minidom import Element
 import requests
 
@@ -163,7 +163,27 @@ class OsmApi(
     # Internal method                                #
     ##################################################
 
-    def _do(  # type: ignore[return-value]  # noqa: C901
+    def _raise_write_error(self, e: errors.ApiError) -> NoReturn:
+        """
+        Translate an `ApiError` raised by an element write into a typed error.
+
+        A 409 means either that the changeset has since been closed or that the
+        element version is out of date; a 412 means a precondition (usually a
+        referenced element) was not met. Anything else is re-raised unchanged.
+        """
+        if e.status == 409:
+            if re.search(r"The changeset .* was closed at .*", e.payload_str):
+                raise errors.ChangesetClosedApiError(
+                    e.status, e.reason, e.payload
+                ) from e
+            raise errors.VersionMismatchApiError(e.status, e.reason, e.payload) from e
+        elif e.status == 412:
+            raise errors.PreconditionFailedApiError(
+                e.status, e.reason, e.payload
+            ) from e
+        raise e
+
+    def _do(  # type: ignore[return-value]
         self, action: str, osm_type: str, osm_data: dict[str, Any]
     ) -> dict[str, Any]:
         if not self._current_changeset_id:
@@ -174,87 +194,49 @@ class OsmApi(
             osm_data.pop("timestamp")
         osm_data["changeset"] = self._current_changeset_id
         if action == "create":
-            if osm_data.get("id", -1) > 0:
-                raise errors.OsmTypeAlreadyExistsError(
-                    f"This {osm_type} already exists"
-                )
-            try:
-                result = self._session._put(
-                    f"/api/0.6/{osm_type}/create",
-                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
-                )
-            except errors.ApiError as e:
-                if e.status == 409 and re.search(
-                    r"The changeset .* was closed at .*", e.payload
-                ):
-                    raise errors.ChangesetClosedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 409:
-                    raise errors.VersionMismatchApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                else:
-                    raise
-            osm_data["id"] = int(result.strip())
-            osm_data["version"] = 1
-            return osm_data
+            return self._do_create(osm_type, osm_data)
         elif action == "modify":
-            try:
-                result = self._session._put(
-                    f"/api/0.6/{osm_type}/{osm_data['id']}",
-                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
-                )
-            except errors.ApiError as e:
-                logger.error(e.reason)
-                if e.status == 409 and re.search(
-                    r"The changeset .* was closed at .*", e.payload
-                ):
-                    raise errors.ChangesetClosedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 409:
-                    raise errors.VersionMismatchApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                else:
-                    raise
-            osm_data["version"] = int(result.strip())
-            return osm_data
+            return self._do_modify(osm_type, osm_data)
         elif action == "delete":
-            try:
-                result = self._session._delete(
-                    f"/api/0.6/{osm_type}/{osm_data['id']}",
-                    xmlbuilder._xml_build(osm_type, osm_data, data=self),
-                )
-            except errors.ApiError as e:
-                if e.status == 409 and re.search(
-                    r"The changeset .* was closed at .*", e.payload
-                ):
-                    raise errors.ChangesetClosedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 409:
-                    raise errors.VersionMismatchApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                elif e.status == 412:
-                    raise errors.PreconditionFailedApiError(
-                        e.status, e.reason, e.payload
-                    ) from e
-                else:
-                    raise
-            osm_data["version"] = int(result.strip())
-            osm_data["visible"] = False
-            return osm_data
+            return self._do_delete(osm_type, osm_data)
+
+    def _do_create(self, osm_type: str, osm_data: dict[str, Any]) -> dict[str, Any]:
+        if osm_data.get("id", -1) > 0:
+            raise errors.OsmTypeAlreadyExistsError(f"This {osm_type} already exists")
+        try:
+            result = self._session._put(
+                f"/api/0.6/{osm_type}/create",
+                xmlbuilder._xml_build(osm_type, osm_data, data=self),
+            )
+        except errors.ApiError as e:
+            self._raise_write_error(e)
+        osm_data["id"] = int(result.strip())
+        osm_data["version"] = 1
+        return osm_data
+
+    def _do_modify(self, osm_type: str, osm_data: dict[str, Any]) -> dict[str, Any]:
+        try:
+            result = self._session._put(
+                f"/api/0.6/{osm_type}/{osm_data['id']}",
+                xmlbuilder._xml_build(osm_type, osm_data, data=self),
+            )
+        except errors.ApiError as e:
+            logger.error(e.reason)
+            self._raise_write_error(e)
+        osm_data["version"] = int(result.strip())
+        return osm_data
+
+    def _do_delete(self, osm_type: str, osm_data: dict[str, Any]) -> dict[str, Any]:
+        try:
+            result = self._session._delete(
+                f"/api/0.6/{osm_type}/{osm_data['id']}",
+                xmlbuilder._xml_build(osm_type, osm_data, data=self),
+            )
+        except errors.ApiError as e:
+            self._raise_write_error(e)
+        osm_data["version"] = int(result.strip())
+        osm_data["visible"] = False
+        return osm_data
 
     def _add_changeset_data(self, change_data: list[dict[str, Any]], type: str) -> str:
         data = ""

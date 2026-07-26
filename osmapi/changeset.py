@@ -41,6 +41,10 @@ class ChangesetMixin:
 
         Returns `changeset_id`
 
+        The changeset is closed on the way out even if the body raises, so
+        that an error does not leave a changeset dangling and block the next
+        one with an `OsmApi.ChangesetAlreadyOpenError`.
+
         If no authentication information are provided,
         `OsmApi.UsernamePasswordMissingError` is raised.
 
@@ -51,8 +55,10 @@ class ChangesetMixin:
             changeset_tags = {}
         # Create a new changeset
         changeset_id = self.changeset_create(changeset_tags)
-        yield changeset_id
-        self.changeset_close()
+        try:
+            yield changeset_id
+        finally:
+            self.changeset_close()
 
     def changeset_get(
         self: "OsmApi", changeset_id: int, include_discussion: bool = False
@@ -214,13 +220,8 @@ class ChangesetMixin:
                 forceAuth=True,
             )
         except errors.ApiError as e:
-            payload_str = (
-                e.payload.decode("utf-8", errors="replace")
-                if isinstance(e.payload, bytes)
-                else str(e.payload)
-            )
             if e.status == 409 and re.search(
-                r"The changeset .* was closed at .*", payload_str
+                r"The changeset .* was closed at .*", e.payload_str
             ):
                 raise errors.ChangesetClosedApiError(
                     e.status, e.reason, e.payload
@@ -273,12 +274,24 @@ class ChangesetMixin:
         """
         Returns a dict with the id of the changeset as key matching all criteria.
 
-        All parameters are optional.
+        All parameters are optional. The bounding box is only applied if all
+        four of `min_lon`, `min_lat`, `max_lon` and `max_lat` are given.
+
+        If only some of the bounding box values are given,
+        `ValueError` is raised.
         """
         uri = "/api/0.6/changesets"
         params: dict[str, Any] = {}
-        if min_lon or min_lat or max_lon or max_lat:
-            params["bbox"] = f"{min_lon},{min_lat},{max_lon},{max_lat}"
+        bbox = (min_lon, min_lat, max_lon, max_lat)
+        if any(coord is not None for coord in bbox):
+            if any(coord is None for coord in bbox):
+                raise ValueError(
+                    "A bounding box needs all of min_lon, min_lat, max_lon "
+                    "and max_lat, got "
+                    f"min_lon={min_lon}, min_lat={min_lat}, "
+                    f"max_lon={max_lon}, max_lat={max_lat}"
+                )
+            params["bbox"] = ",".join(str(coord) for coord in bbox)
         if userid:
             params["user"] = userid
         if username:

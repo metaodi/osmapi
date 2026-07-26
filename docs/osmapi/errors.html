@@ -87,6 +87,9 @@
                         <li>
                                 <a class="variable" href="#ApiError.payload">payload</a>
                         </li>
+                        <li>
+                                <a class="variable" href="#ApiError.payload_str">payload_str</a>
+                        </li>
                 </ul>
 
             </li>
@@ -258,98 +261,110 @@
 </span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span>
 </span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Payload of API when this error occured&quot;&quot;&quot;</span>
 </span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">    Error when the API returned an Unauthorized error,</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">    e.g. when the provided OAuth token is expired</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>    <span class="k">pass</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="nd">@property</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">payload_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">        The payload decoded as text.</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        `payload` is usually the raw `bytes` body of the response; use this</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        when the payload needs to be matched against or shown as a string.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
 </span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="k">class</span><span class="w"> </span><span class="nc">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">    Error when a user tries to subscribe to a changeset</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">    that she is already subscribed to</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="k">pass</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">    Error when the API returned an Unauthorized error,</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">    e.g. when the provided OAuth token is expired</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NotSubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">    Error when user tries to unsubscribe from a changeset</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    that he is not subscribed to</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>    <span class="k">pass</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="k">pass</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="k">class</span><span class="w"> </span><span class="nc">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">    Error when a user tries to subscribe to a changeset</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">    that she is already subscribed to</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementDeletedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">    Error when the requested element is deleted</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>    <span class="k">pass</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">    Error if the the requested element was not found</span>
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ResponseEmptyApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">    Error when the response to the request is empty</span>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>    <span class="k">pass</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NotSubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">    Error when user tries to unsubscribe from a changeset</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">    that he is not subscribed to</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>    <span class="k">pass</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementDeletedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">    Error when the requested element is deleted</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>    <span class="k">pass</span>
 </span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>    <span class="k">pass</span>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ChangesetClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">    Error if the the changeset in question has already been closed</span>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">    Error if the the note in question has already been closed</span>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">    Error if the the requested element was not found</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ResponseEmptyApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">    Error when the response to the request is empty</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>    <span class="k">pass</span>
 </span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
 </span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="k">class</span><span class="w"> </span><span class="nc">VersionMismatchApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ChangesetClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
 </span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">    Error if the provided version does not match the database version</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">    of the element</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">    Error if the the changeset in question has already been closed</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>
 </span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PreconditionFailedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">    Error if the precondition of the operation was not met:</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">    - When a way has nodes that do not exist or are not visible</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">    - When a relation has elements that do not exist or are not visible</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">    - When a node/way/relation is still used in a way/relation</span>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    Error if the http request ran into a timeout</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>
-</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">    while connecting to the remote server.</span>
-</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">    Error if the the note in question has already been closed</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="k">class</span><span class="w"> </span><span class="nc">VersionMismatchApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">    Error if the provided version does not match the database version</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">    of the element</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PreconditionFailedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">    Error if the precondition of the operation was not met:</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">    - When a way has nodes that do not exist or are not visible</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">    - When a relation has elements that do not exist or are not visible</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">    - When a node/way/relation is still used in a way/relation</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">    Error if the http request ran into a timeout</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">    while connecting to the remote server.</span>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -658,8 +673,20 @@ an open changeset</p>
 </span><span id="ApiError-72"><a href="#ApiError-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span>
 </span><span id="ApiError-73"><a href="#ApiError-73"><span class="linenos">73</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Payload of API when this error occured&quot;&quot;&quot;</span>
 </span><span id="ApiError-74"><a href="#ApiError-74"><span class="linenos">74</span></a>
-</span><span id="ApiError-75"><a href="#ApiError-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="ApiError-76"><a href="#ApiError-76"><span class="linenos">76</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="ApiError-75"><a href="#ApiError-75"><span class="linenos">75</span></a>    <span class="nd">@property</span>
+</span><span id="ApiError-76"><a href="#ApiError-76"><span class="linenos">76</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">payload_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ApiError-77"><a href="#ApiError-77"><span class="linenos">77</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ApiError-78"><a href="#ApiError-78"><span class="linenos">78</span></a><span class="sd">        The payload decoded as text.</span>
+</span><span id="ApiError-79"><a href="#ApiError-79"><span class="linenos">79</span></a>
+</span><span id="ApiError-80"><a href="#ApiError-80"><span class="linenos">80</span></a><span class="sd">        `payload` is usually the raw `bytes` body of the response; use this</span>
+</span><span id="ApiError-81"><a href="#ApiError-81"><span class="linenos">81</span></a><span class="sd">        when the payload needs to be matched against or shown as a string.</span>
+</span><span id="ApiError-82"><a href="#ApiError-82"><span class="linenos">82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ApiError-83"><a href="#ApiError-83"><span class="linenos">83</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+</span><span id="ApiError-84"><a href="#ApiError-84"><span class="linenos">84</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+</span><span id="ApiError-85"><a href="#ApiError-85"><span class="linenos">85</span></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+</span><span id="ApiError-86"><a href="#ApiError-86"><span class="linenos">86</span></a>
+</span><span id="ApiError-87"><a href="#ApiError-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ApiError-88"><a href="#ApiError-88"><span class="linenos">88</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Request failed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -731,6 +758,37 @@ an open changeset</p>
 
 
                             </div>
+                            <div id="ApiError.payload_str" class="classattr">
+                                        <input id="ApiError.payload_str-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr variable">
+            <span class="name">payload_str</span><span class="annotation">: str</span>
+
+                <label class="view-source-button" for="ApiError.payload_str-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ApiError.payload_str"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ApiError.payload_str-75"><a href="#ApiError.payload_str-75"><span class="linenos">75</span></a>    <span class="nd">@property</span>
+</span><span id="ApiError.payload_str-76"><a href="#ApiError.payload_str-76"><span class="linenos">76</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">payload_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ApiError.payload_str-77"><a href="#ApiError.payload_str-77"><span class="linenos">77</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ApiError.payload_str-78"><a href="#ApiError.payload_str-78"><span class="linenos">78</span></a><span class="sd">        The payload decoded as text.</span>
+</span><span id="ApiError.payload_str-79"><a href="#ApiError.payload_str-79"><span class="linenos">79</span></a>
+</span><span id="ApiError.payload_str-80"><a href="#ApiError.payload_str-80"><span class="linenos">80</span></a><span class="sd">        `payload` is usually the raw `bytes` body of the response; use this</span>
+</span><span id="ApiError.payload_str-81"><a href="#ApiError.payload_str-81"><span class="linenos">81</span></a><span class="sd">        when the payload needs to be matched against or shown as a string.</span>
+</span><span id="ApiError.payload_str-82"><a href="#ApiError.payload_str-82"><span class="linenos">82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ApiError.payload_str-83"><a href="#ApiError.payload_str-83"><span class="linenos">83</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+</span><span id="ApiError.payload_str-84"><a href="#ApiError.payload_str-84"><span class="linenos">84</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+</span><span id="ApiError.payload_str-85"><a href="#ApiError.payload_str-85"><span class="linenos">85</span></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>The payload decoded as text.</p>
+
+<p><code><a href="#ApiError.payload">payload</a></code> is usually the raw <code>bytes</code> body of the response; use this
+when the payload needs to be matched against or shown as a string.</p>
+</div>
+
+
+                            </div>
                             <div class="inherited">
                                 <h5>Inherited Members</h5>
                                 <dl>
@@ -754,13 +812,13 @@ an open changeset</p>
 
     </div>
     <a class="headerlink" href="#UnauthorizedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="UnauthorizedApiError-79"><a href="#UnauthorizedApiError-79"><span class="linenos">79</span></a><span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="UnauthorizedApiError-80"><a href="#UnauthorizedApiError-80"><span class="linenos">80</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="UnauthorizedApiError-81"><a href="#UnauthorizedApiError-81"><span class="linenos">81</span></a><span class="sd">    Error when the API returned an Unauthorized error,</span>
-</span><span id="UnauthorizedApiError-82"><a href="#UnauthorizedApiError-82"><span class="linenos">82</span></a><span class="sd">    e.g. when the provided OAuth token is expired</span>
-</span><span id="UnauthorizedApiError-83"><a href="#UnauthorizedApiError-83"><span class="linenos">83</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="UnauthorizedApiError-84"><a href="#UnauthorizedApiError-84"><span class="linenos">84</span></a>
-</span><span id="UnauthorizedApiError-85"><a href="#UnauthorizedApiError-85"><span class="linenos">85</span></a>    <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UnauthorizedApiError-91"><a href="#UnauthorizedApiError-91"><span class="linenos">91</span></a><span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="UnauthorizedApiError-92"><a href="#UnauthorizedApiError-92"><span class="linenos">92</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="UnauthorizedApiError-93"><a href="#UnauthorizedApiError-93"><span class="linenos">93</span></a><span class="sd">    Error when the API returned an Unauthorized error,</span>
+</span><span id="UnauthorizedApiError-94"><a href="#UnauthorizedApiError-94"><span class="linenos">94</span></a><span class="sd">    e.g. when the provided OAuth token is expired</span>
+</span><span id="UnauthorizedApiError-95"><a href="#UnauthorizedApiError-95"><span class="linenos">95</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="UnauthorizedApiError-96"><a href="#UnauthorizedApiError-96"><span class="linenos">96</span></a>
+</span><span id="UnauthorizedApiError-97"><a href="#UnauthorizedApiError-97"><span class="linenos">97</span></a>    <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -777,6 +835,7 @@ e.g. when the provided OAuth token is expired</p>
                 <dd id="UnauthorizedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="UnauthorizedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="UnauthorizedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="UnauthorizedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -799,13 +858,13 @@ e.g. when the provided OAuth token is expired</p>
 
     </div>
     <a class="headerlink" href="#AlreadySubscribedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="AlreadySubscribedApiError-88"><a href="#AlreadySubscribedApiError-88"><span class="linenos">88</span></a><span class="k">class</span><span class="w"> </span><span class="nc">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="AlreadySubscribedApiError-89"><a href="#AlreadySubscribedApiError-89"><span class="linenos">89</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="AlreadySubscribedApiError-90"><a href="#AlreadySubscribedApiError-90"><span class="linenos">90</span></a><span class="sd">    Error when a user tries to subscribe to a changeset</span>
-</span><span id="AlreadySubscribedApiError-91"><a href="#AlreadySubscribedApiError-91"><span class="linenos">91</span></a><span class="sd">    that she is already subscribed to</span>
-</span><span id="AlreadySubscribedApiError-92"><a href="#AlreadySubscribedApiError-92"><span class="linenos">92</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="AlreadySubscribedApiError-93"><a href="#AlreadySubscribedApiError-93"><span class="linenos">93</span></a>
-</span><span id="AlreadySubscribedApiError-94"><a href="#AlreadySubscribedApiError-94"><span class="linenos">94</span></a>    <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="AlreadySubscribedApiError-100"><a href="#AlreadySubscribedApiError-100"><span class="linenos">100</span></a><span class="k">class</span><span class="w"> </span><span class="nc">AlreadySubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="AlreadySubscribedApiError-101"><a href="#AlreadySubscribedApiError-101"><span class="linenos">101</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="AlreadySubscribedApiError-102"><a href="#AlreadySubscribedApiError-102"><span class="linenos">102</span></a><span class="sd">    Error when a user tries to subscribe to a changeset</span>
+</span><span id="AlreadySubscribedApiError-103"><a href="#AlreadySubscribedApiError-103"><span class="linenos">103</span></a><span class="sd">    that she is already subscribed to</span>
+</span><span id="AlreadySubscribedApiError-104"><a href="#AlreadySubscribedApiError-104"><span class="linenos">104</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="AlreadySubscribedApiError-105"><a href="#AlreadySubscribedApiError-105"><span class="linenos">105</span></a>
+</span><span id="AlreadySubscribedApiError-106"><a href="#AlreadySubscribedApiError-106"><span class="linenos">106</span></a>    <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -822,6 +881,7 @@ that she is already subscribed to</p>
                 <dd id="AlreadySubscribedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="AlreadySubscribedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="AlreadySubscribedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="AlreadySubscribedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -844,13 +904,13 @@ that she is already subscribed to</p>
 
     </div>
     <a class="headerlink" href="#NotSubscribedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="NotSubscribedApiError-97"><a href="#NotSubscribedApiError-97"><span class="linenos"> 97</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NotSubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="NotSubscribedApiError-98"><a href="#NotSubscribedApiError-98"><span class="linenos"> 98</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="NotSubscribedApiError-99"><a href="#NotSubscribedApiError-99"><span class="linenos"> 99</span></a><span class="sd">    Error when user tries to unsubscribe from a changeset</span>
-</span><span id="NotSubscribedApiError-100"><a href="#NotSubscribedApiError-100"><span class="linenos">100</span></a><span class="sd">    that he is not subscribed to</span>
-</span><span id="NotSubscribedApiError-101"><a href="#NotSubscribedApiError-101"><span class="linenos">101</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="NotSubscribedApiError-102"><a href="#NotSubscribedApiError-102"><span class="linenos">102</span></a>
-</span><span id="NotSubscribedApiError-103"><a href="#NotSubscribedApiError-103"><span class="linenos">103</span></a>    <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NotSubscribedApiError-109"><a href="#NotSubscribedApiError-109"><span class="linenos">109</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NotSubscribedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="NotSubscribedApiError-110"><a href="#NotSubscribedApiError-110"><span class="linenos">110</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NotSubscribedApiError-111"><a href="#NotSubscribedApiError-111"><span class="linenos">111</span></a><span class="sd">    Error when user tries to unsubscribe from a changeset</span>
+</span><span id="NotSubscribedApiError-112"><a href="#NotSubscribedApiError-112"><span class="linenos">112</span></a><span class="sd">    that he is not subscribed to</span>
+</span><span id="NotSubscribedApiError-113"><a href="#NotSubscribedApiError-113"><span class="linenos">113</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="NotSubscribedApiError-114"><a href="#NotSubscribedApiError-114"><span class="linenos">114</span></a>
+</span><span id="NotSubscribedApiError-115"><a href="#NotSubscribedApiError-115"><span class="linenos">115</span></a>    <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -867,6 +927,7 @@ that he is not subscribed to</p>
                 <dd id="NotSubscribedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="NotSubscribedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="NotSubscribedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="NotSubscribedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -889,12 +950,12 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#ElementDeletedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ElementDeletedApiError-106"><a href="#ElementDeletedApiError-106"><span class="linenos">106</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementDeletedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="ElementDeletedApiError-107"><a href="#ElementDeletedApiError-107"><span class="linenos">107</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ElementDeletedApiError-108"><a href="#ElementDeletedApiError-108"><span class="linenos">108</span></a><span class="sd">    Error when the requested element is deleted</span>
-</span><span id="ElementDeletedApiError-109"><a href="#ElementDeletedApiError-109"><span class="linenos">109</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ElementDeletedApiError-110"><a href="#ElementDeletedApiError-110"><span class="linenos">110</span></a>
-</span><span id="ElementDeletedApiError-111"><a href="#ElementDeletedApiError-111"><span class="linenos">111</span></a>    <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ElementDeletedApiError-118"><a href="#ElementDeletedApiError-118"><span class="linenos">118</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementDeletedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="ElementDeletedApiError-119"><a href="#ElementDeletedApiError-119"><span class="linenos">119</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ElementDeletedApiError-120"><a href="#ElementDeletedApiError-120"><span class="linenos">120</span></a><span class="sd">    Error when the requested element is deleted</span>
+</span><span id="ElementDeletedApiError-121"><a href="#ElementDeletedApiError-121"><span class="linenos">121</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ElementDeletedApiError-122"><a href="#ElementDeletedApiError-122"><span class="linenos">122</span></a>
+</span><span id="ElementDeletedApiError-123"><a href="#ElementDeletedApiError-123"><span class="linenos">123</span></a>    <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -910,6 +971,7 @@ that he is not subscribed to</p>
                 <dd id="ElementDeletedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="ElementDeletedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="ElementDeletedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="ElementDeletedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -932,10 +994,10 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#ElementNotFoundApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ElementNotFoundApiError-114"><a href="#ElementNotFoundApiError-114"><span class="linenos">114</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="ElementNotFoundApiError-115"><a href="#ElementNotFoundApiError-115"><span class="linenos">115</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ElementNotFoundApiError-116"><a href="#ElementNotFoundApiError-116"><span class="linenos">116</span></a><span class="sd">    Error if the the requested element was not found</span>
-</span><span id="ElementNotFoundApiError-117"><a href="#ElementNotFoundApiError-117"><span class="linenos">117</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ElementNotFoundApiError-126"><a href="#ElementNotFoundApiError-126"><span class="linenos">126</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ElementNotFoundApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="ElementNotFoundApiError-127"><a href="#ElementNotFoundApiError-127"><span class="linenos">127</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ElementNotFoundApiError-128"><a href="#ElementNotFoundApiError-128"><span class="linenos">128</span></a><span class="sd">    Error if the the requested element was not found</span>
+</span><span id="ElementNotFoundApiError-129"><a href="#ElementNotFoundApiError-129"><span class="linenos">129</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -951,6 +1013,7 @@ that he is not subscribed to</p>
                 <dd id="ElementNotFoundApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="ElementNotFoundApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="ElementNotFoundApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="ElementNotFoundApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -973,12 +1036,12 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#ResponseEmptyApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ResponseEmptyApiError-120"><a href="#ResponseEmptyApiError-120"><span class="linenos">120</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ResponseEmptyApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="ResponseEmptyApiError-121"><a href="#ResponseEmptyApiError-121"><span class="linenos">121</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ResponseEmptyApiError-122"><a href="#ResponseEmptyApiError-122"><span class="linenos">122</span></a><span class="sd">    Error when the response to the request is empty</span>
-</span><span id="ResponseEmptyApiError-123"><a href="#ResponseEmptyApiError-123"><span class="linenos">123</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ResponseEmptyApiError-124"><a href="#ResponseEmptyApiError-124"><span class="linenos">124</span></a>
-</span><span id="ResponseEmptyApiError-125"><a href="#ResponseEmptyApiError-125"><span class="linenos">125</span></a>    <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ResponseEmptyApiError-132"><a href="#ResponseEmptyApiError-132"><span class="linenos">132</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ResponseEmptyApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="ResponseEmptyApiError-133"><a href="#ResponseEmptyApiError-133"><span class="linenos">133</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ResponseEmptyApiError-134"><a href="#ResponseEmptyApiError-134"><span class="linenos">134</span></a><span class="sd">    Error when the response to the request is empty</span>
+</span><span id="ResponseEmptyApiError-135"><a href="#ResponseEmptyApiError-135"><span class="linenos">135</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ResponseEmptyApiError-136"><a href="#ResponseEmptyApiError-136"><span class="linenos">136</span></a>
+</span><span id="ResponseEmptyApiError-137"><a href="#ResponseEmptyApiError-137"><span class="linenos">137</span></a>    <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -994,6 +1057,7 @@ that he is not subscribed to</p>
                 <dd id="ResponseEmptyApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="ResponseEmptyApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="ResponseEmptyApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="ResponseEmptyApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1016,10 +1080,10 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#ChangesetClosedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ChangesetClosedApiError-128"><a href="#ChangesetClosedApiError-128"><span class="linenos">128</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ChangesetClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="ChangesetClosedApiError-129"><a href="#ChangesetClosedApiError-129"><span class="linenos">129</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ChangesetClosedApiError-130"><a href="#ChangesetClosedApiError-130"><span class="linenos">130</span></a><span class="sd">    Error if the the changeset in question has already been closed</span>
-</span><span id="ChangesetClosedApiError-131"><a href="#ChangesetClosedApiError-131"><span class="linenos">131</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ChangesetClosedApiError-140"><a href="#ChangesetClosedApiError-140"><span class="linenos">140</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ChangesetClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="ChangesetClosedApiError-141"><a href="#ChangesetClosedApiError-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ChangesetClosedApiError-142"><a href="#ChangesetClosedApiError-142"><span class="linenos">142</span></a><span class="sd">    Error if the the changeset in question has already been closed</span>
+</span><span id="ChangesetClosedApiError-143"><a href="#ChangesetClosedApiError-143"><span class="linenos">143</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1035,6 +1099,7 @@ that he is not subscribed to</p>
                 <dd id="ChangesetClosedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="ChangesetClosedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="ChangesetClosedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="ChangesetClosedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1057,10 +1122,10 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#NoteAlreadyClosedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="NoteAlreadyClosedApiError-134"><a href="#NoteAlreadyClosedApiError-134"><span class="linenos">134</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="NoteAlreadyClosedApiError-135"><a href="#NoteAlreadyClosedApiError-135"><span class="linenos">135</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="NoteAlreadyClosedApiError-136"><a href="#NoteAlreadyClosedApiError-136"><span class="linenos">136</span></a><span class="sd">    Error if the the note in question has already been closed</span>
-</span><span id="NoteAlreadyClosedApiError-137"><a href="#NoteAlreadyClosedApiError-137"><span class="linenos">137</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NoteAlreadyClosedApiError-146"><a href="#NoteAlreadyClosedApiError-146"><span class="linenos">146</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NoteAlreadyClosedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="NoteAlreadyClosedApiError-147"><a href="#NoteAlreadyClosedApiError-147"><span class="linenos">147</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NoteAlreadyClosedApiError-148"><a href="#NoteAlreadyClosedApiError-148"><span class="linenos">148</span></a><span class="sd">    Error if the the note in question has already been closed</span>
+</span><span id="NoteAlreadyClosedApiError-149"><a href="#NoteAlreadyClosedApiError-149"><span class="linenos">149</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1076,6 +1141,7 @@ that he is not subscribed to</p>
                 <dd id="NoteAlreadyClosedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="NoteAlreadyClosedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="NoteAlreadyClosedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="NoteAlreadyClosedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1098,11 +1164,11 @@ that he is not subscribed to</p>
 
     </div>
     <a class="headerlink" href="#VersionMismatchApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="VersionMismatchApiError-140"><a href="#VersionMismatchApiError-140"><span class="linenos">140</span></a><span class="k">class</span><span class="w"> </span><span class="nc">VersionMismatchApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="VersionMismatchApiError-141"><a href="#VersionMismatchApiError-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="VersionMismatchApiError-142"><a href="#VersionMismatchApiError-142"><span class="linenos">142</span></a><span class="sd">    Error if the provided version does not match the database version</span>
-</span><span id="VersionMismatchApiError-143"><a href="#VersionMismatchApiError-143"><span class="linenos">143</span></a><span class="sd">    of the element</span>
-</span><span id="VersionMismatchApiError-144"><a href="#VersionMismatchApiError-144"><span class="linenos">144</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="VersionMismatchApiError-152"><a href="#VersionMismatchApiError-152"><span class="linenos">152</span></a><span class="k">class</span><span class="w"> </span><span class="nc">VersionMismatchApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="VersionMismatchApiError-153"><a href="#VersionMismatchApiError-153"><span class="linenos">153</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="VersionMismatchApiError-154"><a href="#VersionMismatchApiError-154"><span class="linenos">154</span></a><span class="sd">    Error if the provided version does not match the database version</span>
+</span><span id="VersionMismatchApiError-155"><a href="#VersionMismatchApiError-155"><span class="linenos">155</span></a><span class="sd">    of the element</span>
+</span><span id="VersionMismatchApiError-156"><a href="#VersionMismatchApiError-156"><span class="linenos">156</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1119,6 +1185,7 @@ of the element</p>
                 <dd id="VersionMismatchApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="VersionMismatchApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="VersionMismatchApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="VersionMismatchApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1141,13 +1208,13 @@ of the element</p>
 
     </div>
     <a class="headerlink" href="#PreconditionFailedApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="PreconditionFailedApiError-147"><a href="#PreconditionFailedApiError-147"><span class="linenos">147</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PreconditionFailedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="PreconditionFailedApiError-148"><a href="#PreconditionFailedApiError-148"><span class="linenos">148</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="PreconditionFailedApiError-149"><a href="#PreconditionFailedApiError-149"><span class="linenos">149</span></a><span class="sd">    Error if the precondition of the operation was not met:</span>
-</span><span id="PreconditionFailedApiError-150"><a href="#PreconditionFailedApiError-150"><span class="linenos">150</span></a><span class="sd">    - When a way has nodes that do not exist or are not visible</span>
-</span><span id="PreconditionFailedApiError-151"><a href="#PreconditionFailedApiError-151"><span class="linenos">151</span></a><span class="sd">    - When a relation has elements that do not exist or are not visible</span>
-</span><span id="PreconditionFailedApiError-152"><a href="#PreconditionFailedApiError-152"><span class="linenos">152</span></a><span class="sd">    - When a node/way/relation is still used in a way/relation</span>
-</span><span id="PreconditionFailedApiError-153"><a href="#PreconditionFailedApiError-153"><span class="linenos">153</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PreconditionFailedApiError-159"><a href="#PreconditionFailedApiError-159"><span class="linenos">159</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PreconditionFailedApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="PreconditionFailedApiError-160"><a href="#PreconditionFailedApiError-160"><span class="linenos">160</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="PreconditionFailedApiError-161"><a href="#PreconditionFailedApiError-161"><span class="linenos">161</span></a><span class="sd">    Error if the precondition of the operation was not met:</span>
+</span><span id="PreconditionFailedApiError-162"><a href="#PreconditionFailedApiError-162"><span class="linenos">162</span></a><span class="sd">    - When a way has nodes that do not exist or are not visible</span>
+</span><span id="PreconditionFailedApiError-163"><a href="#PreconditionFailedApiError-163"><span class="linenos">163</span></a><span class="sd">    - When a relation has elements that do not exist or are not visible</span>
+</span><span id="PreconditionFailedApiError-164"><a href="#PreconditionFailedApiError-164"><span class="linenos">164</span></a><span class="sd">    - When a node/way/relation is still used in a way/relation</span>
+</span><span id="PreconditionFailedApiError-165"><a href="#PreconditionFailedApiError-165"><span class="linenos">165</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1169,6 +1236,7 @@ of the element</p>
                 <dd id="PreconditionFailedApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="PreconditionFailedApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="PreconditionFailedApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="PreconditionFailedApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1191,10 +1259,10 @@ of the element</p>
 
     </div>
     <a class="headerlink" href="#TimeoutApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="TimeoutApiError-156"><a href="#TimeoutApiError-156"><span class="linenos">156</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="TimeoutApiError-157"><a href="#TimeoutApiError-157"><span class="linenos">157</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="TimeoutApiError-158"><a href="#TimeoutApiError-158"><span class="linenos">158</span></a><span class="sd">    Error if the http request ran into a timeout</span>
-</span><span id="TimeoutApiError-159"><a href="#TimeoutApiError-159"><span class="linenos">159</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TimeoutApiError-168"><a href="#TimeoutApiError-168"><span class="linenos">168</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TimeoutApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="TimeoutApiError-169"><a href="#TimeoutApiError-169"><span class="linenos">169</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="TimeoutApiError-170"><a href="#TimeoutApiError-170"><span class="linenos">170</span></a><span class="sd">    Error if the http request ran into a timeout</span>
+</span><span id="TimeoutApiError-171"><a href="#TimeoutApiError-171"><span class="linenos">171</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1210,6 +1278,7 @@ of the element</p>
                 <dd id="TimeoutApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="TimeoutApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="TimeoutApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="TimeoutApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>
@@ -1232,11 +1301,11 @@ of the element</p>
 
     </div>
     <a class="headerlink" href="#ConnectionApiError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ConnectionApiError-162"><a href="#ConnectionApiError-162"><span class="linenos">162</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
-</span><span id="ConnectionApiError-163"><a href="#ConnectionApiError-163"><span class="linenos">163</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ConnectionApiError-164"><a href="#ConnectionApiError-164"><span class="linenos">164</span></a><span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
-</span><span id="ConnectionApiError-165"><a href="#ConnectionApiError-165"><span class="linenos">165</span></a><span class="sd">    while connecting to the remote server.</span>
-</span><span id="ConnectionApiError-166"><a href="#ConnectionApiError-166"><span class="linenos">166</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ConnectionApiError-174"><a href="#ConnectionApiError-174"><span class="linenos">174</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ConnectionApiError</span><span class="p">(</span><span class="n">ApiError</span><span class="p">):</span>
+</span><span id="ConnectionApiError-175"><a href="#ConnectionApiError-175"><span class="linenos">175</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ConnectionApiError-176"><a href="#ConnectionApiError-176"><span class="linenos">176</span></a><span class="sd">    Error if there was a network error (e.g. DNS failure, refused connection)</span>
+</span><span id="ConnectionApiError-177"><a href="#ConnectionApiError-177"><span class="linenos">177</span></a><span class="sd">    while connecting to the remote server.</span>
+</span><span id="ConnectionApiError-178"><a href="#ConnectionApiError-178"><span class="linenos">178</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -1253,6 +1322,7 @@ while connecting to the remote server.</p>
                 <dd id="ConnectionApiError.status" class="variable"><a href="#ApiError.status">status</a></dd>
                 <dd id="ConnectionApiError.reason" class="variable"><a href="#ApiError.reason">reason</a></dd>
                 <dd id="ConnectionApiError.payload" class="variable"><a href="#ApiError.payload">payload</a></dd>
+                <dd id="ConnectionApiError.payload_str" class="variable"><a href="#ApiError.payload_str">payload_str</a></dd>
 
             </div>
             <div><dt>builtins.BaseException</dt>

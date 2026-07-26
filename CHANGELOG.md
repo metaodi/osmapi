@@ -7,17 +7,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - **BC-Break**: Remove support for Python 3.9 (EOL since October 2025), new minimum version for osmapi is Python 3.10
 - Replace `setup.py`/`setup.cfg` and the `requirements.txt` files with a PEP 621 `pyproject.toml`, dependency groups are now managed with [uv](https://docs.astral.sh/uv/)
 - Modernize the type hints: `Optional[X]`/`Union[X, Y]` are now written as `X | None`/`X | Y` (PEP 604)
+- `changesets_get` now requires either all four or none of `min_lon`, `min_lat`, `max_lon` and `max_lat`; a partial bounding box raises `ValueError` instead of sending `None` values to the API
+- The `changeset()` context manager now closes the changeset with `try`/`finally`, so an exception inside the `with` block no longer leaves the changeset open
 
 ### Added
 - Test against Python 3.13 and 3.14 in CI
 - Add a Dependabot config (`.github/dependabot.yml`) with weekly updates for the `uv`, `github-actions` and `pre-commit` ecosystems
 - Declare a minimum version for the `requests` dependency (`requests>=2.25.0`), no upper bound is set
+- `ApiError.payload_str`, the response payload decoded as text (the raw `payload` stays `bytes`)
 
 ### Removed
 - **BC-Break**: Removed all deprecated `CamelCase` methods (e.g. `NodeGet`, `ChangesetCreate`, `NotesGet`, `Map`, `Capabilities`), they have been deprecated since 5.0. Use the `snake_case` equivalents instead (e.g. `node_get`, `changeset_create`, `notes_get`, `map`, `capabilities`).
 
 ### Fixed
 - Fix release trigger for Upload Python Package workflow by @metaodi in https://github.com/metaodi/osmapi/pull/202
+- Fix `TypeError` when an element write (`node_create`/`way_update`/`relation_delete`, …) received an HTTP 409: the payload was matched as text against `bytes`, so `ChangesetClosedApiError`/`VersionMismatchApiError` were never raised. This is the same bug that was fixed for `changeset_upload` in 5.1.0, now fixed for all element writes
+- Fix `changesets_get` silently dropping a bounding box whose values are all `0`
 
 ## [5.1.0] - 2026-07-26
 ### Changed

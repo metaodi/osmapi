@@ -71,6 +71,18 @@ class ApiError(OsmApiError):
         self.payload = payload
         """Payload of API when this error occured"""
 
+    @property
+    def payload_str(self) -> str:
+        """
+        The payload decoded as text.
+
+        `payload` is usually the raw `bytes` body of the response; use this
+        when the payload needs to be matched against or shown as a string.
+        """
+        if isinstance(self.payload, bytes):
+            return self.payload.decode("utf-8", errors="replace")
+        return str(self.payload)
+
     def __str__(self) -> str:
         return f"Request failed: {self.status} - {self.reason} - {self.payload}"
 

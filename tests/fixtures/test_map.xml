@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <bounds minlat="47.2870000" minlon="8.7650000" maxlat="47.2890000" maxlon="8.7670000"/>
+  <node id="11949" visible="true" version="1" changeset="298" timestamp="2009-09-14T23:23:18Z" user="green525" uid="12" lat="47.2871000" lon="8.7651000"/>
+  <node id="11950" visible="true" version="2" changeset="298" timestamp="2009-09-14T23:23:19Z" user="green525" uid="12" lat="47.2872000" lon="8.7652000">
+    <tag k="amenity" v="bench"/>
+  </node>
+  <way id="321" visible="true" version="1" changeset="298" timestamp="2009-09-14T23:23:18Z" user="green525" uid="12">
+    <nd ref="11949"/>
+    <nd ref="11950"/>
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <relation id="4294968148" visible="true" version="1" changeset="23123" timestamp="2013-05-14T10:33:04Z" user="tyrTester06" uid="1178">
+    <member type="way" ref="321" role="outer"/>
+    <tag k="type" v="multipolygon"/>
+  </relation>
+</osm>

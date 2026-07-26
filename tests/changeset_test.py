@@ -5,6 +5,8 @@ import pytest
 from responses import GET, PUT, POST
 import requests
 
+from .conftest import GENERATOR
+
 
 def xmltosorteddict(xml):
     xml_dict = xmltodict.parse(xml, dict_constructor=dict)
@@ -101,13 +103,13 @@ def test_changeset_update(auth_api, add_response):
 
     result = auth_api.changeset_update({"test": "foobar"})
     changeset_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/5.1.0">\n'
-        b'  <changeset visible="true">\n'
-        b'    <tag k="test" v="foobar"/>\n'
-        b'    <tag k="created_by" v="osmapi/5.1.0"/>\n'
-        b"  </changeset>\n"
-        b"</osm>\n"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osm version="0.6" generator="{GENERATOR}">\n'
+        '  <changeset visible="true">\n'
+        '    <tag k="test" v="foobar"/>\n'
+        f'    <tag k="created_by" v="{GENERATOR}"/>\n'
+        "  </changeset>\n"
+        "</osm>\n"
     )
     assert xmltosorteddict(resp.calls[1].request.body) == changeset_xml
     assert result == 1414
@@ -124,13 +126,13 @@ def test_changeset_update_with_created_by(auth_api, add_response):
 
     result = auth_api.changeset_update({"test": "foobar", "created_by": "MyTestOSMApp"})
     changeset_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/5.1.0">\n'
-        b'  <changeset visible="true">\n'
-        b'    <tag k="test" v="foobar"/>\n'
-        b'    <tag k="created_by" v="MyTestOSMApp"/>\n'
-        b"  </changeset>\n"
-        b"</osm>\n"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osm version="0.6" generator="{GENERATOR}">\n'
+        '  <changeset visible="true">\n'
+        '    <tag k="test" v="foobar"/>\n'
+        '    <tag k="created_by" v="MyTestOSMApp"/>\n'
+        "  </changeset>\n"
+        "</osm>\n"
     )
     assert xmltosorteddict(resp.calls[1].request.body) == changeset_xml
     assert result == 1414
@@ -148,13 +150,13 @@ def test_changeset_create(auth_api, add_response):
     assert result == 1414
 
     changeset_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/5.1.0">\n'
-        b'  <changeset visible="true">\n'
-        b'    <tag k="foobar" v="A new test changeset"/>\n'
-        b'    <tag k="created_by" v="osmapi/5.1.0"/>\n'
-        b"  </changeset>\n"
-        b"</osm>\n"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osm version="0.6" generator="{GENERATOR}">\n'
+        '  <changeset visible="true">\n'
+        '    <tag k="foobar" v="A new test changeset"/>\n'
+        f'    <tag k="created_by" v="{GENERATOR}"/>\n'
+        "  </changeset>\n"
+        "</osm>\n"
     )
     assert xmltosorteddict(resp.calls[0].request.body) == changeset_xml
 
@@ -171,13 +173,13 @@ def test_changeset_create_with_created_by(auth_api, add_response):
     assert result == 1234
 
     changeset_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osm version="0.6" generator="osmapi/5.1.0">\n'
-        b'  <changeset visible="true">\n'
-        b'    <tag k="foobar" v="A new test changeset"/>\n'
-        b'    <tag k="created_by" v="CoolTestApp"/>\n'
-        b"  </changeset>\n"
-        b"</osm>\n"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osm version="0.6" generator="{GENERATOR}">\n'
+        '  <changeset visible="true">\n'
+        '    <tag k="foobar" v="A new test changeset"/>\n'
+        '    <tag k="created_by" v="CoolTestApp"/>\n'
+        "  </changeset>\n"
+        "</osm>\n"
     )
     assert xmltosorteddict(resp.calls[0].request.body) == changeset_xml
 
@@ -251,21 +253,21 @@ def test_changeset_upload_create_node(auth_api, add_response):
     ]
 
     upload_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/5.1.0">\n'
-        b"<create>\n"
-        b'  <node lat="47.123" lon="8.555" visible="true" '
-        b'changeset="4444">\n'
-        b'    <tag k="amenity" v="place_of_worship"/>\n'
-        b'    <tag k="religion" v="pastafarian"/>\n'
-        b"  </node>\n"
-        b'  <node lat="47.125" lon="8.557" visible="true" '
-        b'changeset="4444">\n'
-        b'    <tag k="amenity" v="place_of_worship"/>\n'
-        b'    <tag k="religion" v="pastafarian"/>\n'
-        b"  </node>\n"
-        b"</create>\n"
-        b"</osmChange>"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osmChange version="0.6" generator="{GENERATOR}">\n'
+        "<create>\n"
+        '  <node lat="47.123" lon="8.555" visible="true" '
+        'changeset="4444">\n'
+        '    <tag k="amenity" v="place_of_worship"/>\n'
+        '    <tag k="religion" v="pastafarian"/>\n'
+        "  </node>\n"
+        '  <node lat="47.125" lon="8.557" visible="true" '
+        'changeset="4444">\n'
+        '    <tag k="amenity" v="place_of_worship"/>\n'
+        '    <tag k="religion" v="pastafarian"/>\n'
+        "  </node>\n"
+        "</create>\n"
+        "</osmChange>"
     )
 
     # Call
@@ -323,32 +325,32 @@ def test_changeset_upload_modify_way(auth_api, add_response):
     ]
 
     upload_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/5.1.0">\n'
-        b"<modify>\n"
-        b'  <way id="4294967296" version="2" visible="true" '
-        b'changeset="4444">\n'
-        b'    <tag k="highway" v="secondary"/>\n'
-        b'    <tag k="name" v="Stansted Road"/>\n'
-        b'    <nd ref="4295832773"/>\n'
-        b'    <nd ref="4295832773"/>\n'
-        b'    <nd ref="4294967304"/>\n'
-        b'    <nd ref="4294967303"/>\n'
-        b'    <nd ref="4294967300"/>\n'
-        b'    <nd ref="4608751"/>\n'
-        b'    <nd ref="4294967305"/>\n'
-        b'    <nd ref="4294967302"/>\n'
-        b'    <nd ref="8548430"/>\n'
-        b'    <nd ref="4294967296"/>\n'
-        b'    <nd ref="4294967301"/>\n'
-        b'    <nd ref="4294967298"/>\n'
-        b'    <nd ref="4294967306"/>\n'
-        b'    <nd ref="7855737"/>\n'
-        b'    <nd ref="4294967297"/>\n'
-        b'    <nd ref="4294967299"/>\n'
-        b"  </way>\n"
-        b"</modify>\n"
-        b"</osmChange>"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osmChange version="0.6" generator="{GENERATOR}">\n'
+        "<modify>\n"
+        '  <way id="4294967296" version="2" visible="true" '
+        'changeset="4444">\n'
+        '    <tag k="highway" v="secondary"/>\n'
+        '    <tag k="name" v="Stansted Road"/>\n'
+        '    <nd ref="4295832773"/>\n'
+        '    <nd ref="4295832773"/>\n'
+        '    <nd ref="4294967304"/>\n'
+        '    <nd ref="4294967303"/>\n'
+        '    <nd ref="4294967300"/>\n'
+        '    <nd ref="4608751"/>\n'
+        '    <nd ref="4294967305"/>\n'
+        '    <nd ref="4294967302"/>\n'
+        '    <nd ref="8548430"/>\n'
+        '    <nd ref="4294967296"/>\n'
+        '    <nd ref="4294967301"/>\n'
+        '    <nd ref="4294967298"/>\n'
+        '    <nd ref="4294967306"/>\n'
+        '    <nd ref="7855737"/>\n'
+        '    <nd ref="4294967297"/>\n'
+        '    <nd ref="4294967299"/>\n'
+        "  </way>\n"
+        "</modify>\n"
+        "</osmChange>"
     )
 
     # Call
@@ -396,19 +398,19 @@ def test_changeset_upload_delete_relation(auth_api, add_response):
     ]
 
     upload_xml = xmltosorteddict(
-        b'<?xml version="1.0" encoding="UTF-8"?>\n'
-        b'<osmChange version="0.6" generator="osmapi/5.1.0">\n'
-        b"<delete>\n"
-        b'  <relation id="676" version="2" visible="true" '
-        b'changeset="4444">\n'
-        b'    <tag k="admin_level" v="9"/>\n'
-        b'    <tag k="boundary" v="administrative"/>\n'
-        b'    <tag k="type" v="multipolygon"/>\n'
-        b'    <member type="way" ref="4799" role="outer"/>\n'
-        b'    <member type="way" ref="9391" role="outer"/>\n'
-        b"  </relation>\n"
-        b"</delete>\n"
-        b"</osmChange>"
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<osmChange version="0.6" generator="{GENERATOR}">\n'
+        "<delete>\n"
+        '  <relation id="676" version="2" visible="true" '
+        'changeset="4444">\n'
+        '    <tag k="admin_level" v="9"/>\n'
+        '    <tag k="boundary" v="administrative"/>\n'
+        '    <tag k="type" v="multipolygon"/>\n'
+        '    <member type="way" ref="4799" role="outer"/>\n'
+        '    <member type="way" ref="9391" role="outer"/>\n'
+        "  </relation>\n"
+        "</delete>\n"
+        "</osmChange>"
     )
 
     # Call
@@ -802,3 +804,306 @@ def test_changeset_unsubscribe_no_auth(api):
     with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
         api.changeset_unsubscribe(45627)
     assert str(execinfo.value) == "Username/Password missing"
+
+
+##################################################
+# changesets_get query parameters                #
+##################################################
+
+
+def test_changesets_get_no_filters(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get()
+
+    assert resp.calls[0].request.url == (
+        "http://api06.dev.openstreetmap.org/api/0.6/changesets"
+    )
+
+
+def test_changesets_get_by_userid(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(userid=1841)
+
+    assert resp.calls[0].request.params == {"user": "1841"}
+
+
+def test_changesets_get_only_open(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(only_open=True)
+
+    assert resp.calls[0].request.params == {"open": "1"}
+
+
+def test_changesets_get_bbox(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(min_lon=8.7, min_lat=47.2, max_lon=8.8, max_lat=47.3)
+
+    assert resp.calls[0].request.params == {"bbox": "8.7,47.2,8.8,47.3"}
+
+
+def test_changesets_get_bbox_at_origin(api, add_response):
+    """A bbox of all zeros is a real bbox and must not be dropped."""
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(min_lon=0, min_lat=0, max_lon=0, max_lat=0)
+
+    assert resp.calls[0].request.params == {"bbox": "0,0,0,0"}
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"min_lon": 8.7},
+        {"min_lon": 8.7, "min_lat": 47.2},
+        {"min_lon": 8.7, "min_lat": 47.2, "max_lon": 8.8},
+        {"max_lat": 47.3},
+    ],
+)
+def test_changesets_get_partial_bbox_raises(api, kwargs):
+    """A partial bbox is rejected instead of being sent with 'None' in it."""
+    with pytest.raises(ValueError, match="bounding box needs all of"):
+        api.changesets_get(**kwargs)
+
+
+def test_changesets_get_closed_after(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(closed_after="2024-01-01T00:00:00Z")
+
+    assert resp.calls[0].request.params == {"time": "2024-01-01T00:00:00Z"}
+
+
+def test_changesets_get_created_before(api, add_response):
+    """`created_before` alone becomes a range starting at the epoch."""
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(created_before="2024-06-01T00:00:00Z")
+
+    assert resp.calls[0].request.params == {
+        "time": "1970-01-01T00:00:00Z,2024-06-01T00:00:00Z"
+    }
+
+
+def test_changesets_get_time_range(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(
+        closed_after="2024-01-01T00:00:00Z", created_before="2024-06-01T00:00:00Z"
+    )
+
+    assert resp.calls[0].request.params == {
+        "time": "2024-01-01T00:00:00Z,2024-06-01T00:00:00Z"
+    }
+
+
+def test_changesets_get_all_filters(api, add_response):
+    resp = add_response(GET, "/changesets", filename="test_changesets_get.xml")
+
+    api.changesets_get(
+        min_lon=8.7,
+        min_lat=47.2,
+        max_lon=8.8,
+        max_lat=47.3,
+        userid=1841,
+        username="metaodi",
+        closed_after="2024-01-01T00:00:00Z",
+        created_before="2024-06-01T00:00:00Z",
+        only_open=True,
+        only_closed=True,
+    )
+
+    assert resp.calls[0].request.params == {
+        "bbox": "8.7,47.2,8.8,47.3",
+        "user": "1841",
+        "display_name": "metaodi",
+        "time": "2024-01-01T00:00:00Z,2024-06-01T00:00:00Z",
+        "open": "1",
+        "closed": "1",
+    }
+
+
+##################################################
+# Error paths of the changeset operations        #
+##################################################
+
+
+def test_changeset_update_on_closed_changeset(auth_api, add_response):
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    add_response(PUT, "/changeset/1414", status=409)
+
+    auth_api.changeset_create()
+
+    with pytest.raises(osmapi.ChangesetClosedApiError) as execinfo:
+        auth_api.changeset_update({"test": "foobar"})
+
+    assert execinfo.value.status == 409
+    assert (
+        execinfo.value.payload_str
+        == "The changeset 1414 was closed at 2024-03-01 10:00:00 UTC."
+    )
+
+
+def test_changeset_update_server_error(auth_api, add_response):
+    """A non-409 error is re-raised unchanged rather than mapped."""
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    # a 5xx is retried, so every attempt needs a registered response
+    for _ in range(osmapi.http.OsmApiSession.MAX_RETRY_LIMIT):
+        add_response(PUT, "/changeset/1414", status=500)
+
+    auth_api.changeset_create()
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        auth_api.changeset_update({"test": "foobar"})
+
+    assert type(execinfo.value) is osmapi.ApiError
+    assert execinfo.value.status == 500
+
+
+def test_changeset_close_on_closed_changeset(auth_api, add_response):
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    add_response(PUT, "/changeset/1414/close", status=409)
+
+    auth_api.changeset_create()
+
+    with pytest.raises(osmapi.ChangesetClosedApiError) as execinfo:
+        auth_api.changeset_close()
+
+    assert execinfo.value.status == 409
+    assert (
+        execinfo.value.payload_str
+        == "The changeset 1414 was closed at 2024-03-01 10:00:00 UTC."
+    )
+
+
+def test_changeset_comment_on_closed_changeset(auth_api, add_response):
+    add_response(POST, "/changeset/123/comment", status=409)
+
+    with pytest.raises(osmapi.ChangesetClosedApiError) as execinfo:
+        auth_api.changeset_comment(123, comment="too late")
+
+    assert execinfo.value.status == 409
+    assert (
+        execinfo.value.payload_str
+        == "The changeset 123 was closed at 2024-03-01 10:00:00 UTC."
+    )
+
+
+def test_changeset_comment_not_found(auth_api, add_response):
+    """A non-409 error is re-raised unchanged rather than mapped."""
+    add_response(POST, "/changeset/123/comment", status=404)
+
+    with pytest.raises(osmapi.ElementNotFoundApiError) as execinfo:
+        auth_api.changeset_comment(123, comment="test comment")
+
+    assert execinfo.value.status == 404
+
+
+def test_changeset_subscribe_other_error(auth_api, add_response):
+    """Only a 409 means 'already subscribed'; anything else is re-raised."""
+    add_response(POST, "/changeset/52924/subscribe", status=403)
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        auth_api.changeset_subscribe(52924)
+
+    assert type(execinfo.value) is osmapi.ApiError
+    assert execinfo.value.status == 403
+
+
+def test_changeset_unsubscribe_other_error(auth_api, add_response):
+    """Only a 404 means 'not subscribed'; anything else is re-raised."""
+    add_response(POST, "/changeset/52924/unsubscribe", status=403)
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        auth_api.changeset_unsubscribe(52924)
+
+    assert type(execinfo.value) is osmapi.ApiError
+    assert execinfo.value.status == 403
+
+
+##################################################
+# The changeset() context manager                #
+##################################################
+
+
+def test_changeset_contextmanager_closes_on_exception(auth_api, add_response):
+    """An error inside the block must not leave the changeset open."""
+    resp = add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    add_response(PUT, "/changeset/1414/close", filename="test_changeset_close.xml")
+
+    with pytest.raises(ValueError, match="boom"):
+        with auth_api.changeset({"comment": "will fail"}):
+            raise ValueError("boom")
+
+    assert "/api/0.6/changeset/1414/close" in resp.calls[1].request.url
+    assert auth_api._current_changeset_id == 0
+
+
+def test_changeset_contextmanager_reusable_after_exception(auth_api, add_response):
+    """After a failed block a new changeset can be opened straight away."""
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    add_response(PUT, "/changeset/1414/close", filename="test_changeset_close.xml")
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    add_response(PUT, "/changeset/1414/close", filename="test_changeset_close.xml")
+
+    with pytest.raises(ValueError):
+        with auth_api.changeset():
+            raise ValueError("boom")
+
+    # would raise ChangesetAlreadyOpenError if the first one had leaked
+    with auth_api.changeset() as changeset_id:
+        assert changeset_id == 1414
+
+    assert auth_api._current_changeset_id == 0
+
+
+def test_changeset_get_include_discussion_without_discussion(api, add_response):
+    """Asking for the discussion of a changeset that has none yields nothing."""
+    resp = add_response(
+        GET, "/changeset/52924", filename="test_changeset_get_without_discussion.xml"
+    )
+
+    result = api.changeset_get(52924, include_discussion=True)
+
+    assert resp.calls[0].request.params == {"include_discussion": "true"}
+    # the key is present but empty, rather than the parse failing
+    assert result["discussion"] == []
+    assert result["id"] == 52924
+
+
+def test_changeset_update_without_tags(auth_api, add_response):
+    """Called with no tags, only `created_by` is sent."""
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    resp = add_response(PUT, "/changeset/1414", filename="test_changeset_update.xml")
+
+    auth_api.changeset_create()
+    auth_api.changeset_update()
+
+    assert xmltosorteddict(resp.calls[1].request.body) == xmltosorteddict(
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        f'<osm version="0.6" generator="{GENERATOR}">'
+        '<changeset visible="true">'
+        f'<tag k="created_by" v="{GENERATOR}"/>'
+        "</changeset>"
+        "</osm>"
+    )
+
+
+def test_changeset_close_server_error(auth_api, add_response):
+    """A non-409 error while closing is re-raised unchanged."""
+    add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
+    for _ in range(osmapi.http.OsmApiSession.MAX_RETRY_LIMIT):
+        add_response(PUT, "/changeset/1414/close", status=500)
+
+    auth_api.changeset_create()
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        auth_api.changeset_close()
+
+    assert type(execinfo.value) is osmapi.ApiError
+    assert execinfo.value.status == 500
+    # the changeset is still considered open, since closing it failed
+    assert auth_api._current_changeset_id == 1414

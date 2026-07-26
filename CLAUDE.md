@@ -6,7 +6,9 @@ Guidance for AI assistants working in this repository.
 
 `osmapi` is a pure-Python wrapper around the [OpenStreetMap API v0.6](https://wiki.openstreetmap.org/wiki/API_v0.6).
 It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org/pypi/osmapi) and documented at
-<http://osmapi.metaodi.ch> (GitHub Pages, served from the `main` branch via `docs/` + `CNAME`).
+<http://osmapi.metaodi.ch> (GitHub Pages, built from the docstrings and deployed by the `publish_docs.yml`
+workflow on every push to `main`; the custom domain comes from the root `CNAME`, which the workflow copies
+into the published site).
 
 - Packaging: PEP 621 `pyproject.toml` (setuptools backend), dependencies and virtual env managed with
   [uv](https://docs.astral.sh/uv/); `uv.lock` is committed. There is no `setup.py`, `setup.cfg` or
@@ -16,8 +18,8 @@ It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org
   dev/test tooling.
 - Version constraints: runtime deps get a **lower bound only** — never cap a dependency (`<`) in a library,
   the cap propagates into every downstream resolver. Dev tools get `>=` floors at the versions currently
-  locked, except `black`, `pdoc` and `Pygments`, which are pinned exactly because a bump rewrites the whole
-  code base / the committed `docs/`. Constraints also matter for Dependabot: it skips dependencies declared
+  locked, except `black`, `pdoc` and `Pygments`, which are pinned exactly because a bump reformats the whole
+  code base / restyles the whole published documentation. Constraints also matter for Dependabot: it skips dependencies declared
   without any specifier, so a new dependency needs at least a floor to be tracked.
 - Supported Python: **>= 3.10** (CI matrix: 3.10, 3.11, 3.12, 3.13, 3.14).
 - License: GPLv3. Originally written by Etienne Chové, maintained by Stefan Oderbolz (metaodi).
@@ -42,8 +44,9 @@ osmapi/            the package
   errors.py        exception hierarchy
 tests/             pytest suite + tests/fixtures/*.xml recorded API responses
 examples/          runnable usage examples (oauth2, changesets, notes, timeout, ...)
-docs/              pdoc-generated HTML, committed to the repo (published via GitHub Pages)
-.github/workflows/ build.yml (CI) and publish_python.yml (PyPI release)
+docs/              pdoc-generated HTML, git-ignored build output (never commit it)
+.github/workflows/ build.yml (CI), publish_python.yml (PyPI release) and
+                   publish_docs.yml (GitHub Pages deployment)
 .github/           dependabot.yml (weekly uv / github-actions / pre-commit updates)
 pyproject.toml     packaging metadata, dependency groups, mypy config
 uv.lock            the locked dev environment (committed)
@@ -93,7 +96,8 @@ When you add a new public method:
 
 ## Docstrings
 
-Docstrings are the documentation — `make docs` runs `pdoc` over them and writes `docs/`. Follow the existing
+Docstrings are the documentation — `make docs` runs `pdoc` over them and writes `docs/`, and the
+`publish_docs.yml` workflow does exactly that to build the published site. Follow the existing
 style: describe the returned dict inline using pdoc's fenced form
 
 ```
@@ -119,7 +123,7 @@ make format         # black over osmapi examples tests
 make lint           # black --check, flake8 ., mypy osmapi
 make test           # pytest --cov=osmapi tests/ (in UTF-8 mode)
 make coverage       # coverage run + report
-make docs           # pdoc -o docs osmapi  (regenerates the committed docs/)
+make docs           # pdoc -o docs osmapi  (local preview, docs/ is git-ignored)
 make build          # uv build (wheel + sdist into dist/)
 ./test.sh           # what CI runs: lint + test + docs + build + import from the built wheel
 ```
@@ -170,9 +174,10 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 - The version lives **only** in `osmapi/__init__.py`; `pyproject.toml` reads it via
   `[tool.setuptools.dynamic] version = { attr = "osmapi.__version__" }`.
 - Release steps (see README): bump `__version__` in `osmapi/__init__.py`, update `CHANGELOG.md`,
-  run `make docs`, PR `develop` -> `main`, then publish a GitHub release/tag — `publish_python.yml`
+  PR `develop` -> `main`, then publish a GitHub release/tag — `publish_python.yml`
   builds and uploads to PyPI via trusted publishing on `release: published` (or manual `workflow_dispatch`
-  with a tag).
+  with a tag). The merge to `main` also triggers `publish_docs.yml`, which redeploys the documentation;
+  there is nothing to regenerate by hand.
 - The project follows [Semantic Versioning](http://semver.org/) and
   [Keep a Changelog](http://keepachangelog.com/); add an entry under `## [Unreleased]` for user-visible changes.
 
@@ -194,8 +199,8 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
   `__getattr__` of both `osmapi/errors.py` and `osmapi/__init__.py` (the star-import doesn't pick up the
   hook, hence both). `UsernamePasswordMissingError` is such an alias and is due for removal in 7.0.
 - Point examples and manual testing at the dev server `https://api06.dev.openstreetmap.org`, never production.
-- `docs/` is generated **and committed**; regenerate with `make docs` when docstrings change rather than
-  editing the HTML.
+- `docs/` is generated build output and git-ignored — don't commit it, and don't edit the HTML. Run
+  `make docs` to preview docstring changes locally; the published site is rebuilt by `publish_docs.yml`.
 - `_do()` mutates the `osm_data` dict it is given (drops `timestamp`, sets `changeset`, `id`, `version`).
 - `self._current_changeset_id` is set by `changeset_create` and reset to `0` by `changeset_close`
   (the `changeset()` context manager wraps both). `changeset_update`, `changeset_close`, `changeset_upload`

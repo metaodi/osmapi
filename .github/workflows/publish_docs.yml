@@ -1,0 +1,57 @@
+name: Publish documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never run two deployments at once, and let a running one finish instead of
+# cancelling it halfway through publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v9.0.0
+      with:
+        enable-cache: true
+
+    - name: Install dependencies
+      run: uv sync
+
+    - name: Generate the documentation
+      run: make docs
+
+    - name: Keep the custom domain (osmapi.metaodi.ch)
+      run: cp CNAME docs/CNAME
+
+    - name: Upload the documentation as a Pages artifact
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: docs
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v5

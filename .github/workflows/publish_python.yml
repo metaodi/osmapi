@@ -2,7 +2,13 @@ name: Upload Python Package
 
 on:
   release:
-    types: [created]
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and publish (e.g. v5.1.0)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,6 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.tag || github.ref }}
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
@@ -42,6 +50,8 @@ jobs:
       id-token: write
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.tag || github.ref }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:

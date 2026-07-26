@@ -60,9 +60,6 @@ class OsmApi(
 
     def __init__(
         self,
-        username: str | None = None,
-        password: str | None = None,
-        passwordfile: str | None = None,
         appid: str = "",
         created_by: str = f"osmapi/{__version__}",
         api: str = "https://www.openstreetmap.org",
@@ -72,10 +69,12 @@ class OsmApi(
         """
         Initialized the OsmApi object.
 
-        There are two different ways to authenticate a user.
-        Either `username` and `password` are supplied directly or the path
-        to a `passwordfile` is given, where on the first line username
-        and password must be colon-separated (<user>:<pass>).
+        To make authenticated requests (i.e. anything that writes to OSM),
+        pass an authenticated `requests.Session` as the `session` parameter,
+        see below. Username/password authentication was shut down by
+        OpenStreetMap in July 2024 and the corresponding parameters
+        (`username`, `password` and `passwordfile`) were removed in
+        version 6.0 of osmapi, use OAuth 2.0 instead.
 
         To credit the application that supplies changes to OSM, an `appid`
         can be provided.  This is a string identifying the application.
@@ -90,33 +89,22 @@ class OsmApi(
         https://api.openstreetmap.com).
 
         The `session` parameter can be used to provide a custom requests
-        http session object (requests.Session). This might be useful for
-        OAuth authentication, custom adapters, hooks etc.
+        http session object (requests.Session). This is how authentication
+        is provided: any session that authenticates its requests works, be it
+        by `session.auth`, by an `Authorization: Bearer` header, by a custom
+        adapter, or by a `Session` subclass that adds the token per request.
+        Sessions are also useful for custom adapters, hooks etc.
+
+        Without a session, requests that require authentication raise
+        `OsmApi.AuthenticationMissingError` before anything is sent. With a
+        session, they are sent as they are, and a missing or invalid
+        authorization is reported by the API as
+        `OsmApi.UnauthorizedApiError`.
 
         Finally the `timeout` parameter is used by the http session to
         throw an expcetion if the the timeout (in seconds) has passed without
         an answer from the server.
         """
-        # Get username
-        self._username: str | None = None
-        if username:
-            self._username = username
-        elif passwordfile:
-            with open(passwordfile) as f:
-                pass_line = f.readline()
-            self._username = pass_line.partition(":")[0].strip()
-
-        # Get password
-        self._password: str | None = None
-        if password:
-            self._password = password
-        elif passwordfile:
-            with open(passwordfile) as f:
-                for line in f:
-                    key, _, value = line.strip().partition(":")
-                    if key == self._username:
-                        self._password = value
-
         # Get API
         self._api: str = api.strip("/")
 
@@ -132,13 +120,9 @@ class OsmApi(
         # Http connection
         self.http_session: requests.Session | None = session
         self._timeout: int = timeout
-        auth: tuple[str, str] | None = None
-        if self._username and self._password:
-            auth = (self._username, self._password)
         self._session: http.OsmApiSession = http.OsmApiSession(
             self._api,
             self._created_by,
-            auth=auth,
             session=self.http_session,
             timeout=self._timeout,
         )

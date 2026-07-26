@@ -90,8 +90,8 @@ class NoteMixin:
 
         Returns the updated note.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
         """
         path = f"/api/0.6/notes/{note_id}/close"
         return self._note_action(path, comment, optional_auth=False)
@@ -104,8 +104,8 @@ class NoteMixin:
 
         Returns the updated note.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.

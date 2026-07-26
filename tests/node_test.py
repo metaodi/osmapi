@@ -104,7 +104,7 @@ def test_node_create_wo_auth(api):
     api._current_changeset_id = OPEN_CHANGESET_ID
 
     with pytest.raises(
-        osmapi.UsernamePasswordMissingError, match="Username/Password missing"
+        osmapi.AuthenticationMissingError, match="Authentication missing"
     ):
         api.node_create(dict(TEST_NODE))
 

@@ -1,5 +1,7 @@
 """Tests for the error hierarchy."""
 
+import warnings
+
 import osmapi
 import pytest
 
@@ -58,3 +60,43 @@ def test_api_errors_are_catchable_as_api_error(error_class):
     assert isinstance(error, osmapi.ApiError)
     assert isinstance(error, osmapi.OsmApiError)
     assert error.payload_str == "payload"
+
+
+##################################################
+# Deprecated error names (to be removed in 7.0)  #
+##################################################
+
+
+@pytest.mark.parametrize(
+    "module", [osmapi, osmapi.errors], ids=["osmapi", "osmapi.errors"]
+)
+def test_deprecated_error_name_resolves_to_new_class(module):
+    """The old name is the new class, so existing `except` clauses still work."""
+    with pytest.deprecated_call(match="renamed to AuthenticationMissingError"):
+        error_class = module.UsernamePasswordMissingError
+
+    assert error_class is osmapi.AuthenticationMissingError
+
+
+def test_deprecated_error_name_catches_new_error():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+
+        with pytest.raises(osmapi.UsernamePasswordMissingError):
+            raise osmapi.AuthenticationMissingError("no credentials")
+
+
+def test_deprecated_error_name_from_import_warns():
+    with pytest.deprecated_call(match="removed in osmapi 7.0"):
+        from osmapi.errors import UsernamePasswordMissingError
+
+    assert UsernamePasswordMissingError is osmapi.AuthenticationMissingError
+
+
+@pytest.mark.parametrize(
+    "module", [osmapi, osmapi.errors], ids=["osmapi", "osmapi.errors"]
+)
+def test_unknown_attribute_still_raises_attribute_error(module):
+    """The deprecation hook must not swallow typos."""
+    with pytest.raises(AttributeError, match="NoSuchError"):
+        module.NoSuchError

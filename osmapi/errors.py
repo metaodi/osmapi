@@ -1,6 +1,7 @@
 """
 Error classes for the OpenStreetMap API."""
 
+import warnings
 from typing import Any
 
 
@@ -16,9 +17,26 @@ class MaximumRetryLimitReachedError(OsmApiError):
     """
 
 
-class UsernamePasswordMissingError(OsmApiError):
+class AuthenticationMissingError(OsmApiError):
     """
-    Error when username or password is missing for an authenticated request
+    Error when a request requires authentication, but no session was provided
+    that could carry credentials.
+
+    Pass an authenticated `requests.Session` (e.g. an OAuth 2.0 session, see
+    the [README](https://github.com/metaodi/osmapi#oauth-authentication)) to
+    `OsmApi` to make authenticated requests.
+
+    This error is raised before the request is sent, and only when `OsmApi`
+    created the http session itself — in that case there is no way for the
+    request to be authenticated. A session that was passed in is never
+    second-guessed (it can carry a token in `session.auth`, in an
+    `Authorization` header, in a transport adapter, or add it per request),
+    so a missing or invalid authorization on such a session is reported by
+    the API as `OsmApi.UnauthorizedApiError` (HTTP 401) instead.
+
+    Before version 6.0 this error was called `UsernamePasswordMissingError`.
+    That name still works, but it is deprecated and will be removed in
+    version 7.0.
     """
 
     pass
@@ -175,3 +193,45 @@ class ConnectionApiError(ApiError):
     Error if there was a network error (e.g. DNS failure, refused connection)
     while connecting to the remote server.
     """
+
+
+DEPRECATED_ERROR_NAMES = {
+    "UsernamePasswordMissingError": "AuthenticationMissingError",
+}
+"""
+Error names that were renamed, mapped to their replacement.
+
+The old names still resolve to the new class (so `except` clauses keep
+working), but emit a `DeprecationWarning`. They will be removed in
+version 7.0.
+"""
+
+
+def resolve_deprecated_name(name: str) -> Any:
+    """
+    Return the error class a deprecated name refers to, with a warning.
+
+    Raises `AttributeError` if `name` is not a deprecated error name. The
+    `DeprecationWarning` is reported against the caller of the module-level
+    `__getattr__` that calls this, i.e. the code using the old name.
+    """
+    new_name = DEPRECATED_ERROR_NAMES.get(name)
+    if not new_name:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    warnings.warn(
+        f"{name} has been renamed to {new_name}, "
+        f"the old name is deprecated and will be removed in osmapi 7.0",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+    return globals()[new_name]
+
+
+def __getattr__(name: str) -> Any:
+    """
+    Resolve a deprecated error name to its replacement (see PEP 562).
+
+    Accessing `osmapi.errors.UsernamePasswordMissingError` returns
+    `AuthenticationMissingError` and emits a `DeprecationWarning`.
+    """
+    return resolve_deprecated_name(name)

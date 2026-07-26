@@ -73,8 +73,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the supplied information contain an existing node,
         `OsmApi.OsmTypeAlreadyExistsError` is raised.
@@ -116,8 +116,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -156,8 +156,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.

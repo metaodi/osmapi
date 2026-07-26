@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Replace `setup.py`/`setup.cfg` and the `requirements.txt` files with a PEP 621 `pyproject.toml`, dependency groups are now managed with [uv](https://docs.astral.sh/uv/)
 - Modernize the type hints: `Optional[X]`/`Union[X, Y]` are now written as `X | None`/`X | Y` (PEP 604)
 - `changesets_get` now requires either all four or none of `min_lon`, `min_lat`, `max_lon` and `max_lat`; a partial bounding box raises `ValueError` instead of sending `None` values to the API
+- osmapi no longer guesses whether a session passed via `session=` is authenticated: `AuthenticationMissingError` is now only raised when no session was provided at all, i.e. when there is no way for the request to be authenticated. This makes every OAuth 2.0 setup work, including those that osmapi cannot inspect — a bearer token in an `Authorization` header, a custom transport adapter, or a `requests.Session` subclass that adds the token per request (e.g. `requests_oauthlib.OAuth2Session`, which only sets `session.auth` to a no-op lambda). A missing or invalid authorization on such a session is reported by the API as `UnauthorizedApiError` (HTTP 401)
+- **BC-Break**: `UsernamePasswordMissingError` has been renamed to `AuthenticationMissingError`, as there is no username/password anymore (see issue #192). The old name still resolves to the new class (so existing `except osmapi.UsernamePasswordMissingError` clauses keep working), but it raises a `DeprecationWarning` and will be removed in version 7.0
 - The `changeset()` context manager now closes the changeset with `try`/`finally`, so an exception inside the `with` block no longer leaves the changeset open
 
 ### Added
@@ -17,6 +19,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `ApiError.payload_str`, the response payload decoded as text (the raw `payload` stays `bytes`)
 
 ### Removed
+- **BC-Break**: Removed the `username`, `password` and `passwordfile` parameters of `osmapi.OsmApi` and the `auth` parameter of `osmapi.http.OsmApiSession` (see issue #192). Basic authentication was shut down by OpenStreetMap in July 2024, authentication is now provided exclusively by passing an authenticated session (OAuth 2.0) via the `session` parameter:
+  ```python
+  # before
+  api = osmapi.OsmApi(username="user", password="pass")
+  # now
+  api = osmapi.OsmApi(session=oauth_session)
+  ```
 - **BC-Break**: Removed all deprecated `CamelCase` methods (e.g. `NodeGet`, `ChangesetCreate`, `NotesGet`, `Map`, `Capabilities`), they have been deprecated since 5.0. Use the `snake_case` equivalents instead (e.g. `node_get`, `changeset_create`, `notes_get`, `map`, `capabilities`).
 
 ### Fixed

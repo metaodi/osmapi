@@ -44,6 +44,9 @@ dev = [
 ]
 # pdoc and Pygments are pinned exactly: they render the published documentation,
 # a bump restyles every page of it and should be its own reviewable change.
+# The same two pins are repeated in .github/workflows/publish_docs.yml, which
+# builds the published site without this file (it has to work for old tags too),
+# so bump them in both places.
 docs = ["pdoc==16.0.0", "Pygments==2.20.0"]
 # black is pinned exactly (and must match the rev in .pre-commit-config.yaml),
 # a bump reformats the whole code base. The flake8/mypy floors keep the local

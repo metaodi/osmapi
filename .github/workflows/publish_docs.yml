@@ -34,11 +34,22 @@ jobs:
       with:
         enable-cache: true
 
-    - name: Install dependencies
-      run: uv sync
-
+    # `make docs` is deliberately not used here: it would run the checked-out
+    # revision's Makefile, which for a tag older than the uv/pyproject.toml
+    # migration calls a bare `python -m pdoc` against an interpreter that has no
+    # pdoc installed. Running pdoc from an ephemeral, pinned environment makes
+    # the workflow work for any tag, independent of that tag's dev tooling.
+    # `requests` is osmapi's only runtime dependency and is needed to import the
+    # package; the pdoc/Pygments pins mirror the `docs` dependency group in
+    # pyproject.toml and have to be bumped together with it.
     - name: Generate the documentation
-      run: make docs
+      run: >
+        rm -rf docs &&
+        uv run --no-project --isolated
+        --with pdoc==16.0.0
+        --with Pygments==2.20.0
+        --with requests
+        pdoc -o docs osmapi
 
     - name: Keep the custom domain (osmapi.metaodi.ch)
       run: cp CNAME docs/CNAME

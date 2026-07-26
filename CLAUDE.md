@@ -97,7 +97,9 @@ When you add a new public method:
 ## Docstrings
 
 Docstrings are the documentation — `make docs` runs `pdoc` over them and writes `docs/`, and the
-`publish_docs.yml` workflow does exactly that to build the published site. Follow the existing
+`publish_docs.yml` workflow builds the published site the same way (it calls `pdoc` directly, from
+an ephemeral `uv run --no-project` environment, so that it also works for tags older than the uv
+migration — see the Gotchas). Follow the existing
 style: describe the returned dict inline using pdoc's fenced form
 
 ```
@@ -201,6 +203,11 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 - Point examples and manual testing at the dev server `https://api06.dev.openstreetmap.org`, never production.
 - `docs/` is generated build output and git-ignored — don't commit it, and don't edit the HTML. Run
   `make docs` to preview docstring changes locally; the published site is rebuilt by `publish_docs.yml`.
+- `pdoc` and `Pygments` are pinned twice — in the `docs` dependency group of `pyproject.toml` and in the
+  `pdoc` invocation of `.github/workflows/publish_docs.yml`. Bump both together. The workflow does not use
+  `uv sync`/`make docs` on purpose: it can be dispatched with any tag, and a tag from before the
+  `pyproject.toml`/uv migration has a `Makefile` that runs a bare `python -m pdoc` with nothing installed
+  (that is exactly how the first run of the workflow failed).
 - `_do()` mutates the `osm_data` dict it is given (drops `timestamp`, sets `changeset`, `id`, `version`).
 - `self._current_changeset_id` is set by `changeset_create` and reset to `0` by `changeset_close`
   (the `changeset()` context manager wraps both). `changeset_update`, `changeset_close`, `changeset_upload`

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - Test against Python 3.13 and 3.14 in CI
+- Add a Dependabot config (`.github/dependabot.yml`) with weekly updates for the `uv`, `github-actions` and `pre-commit` ecosystems
 
 ### Removed
 - **BC-Break**: Removed all deprecated `CamelCase` methods (e.g. `NodeGet`, `ChangesetCreate`, `NotesGet`, `Map`, `Capabilities`), they have been deprecated since 5.0. Use the `snake_case` equivalents instead (e.g. `node_get`, `changeset_create`, `notes_get`, `map`, `capabilities`).

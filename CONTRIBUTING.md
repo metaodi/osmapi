@@ -8,29 +8,36 @@ Fork and clone this repository:
 git clone git@github.com:your-username/osmapi.git
 ```
 
-Install the dependencies using `pip`:
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then install the dependencies:
 
 ```bash
-pip install -r requirements.txt
-pip install -r test-requirements.txt
+make deps
 ```
+
+This creates a virtual env in `.venv` and installs `osmapi` together with all its dev dependencies.
 
 Make sure the tests pass:
 
 ```bash
-nosetests --verbose
+make test
 ```
 
-You can even run the tests on different versions of Python with `tox`:
+You can run the tests on a different version of Python (>= 3.10) with `uv`:
 
 ```bash
-tox
+uv run --python 3.13 python -m pytest tests/
 ```
 
-To ensure a good quality of the code use `flake8` to check the code style:
+To ensure a good quality of the code, check the code style and the type hints:
 
 ```bash
-flake8 --install-hook
+make lint
+```
+
+Most style issues are fixed automatically by:
+
+```bash
+make format
 ```
 
 ## Create a pull request
@@ -50,6 +57,6 @@ Some things that will increase the chance that your pull request is accepted:
 * Write a [good commit message][commit].
 
 [pr]: https://github.com/metaodi/osmapi/compare/
-[ci]: https://travis-ci.org/metaodi/osmapi
+[ci]: https://github.com/metaodi/osmapi/actions/workflows/build.yml
 [pep8]: https://www.python.org/dev/peps/pep-0008/
 [commit]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

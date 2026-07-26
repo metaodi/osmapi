@@ -1,3 +1,84 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "osmapi"
+description = "Python wrapper for the OSM API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE.txt"]
+authors = [{ name = "Etienne Chové", email = "chove@crans.org" }]
+maintainers = [{ name = "Stefan Oderbolz", email = "odi@metaodi.ch" }]
+keywords = ["openstreetmap", "osm", "api"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Software Development :: Libraries",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = ["requests"]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "http://osmapi.metaodi.ch"
+Documentation = "http://osmapi.metaodi.ch"
+Repository = "https://github.com/metaodi/osmapi"
+Changelog = "https://github.com/metaodi/osmapi/blob/develop/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    { include-group = "docs" },
+    { include-group = "lint" },
+    { include-group = "test" },
+    "pre-commit",
+]
+docs = ["pdoc==14.5.1", "Pygments==2.20.0"]
+lint = ["black==26.3.1", "flake8", "mypy", "types-requests"]
+test = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "responses",
+    "xmltodict",
+    "python-dotenv",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "osmapi.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["osmapi*"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+warn_no_return = false
+strict_equality = true
+extra_checks = true
+
+[[tool.mypy.overrides]]
+module = [
+    "osmapi.node",
+    "osmapi.way",
+    "osmapi.relation",
+    "osmapi.changeset",
+    "osmapi.note",
+    "osmapi.capabilities",
+]
+disable_error_code = ["misc"]

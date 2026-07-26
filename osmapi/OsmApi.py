@@ -30,7 +30,8 @@ import re
 import logging
 import warnings
 from contextlib import contextmanager
-from typing import Any, Optional, Generator
+from collections.abc import Generator
+from typing import Any
 from xml.dom.minidom import Element
 import requests
 
@@ -62,13 +63,13 @@ class OsmApi(
 
     def __init__(
         self,
-        username: Optional[str] = None,
-        password: Optional[str] = None,
-        passwordfile: Optional[str] = None,
+        username: str | None = None,
+        password: str | None = None,
+        passwordfile: str | None = None,
         appid: str = "",
         created_by: str = f"osmapi/{__version__}",
         api: str = "https://www.openstreetmap.org",
-        session: Optional[requests.Session] = None,
+        session: requests.Session | None = None,
         timeout: int = 30,
     ) -> None:
         """
@@ -100,7 +101,7 @@ class OsmApi(
         an answer from the server.
         """
         # Get username
-        self._username: Optional[str] = None
+        self._username: str | None = None
         if username:
             self._username = username
         elif passwordfile:
@@ -109,7 +110,7 @@ class OsmApi(
             self._username = pass_line.partition(":")[0].strip()
 
         # Get password
-        self._password: Optional[str] = None
+        self._password: str | None = None
         if password:
             self._password = password
         elif passwordfile:
@@ -132,9 +133,9 @@ class OsmApi(
         self._current_changeset_id: int = 0
 
         # Http connection
-        self.http_session: Optional[requests.Session] = session
+        self.http_session: requests.Session | None = session
         self._timeout: int = timeout
-        auth: Optional[tuple[str, str]] = None
+        auth: tuple[str, str] | None = None
         if self._username and self._password:
             auth = (self._username, self._password)
         self._session: http.OsmApiSession = http.OsmApiSession(
@@ -195,7 +196,7 @@ class OsmApi(
         )
         return self.node_get(NodeId, NodeVersion)
 
-    def NodeCreate(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def NodeCreate(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`node_create` instead."""
         warnings.warn(
             "NodeCreate() is deprecated, use node_create() instead",
@@ -204,7 +205,7 @@ class OsmApi(
         )
         return self.node_create(NodeData)
 
-    def NodeUpdate(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def NodeUpdate(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`node_update` instead."""
         warnings.warn(
             "NodeUpdate() is deprecated, use node_update() instead",
@@ -213,7 +214,7 @@ class OsmApi(
         )
         return self.node_update(NodeData)
 
-    def NodeDelete(self, NodeData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def NodeDelete(self, NodeData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`node_delete` instead."""
         warnings.warn(
             "NodeDelete() is deprecated, use node_delete() instead",
@@ -271,7 +272,7 @@ class OsmApi(
         )
         return self.way_get(WayId, WayVersion)
 
-    def WayCreate(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def WayCreate(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`way_create` instead."""
         warnings.warn(
             "WayCreate() is deprecated, use way_create() instead",
@@ -280,7 +281,7 @@ class OsmApi(
         )
         return self.way_create(WayData)
 
-    def WayUpdate(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def WayUpdate(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`way_update` instead."""
         warnings.warn(
             "WayUpdate() is deprecated, use way_update() instead",
@@ -289,7 +290,7 @@ class OsmApi(
         )
         return self.way_update(WayData)
 
-    def WayDelete(self, WayData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def WayDelete(self, WayData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`way_delete` instead."""
         warnings.warn(
             "WayDelete() is deprecated, use way_delete() instead",
@@ -347,7 +348,7 @@ class OsmApi(
         )
         return self.relation_get(RelationId, RelationVersion)
 
-    def RelationCreate(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def RelationCreate(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`relation_create` instead."""
         warnings.warn(
             "RelationCreate() is deprecated, use relation_create() instead",
@@ -356,7 +357,7 @@ class OsmApi(
         )
         return self.relation_create(RelationData)
 
-    def RelationUpdate(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def RelationUpdate(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`relation_update` instead."""
         warnings.warn(
             "RelationUpdate() is deprecated, use relation_update() instead",
@@ -365,7 +366,7 @@ class OsmApi(
         )
         return self.relation_update(RelationData)
 
-    def RelationDelete(self, RelationData: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def RelationDelete(self, RelationData: dict[str, Any]) -> dict[str, Any] | None:
         """.. deprecated:: Use :meth:`relation_delete` instead."""
         warnings.warn(
             "RelationDelete() is deprecated, use relation_delete() instead",
@@ -425,7 +426,7 @@ class OsmApi(
 
     @contextmanager
     def Changeset(
-        self, ChangesetTags: Optional[dict[str, str]] = None
+        self, ChangesetTags: dict[str, str] | None = None
     ) -> Generator[int, None, None]:
         """.. deprecated:: Use :meth:`changeset` instead."""
         warnings.warn(
@@ -447,7 +448,7 @@ class OsmApi(
         )
         return self.changeset_get(ChangesetId, include_discussion)
 
-    def ChangesetUpdate(self, ChangesetTags: Optional[dict[str, str]] = None) -> int:
+    def ChangesetUpdate(self, ChangesetTags: dict[str, str] | None = None) -> int:
         """.. deprecated:: Use :meth:`changeset_update` instead."""
         warnings.warn(
             "ChangesetUpdate() is deprecated, use changeset_update() instead",
@@ -456,7 +457,7 @@ class OsmApi(
         )
         return self.changeset_update(ChangesetTags)
 
-    def ChangesetCreate(self, ChangesetTags: Optional[dict[str, str]] = None) -> int:
+    def ChangesetCreate(self, ChangesetTags: dict[str, str] | None = None) -> int:
         """.. deprecated:: Use :meth:`changeset_create` instead."""
         warnings.warn(
             "ChangesetCreate() is deprecated, use changeset_create() instead",
@@ -496,14 +497,14 @@ class OsmApi(
 
     def ChangesetsGet(  # noqa
         self,
-        min_lon: Optional[float] = None,
-        min_lat: Optional[float] = None,
-        max_lon: Optional[float] = None,
-        max_lat: Optional[float] = None,
-        userid: Optional[int] = None,
-        username: Optional[str] = None,
-        closed_after: Optional[str] = None,
-        created_before: Optional[str] = None,
+        min_lon: float | None = None,
+        min_lat: float | None = None,
+        max_lon: float | None = None,
+        max_lat: float | None = None,
+        userid: int | None = None,
+        username: str | None = None,
+        closed_after: str | None = None,
+        created_before: str | None = None,
         only_open: bool = False,
         only_closed: bool = False,
     ) -> dict[int, dict[str, Any]]:
@@ -601,7 +602,7 @@ class OsmApi(
         )
         return self.note_comment(note_id, comment)
 
-    def NoteClose(self, note_id: int, comment: Optional[str] = None) -> dict[str, Any]:
+    def NoteClose(self, note_id: int, comment: str | None = None) -> dict[str, Any]:
         """.. deprecated:: Use :meth:`note_close` instead."""
         warnings.warn(
             "NoteClose() is deprecated, use note_close() instead",
@@ -610,7 +611,7 @@ class OsmApi(
         )
         return self.note_close(note_id, comment)
 
-    def NoteReopen(self, note_id: int, comment: Optional[str] = None) -> dict[str, Any]:
+    def NoteReopen(self, note_id: int, comment: str | None = None) -> dict[str, Any]:
         """.. deprecated:: Use :meth:`note_reopen` instead."""
         warnings.warn(
             "NoteReopen() is deprecated, use note_reopen() instead",
@@ -631,7 +632,7 @@ class OsmApi(
         return self.notes_search(query, limit, closed)
 
     def _NoteAction(
-        self, path: str, comment: Optional[str] = None, optionalAuth: bool = True
+        self, path: str, comment: str | None = None, optionalAuth: bool = True
     ) -> dict[str, Any]:
         """Internal method - calls _note_action."""
         return self._note_action(path, comment, optionalAuth)

@@ -1,0 +1,9 @@
+[flake8]
+max-complexity = 10
+exclude = .git,.tox,__pycache__,.venv,build,dist
+# set to true to check all ignored errors
+disable_noqa = False
+
+# adaptions for black
+max-line-length = 88
+extend-ignore = E203

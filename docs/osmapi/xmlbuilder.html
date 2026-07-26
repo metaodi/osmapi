@@ -51,7 +51,7 @@
 
                         <label class="view-source-button" for="mod-xmlbuilder-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">xml.dom.minidom</span><span class="w"> </span><span class="kn">import</span> <span class="n">Element</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -122,7 +122,7 @@
 </span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>    <span class="p">)</span>
 </span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>
 </span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="k">def</span><span class="w"> </span><span class="nf">_get_xml_value</span><span class="p">(</span><span class="n">dom_element</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="k">def</span><span class="w"> </span><span class="nf">_get_xml_value</span><span class="p">(</span><span class="n">dom_element</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="k">try</span><span class="p">:</span>
 </span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="n">elem</span> <span class="o">=</span> <span class="n">dom_element</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="n">tag</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">firstChild</span><span class="o">.</span><span class="n">nodeValue</span>  <span class="c1"># type: ignore[union-attr]</span>

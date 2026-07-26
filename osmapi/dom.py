@@ -6,7 +6,7 @@ from datetime import datetime
 import xml.dom.minidom
 import xml.parsers.expat
 import logging
-from typing import Any, Union, Optional
+from typing import Any
 from xml.dom.minidom import Element
 
 from . import errors
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def OsmResponseToDom(
     response: bytes, tag: str, single: bool = False, allow_empty: bool = False
-) -> Union[Element, list[Element]]:
+) -> Element | list[Element]:
     """
     Returns the (sub-) DOM parsed from an OSM response
     """
@@ -202,7 +202,7 @@ def _dom_get_member(dom_element: Element) -> list[dict[str, Any]]:
     return result
 
 
-def _parse_date(date_string: Optional[str]) -> Union[datetime, str, None]:
+def _parse_date(date_string: str | None) -> datetime | str | None:
     date_formats = ["%Y-%m-%d %H:%M:%S UTC", "%Y-%m-%dT%H:%M:%SZ"]
     for date_format in date_formats:
         try:

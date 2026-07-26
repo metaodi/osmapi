@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- **BC-Break**: Remove support for Python 3.9 (EOL since October 2025), new minimum version for osmapi is Python 3.10
+- Replace `setup.py`/`setup.cfg` and the `requirements.txt` files with a PEP 621 `pyproject.toml`, dependency groups are now managed with [uv](https://docs.astral.sh/uv/)
+- Modernize the type hints: `Optional[X]`/`Union[X, Y]` are now written as `X | None`/`X | Y` (PEP 604)
+
+### Added
+- Test against Python 3.13 and 3.14 in CI
+
 ### Fixed
 - Fix release trigger for Upload Python Package workflow by @metaodi in https://github.com/metaodi/osmapi/pull/202
 

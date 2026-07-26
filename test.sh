@@ -17,6 +17,7 @@ make test
 # generate the docs
 make docs
 
-# setup a new virtualenv and try to install the lib
-virtualenv pyenv
-source pyenv/bin/activate && pip install .
+# build the package and make sure it can be installed on its own
+make build
+uv run --no-project --isolated --with "$(ls dist/*.whl)" \
+    python -c "import osmapi; print(osmapi.__version__)"

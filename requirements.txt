@@ -1,4 +1,0 @@
-pdoc==14.5.1
-Pygments==2.20.0
-requests==2.32.4
-python-dotenv

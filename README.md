@@ -85,7 +85,7 @@ client_id = "<client_id>"
 client_secret = "<client_secret>"
 
 auth = OpenStreetMapDevAuth(
-    client_id, client_secret, ['read_prefs', 'write_map']
+    client_id, client_secret, ['read_prefs', 'write_api']
 ).auth_code()
 
 api = osmapi.OsmApi(

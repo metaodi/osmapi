@@ -10,3 +10,4 @@ MANIFEST
 .mypy_cache/
 .env
 .venv
+docs/

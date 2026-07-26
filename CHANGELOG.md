@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Fix release trigger for Upload Python Package workflow by @metaodi in https://github.com/metaodi/osmapi/pull/202
 
 ## [5.1.0] - 2026-07-26
 ### Changed

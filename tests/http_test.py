@@ -65,7 +65,7 @@ def test_http_request_auth_missing_credentials(mock_api):
     api, session = mock_api(auth=False)
 
     with pytest.raises(
-        osmapi.UsernamePasswordMissingError, match="Username/Password missing"
+        osmapi.AuthenticationMissingError, match="Authentication missing"
     ):
         api._session._http_request("PUT", "/api/0.6/testauth", True, None)
 
@@ -188,7 +188,7 @@ def test_http_does_not_retry_client_error(mock_api):
 def test_http_does_not_retry_missing_credentials(mock_api):
     api, session = mock_api(auth=False)
 
-    with pytest.raises(osmapi.UsernamePasswordMissingError):
+    with pytest.raises(osmapi.AuthenticationMissingError):
         api._session._http("PUT", "/api/0.6/test", True, None)
 
     assert session.request.call_count == 0

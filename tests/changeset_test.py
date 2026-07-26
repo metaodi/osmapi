@@ -478,9 +478,9 @@ def test_changeset_upload_no_auth(api):
         }
     ]
 
-    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+    with pytest.raises(osmapi.AuthenticationMissingError) as execinfo:
         api.changeset_upload(changesdata)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert "Authentication missing" in str(execinfo.value)
 
 
 def test_changeset_upload_version_mismatch_raises_api_error(auth_api, add_response):
@@ -721,9 +721,9 @@ def test_changeset_comment(auth_api, add_response):
 
 
 def test_changeset_comment_no_auth(api):
-    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+    with pytest.raises(osmapi.AuthenticationMissingError) as execinfo:
         api.changeset_comment(123, comment="test comment")
-    assert str(execinfo.value) == "Username/Password missing"
+    assert "Authentication missing" in str(execinfo.value)
 
 
 def test_changeset_subscribe(auth_api, add_response):
@@ -761,9 +761,9 @@ def test_changeset_subscribe_when_already_subscribed(auth_api, add_response):
 
 
 def test_changeset_subscribe_no_auth(api):
-    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+    with pytest.raises(osmapi.AuthenticationMissingError) as execinfo:
         api.changeset_subscribe(45627)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert "Authentication missing" in str(execinfo.value)
 
 
 def test_changeset_unsubscribe(auth_api, add_response):
@@ -801,9 +801,9 @@ def test_changeset_unsubscribe_when_not_subscribed(auth_api, add_response):
 
 
 def test_changeset_unsubscribe_no_auth(api):
-    with pytest.raises(osmapi.UsernamePasswordMissingError) as execinfo:
+    with pytest.raises(osmapi.AuthenticationMissingError) as execinfo:
         api.changeset_unsubscribe(45627)
-    assert str(execinfo.value) == "Username/Password missing"
+    assert "Authentication missing" in str(execinfo.value)
 
 
 ##################################################

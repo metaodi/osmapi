@@ -1,17 +1,11 @@
 """Tests for construction and lifecycle of the OsmApi object."""
 
-import os
 from unittest import mock
 
 import osmapi
+import pytest
 
-from .conftest import API_BASE
-
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
-
-def fixture_path(filename):
-    return os.path.join(__location__, "fixtures", filename)
+from .conftest import API_BASE, authenticated_session
 
 
 def test_constructor():
@@ -58,32 +52,26 @@ def test_no_changeset_open_initially():
     api.close()
 
 
-def test_passwordfile_only():
-    api = osmapi.OsmApi(passwordfile=fixture_path("passwordfile.txt"))
+def test_constructor_without_session_is_unauthenticated():
+    api = osmapi.OsmApi(api=API_BASE)
 
-    assert api._username == "testosm"
-    assert api._password == "testpass"
+    assert api._session._auth is None
     api.close()
 
 
-def test_passwordfile_with_user():
-    api = osmapi.OsmApi(
-        username="testuser", passwordfile=fixture_path("passwordfile.txt")
-    )
+def test_constructor_takes_auth_from_session():
+    """Authentication comes from the session, there is no other way to set it."""
+    api = osmapi.OsmApi(api=API_BASE, session=authenticated_session())
 
-    assert api._username == "testuser"
-    assert api._password == "testuserpass"
+    assert api._session._auth == ("testuser", "testpassword")
     api.close()
 
 
-def test_passwordfile_with_colon():
-    api = osmapi.OsmApi(
-        username="testuser", passwordfile=fixture_path("passwordfile_colon.txt")
-    )
-
-    assert api._username == "testuser"
-    assert api._password == "test:userpass"
-    api.close()
+@pytest.mark.parametrize("credential", ["username", "password", "passwordfile"])
+def test_constructor_rejects_username_password(credential):
+    """Username/password auth was removed in 6.0, an OAuth session is required."""
+    with pytest.raises(TypeError):
+        osmapi.OsmApi(api=API_BASE, **{credential: "testuser"})
 
 
 def test_close_call(mock_api):

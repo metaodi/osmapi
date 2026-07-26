@@ -46,7 +46,7 @@ class ChangesetMixin:
         one with an `OsmApi.ChangesetAlreadyOpenError`.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
@@ -87,7 +87,7 @@ class ChangesetMixin:
         Updates current changeset with `changeset_tags`.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -127,7 +127,7 @@ class ChangesetMixin:
         Returns `changeset_id`
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
@@ -162,7 +162,7 @@ class ChangesetMixin:
         Returns `changeset_id`.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -198,7 +198,7 @@ class ChangesetMixin:
         Returns list with updated ids.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
@@ -329,7 +329,7 @@ class ChangesetMixin:
         Returns the updated changeset data dict.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
@@ -361,7 +361,7 @@ class ChangesetMixin:
         Returns the updated changeset data dict.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If already subscribed to this changeset,
         `OsmApi.AlreadySubscribedApiError` is raised.
@@ -392,7 +392,7 @@ class ChangesetMixin:
         Returns the updated changeset data dict.
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If not subscribed to this changeset,
         `OsmApi.NotSubscribedApiError` is raised.

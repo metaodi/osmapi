@@ -67,7 +67,7 @@ Request/response flow for a typical call:
 
 1. Mixin method builds the URI (`/api/0.6/...`) and calls `self._session._get/_put/_post/_delete`.
 2. `http.OsmApiSession._http()` performs the request, retrying up to `MAX_RETRY_LIMIT` (5) on 5xx and on
-   unexpected exceptions, sleeping 5s between attempts; 4xx and `UsernamePasswordMissingError` are re-raised
+   unexpected exceptions, sleeping 5s between attempts; 4xx and `AuthenticationMissingError` are re-raised
    immediately. Status codes map to typed errors (401 -> `UnauthorizedApiError`, 404 -> `ElementNotFoundApiError`,
    410 -> `ElementDeletedApiError`, empty body -> `ResponseEmptyApiError`, otherwise `ApiError`).
 3. The mixin parses bytes with `dom.OsmResponseToDom(data, tag=..., single=..., allow_empty=...)` and then a
@@ -178,8 +178,13 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 
 ## Gotchas
 
-- Username/password auth is deprecated by OSM (shut down July 2024). New examples and docs should use
+- Username/password auth was shut down by OSM (July 2024) and removed from osmapi in 6.0. Authentication
+  comes exclusively from the session: `OsmApiSession._auth` is read from `session.auth`, and a request that
+  needs auth without it raises `AuthenticationMissingError` before anything is sent. Examples and docs use
   OAuth 2.0 by passing a prepared `requests.Session` via the `session=` parameter.
+- Deprecated error names live in `errors.DEPRECATED_ERROR_NAMES` and are resolved by the module-level
+  `__getattr__` of both `osmapi/errors.py` and `osmapi/__init__.py` (the star-import doesn't pick up the
+  hook, hence both). `UsernamePasswordMissingError` is such an alias and is due for removal in 7.0.
 - Point examples and manual testing at the dev server `https://api06.dev.openstreetmap.org`, never production.
 - `docs/` is generated **and committed**; regenerate with `make docs` when docstrings change rather than
   editing the HTML.

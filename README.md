@@ -54,10 +54,13 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### Write to OpenStreetMap
 
+Writing requires an authenticated session, see [OAuth authentication](#oauth-authentication) below
+for how to create one (`auth.session` in this example):
+
 
 ```python
 >>> import osmapi
->>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "metaodi", password = "*******")
+>>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
 >>> api.changeset_create({"comment": "My first test"})
 >>> print(api.node_create({"lon":1, "lat":1, "tag": {}}))
 {'changeset': 532907, 'lon': 1, 'version': 1, 'lat': 1, 'tag': {}, 'id': 164684}
@@ -66,16 +69,15 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### OAuth authentication
 
-Username/Password authentication is deprecated since July 2024
-(see [official OWG announcemnt](https://blog.openstreetmap.org/2024/04/17/oauth-1-0a-and-http-basic-auth-shutdown-on-openstreetmap-org/) for details).
+Username/Password authentication was shut down by OpenStreetMap in July 2024
+(see [official OWG announcemnt](https://blog.openstreetmap.org/2024/04/17/oauth-1-0a-and-http-basic-auth-shutdown-on-openstreetmap-org/) for details),
+the `username`, `password` and `passwordfile` parameters of `osmapi.OsmApi` were removed in version 6.0.
 In order to use this library, you need to use OAuth 2.0.
 
 To use OAuth 2.0, you must register an application with an OpenStreetMap account, either on the
 [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications)
 or on the [production server](https://www.openstreetmap.org/oauth2/applications).
 Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
-
-auth = OpenStreetMapDevAuth(
 
 Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2) on the development server, replace `OpenStreetMapDevAuth` with `OpenStreetMapAuth` to use the production server:
 

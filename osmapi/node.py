@@ -79,7 +79,7 @@ class NodeMixin:
             }
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -121,7 +121,7 @@ class NodeMixin:
             }
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -163,7 +163,7 @@ class NodeMixin:
             }
 
         If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.

@@ -1,5 +1,6 @@
 import osmapi
 import pytest
+import requests
 from unittest import mock
 import responses
 import os
@@ -30,6 +31,18 @@ def file_content():
     return _file_content
 
 
+def authenticated_session():
+    """A session that carries credentials, standing in for an OAuth session.
+
+    osmapi considers a session authenticated if its `auth` is set; what kind
+    of credentials that is (an OAuth 2.0 auth handler in practice) does not
+    matter to the library.
+    """
+    session = requests.Session()
+    session.auth = ("testuser", "testpassword")
+    return session
+
+
 @pytest.fixture
 def api():
     api = osmapi.OsmApi(api=API_BASE)
@@ -41,7 +54,7 @@ def api():
 
 @pytest.fixture
 def auth_api():
-    api = osmapi.OsmApi(api=API_BASE, username="testuser", password="testpassword")
+    api = osmapi.OsmApi(api=API_BASE, session=authenticated_session())
     api._session._sleep = mock.Mock()
 
     yield api
@@ -61,7 +74,7 @@ def changeset_api(auth_api):
 
 @pytest.fixture
 def prod_api():
-    api = osmapi.OsmApi(api=PROD_API_BASE, username="testuser", password="testpassword")
+    api = osmapi.OsmApi(api=PROD_API_BASE, session=authenticated_session())
     api._session._sleep = mock.Mock()
 
     yield api
@@ -185,10 +198,7 @@ def mock_api():
                 return_value=make_http_response(status, content, reason)
             )
 
-        credentials = (
-            {"username": "testuser", "password": "testpassword"} if auth else {}
-        )
-        api = osmapi.OsmApi(api=API_BASE, session=session, **credentials)
+        api = osmapi.OsmApi(api=API_BASE, session=session)
         api._session._sleep = mock.Mock()
         created.append(api)
         return api, session

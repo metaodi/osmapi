@@ -173,7 +173,7 @@
 </span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
 </span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/notes/</span><span class="si">{</span><span class="n">note_id</span><span class="si">}</span><span class="s2">/close&quot;</span>
 </span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_note_action</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optional_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -187,7 +187,7 @@
 </span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
 </span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
 </span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">        If the requested element has been deleted,</span>
 </span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
@@ -351,7 +351,7 @@
 </span><span id="NoteMixin-92"><a href="#NoteMixin-92"><span class="linenos"> 92</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="NoteMixin-93"><a href="#NoteMixin-93"><span class="linenos"> 93</span></a>
 </span><span id="NoteMixin-94"><a href="#NoteMixin-94"><span class="linenos"> 94</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="NoteMixin-95"><a href="#NoteMixin-95"><span class="linenos"> 95</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="NoteMixin-95"><a href="#NoteMixin-95"><span class="linenos"> 95</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="NoteMixin-96"><a href="#NoteMixin-96"><span class="linenos"> 96</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="NoteMixin-97"><a href="#NoteMixin-97"><span class="linenos"> 97</span></a>        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/notes/</span><span class="si">{</span><span class="n">note_id</span><span class="si">}</span><span class="s2">/close&quot;</span>
 </span><span id="NoteMixin-98"><a href="#NoteMixin-98"><span class="linenos"> 98</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_note_action</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optional_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -365,7 +365,7 @@
 </span><span id="NoteMixin-106"><a href="#NoteMixin-106"><span class="linenos">106</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="NoteMixin-107"><a href="#NoteMixin-107"><span class="linenos">107</span></a>
 </span><span id="NoteMixin-108"><a href="#NoteMixin-108"><span class="linenos">108</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="NoteMixin-109"><a href="#NoteMixin-109"><span class="linenos">109</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="NoteMixin-109"><a href="#NoteMixin-109"><span class="linenos">109</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="NoteMixin-110"><a href="#NoteMixin-110"><span class="linenos">110</span></a>
 </span><span id="NoteMixin-111"><a href="#NoteMixin-111"><span class="linenos">111</span></a><span class="sd">        If the requested element has been deleted,</span>
 </span><span id="NoteMixin-112"><a href="#NoteMixin-112"><span class="linenos">112</span></a><span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
@@ -624,7 +624,7 @@ The value 0 means only open bugs are returned,
 </span><span id="NoteMixin.note_close-92"><a href="#NoteMixin.note_close-92"><span class="linenos">92</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="NoteMixin.note_close-93"><a href="#NoteMixin.note_close-93"><span class="linenos">93</span></a>
 </span><span id="NoteMixin.note_close-94"><a href="#NoteMixin.note_close-94"><span class="linenos">94</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="NoteMixin.note_close-95"><a href="#NoteMixin.note_close-95"><span class="linenos">95</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="NoteMixin.note_close-95"><a href="#NoteMixin.note_close-95"><span class="linenos">95</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="NoteMixin.note_close-96"><a href="#NoteMixin.note_close-96"><span class="linenos">96</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="NoteMixin.note_close-97"><a href="#NoteMixin.note_close-97"><span class="linenos">97</span></a>        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/api/0.6/notes/</span><span class="si">{</span><span class="n">note_id</span><span class="si">}</span><span class="s2">/close&quot;</span>
 </span><span id="NoteMixin.note_close-98"><a href="#NoteMixin.note_close-98"><span class="linenos">98</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_note_action</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">optional_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -636,7 +636,7 @@ The value 0 means only open bugs are returned,
 <p>Returns the updated note.</p>
 
 <p>If no authentication information are provided,
-<code>OsmApi.UsernamePasswordMissingError</code> is raised.</p>
+<code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 </div>
 
 
@@ -661,7 +661,7 @@ The value 0 means only open bugs are returned,
 </span><span id="NoteMixin.note_reopen-106"><a href="#NoteMixin.note_reopen-106"><span class="linenos">106</span></a><span class="sd">        Returns the updated note.</span>
 </span><span id="NoteMixin.note_reopen-107"><a href="#NoteMixin.note_reopen-107"><span class="linenos">107</span></a>
 </span><span id="NoteMixin.note_reopen-108"><a href="#NoteMixin.note_reopen-108"><span class="linenos">108</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="NoteMixin.note_reopen-109"><a href="#NoteMixin.note_reopen-109"><span class="linenos">109</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="NoteMixin.note_reopen-109"><a href="#NoteMixin.note_reopen-109"><span class="linenos">109</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="NoteMixin.note_reopen-110"><a href="#NoteMixin.note_reopen-110"><span class="linenos">110</span></a>
 </span><span id="NoteMixin.note_reopen-111"><a href="#NoteMixin.note_reopen-111"><span class="linenos">111</span></a><span class="sd">        If the requested element has been deleted,</span>
 </span><span id="NoteMixin.note_reopen-112"><a href="#NoteMixin.note_reopen-112"><span class="linenos">112</span></a><span class="sd">        `OsmApi.ElementDeletedApiError` is raised.</span>
@@ -679,7 +679,7 @@ The value 0 means only open bugs are returned,
 <p>Returns the updated note.</p>
 
 <p>If no authentication information are provided,
-<code>OsmApi.UsernamePasswordMissingError</code> is raised.</p>
+<code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If the requested element has been deleted,
 <code>OsmApi.ElementDeletedApiError</code> is raised.</p>

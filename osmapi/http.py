@@ -22,7 +22,6 @@ class OsmApiSession:
         self,
         base_url: str,
         created_by: str,
-        auth: tuple[str, str] | None = None,
         session: requests.Session | None = None,
         timeout: int = 30,
     ) -> None:
@@ -30,12 +29,8 @@ class OsmApiSession:
         self._created_by = created_by
         self._timeout = timeout
 
-        try:
-            self._auth: Any = auth
-            if not auth and session.auth:  # type: ignore[union-attr]
-                self._auth = session.auth  # type: ignore[union-attr]
-        except AttributeError:
-            pass
+        # authentication is taken from the session (e.g. an OAuth 2.0 session)
+        self._auth: Any = getattr(session, "auth", None)
 
         self._http_session = session
         self._session = self._get_http_session()
@@ -68,8 +63,8 @@ class OsmApiSession:
         `return_value` indicates wheter this request should return
         any data or not.
 
-        If the username or password is missing,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If the request requires authentication, but the session is not
+        authenticated, `OsmApi.AuthenticationMissingError` is raised.
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -86,7 +81,10 @@ class OsmApiSession:
         path = self._api + path
 
         if auth and not self._auth:
-            raise errors.UsernamePasswordMissingError("Username/Password missing")
+            raise errors.AuthenticationMissingError(
+                "Authentication missing, this request requires an "
+                "authenticated session (see the OAuth 2.0 examples)"
+            )
 
         try:
             response = self._session.request(
@@ -148,7 +146,7 @@ class OsmApiSession:
                 else:
                     logger.debug("ApiError Exception occured")
                     raise
-            except errors.UsernamePasswordMissingError:
+            except errors.AuthenticationMissingError:
                 raise
             except Exception as e:
                 logger.exception("General exception occured")

@@ -137,7 +137,7 @@
 </span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">        Creates a relation based on the supplied `relation_data` dict.</span>
 </span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
 </span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
 </span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">        If the supplied information contain an existing relation,</span>
 </span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">        `OsmApi.OsmTypeAlreadyExistsError` is raised.</span>
@@ -157,7 +157,7 @@
 </span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">        Updates relation with the supplied `relation_data` dict.</span>
 </span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
 </span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
 </span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -174,7 +174,7 @@
 </span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        Delete relation with `relation_data`.</span>
 </span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
 </span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
 </span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -333,7 +333,7 @@
 </span><span id="RelationMixin-48"><a href="#RelationMixin-48"><span class="linenos"> 48</span></a><span class="sd">        Creates a relation based on the supplied `relation_data` dict.</span>
 </span><span id="RelationMixin-49"><a href="#RelationMixin-49"><span class="linenos"> 49</span></a>
 </span><span id="RelationMixin-50"><a href="#RelationMixin-50"><span class="linenos"> 50</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin-51"><a href="#RelationMixin-51"><span class="linenos"> 51</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin-51"><a href="#RelationMixin-51"><span class="linenos"> 51</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin-52"><a href="#RelationMixin-52"><span class="linenos"> 52</span></a>
 </span><span id="RelationMixin-53"><a href="#RelationMixin-53"><span class="linenos"> 53</span></a><span class="sd">        If the supplied information contain an existing relation,</span>
 </span><span id="RelationMixin-54"><a href="#RelationMixin-54"><span class="linenos"> 54</span></a><span class="sd">        `OsmApi.OsmTypeAlreadyExistsError` is raised.</span>
@@ -353,7 +353,7 @@
 </span><span id="RelationMixin-68"><a href="#RelationMixin-68"><span class="linenos"> 68</span></a><span class="sd">        Updates relation with the supplied `relation_data` dict.</span>
 </span><span id="RelationMixin-69"><a href="#RelationMixin-69"><span class="linenos"> 69</span></a>
 </span><span id="RelationMixin-70"><a href="#RelationMixin-70"><span class="linenos"> 70</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin-71"><a href="#RelationMixin-71"><span class="linenos"> 71</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin-71"><a href="#RelationMixin-71"><span class="linenos"> 71</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin-72"><a href="#RelationMixin-72"><span class="linenos"> 72</span></a>
 </span><span id="RelationMixin-73"><a href="#RelationMixin-73"><span class="linenos"> 73</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="RelationMixin-74"><a href="#RelationMixin-74"><span class="linenos"> 74</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -370,7 +370,7 @@
 </span><span id="RelationMixin-85"><a href="#RelationMixin-85"><span class="linenos"> 85</span></a><span class="sd">        Delete relation with `relation_data`.</span>
 </span><span id="RelationMixin-86"><a href="#RelationMixin-86"><span class="linenos"> 86</span></a>
 </span><span id="RelationMixin-87"><a href="#RelationMixin-87"><span class="linenos"> 87</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin-88"><a href="#RelationMixin-88"><span class="linenos"> 88</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin-88"><a href="#RelationMixin-88"><span class="linenos"> 88</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin-89"><a href="#RelationMixin-89"><span class="linenos"> 89</span></a>
 </span><span id="RelationMixin-90"><a href="#RelationMixin-90"><span class="linenos"> 90</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="RelationMixin-91"><a href="#RelationMixin-91"><span class="linenos"> 91</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -556,7 +556,7 @@ otherwise the latest version is returned.</p>
 </span><span id="RelationMixin.relation_create-48"><a href="#RelationMixin.relation_create-48"><span class="linenos">48</span></a><span class="sd">        Creates a relation based on the supplied `relation_data` dict.</span>
 </span><span id="RelationMixin.relation_create-49"><a href="#RelationMixin.relation_create-49"><span class="linenos">49</span></a>
 </span><span id="RelationMixin.relation_create-50"><a href="#RelationMixin.relation_create-50"><span class="linenos">50</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin.relation_create-51"><a href="#RelationMixin.relation_create-51"><span class="linenos">51</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin.relation_create-51"><a href="#RelationMixin.relation_create-51"><span class="linenos">51</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin.relation_create-52"><a href="#RelationMixin.relation_create-52"><span class="linenos">52</span></a>
 </span><span id="RelationMixin.relation_create-53"><a href="#RelationMixin.relation_create-53"><span class="linenos">53</span></a><span class="sd">        If the supplied information contain an existing relation,</span>
 </span><span id="RelationMixin.relation_create-54"><a href="#RelationMixin.relation_create-54"><span class="linenos">54</span></a><span class="sd">        `OsmApi.OsmTypeAlreadyExistsError` is raised.</span>
@@ -574,7 +574,7 @@ otherwise the latest version is returned.</p>
             <div class="docstring"><p>Creates a relation based on the supplied <code>relation_data</code> dict.</p>
 
 <p>If no authentication information are provided,
-<code>OsmApi.UsernamePasswordMissingError</code> is raised.</p>
+<code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If the supplied information contain an existing relation,
 <code>OsmApi.OsmTypeAlreadyExistsError</code> is raised.</p>
@@ -606,7 +606,7 @@ otherwise the latest version is returned.</p>
 </span><span id="RelationMixin.relation_update-68"><a href="#RelationMixin.relation_update-68"><span class="linenos">68</span></a><span class="sd">        Updates relation with the supplied `relation_data` dict.</span>
 </span><span id="RelationMixin.relation_update-69"><a href="#RelationMixin.relation_update-69"><span class="linenos">69</span></a>
 </span><span id="RelationMixin.relation_update-70"><a href="#RelationMixin.relation_update-70"><span class="linenos">70</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin.relation_update-71"><a href="#RelationMixin.relation_update-71"><span class="linenos">71</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin.relation_update-71"><a href="#RelationMixin.relation_update-71"><span class="linenos">71</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin.relation_update-72"><a href="#RelationMixin.relation_update-72"><span class="linenos">72</span></a>
 </span><span id="RelationMixin.relation_update-73"><a href="#RelationMixin.relation_update-73"><span class="linenos">73</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="RelationMixin.relation_update-74"><a href="#RelationMixin.relation_update-74"><span class="linenos">74</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -621,7 +621,7 @@ otherwise the latest version is returned.</p>
             <div class="docstring"><p>Updates relation with the supplied <code>relation_data</code> dict.</p>
 
 <p>If no authentication information are provided,
-<code>OsmApi.UsernamePasswordMissingError</code> is raised.</p>
+<code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is no open changeset,
 <code>OsmApi.NoChangesetOpenError</code> is raised.</p>
@@ -650,7 +650,7 @@ otherwise the latest version is returned.</p>
 </span><span id="RelationMixin.relation_delete-85"><a href="#RelationMixin.relation_delete-85"><span class="linenos">85</span></a><span class="sd">        Delete relation with `relation_data`.</span>
 </span><span id="RelationMixin.relation_delete-86"><a href="#RelationMixin.relation_delete-86"><span class="linenos">86</span></a>
 </span><span id="RelationMixin.relation_delete-87"><a href="#RelationMixin.relation_delete-87"><span class="linenos">87</span></a><span class="sd">        If no authentication information are provided,</span>
-</span><span id="RelationMixin.relation_delete-88"><a href="#RelationMixin.relation_delete-88"><span class="linenos">88</span></a><span class="sd">        `OsmApi.UsernamePasswordMissingError` is raised.</span>
+</span><span id="RelationMixin.relation_delete-88"><a href="#RelationMixin.relation_delete-88"><span class="linenos">88</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="RelationMixin.relation_delete-89"><a href="#RelationMixin.relation_delete-89"><span class="linenos">89</span></a>
 </span><span id="RelationMixin.relation_delete-90"><a href="#RelationMixin.relation_delete-90"><span class="linenos">90</span></a><span class="sd">        If there is no open changeset,</span>
 </span><span id="RelationMixin.relation_delete-91"><a href="#RelationMixin.relation_delete-91"><span class="linenos">91</span></a><span class="sd">        `OsmApi.NoChangesetOpenError` is raised.</span>
@@ -665,7 +665,7 @@ otherwise the latest version is returned.</p>
             <div class="docstring"><p>Delete relation with <code>relation_data</code>.</p>
 
 <p>If no authentication information are provided,
-<code>OsmApi.UsernamePasswordMissingError</code> is raised.</p>
+<code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is no open changeset,
 <code>OsmApi.NoChangesetOpenError</code> is raised.</p>

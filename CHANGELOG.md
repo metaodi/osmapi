@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 * Fix TypeError in changeset_upload when handling HTTP 409 responses by @hagatopaxi in https://github.com/metaodi/osmapi/pull/196
+* fix/update example oauth code in readme by @tyrasd in https://github.com/metaodi/osmapi/pull/195
+
 
 ## [5.0.0] - 2026-02-18
 ### Changed

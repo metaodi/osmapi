@@ -11,7 +11,9 @@ osmapi
 
 Python wrapper for the OSM API (requires Python >= 3.10).
 
-**NOTE**: Since version 5.0 of this library, all method names are in `snake_case`, the `CamelCase` versions are deprecated and will be removed in version 6.0.
+**NOTE**: All method names of this library are in `snake_case` (e.g. `api.node_get(123)`).
+The deprecated `CamelCase` versions (e.g. `api.NodeGet(123)`) were removed in version 6.0,
+they have been deprecated since version 5.0.
 
 ## Installation
 

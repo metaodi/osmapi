@@ -47,11 +47,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NotesGet_deprecated(self):
-        self._session_mock(filenames=["test_notes_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NotesGet(-1.4998534, 45.9667901, -1.4831815, 52.4710193)
-
     def test_notes_get_empty(self):
         self._session_mock()
         result = self.api.notes_get(
@@ -101,21 +96,10 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NoteGet_deprecated(self):
-        self._session_mock(filenames=["test_note_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteGet(1111)
-
     def test_note_get_invalid_xml(self):
         self._session_mock()
         with self.assertRaises(osmapi.XmlResponseInvalidError):
             self.api.note_get(1111)
-
-    def test_NoteCreate_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_note_create.xml"])
-        note = {"lat": 47.123, "lon": 8.432, "text": "This is a test"}
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteCreate(note)
 
     def test_note_create(self):
         self._session_mock(auth=True)
@@ -151,12 +135,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_NoteCreateAnonymous_deprecated(self):
-        self._session_mock(filenames=["test_note_create.xml"])
-        note = {"lat": 47.123, "lon": 8.432, "text": "test 123"}
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteCreate(note)
-
     def test_note_create_anonymous(self):
         self._session_mock()
         note = {"lat": 47.123, "lon": 8.432, "text": "test 123"}
@@ -190,11 +168,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
                 ],
             },
         )
-
-    def test_NoteComment_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_note_comment.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteComment(812, "This is a comment")
 
     def test_note_comment(self):
         self._session_mock(auth=True)
@@ -236,11 +209,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
                 ],
             },
         )
-
-    def test_NoteCommentAnonymous_deprecated(self):
-        self._session_mock(filenames=["test_note_comment.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteComment(842, "blubb")
 
     def test_note_comment_anonymous(self):
         self._session_mock()
@@ -298,11 +266,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
             self.api.note_comment(817, "Comment on closed note")
         self.assertEqual(cm.exception.status, 404)
 
-    def test_NoteClose_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_note_close.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteClose(819, "Close this note!")
-
     def test_note_close(self):
         self._session_mock(auth=True)
         result = self.api.note_close(819, "Close this note!")
@@ -351,11 +314,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
         self.assertEqual(
             cm.exception.payload, "The note 819 was closed at 2022-04-29 20:57:20 UTC"
         )
-
-    def test_NoteReopen_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_note_reopen.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NoteReopen(815, "Reopen this note!")
 
     def test_note_reopen(self):
         self._session_mock(auth=True)
@@ -408,11 +366,6 @@ class TestOsmApiNotes(osmapi_test.TestOsmApi):
                 ],
             },
         )
-
-    def test_NotesSearch_deprecated(self):
-        self._session_mock(filenames=["test_notes_search.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NotesSearch("street")
 
     def test_notes_search(self):
         self._session_mock()

@@ -17,8 +17,3 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
                 "waynodes": {"maximum": 2000.0},
             },
         )
-
-    def test_Capabilities_deprecation_warning(self):
-        self._session_mock(filenames=["test_capabilities.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.Capabilities()

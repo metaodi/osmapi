@@ -47,11 +47,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_WayGet_deprecated(self):
-        self._session_mock(filenames=["test_way_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayGet(321)
-
     def test_way_get_with_version(self):
         self._session_mock()
         result = self.api.way_get(4294967296, 2)
@@ -61,11 +56,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertEqual(result["id"], 4294967296)
         self.assertEqual(result["changeset"], 41303)
         self.assertEqual(result["user"], "metaodi")
-
-    def test_WayGet_with_version_deprecated(self):
-        self._session_mock(filenames=["test_way_get_with_version.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayGet(4294967296, 2)
 
     def test_way_get_nodata(self):
         self._session_mock()
@@ -89,17 +79,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertEqual(result["id"], 5454)
         self.assertEqual(result["nd"], test_way["nd"])
         self.assertEqual(result["tag"], test_way["tag"])
-
-    def test_WayCreate_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_way_create.xml"])
-        self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._current_changeset_id = 2222
-        test_way = {
-            "nd": [11949, 11950],
-            "tag": {"highway": "unclassified", "name": "Osmapi Street"},
-        }
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayCreate(test_way)
 
     def test_way_create_existing_node(self):
         self.api.changeset_create = mock.Mock(return_value=1111)
@@ -133,18 +112,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertEqual(result["version"], 7)
         self.assertEqual(result["nd"], test_way["nd"])
         self.assertEqual(result["tag"], test_way["tag"])
-
-    def test_WayUpdate_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_way_update.xml"])
-        self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._current_changeset_id = 2222
-        test_way = {
-            "id": 876,
-            "nd": [11949, 11950],
-            "tag": {"highway": "unclassified", "name": "Osmapi Street Update"},
-        }
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayUpdate(test_way)
 
     def test_way_update_precondition_failed(self):
         self._session_mock(auth=True, status=412)
@@ -181,14 +148,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertEqual(result["id"], 876)
         self.assertEqual(result["version"], 8)
 
-    def test_WayDelete_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_way_delete.xml"])
-        self.api.changeset_create = mock.Mock(return_value=2222)
-        self.api._current_changeset_id = 2222
-        test_way = {"id": 876}
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayDelete(test_way)
-
     def test_way_history(self):
         self._session_mock()
         result = self.api.way_history(4294967296)
@@ -205,11 +164,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
                 "name": "Stansted Road",
             },
         )
-
-    def test_WayHistory_deprecated(self):
-        self._session_mock(filenames=["test_way_history.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayHistory(4294967296)
 
     def test_way_relations(self):
         self._session_mock()
@@ -235,11 +189,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_WayRelations_deprecated(self):
-        self._session_mock(filenames=["test_way_relations.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayRelations(4295032193)
-
     def test_way_relations_unused_element(self):
         self._session_mock()
         result = self.api.way_relations(4295032193)
@@ -263,11 +212,6 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertEqual(result[16]["data"]["changeset"], 298)
         self.assertEqual(result[16]["type"], "way")
 
-    def test_WayFull_deprecated(self):
-        self._session_mock(filenames=["test_way_full.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WayFull(321)
-
     def test_way_full_invalid_response(self):
         self._session_mock()
         with self.assertRaises(osmapi.XmlResponseInvalidError):
@@ -284,8 +228,3 @@ class TestOsmApiWay(osmapi_test.TestOsmApi):
         self.assertIs(type(result[678]), dict)
         with self.assertRaises(KeyError):
             self.assertIs(type(result[123]), dict)
-
-    def test_WaysGet_deprecated(self):
-        self._session_mock(filenames=["test_ways_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.WaysGet([456, 678])

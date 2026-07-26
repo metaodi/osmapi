@@ -40,11 +40,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_RelationGet_deprecated(self):
-        self._session_mock(filenames=["test_relation_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationGet(321)
-
     def test_relation_get_with_version(self):
         self._session_mock()
         result = self.api.relation_get(765, 2)
@@ -55,11 +50,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(result["changeset"], 41378)
         self.assertEqual(result["user"], "metaodi")
         self.assertEqual(result["tag"]["source"], "test")
-
-    def test_RelationGet_with_version_deprecated(self):
-        self._session_mock(filenames=["test_relation_get_with_version.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationGet(765, 2)
 
     def test_relation_create(self):
         self._session_mock(auth=True)
@@ -82,20 +72,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(result["version"], 1)
         self.assertEqual(result["member"], test_relation["member"])
         self.assertEqual(result["tag"], test_relation["tag"])
-
-    def test_RelationCreate_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_relation_create.xml"])
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {
-            "tag": {"type": "test"},
-            "member": [
-                {"ref": 6908, "role": "outer", "type": "way"},
-                {"ref": 6352, "role": "point", "type": "node"},
-            ],
-        }
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationCreate(test_relation)
 
     def test_relation_create_existing_node(self):
         self.api.changeset_create = mock.Mock(return_value=1111)
@@ -133,18 +109,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(result["member"], test_relation["member"])
         self.assertEqual(result["tag"], test_relation["tag"])
 
-    def test_RelationUpdate_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_relation_update.xml"])
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {
-            "id": 8989,
-            "tag": {"type": "test update"},
-            "member": [{"ref": 6908, "role": "outer", "type": "way"}],
-        }
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationUpdate(test_relation)
-
     def test_relation_delete(self):
         self._session_mock(auth=True)
         self.api.changeset_create = mock.Mock(return_value=3333)
@@ -158,14 +122,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(args[1], self.api_base + "/api/0.6/relation/8989")
         self.assertEqual(result["id"], 8989)
         self.assertEqual(result["version"], 43)
-
-    def test_RelationDelete_deprecated(self):
-        self._session_mock(auth=True, filenames=["test_relation_delete.xml"])
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {"id": 8989}
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationDelete(test_relation)
 
     def test_relation_history(self):
         self._session_mock()
@@ -185,11 +141,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         )
         self.assertEqual(result[2]["version"], 2)
 
-    def test_RelationHistory_deprecated(self):
-        self._session_mock(filenames=["test_relation_history.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationHistory(2470397)
-
     def test_relation_relations(self):
         self._session_mock()
         result = self.api.relation_relations(1532552)
@@ -202,11 +153,6 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(len(result[0]["member"]), 120)
         self.assertEqual(result[0]["tag"]["type"], "network")
         self.assertEqual(result[0]["tag"]["name"], "Aargauischer Radroutennetz")
-
-    def test_RelationRelations_deprecated(self):
-        self._session_mock(filenames=["test_relation_relations.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationRelations(1532552)
 
     def test_relation_relations_unused_element(self):
         self._session_mock()
@@ -247,20 +193,9 @@ class TestOsmApiRelation(osmapi_test.TestOsmApi):
         self.assertEqual(result[1532552]["visible"], True)
         self.assertEqual(result[1532552]["tag"]["route"], "bicycle")
 
-    def test_RelationsGet_deprecated(self):
-        self._session_mock(filenames=["test_relations_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationsGet([1532552, 1532553])
-
     def test_RelationFull_with_deleted_relation(self):
         self._session_mock(filenames=[], status=410)
 
         with self.assertRaises(osmapi.ElementDeletedApiError) as context:
             self.api.relation_full(2911456)
         self.assertEqual(410, context.exception.status)
-
-    def test_RelationFull_deprecated(self):
-        self._session_mock(filenames=["test_relation_full.xml"])
-
-        with self.assertWarns(DeprecationWarning):
-            self.api.RelationFull(2911456)

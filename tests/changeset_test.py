@@ -37,23 +37,6 @@ def test_changeset_contextmanager(auth_api, add_response):
     assert len(resp.calls) == 3
 
 
-def test_Changeset_contextmanager_deprecated(auth_api, add_response):
-    # Setup mock
-    resp = add_response(PUT, "/changeset/create", filename="test_changeset_create.xml")
-    resp = add_response(
-        PUT, "/changeset/1414/close", filename="test_changeset_close.xml"
-    )
-    import warnings
-
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        with auth_api.Changeset() as changeset_id:
-            assert changeset_id == 1414
-            assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
-    # check requests
-    assert len(resp.calls) == 2
-
-
 def test_changeset_get(api, add_response):
     # Setup mock
     add_response(GET, "/changeset/123")
@@ -76,16 +59,6 @@ def test_changeset_get(api, add_response):
         },
     }
     assert result == test_changeset
-
-
-def test_ChangesetGet_deprecated(api, add_response):
-    add_response(GET, "/changeset/123", filename="test_changeset_get.xml")
-    import warnings
-
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        api.ChangesetGet(123)
-        assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
 
 
 def test_changeset_get_with_connection_error(api, add_response):
@@ -652,16 +625,6 @@ def test_changesets_get(api, add_response):
     )
 
 
-def test_ChangesetsGet_deprecated(api, add_response):
-    add_response(GET, "/changesets", filename="test_changesets_get.xml")
-    import warnings
-
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        api.ChangesetsGet(only_closed=True, username="metaodi")
-        assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
-
-
 def test_changeset_get_with_comment(api, add_response):
     resp = add_response(GET, "/changeset/52924")
 
@@ -782,19 +745,6 @@ def test_changeset_subscribe(auth_api, add_response):
             "created_by": "Potlatch 1.2a",
         },
     }
-
-
-def test_ChangesetSubscribe_deprecated(auth_api, add_response):
-    add_response(
-        POST, "/changeset/123/subscribe", filename="test_changeset_subscribe.xml"
-    )
-
-    import warnings
-
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        auth_api.ChangesetSubscribe(123)
-        assert any(issubclass(warn.category, DeprecationWarning) for warn in w)
 
 
 def test_changeset_subscribe_when_already_subscribed(auth_api, add_response):

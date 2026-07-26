@@ -18,8 +18,8 @@ It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org
 ```
 osmapi/            the package
   __init__.py      __version__ + star-imports of OsmApi and errors
-  OsmApi.py        the OsmApi class: __init__, context manager, deprecated CamelCase
-                   wrappers, and the private _do()/_add_changeset_data()/_assign_id_and_version()
+  OsmApi.py        the OsmApi class: __init__, context manager, and the private
+                   _do()/_add_changeset_data()/_assign_id_and_version()
   node.py          NodeMixin        (node_get, node_create, nodes_get, ...)
   way.py           WayMixin         (way_get, way_full, ways_get, ...)
   relation.py      RelationMixin    (relation_get, relation_full_recur, ...)
@@ -70,15 +70,13 @@ node `lat`/`lon` are floats, way `nd` is a list of ints, relation `member` is a 
 
 ## Naming convention (important)
 
-Since **5.0**, the public API is `snake_case`. The `CamelCase` names still exist as thin wrappers in
-`OsmApi.py` that emit a `DeprecationWarning` (`stacklevel=2`) and delegate to the snake_case method. They are
-scheduled for removal in **6.0**.
+The public API is `snake_case`. The `CamelCase` names (`NodeGet`, `ChangesetCreate`, ...) were deprecated
+in **5.0** and **removed in 6.0** — there are no aliases left in `OsmApi.py`.
 
 When you add a new public method:
 
 - implement it in the appropriate mixin with a `snake_case` name and `snake_case` parameters;
-- do **not** add a new `CamelCase` alias — the deprecated set is frozen;
-- when you rename/remove an existing method, update its `CamelCase` wrapper in `OsmApi.py` accordingly.
+- do **not** add a `CamelCase` alias, not even for a method that used to have one.
 
 ## Docstrings
 
@@ -132,7 +130,6 @@ Note: `CONTRIBUTING.md` is outdated (it mentions `nosetests`, `tox` and Travis C
   When adding a test that needs a new response, add the fixture file named after the test.
 - Assert on the request too (method, URL, and body where relevant), not just the parsed result — that is what
   catches URI regressions.
-- Deprecated-alias coverage uses `with self.assertWarns(DeprecationWarning):`.
 
 ## Branches and releases
 

@@ -64,9 +64,9 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### OAuth authentication
 
-Username/Password authentication will be deprecated in July 2024
+Username/Password authentication is deprecated since July 2024
 (see [official OWG announcemnt](https://blog.openstreetmap.org/2024/04/17/oauth-1-0a-and-http-basic-auth-shutdown-on-openstreetmap-org/) for details).
-In order to use this library in the future, you'll need to use OAuth 2.0.
+In order to use this library, you need to use OAuth 2.0.
 
 To use OAuth 2.0, you must register an application with an OpenStreetMap account, either on the
 [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications)
@@ -85,7 +85,7 @@ client_id = "<client_id>"
 client_secret = "<client_secret>"
 
 auth = OpenStreetMapDevAuth(
-    client_id, client_secret, ['read_prefs', 'write_map']
+    client_id, client_secret, ['read_prefs', 'write_api']
 ).auth_code()
 
 api = osmapi.OsmApi(

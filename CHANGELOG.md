@@ -4,6 +4,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [5.1.0] - 2026-07-26
+### Changed
+* Bump pygments from 2.15.0 to 2.20.0 by @dependabot[bot] in https://github.com/metaodi/osmapi/pull/193
+
+### Added
+* Add support for PEP 517. by @sebastic in https://github.com/metaodi/osmapi/pull/197
+
+### Fixed
+* Fix TypeError in changeset_upload when handling HTTP 409 responses by @hagatopaxi in https://github.com/metaodi/osmapi/pull/196
+
 ## [5.0.0] - 2026-02-18
 ### Changed
 - **BC-Break**: Remove support for Python 3.8, new minimum version for osmapi is Python 3.9
@@ -379,7 +389,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.0.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.1.0...HEAD
+[5.1.0]: https://github.com/metaodi/osmapi/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/metaodi/osmapi/compare/v4.3.0...v5.0.0
 [4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/metaodi/osmapi/compare/v4.1.0...v4.2.0

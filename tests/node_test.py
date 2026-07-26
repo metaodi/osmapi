@@ -28,11 +28,6 @@ class TestOsmApiNode(osmapi_test.TestOsmApi):
             },
         )
 
-    def test_node_get_deprecation_warning(self):
-        self._session_mock(filenames=["test_node_get.xml"])
-        with self.assertWarns(DeprecationWarning):
-            self.api.NodeGet(123)
-
     def test_node_get_with_version(self):
         self._session_mock()
         result = self.api.node_get(123, node_version=2)

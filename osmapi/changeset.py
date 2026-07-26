@@ -7,7 +7,8 @@ import urllib.parse
 import xml.dom.minidom
 import xml.parsers.expat
 from contextlib import contextmanager
-from typing import Any, Optional, TYPE_CHECKING, Generator, cast
+from collections.abc import Generator
+from typing import Any, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
 from . import dom, errors, xmlbuilder, parser
@@ -21,7 +22,7 @@ class ChangesetMixin:
 
     @contextmanager
     def changeset(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> Generator[int, None, None]:
         """
         Context manager for a Changeset.
@@ -74,7 +75,7 @@ class ChangesetMixin:
         return dom.dom_parse_changeset(changeset, include_discussion=include_discussion)
 
     def changeset_update(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> int:
         """
         Updates current changeset with `changeset_tags`.
@@ -110,7 +111,7 @@ class ChangesetMixin:
         return self._current_changeset_id
 
     def changeset_create(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> int:
         """
         Opens a changeset.
@@ -258,14 +259,14 @@ class ChangesetMixin:
 
     def changesets_get(  # noqa: C901
         self: "OsmApi",
-        min_lon: Optional[float] = None,
-        min_lat: Optional[float] = None,
-        max_lon: Optional[float] = None,
-        max_lat: Optional[float] = None,
-        userid: Optional[int] = None,
-        username: Optional[str] = None,
-        closed_after: Optional[str] = None,
-        created_before: Optional[str] = None,
+        min_lon: float | None = None,
+        min_lat: float | None = None,
+        max_lon: float | None = None,
+        max_lat: float | None = None,
+        userid: int | None = None,
+        username: str | None = None,
+        closed_after: str | None = None,
+        created_before: str | None = None,
         only_open: bool = False,
         only_closed: bool = False,
     ) -> dict[int, dict[str, Any]]:

@@ -9,7 +9,7 @@ osmapi
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
-Python wrapper for the OSM API (requires Python >= 3.9).
+Python wrapper for the OSM API (requires Python >= 3.10).
 
 **NOTE**: Since version 5.0 of this library, all method names are in `snake_case`, the `CamelCase` versions are deprecated and will be removed in version 6.0.
 
@@ -129,11 +129,14 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 
 ## Development
 
-If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
+This project uses [uv](https://docs.astral.sh/uv/) to manage its virtual env and dependencies, see the [installation instructions](https://docs.astral.sh/uv/getting-started/installation/) to get it.
+
+If you want to help with the development of `osmapi`, you should clone this repository and install the dependencies:
 
     make deps
 
-Better yet use the provided [`setup.sh`](https://github.com/metaodi/osmapi/blob/develop/setup.sh) script to create a virtual env and install this package in it. 
+This creates a virtual env in `.venv` with `osmapi` and all its dev dependencies installed (the provided [`setup.sh`](https://github.com/metaodi/osmapi/blob/develop/setup.sh) script does the same thing).
+All the commands below run inside that env, there is no need to activate it manually.
 
 You can lint the source code using this command:
 
@@ -146,6 +149,10 @@ And if you want to reformat the files (using the black code style) simply run:
 To run the tests use the following command:
 
     make test
+
+To build the wheel and the source distribution locally:
+
+    make build
 
 ## Release
 

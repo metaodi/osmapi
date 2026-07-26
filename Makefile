@@ -1,30 +1,32 @@
 .DEFAULT_GOAL := help
-.PHONY: coverage deps help lint test docs
+.PHONY: build coverage deps format help lint test docs
+
+build:  ## Build the wheel and the source distribution
+	rm -rf dist
+	uv build
 
 coverage:  ## Run tests with coverage
-	python -m coverage erase
-	python -m coverage run --include=osmapi/* -m pytest -ra
-	python -m coverage report -m
+	uv run coverage erase
+	uv run coverage run --include=osmapi/* -m pytest -ra
+	uv run coverage report -m
 
 deps:  ## Install dependencies
-	python -m pip install --upgrade pip
-	python -m pip install -r requirements.txt
-	python -m pip install -r test-requirements.txt
-	pre-commit install
+	uv sync
+	uv run pre-commit install
 
 docs:  ## Generate documentation
-	python -m pdoc -o docs osmapi
+	uv run pdoc -o docs osmapi
 
 format:  ## Format source code (black codestyle)
-	python -m black osmapi examples tests *.py
+	uv run black osmapi examples tests
 
 lint:  ## Linting of source code
-	python -m black --check --diff osmapi examples tests *.py
-	python -m flake8 --statistics --show-source .
-	python -m mypy osmapi
+	uv run black --check --diff osmapi examples tests
+	uv run flake8 --statistics --show-source .
+	uv run mypy osmapi
 
 test:  ## Run tests (run in UTF-8 mode in Windows)
-	python -Xutf8 -m pytest --cov=osmapi tests/
+	uv run python -Xutf8 -m pytest --cov=osmapi tests/
 
 help: SHELL := /bin/bash
 help: ## Show help message

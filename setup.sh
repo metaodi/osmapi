@@ -1,7 +1,4 @@
 #!/bin/bash
 
-[ ! -d pyenv ] && python -m venv pyenv
-source pyenv/bin/activate
-
+# Create the virtualenv (.venv) and install all dependencies
 make deps
-pip install -e .

@@ -62,6 +62,22 @@ def auth_api():
 
 
 @pytest.fixture
+def unauthenticated_api():
+    """An OsmApi without a session, i.e. with no way to authenticate at all.
+
+    The `request` method of the session osmapi built for itself is mocked, so
+    a test can assert that no request was attempted. Returns an
+    `(api, session_mock)` tuple.
+    """
+    api = osmapi.OsmApi(api=API_BASE)
+    api._session._sleep = mock.Mock()
+    api._session._session.request = mock.Mock()
+
+    yield api, api._session._session
+    api.close()
+
+
+@pytest.fixture
 def changeset_api(auth_api):
     """An authenticated api with changeset `OPEN_CHANGESET_ID` already open.
 

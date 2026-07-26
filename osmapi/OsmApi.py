@@ -90,9 +90,16 @@ class OsmApi(
 
         The `session` parameter can be used to provide a custom requests
         http session object (requests.Session). This is how authentication
-        is provided: a session whose `auth` is set (e.g. by an OAuth 2.0
-        library) is used for authenticated requests. It is also useful for
-        custom adapters, hooks etc.
+        is provided: any session that authenticates its requests works, be it
+        by `session.auth`, by an `Authorization: Bearer` header, by a custom
+        adapter, or by a `Session` subclass that adds the token per request.
+        Sessions are also useful for custom adapters, hooks etc.
+
+        Without a session, requests that require authentication raise
+        `OsmApi.AuthenticationMissingError` before anything is sent. With a
+        session, they are sent as they are, and a missing or invalid
+        authorization is reported by the API as
+        `OsmApi.UnauthorizedApiError`.
 
         Finally the `timeout` parameter is used by the http session to
         throw an expcetion if the the timeout (in seconds) has passed without

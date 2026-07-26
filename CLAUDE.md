@@ -179,9 +179,17 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 ## Gotchas
 
 - Username/password auth was shut down by OSM (July 2024) and removed from osmapi in 6.0. Authentication
-  comes exclusively from the session: `OsmApiSession._auth` is read from `session.auth`, and a request that
-  needs auth without it raises `AuthenticationMissingError` before anything is sent. Examples and docs use
-  OAuth 2.0 by passing a prepared `requests.Session` via the `session=` parameter.
+  comes exclusively from the session; examples and docs use OAuth 2.0 by passing a prepared
+  `requests.Session` via the `session=` parameter. OSM only accepts a bearer token in the `Authorization`
+  header (`access_token_methods :from_bearer_authorization` in its Doorkeeper config) — there is no
+  query-parameter variant to support.
+- Don't reintroduce sniffing of `session.auth` to decide whether a request can be authenticated:
+  `OsmApiSession._can_authenticate` is `True` for *any* caller-supplied session, because credentials can
+  live where osmapi cannot see them (an `Authorization` header, a transport adapter, or a `Session`
+  subclass adding the token per request — `requests_oauthlib.OAuth2Session` sets `session.auth` to a no-op
+  lambda and injects the token in `request()`). `AuthenticationMissingError` is raised before sending only
+  when osmapi built the session itself; everything else is the API's 401 -> `UnauthorizedApiError`.
+  `_auth` still exists, but only to re-apply `session.auth` when the session is rebuilt between retries.
 - Deprecated error names live in `errors.DEPRECATED_ERROR_NAMES` and are resolved by the module-level
   `__getattr__` of both `osmapi/errors.py` and `osmapi/__init__.py` (the star-import doesn't pick up the
   hook, hence both). `UsernamePasswordMissingError` is such an alias and is due for removal in 7.0.

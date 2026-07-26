@@ -46,7 +46,7 @@ class RelationMixin:
         """
         Creates a relation based on the supplied `relation_data` dict.
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If the supplied information contain an existing relation,
@@ -66,7 +66,7 @@ class RelationMixin:
         """
         Updates relation with the supplied `relation_data` dict.
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
@@ -83,7 +83,7 @@ class RelationMixin:
         """
         Delete relation with `relation_data`.
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,

@@ -90,7 +90,7 @@ class NoteMixin:
 
         Returns the updated note.
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
         """
         path = f"/api/0.6/notes/{note_id}/close"
@@ -104,7 +104,7 @@ class NoteMixin:
 
         Returns the updated note.
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If the requested element has been deleted,

@@ -32,6 +32,18 @@ class OsmApiSession:
         # authentication is taken from the session (e.g. an OAuth 2.0 session)
         self._auth: Any = getattr(session, "auth", None)
 
+        # A caller-provided session can carry credentials in ways that are not
+        # visible from the outside: `session.auth`, an `Authorization` header,
+        # a custom transport adapter, or a `Session` subclass adding the token
+        # per request (this is what requests-oauthlib does). Sniffing
+        # `session.auth` therefore both rejects valid setups and accepts
+        # sessions without any token, so it is not used to make this decision:
+        # the only case in which authentication is certainly missing is a
+        # session that was built here, i.e. one the caller didn't provide.
+        # Everything else is sent, and the API answers with a 401 ->
+        # `UnauthorizedApiError` if the authorization really was missing.
+        self._can_authenticate: bool = session is not None
+
         self._http_session = session
         self._session = self._get_http_session()
 
@@ -63,8 +75,10 @@ class OsmApiSession:
         `return_value` indicates wheter this request should return
         any data or not.
 
-        If the request requires authentication, but the session is not
-        authenticated, `OsmApi.AuthenticationMissingError` is raised.
+        If the request requires authentication and no session was provided to
+        carry credentials, `OsmApi.AuthenticationMissingError` is raised. With
+        a session, the request is sent and a rejected authorization surfaces
+        as `OsmApi.UnauthorizedApiError` (HTTP 401).
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -80,10 +94,11 @@ class OsmApiSession:
         # Add API base URL to path
         path = self._api + path
 
-        if auth and not self._auth:
+        if auth and not self._can_authenticate:
             raise errors.AuthenticationMissingError(
                 "Authentication missing, this request requires an "
-                "authenticated session (see the OAuth 2.0 examples)"
+                "authenticated session, but no session was provided "
+                "(see the OAuth 2.0 examples)"
             )
 
         try:
@@ -193,7 +208,7 @@ class OsmApiSession:
         params: dict | None = None,
     ) -> bytes:
         # the Notes API allows certain POSTs by non-authenticated users
-        auth = optionalAuth and self._auth
+        auth = optionalAuth and self._can_authenticate
         if forceAuth:
             auth = True
         return self._http("POST", path, bool(auth), data, params=params)

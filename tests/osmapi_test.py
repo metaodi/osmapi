@@ -4,6 +4,7 @@ from unittest import mock
 
 import osmapi
 import pytest
+import requests
 
 from .conftest import API_BASE, authenticated_session
 
@@ -52,10 +53,11 @@ def test_no_changeset_open_initially():
     api.close()
 
 
-def test_constructor_without_session_is_unauthenticated():
+def test_constructor_without_session_cannot_authenticate():
     api = osmapi.OsmApi(api=API_BASE)
 
     assert api._session._auth is None
+    assert api._session._can_authenticate is False
     api.close()
 
 
@@ -64,6 +66,16 @@ def test_constructor_takes_auth_from_session():
     api = osmapi.OsmApi(api=API_BASE, session=authenticated_session())
 
     assert api._session._auth == ("testuser", "testpassword")
+    assert api._session._can_authenticate is True
+    api.close()
+
+
+def test_constructor_trusts_a_session_without_visible_credentials():
+    """A session may authenticate in ways osmapi cannot inspect."""
+    api = osmapi.OsmApi(api=API_BASE, session=requests.Session())
+
+    assert api._session._auth is None
+    assert api._session._can_authenticate is True
     api.close()
 
 

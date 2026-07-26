@@ -19,16 +19,20 @@ class MaximumRetryLimitReachedError(OsmApiError):
 
 class AuthenticationMissingError(OsmApiError):
     """
-    Error when a request requires authentication, but the session used to
-    make it is not authenticated.
+    Error when a request requires authentication, but no session was provided
+    that could carry credentials.
 
     Pass an authenticated `requests.Session` (e.g. an OAuth 2.0 session, see
     the [README](https://github.com/metaodi/osmapi#oauth-authentication)) to
     `OsmApi` to make authenticated requests.
 
-    This error is raised before the request is sent, i.e. it means osmapi
-    itself found no credentials. If credentials were sent but rejected by the
-    API, `OsmApi.UnauthorizedApiError` is raised instead.
+    This error is raised before the request is sent, and only when `OsmApi`
+    created the http session itself — in that case there is no way for the
+    request to be authenticated. A session that was passed in is never
+    second-guessed (it can carry a token in `session.auth`, in an
+    `Authorization` header, in a transport adapter, or add it per request),
+    so a missing or invalid authorization on such a session is reported by
+    the API as `OsmApi.UnauthorizedApiError` (HTTP 401) instead.
 
     Before version 6.0 this error was called `UsernamePasswordMissingError`.
     That name still works, but it is deprecated and will be removed in

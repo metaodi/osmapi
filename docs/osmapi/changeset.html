@@ -139,7 +139,7 @@
 </span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">        that an error does not leave a changeset dangling and block the next</span>
 </span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">        one with an `OsmApi.ChangesetAlreadyOpenError`.</span>
 </span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
 </span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -180,7 +180,7 @@
 </span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        Updates current changeset with `changeset_tags`.</span>
 </span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
 </span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        If there is no open changeset,</span>
@@ -220,7 +220,7 @@
 </span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
 </span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">        Returns `changeset_id`</span>
 </span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
 </span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -255,7 +255,7 @@
 </span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>
 </span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">        Returns `changeset_id`.</span>
 </span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
 </span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        If there is no open changeset,</span>
@@ -291,7 +291,7 @@
 </span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>
 </span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a><span class="sd">        Returns list with updated ids.</span>
 </span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>
-</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>
 </span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -422,7 +422,7 @@
 </span><span id="L-328"><a href="#L-328"><span class="linenos">328</span></a>
 </span><span id="L-329"><a href="#L-329"><span class="linenos">329</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="L-330"><a href="#L-330"><span class="linenos">330</span></a>
-</span><span id="L-331"><a href="#L-331"><span class="linenos">331</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-331"><a href="#L-331"><span class="linenos">331</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-332"><a href="#L-332"><span class="linenos">332</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-333"><a href="#L-333"><span class="linenos">333</span></a>
 </span><span id="L-334"><a href="#L-334"><span class="linenos">334</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -454,7 +454,7 @@
 </span><span id="L-360"><a href="#L-360"><span class="linenos">360</span></a>
 </span><span id="L-361"><a href="#L-361"><span class="linenos">361</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="L-362"><a href="#L-362"><span class="linenos">362</span></a>
-</span><span id="L-363"><a href="#L-363"><span class="linenos">363</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-363"><a href="#L-363"><span class="linenos">363</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-364"><a href="#L-364"><span class="linenos">364</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-365"><a href="#L-365"><span class="linenos">365</span></a>
 </span><span id="L-366"><a href="#L-366"><span class="linenos">366</span></a><span class="sd">        If already subscribed to this changeset,</span>
@@ -485,7 +485,7 @@
 </span><span id="L-391"><a href="#L-391"><span class="linenos">391</span></a>
 </span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="L-393"><a href="#L-393"><span class="linenos">393</span></a>
-</span><span id="L-394"><a href="#L-394"><span class="linenos">394</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="L-394"><a href="#L-394"><span class="linenos">394</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="L-395"><a href="#L-395"><span class="linenos">395</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="L-396"><a href="#L-396"><span class="linenos">396</span></a>
 </span><span id="L-397"><a href="#L-397"><span class="linenos">397</span></a><span class="sd">        If not subscribed to this changeset,</span>
@@ -550,7 +550,7 @@
 </span><span id="ChangesetMixin-46"><a href="#ChangesetMixin-46"><span class="linenos"> 46</span></a><span class="sd">        that an error does not leave a changeset dangling and block the next</span>
 </span><span id="ChangesetMixin-47"><a href="#ChangesetMixin-47"><span class="linenos"> 47</span></a><span class="sd">        one with an `OsmApi.ChangesetAlreadyOpenError`.</span>
 </span><span id="ChangesetMixin-48"><a href="#ChangesetMixin-48"><span class="linenos"> 48</span></a>
-</span><span id="ChangesetMixin-49"><a href="#ChangesetMixin-49"><span class="linenos"> 49</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-49"><a href="#ChangesetMixin-49"><span class="linenos"> 49</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-50"><a href="#ChangesetMixin-50"><span class="linenos"> 50</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-51"><a href="#ChangesetMixin-51"><span class="linenos"> 51</span></a>
 </span><span id="ChangesetMixin-52"><a href="#ChangesetMixin-52"><span class="linenos"> 52</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -591,7 +591,7 @@
 </span><span id="ChangesetMixin-87"><a href="#ChangesetMixin-87"><span class="linenos"> 87</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="ChangesetMixin-88"><a href="#ChangesetMixin-88"><span class="linenos"> 88</span></a><span class="sd">        Updates current changeset with `changeset_tags`.</span>
 </span><span id="ChangesetMixin-89"><a href="#ChangesetMixin-89"><span class="linenos"> 89</span></a>
-</span><span id="ChangesetMixin-90"><a href="#ChangesetMixin-90"><span class="linenos"> 90</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-90"><a href="#ChangesetMixin-90"><span class="linenos"> 90</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-91"><a href="#ChangesetMixin-91"><span class="linenos"> 91</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-92"><a href="#ChangesetMixin-92"><span class="linenos"> 92</span></a>
 </span><span id="ChangesetMixin-93"><a href="#ChangesetMixin-93"><span class="linenos"> 93</span></a><span class="sd">        If there is no open changeset,</span>
@@ -631,7 +631,7 @@
 </span><span id="ChangesetMixin-127"><a href="#ChangesetMixin-127"><span class="linenos">127</span></a>
 </span><span id="ChangesetMixin-128"><a href="#ChangesetMixin-128"><span class="linenos">128</span></a><span class="sd">        Returns `changeset_id`</span>
 </span><span id="ChangesetMixin-129"><a href="#ChangesetMixin-129"><span class="linenos">129</span></a>
-</span><span id="ChangesetMixin-130"><a href="#ChangesetMixin-130"><span class="linenos">130</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-130"><a href="#ChangesetMixin-130"><span class="linenos">130</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-131"><a href="#ChangesetMixin-131"><span class="linenos">131</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-132"><a href="#ChangesetMixin-132"><span class="linenos">132</span></a>
 </span><span id="ChangesetMixin-133"><a href="#ChangesetMixin-133"><span class="linenos">133</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -666,7 +666,7 @@
 </span><span id="ChangesetMixin-162"><a href="#ChangesetMixin-162"><span class="linenos">162</span></a>
 </span><span id="ChangesetMixin-163"><a href="#ChangesetMixin-163"><span class="linenos">163</span></a><span class="sd">        Returns `changeset_id`.</span>
 </span><span id="ChangesetMixin-164"><a href="#ChangesetMixin-164"><span class="linenos">164</span></a>
-</span><span id="ChangesetMixin-165"><a href="#ChangesetMixin-165"><span class="linenos">165</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-165"><a href="#ChangesetMixin-165"><span class="linenos">165</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-166"><a href="#ChangesetMixin-166"><span class="linenos">166</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-167"><a href="#ChangesetMixin-167"><span class="linenos">167</span></a>
 </span><span id="ChangesetMixin-168"><a href="#ChangesetMixin-168"><span class="linenos">168</span></a><span class="sd">        If there is no open changeset,</span>
@@ -702,7 +702,7 @@
 </span><span id="ChangesetMixin-198"><a href="#ChangesetMixin-198"><span class="linenos">198</span></a>
 </span><span id="ChangesetMixin-199"><a href="#ChangesetMixin-199"><span class="linenos">199</span></a><span class="sd">        Returns list with updated ids.</span>
 </span><span id="ChangesetMixin-200"><a href="#ChangesetMixin-200"><span class="linenos">200</span></a>
-</span><span id="ChangesetMixin-201"><a href="#ChangesetMixin-201"><span class="linenos">201</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-201"><a href="#ChangesetMixin-201"><span class="linenos">201</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-202"><a href="#ChangesetMixin-202"><span class="linenos">202</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-203"><a href="#ChangesetMixin-203"><span class="linenos">203</span></a>
 </span><span id="ChangesetMixin-204"><a href="#ChangesetMixin-204"><span class="linenos">204</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -833,7 +833,7 @@
 </span><span id="ChangesetMixin-329"><a href="#ChangesetMixin-329"><span class="linenos">329</span></a>
 </span><span id="ChangesetMixin-330"><a href="#ChangesetMixin-330"><span class="linenos">330</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin-331"><a href="#ChangesetMixin-331"><span class="linenos">331</span></a>
-</span><span id="ChangesetMixin-332"><a href="#ChangesetMixin-332"><span class="linenos">332</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-332"><a href="#ChangesetMixin-332"><span class="linenos">332</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-333"><a href="#ChangesetMixin-333"><span class="linenos">333</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-334"><a href="#ChangesetMixin-334"><span class="linenos">334</span></a>
 </span><span id="ChangesetMixin-335"><a href="#ChangesetMixin-335"><span class="linenos">335</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -865,7 +865,7 @@
 </span><span id="ChangesetMixin-361"><a href="#ChangesetMixin-361"><span class="linenos">361</span></a>
 </span><span id="ChangesetMixin-362"><a href="#ChangesetMixin-362"><span class="linenos">362</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin-363"><a href="#ChangesetMixin-363"><span class="linenos">363</span></a>
-</span><span id="ChangesetMixin-364"><a href="#ChangesetMixin-364"><span class="linenos">364</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-364"><a href="#ChangesetMixin-364"><span class="linenos">364</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-365"><a href="#ChangesetMixin-365"><span class="linenos">365</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-366"><a href="#ChangesetMixin-366"><span class="linenos">366</span></a>
 </span><span id="ChangesetMixin-367"><a href="#ChangesetMixin-367"><span class="linenos">367</span></a><span class="sd">        If already subscribed to this changeset,</span>
@@ -896,7 +896,7 @@
 </span><span id="ChangesetMixin-392"><a href="#ChangesetMixin-392"><span class="linenos">392</span></a>
 </span><span id="ChangesetMixin-393"><a href="#ChangesetMixin-393"><span class="linenos">393</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin-394"><a href="#ChangesetMixin-394"><span class="linenos">394</span></a>
-</span><span id="ChangesetMixin-395"><a href="#ChangesetMixin-395"><span class="linenos">395</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin-395"><a href="#ChangesetMixin-395"><span class="linenos">395</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin-396"><a href="#ChangesetMixin-396"><span class="linenos">396</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin-397"><a href="#ChangesetMixin-397"><span class="linenos">397</span></a>
 </span><span id="ChangesetMixin-398"><a href="#ChangesetMixin-398"><span class="linenos">398</span></a><span class="sd">        If not subscribed to this changeset,</span>
@@ -962,7 +962,7 @@
 </span><span id="ChangesetMixin.changeset-46"><a href="#ChangesetMixin.changeset-46"><span class="linenos">46</span></a><span class="sd">        that an error does not leave a changeset dangling and block the next</span>
 </span><span id="ChangesetMixin.changeset-47"><a href="#ChangesetMixin.changeset-47"><span class="linenos">47</span></a><span class="sd">        one with an `OsmApi.ChangesetAlreadyOpenError`.</span>
 </span><span id="ChangesetMixin.changeset-48"><a href="#ChangesetMixin.changeset-48"><span class="linenos">48</span></a>
-</span><span id="ChangesetMixin.changeset-49"><a href="#ChangesetMixin.changeset-49"><span class="linenos">49</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset-49"><a href="#ChangesetMixin.changeset-49"><span class="linenos">49</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset-50"><a href="#ChangesetMixin.changeset-50"><span class="linenos">50</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset-51"><a href="#ChangesetMixin.changeset-51"><span class="linenos">51</span></a>
 </span><span id="ChangesetMixin.changeset-52"><a href="#ChangesetMixin.changeset-52"><span class="linenos">52</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -1000,7 +1000,7 @@ with api.changeset({"comment": "Import script XYZ"}) as changeset_id:
 that an error does not leave a changeset dangling and block the next
 one with an <code>OsmApi.ChangesetAlreadyOpenError</code>.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is already an open changeset,
@@ -1069,7 +1069,7 @@ will be available in the result.</p>
 </span><span id="ChangesetMixin.changeset_update-87"><a href="#ChangesetMixin.changeset_update-87"><span class="linenos"> 87</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="ChangesetMixin.changeset_update-88"><a href="#ChangesetMixin.changeset_update-88"><span class="linenos"> 88</span></a><span class="sd">        Updates current changeset with `changeset_tags`.</span>
 </span><span id="ChangesetMixin.changeset_update-89"><a href="#ChangesetMixin.changeset_update-89"><span class="linenos"> 89</span></a>
-</span><span id="ChangesetMixin.changeset_update-90"><a href="#ChangesetMixin.changeset_update-90"><span class="linenos"> 90</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_update-90"><a href="#ChangesetMixin.changeset_update-90"><span class="linenos"> 90</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_update-91"><a href="#ChangesetMixin.changeset_update-91"><span class="linenos"> 91</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_update-92"><a href="#ChangesetMixin.changeset_update-92"><span class="linenos"> 92</span></a>
 </span><span id="ChangesetMixin.changeset_update-93"><a href="#ChangesetMixin.changeset_update-93"><span class="linenos"> 93</span></a><span class="sd">        If there is no open changeset,</span>
@@ -1103,7 +1103,7 @@ will be available in the result.</p>
 
             <div class="docstring"><p>Updates current changeset with <code>changeset_tags</code>.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is no open changeset,
@@ -1136,7 +1136,7 @@ will be available in the result.</p>
 </span><span id="ChangesetMixin.changeset_create-127"><a href="#ChangesetMixin.changeset_create-127"><span class="linenos">127</span></a>
 </span><span id="ChangesetMixin.changeset_create-128"><a href="#ChangesetMixin.changeset_create-128"><span class="linenos">128</span></a><span class="sd">        Returns `changeset_id`</span>
 </span><span id="ChangesetMixin.changeset_create-129"><a href="#ChangesetMixin.changeset_create-129"><span class="linenos">129</span></a>
-</span><span id="ChangesetMixin.changeset_create-130"><a href="#ChangesetMixin.changeset_create-130"><span class="linenos">130</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_create-130"><a href="#ChangesetMixin.changeset_create-130"><span class="linenos">130</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_create-131"><a href="#ChangesetMixin.changeset_create-131"><span class="linenos">131</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_create-132"><a href="#ChangesetMixin.changeset_create-132"><span class="linenos">132</span></a>
 </span><span id="ChangesetMixin.changeset_create-133"><a href="#ChangesetMixin.changeset_create-133"><span class="linenos">133</span></a><span class="sd">        If there is already an open changeset,</span>
@@ -1173,7 +1173,7 @@ will be available in the result.</p>
 
 <p>Returns <code>changeset_id</code></p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is already an open changeset,
@@ -1199,7 +1199,7 @@ will be available in the result.</p>
 </span><span id="ChangesetMixin.changeset_close-162"><a href="#ChangesetMixin.changeset_close-162"><span class="linenos">162</span></a>
 </span><span id="ChangesetMixin.changeset_close-163"><a href="#ChangesetMixin.changeset_close-163"><span class="linenos">163</span></a><span class="sd">        Returns `changeset_id`.</span>
 </span><span id="ChangesetMixin.changeset_close-164"><a href="#ChangesetMixin.changeset_close-164"><span class="linenos">164</span></a>
-</span><span id="ChangesetMixin.changeset_close-165"><a href="#ChangesetMixin.changeset_close-165"><span class="linenos">165</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_close-165"><a href="#ChangesetMixin.changeset_close-165"><span class="linenos">165</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_close-166"><a href="#ChangesetMixin.changeset_close-166"><span class="linenos">166</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_close-167"><a href="#ChangesetMixin.changeset_close-167"><span class="linenos">167</span></a>
 </span><span id="ChangesetMixin.changeset_close-168"><a href="#ChangesetMixin.changeset_close-168"><span class="linenos">168</span></a><span class="sd">        If there is no open changeset,</span>
@@ -1233,7 +1233,7 @@ will be available in the result.</p>
 
 <p>Returns <code>changeset_id</code>.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If there is no open changeset,
@@ -1264,7 +1264,7 @@ will be available in the result.</p>
 </span><span id="ChangesetMixin.changeset_upload-198"><a href="#ChangesetMixin.changeset_upload-198"><span class="linenos">198</span></a>
 </span><span id="ChangesetMixin.changeset_upload-199"><a href="#ChangesetMixin.changeset_upload-199"><span class="linenos">199</span></a><span class="sd">        Returns list with updated ids.</span>
 </span><span id="ChangesetMixin.changeset_upload-200"><a href="#ChangesetMixin.changeset_upload-200"><span class="linenos">200</span></a>
-</span><span id="ChangesetMixin.changeset_upload-201"><a href="#ChangesetMixin.changeset_upload-201"><span class="linenos">201</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_upload-201"><a href="#ChangesetMixin.changeset_upload-201"><span class="linenos">201</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_upload-202"><a href="#ChangesetMixin.changeset_upload-202"><span class="linenos">202</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_upload-203"><a href="#ChangesetMixin.changeset_upload-203"><span class="linenos">203</span></a>
 </span><span id="ChangesetMixin.changeset_upload-204"><a href="#ChangesetMixin.changeset_upload-204"><span class="linenos">204</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -1321,7 +1321,7 @@ will be available in the result.</p>
 
 <p>Returns list with updated ids.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If the changeset is already closed,
@@ -1465,7 +1465,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 </span><span id="ChangesetMixin.changeset_comment-329"><a href="#ChangesetMixin.changeset_comment-329"><span class="linenos">329</span></a>
 </span><span id="ChangesetMixin.changeset_comment-330"><a href="#ChangesetMixin.changeset_comment-330"><span class="linenos">330</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin.changeset_comment-331"><a href="#ChangesetMixin.changeset_comment-331"><span class="linenos">331</span></a>
-</span><span id="ChangesetMixin.changeset_comment-332"><a href="#ChangesetMixin.changeset_comment-332"><span class="linenos">332</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_comment-332"><a href="#ChangesetMixin.changeset_comment-332"><span class="linenos">332</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_comment-333"><a href="#ChangesetMixin.changeset_comment-333"><span class="linenos">333</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_comment-334"><a href="#ChangesetMixin.changeset_comment-334"><span class="linenos">334</span></a>
 </span><span id="ChangesetMixin.changeset_comment-335"><a href="#ChangesetMixin.changeset_comment-335"><span class="linenos">335</span></a><span class="sd">        If the changeset is already closed,</span>
@@ -1499,7 +1499,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 
 <p>Returns the updated changeset data dict.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If the changeset is already closed,
@@ -1525,7 +1525,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 </span><span id="ChangesetMixin.changeset_subscribe-361"><a href="#ChangesetMixin.changeset_subscribe-361"><span class="linenos">361</span></a>
 </span><span id="ChangesetMixin.changeset_subscribe-362"><a href="#ChangesetMixin.changeset_subscribe-362"><span class="linenos">362</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin.changeset_subscribe-363"><a href="#ChangesetMixin.changeset_subscribe-363"><span class="linenos">363</span></a>
-</span><span id="ChangesetMixin.changeset_subscribe-364"><a href="#ChangesetMixin.changeset_subscribe-364"><span class="linenos">364</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_subscribe-364"><a href="#ChangesetMixin.changeset_subscribe-364"><span class="linenos">364</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_subscribe-365"><a href="#ChangesetMixin.changeset_subscribe-365"><span class="linenos">365</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_subscribe-366"><a href="#ChangesetMixin.changeset_subscribe-366"><span class="linenos">366</span></a>
 </span><span id="ChangesetMixin.changeset_subscribe-367"><a href="#ChangesetMixin.changeset_subscribe-367"><span class="linenos">367</span></a><span class="sd">        If already subscribed to this changeset,</span>
@@ -1556,7 +1556,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 
 <p>Returns the updated changeset data dict.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If already subscribed to this changeset,
@@ -1582,7 +1582,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 </span><span id="ChangesetMixin.changeset_unsubscribe-392"><a href="#ChangesetMixin.changeset_unsubscribe-392"><span class="linenos">392</span></a>
 </span><span id="ChangesetMixin.changeset_unsubscribe-393"><a href="#ChangesetMixin.changeset_unsubscribe-393"><span class="linenos">393</span></a><span class="sd">        Returns the updated changeset data dict.</span>
 </span><span id="ChangesetMixin.changeset_unsubscribe-394"><a href="#ChangesetMixin.changeset_unsubscribe-394"><span class="linenos">394</span></a>
-</span><span id="ChangesetMixin.changeset_unsubscribe-395"><a href="#ChangesetMixin.changeset_unsubscribe-395"><span class="linenos">395</span></a><span class="sd">        If no authentication information are provided,</span>
+</span><span id="ChangesetMixin.changeset_unsubscribe-395"><a href="#ChangesetMixin.changeset_unsubscribe-395"><span class="linenos">395</span></a><span class="sd">        If no session is provided to authenticate the request,</span>
 </span><span id="ChangesetMixin.changeset_unsubscribe-396"><a href="#ChangesetMixin.changeset_unsubscribe-396"><span class="linenos">396</span></a><span class="sd">        `OsmApi.AuthenticationMissingError` is raised.</span>
 </span><span id="ChangesetMixin.changeset_unsubscribe-397"><a href="#ChangesetMixin.changeset_unsubscribe-397"><span class="linenos">397</span></a>
 </span><span id="ChangesetMixin.changeset_unsubscribe-398"><a href="#ChangesetMixin.changeset_unsubscribe-398"><span class="linenos">398</span></a><span class="sd">        If not subscribed to this changeset,</span>
@@ -1611,7 +1611,7 @@ four of <code>min_lon</code>, <code>min_lat</code>, <code>max_lon</code> and <co
 
 <p>Returns the updated changeset data dict.</p>
 
-<p>If no authentication information are provided,
+<p>If no session is provided to authenticate the request,
 <code>OsmApi.AuthenticationMissingError</code> is raised.</p>
 
 <p>If not subscribed to this changeset,

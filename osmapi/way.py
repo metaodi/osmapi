@@ -73,7 +73,7 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If the supplied information contain an existing node,
@@ -116,7 +116,7 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
@@ -156,7 +156,7 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
+        If no session is provided to authenticate the request,
         `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,

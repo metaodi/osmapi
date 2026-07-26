@@ -61,16 +61,47 @@ def test_http_request_auth(mock_api):
     assert response == "test response"
 
 
-def test_http_request_auth_missing_credentials(mock_api):
-    api, session = mock_api(auth=False)
+def test_http_request_auth_without_session(unauthenticated_api):
+    """Without a session there is no way to authenticate, so osmapi refuses."""
+    api, session = unauthenticated_api
 
     with pytest.raises(
-        osmapi.AuthenticationMissingError, match="Authentication missing"
+        osmapi.AuthenticationMissingError, match="no session was provided"
     ):
         api._session._http_request("PUT", "/api/0.6/testauth", True, None)
 
     # the request is never attempted
     assert session.request.call_count == 0
+
+
+def test_http_request_auth_with_session_without_credentials(mock_api):
+    """A session is never second-guessed: the request is sent, the API decides.
+
+    `session.auth` is not a reliable signal — requests-oauthlib sets it to a
+    no-op lambda and adds the token per request, others only set an
+    `Authorization` header — so a session without visible credentials is
+    still sent, and a real authorization problem comes back as a 401.
+    """
+    api, session = mock_api(auth=False)
+
+    response = api._session._http_request("PUT", "/api/0.6/testauth", True, None)
+
+    assert session.request.call_count == 1
+    assert response == "test response"
+
+
+def test_http_request_auth_with_authorization_header():
+    """The setup OSM actually uses: a bearer token, no `session.auth` at all."""
+    session = requests.Session()
+    session.headers["Authorization"] = "Bearer test-token"
+    session.request = mock.Mock(return_value=make_http_response())
+    api = osmapi.OsmApi(api=API_BASE, session=session)
+
+    response = api._session._http_request("PUT", "/api/0.6/testauth", True, None)
+
+    assert session.request.call_count == 1
+    assert response == "test response"
+    api.close()
 
 
 @pytest.mark.parametrize(
@@ -185,8 +216,8 @@ def test_http_does_not_retry_client_error(mock_api):
     assert api._session._sleep.call_count == 0
 
 
-def test_http_does_not_retry_missing_credentials(mock_api):
-    api, session = mock_api(auth=False)
+def test_http_does_not_retry_missing_authentication(unauthenticated_api):
+    api, session = unauthenticated_api
 
     with pytest.raises(osmapi.AuthenticationMissingError):
         api._session._http("PUT", "/api/0.6/test", True, None)

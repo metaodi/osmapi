@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [5.1.0] - 2026-07-26
 ### Changed
 * Bump pygments from 2.15.0 to 2.20.0 by @dependabot[bot] in https://github.com/metaodi/osmapi/pull/193
 

@@ -14,6 +14,11 @@ It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org
 - Runtime dependency: **`requests` only** (`[project] dependencies`). Do not add new runtime dependencies
   without a very good reason — everything in `[dependency-groups]` (`dev`, `docs`, `lint`, `test`) is
   dev/test tooling.
+- Version constraints: runtime deps get a **lower bound only** — never cap a dependency (`<`) in a library,
+  the cap propagates into every downstream resolver. Dev tools get `>=` floors at the versions currently
+  locked, except `black`, `pdoc` and `Pygments`, which are pinned exactly because a bump rewrites the whole
+  code base / the committed `docs/`. Constraints also matter for Dependabot: it skips dependencies declared
+  without any specifier, so a new dependency needs at least a floor to be tracked.
 - Supported Python: **>= 3.10** (CI matrix: 3.10, 3.11, 3.12, 3.13, 3.14).
 - License: GPLv3. Originally written by Etienne Chové, maintained by Stefan Oderbolz (metaodi).
 

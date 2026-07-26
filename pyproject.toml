@@ -23,7 +23,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = ["requests"]
+# Lower bound only: osmapi only uses the long-stable parts of the requests API
+# (Session, Session.request and the exception classes). Never add an upper bound
+# here, a cap in a library propagates into every downstream resolver.
+dependencies = ["requests>=2.25.0"]
 dynamic = ["version"]
 
 [project.urls]
@@ -37,17 +40,22 @@ dev = [
     { include-group = "docs" },
     { include-group = "lint" },
     { include-group = "test" },
-    "pre-commit",
+    "pre-commit>=4.6",
 ]
+# pdoc and Pygments are pinned exactly: they render the committed docs/ HTML,
+# a bump rewrites every file in there and should be its own reviewable change.
 docs = ["pdoc==14.5.1", "Pygments==2.20.0"]
-lint = ["black==26.3.1", "flake8", "mypy", "types-requests"]
+# black is pinned exactly (and must match the rev in .pre-commit-config.yaml),
+# a bump reformats the whole code base. The flake8/mypy floors keep the local
+# tools from being older than the versions the pre-commit hooks run.
+lint = ["black==26.3.1", "flake8>=7.3", "mypy>=2.3", "types-requests>=2.33"]
 test = [
-    "pytest",
-    "pytest-cov",
-    "coverage",
-    "responses",
-    "xmltodict",
-    "python-dotenv",
+    "pytest>=9.1",
+    "pytest-cov>=7.1",
+    "coverage>=7.15",
+    "responses>=0.26",
+    "xmltodict>=1.0",
+    "python-dotenv>=1.2",
 ]
 
 [tool.setuptools.dynamic]

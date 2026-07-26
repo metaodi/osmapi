@@ -44,11 +44,11 @@ dev = [
 ]
 # pdoc and Pygments are pinned exactly: they render the committed docs/ HTML,
 # a bump rewrites every file in there and should be its own reviewable change.
-docs = ["pdoc==14.5.1", "Pygments==2.20.0"]
+docs = ["pdoc==16.0.0", "Pygments==2.20.0"]
 # black is pinned exactly (and must match the rev in .pre-commit-config.yaml),
 # a bump reformats the whole code base. The flake8/mypy floors keep the local
 # tools from being older than the versions the pre-commit hooks run.
-lint = ["black==26.3.1", "flake8>=7.3", "mypy>=2.3", "types-requests>=2.33"]
+lint = ["black==26.5.1", "flake8>=7.3", "mypy>=2.3", "types-requests>=2.33"]
 test = [
     "pytest>=9.1",
     "pytest-cov>=7.1",

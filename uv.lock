@@ -705,23 +705,23 @@ test = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "requests" }]
+requires-dist = [{ name = "requests", specifier = ">=2.25.0" }]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "black", specifier = "==26.3.1" },
-    { name = "coverage" },
-    { name = "flake8" },
-    { name = "mypy" },
+    { name = "coverage", specifier = ">=7.15" },
+    { name = "flake8", specifier = ">=7.3" },
+    { name = "mypy", specifier = ">=2.3" },
     { name = "pdoc", specifier = "==14.5.1" },
-    { name = "pre-commit" },
+    { name = "pre-commit", specifier = ">=4.6" },
     { name = "pygments", specifier = "==2.20.0" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "python-dotenv" },
-    { name = "responses" },
-    { name = "types-requests" },
-    { name = "xmltodict" },
+    { name = "pytest", specifier = ">=9.1" },
+    { name = "pytest-cov", specifier = ">=7.1" },
+    { name = "python-dotenv", specifier = ">=1.2" },
+    { name = "responses", specifier = ">=0.26" },
+    { name = "types-requests", specifier = ">=2.33" },
+    { name = "xmltodict", specifier = ">=1.0" },
 ]
 docs = [
     { name = "pdoc", specifier = "==14.5.1" },
@@ -729,17 +729,17 @@ docs = [
 ]
 lint = [
     { name = "black", specifier = "==26.3.1" },
-    { name = "flake8" },
-    { name = "mypy" },
-    { name = "types-requests" },
+    { name = "flake8", specifier = ">=7.3" },
+    { name = "mypy", specifier = ">=2.3" },
+    { name = "types-requests", specifier = ">=2.33" },
 ]
 test = [
-    { name = "coverage" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "python-dotenv" },
-    { name = "responses" },
-    { name = "xmltodict" },
+    { name = "coverage", specifier = ">=7.15" },
+    { name = "pytest", specifier = ">=9.1" },
+    { name = "pytest-cov", specifier = ">=7.1" },
+    { name = "python-dotenv", specifier = ">=1.2" },
+    { name = "responses", specifier = ">=0.26" },
+    { name = "xmltodict", specifier = ">=1.0" },
 ]
 
 [[package]]

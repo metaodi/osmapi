@@ -8,9 +8,18 @@ Guidance for AI assistants working in this repository.
 It is a library (no CLI, no server), published on [PyPI](https://pypi.python.org/pypi/osmapi) and documented at
 <http://osmapi.metaodi.ch> (GitHub Pages, served from the `main` branch via `docs/` + `CNAME`).
 
-- Runtime dependency: **`requests` only** (`setup.py` `install_requires`). Do not add new runtime dependencies
-  without a very good reason — everything else in `test-requirements.txt` is dev/test tooling.
-- Supported Python: **>= 3.9** (CI matrix: 3.9, 3.10, 3.11, 3.12).
+- Packaging: PEP 621 `pyproject.toml` (setuptools backend), dependencies and virtual env managed with
+  [uv](https://docs.astral.sh/uv/); `uv.lock` is committed. There is no `setup.py`, `setup.cfg` or
+  `requirements.txt` anymore.
+- Runtime dependency: **`requests` only** (`[project] dependencies`). Do not add new runtime dependencies
+  without a very good reason — everything in `[dependency-groups]` (`dev`, `docs`, `lint`, `test`) is
+  dev/test tooling.
+- Version constraints: runtime deps get a **lower bound only** — never cap a dependency (`<`) in a library,
+  the cap propagates into every downstream resolver. Dev tools get `>=` floors at the versions currently
+  locked, except `black`, `pdoc` and `Pygments`, which are pinned exactly because a bump rewrites the whole
+  code base / the committed `docs/`. Constraints also matter for Dependabot: it skips dependencies declared
+  without any specifier, so a new dependency needs at least a floor to be tracked.
+- Supported Python: **>= 3.10** (CI matrix: 3.10, 3.11, 3.12, 3.13, 3.14).
 - License: GPLv3. Originally written by Etienne Chové, maintained by Stefan Oderbolz (metaodi).
 
 ## Repository layout
@@ -35,6 +44,10 @@ tests/             pytest suite + tests/fixtures/*.xml recorded API responses
 examples/          runnable usage examples (oauth2, changesets, notes, timeout, ...)
 docs/              pdoc-generated HTML, committed to the repo (published via GitHub Pages)
 .github/workflows/ build.yml (CI) and publish_python.yml (PyPI release)
+.github/           dependabot.yml (weekly uv / github-actions / pre-commit updates)
+pyproject.toml     packaging metadata, dependency groups, mypy config
+uv.lock            the locked dev environment (committed)
+.flake8            flake8 config (max-complexity, line length, E203 ignore)
 ```
 
 ## Architecture
@@ -47,8 +60,8 @@ class OsmApi(NodeMixin, WayMixin, RelationMixin, ChangesetMixin, NoteMixin, Capa
 
 Every mixin method is annotated `self: "OsmApi"` (with `from .OsmApi import OsmApi` under
 `if TYPE_CHECKING:`) so mypy resolves the cross-mixin attribute access. Keep that pattern when adding methods.
-`setup.cfg` disables mypy's `misc` error code per-mixin-module — that is what makes the `self: "OsmApi"`
-annotation acceptable; don't "fix" it by removing the annotations.
+The `[[tool.mypy.overrides]]` block in `pyproject.toml` disables mypy's `misc` error code per-mixin-module —
+that is what makes the `self: "OsmApi"` annotation acceptable; don't "fix" it by removing the annotations.
 
 Request/response flow for a typical call:
 
@@ -96,24 +109,29 @@ and list every exception the method can raise ("If the requested element has bee
 
 ## Development workflow
 
+Everything runs through [uv](https://docs.astral.sh/uv/) — the `make` targets wrap `uv run`, so there is no
+venv to activate manually:
+
 ```bash
-./setup.sh          # create ./pyenv venv, install deps + this package editable
-make deps           # install requirements + test-requirements, install pre-commit hooks
-make format         # black over osmapi examples tests *.py
-make lint           # black --check, flake8, mypy osmapi
-make test           # pytest --cov=osmapi tests/
+./setup.sh          # just calls `make deps`
+make deps           # uv sync (creates ./.venv) + uv run pre-commit install
+make format         # black over osmapi examples tests
+make lint           # black --check, flake8 ., mypy osmapi
+make test           # pytest --cov=osmapi tests/ (in UTF-8 mode)
 make coverage       # coverage run + report
 make docs           # pdoc -o docs osmapi  (regenerates the committed docs/)
-./test.sh           # what CI runs: lint + test + docs + install into a fresh virtualenv
+make build          # uv build (wheel + sdist into dist/)
+./test.sh           # what CI runs: lint + test + docs + build + import from the built wheel
 ```
 
-Style rules: **black** (line length 88), flake8 with `max-complexity = 10` and `extend-ignore = E203`
-(see `setup.cfg`). Functions that legitimately exceed the complexity limit carry `# noqa: C901` —
-prefer refactoring, but the marker is accepted for the big dispatch functions.
-`pre-commit` runs black, flake8 and mypy; `make deps` installs the hooks.
+Use `uv run <cmd>` for one-off commands and `uv run --python 3.13 ...` to try another interpreter;
+`uv add` / `uv add --group <group>` when a dependency really has to change (that also updates `uv.lock`).
 
-Note: `CONTRIBUTING.md` is outdated (it mentions `nosetests`, `tox` and Travis CI). The commands above and
-`.github/workflows/build.yml` are the source of truth.
+Style rules: **black** (line length 88), flake8 with `max-complexity = 10` and `extend-ignore = E203`
+(see `.flake8`). Functions that legitimately exceed the complexity limit carry `# noqa: C901` —
+prefer refactoring, but the marker is accepted for the big dispatch functions.
+`pre-commit` runs black, flake8 and mypy (the hook points at `--config-file=pyproject.toml`);
+`make deps` installs the hooks.
 
 ## Tests
 
@@ -135,7 +153,12 @@ Note: `CONTRIBUTING.md` is outdated (it mentions `nosetests`, `tox` and Travis C
 
 - `develop` is the integration branch and the **default target for pull requests**; `main` holds releases and
   the published documentation.
-- CI (`build.yml`) runs `./test.sh` on every PR and on pushes to `main`/`develop`, across Python 3.9–3.12.
+- CI (`build.yml`) runs `./test.sh` on every PR and on pushes to `main`/`develop`, across Python 3.10–3.14
+  (`astral-sh/setup-uv` + `uv sync`).
+- Dependabot (`.github/dependabot.yml`) opens weekly PRs against `develop` for the `uv`, `github-actions`
+  and `pre-commit` ecosystems; dev-dependency bumps are grouped into a single PR, runtime bumps are not.
+- The version lives **only** in `osmapi/__init__.py`; `pyproject.toml` reads it via
+  `[tool.setuptools.dynamic] version = { attr = "osmapi.__version__" }`.
 - Release steps (see README): bump `__version__` in `osmapi/__init__.py`, update `CHANGELOG.md`,
   run `make docs`, PR `develop` -> `main`, then publish a GitHub release/tag — `publish_python.yml`
   builds and uploads to PyPI via trusted publishing on `release: published` (or manual `workflow_dispatch`
@@ -155,5 +178,7 @@ Note: `CONTRIBUTING.md` is outdated (it mentions `nosetests`, `tox` and Travis C
   (the `changeset()` context manager wraps both). `changeset_update`, `changeset_close`, `changeset_upload`
   and every element write require it to be non-zero, otherwise `NoChangesetOpenError` is raised;
   `changeset_create` raises `ChangesetAlreadyOpenError` if one is already open.
-- mypy prints a warning that `python_version = 3.9` in `setup.cfg` is unsupported by the installed mypy —
-  it still succeeds; that is expected, not a failure.
+- `black` is pinned twice — `[dependency-groups] lint` in `pyproject.toml` and `rev:` in
+  `.pre-commit-config.yaml`. Bump both together, otherwise `make lint` and the hook disagree on formatting.
+- Don't hand-edit `uv.lock`; change `pyproject.toml` and run `uv sync` (or use `uv add`) so the lock is
+  regenerated.

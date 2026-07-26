@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+ <relation id="401" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7">
+  <member type="relation" ref="400" role="subarea"/>
+  <tag k="name" v="relation 401"/>
+ </relation>
+ <relation id="400" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7">
+  <member type="relation" ref="401" role="subarea"/>
+  <tag k="name" v="relation 400"/>
+ </relation>
+</osm>

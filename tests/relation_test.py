@@ -1,201 +1,311 @@
-from . import osmapi_test
-import osmapi
-from unittest import mock
 import datetime
 
+import osmapi
+import pytest
+import responses
+from responses import DELETE, GET, PUT
+from responses.registries import OrderedRegistry
 
-class TestOsmApiRelation(osmapi_test.TestOsmApi):
-    def test_relation_get(self):
-        self._session_mock()
-        result = self.api.relation_get(321)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], self.api_base + "/api/0.6/relation/321")
-        self.assertEqual(
-            result,
-            {
-                "id": 321,
-                "changeset": 434,
-                "uid": 12,
-                "timestamp": datetime.datetime(2009, 9, 15, 22, 24, 25),
-                "visible": True,
-                "version": 1,
-                "user": "green525",
-                "tag": {
-                    "admin_level": "9",
-                    "boundary": "administrative",
-                    "type": "multipolygon",
-                },
-                "member": [
-                    {"ref": 6908, "role": "outer", "type": "way"},
-                    {"ref": 6352, "role": "outer", "type": "way"},
-                    {"ref": 5669, "role": "outer", "type": "way"},
-                    {"ref": 5682, "role": "outer", "type": "way"},
-                    {"ref": 6909, "role": "outer", "type": "way"},
-                    {"ref": 6355, "role": "outer", "type": "way"},
-                    {"ref": 6910, "role": "outer", "type": "way"},
-                    {"ref": 6911, "role": "outer", "type": "way"},
-                    {"ref": 6912, "role": "outer", "type": "way"},
-                ],
-            },
-        )
+from .conftest import API_BASE, OPEN_CHANGESET_ID
 
-    def test_relation_get_with_version(self):
-        self._session_mock()
-        result = self.api.relation_get(765, 2)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], self.api_base + "/api/0.6/relation/765/2")
-        self.assertEqual(result["id"], 765)
-        self.assertEqual(result["changeset"], 41378)
-        self.assertEqual(result["user"], "metaodi")
-        self.assertEqual(result["tag"]["source"], "test")
 
-    def test_relation_create(self):
-        self._session_mock(auth=True)
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {
-            "tag": {"type": "test"},
-            "member": [
-                {"ref": 6908, "role": "outer", "type": "way"},
-                {"ref": 6352, "role": "point", "type": "node"},
-            ],
-        }
-        cs = self.api.changeset_create({"comment": "This is a test relation"})
-        self.assertEqual(cs, 3333)
-        result = self.api.relation_create(test_relation)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "PUT")
-        self.assertEqual(args[1], self.api_base + "/api/0.6/relation/create")
-        self.assertEqual(result["id"], 8989)
-        self.assertEqual(result["version"], 1)
-        self.assertEqual(result["member"], test_relation["member"])
-        self.assertEqual(result["tag"], test_relation["tag"])
+def test_relation_get(api, add_response):
+    resp = add_response(GET, "/relation/321")
 
-    def test_relation_create_existing_node(self):
-        self.api.changeset_create = mock.Mock(return_value=1111)
-        self.api._current_changeset_id = 1111
-        test_relation = {
-            "id": 456,
-            "tag": {"type": "test"},
-            "member": [
-                {"ref": 6908, "role": "outer", "type": "way"},
-                {"ref": 6352, "role": "point", "type": "node"},
-            ],
-        }
-        with self.assertRaisesRegex(
-            osmapi.OsmTypeAlreadyExistsError, "This relation already exists"
-        ):
-            self.api.relation_create(test_relation)
+    result = api.relation_get(321)
 
-    def test_relation_update(self):
-        self._session_mock(auth=True)
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {
-            "id": 8989,
-            "tag": {"type": "test update"},
-            "member": [{"ref": 6908, "role": "outer", "type": "way"}],
-        }
-        cs = self.api.changeset_create({"comment": "This is a test relation"})
-        self.assertEqual(cs, 3333)
-        result = self.api.relation_update(test_relation)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "PUT")
-        self.assertEqual(args[1], self.api_base + "/api/0.6/relation/8989")
-        self.assertEqual(result["id"], 8989)
-        self.assertEqual(result["version"], 42)
-        self.assertEqual(result["member"], test_relation["member"])
-        self.assertEqual(result["tag"], test_relation["tag"])
+    assert resp.calls[0].request.method == "GET"
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/321"
+    assert result == {
+        "id": 321,
+        "changeset": 434,
+        "uid": 12,
+        "timestamp": datetime.datetime(2009, 9, 15, 22, 24, 25),
+        "visible": True,
+        "version": 1,
+        "user": "green525",
+        "tag": {
+            "admin_level": "9",
+            "boundary": "administrative",
+            "type": "multipolygon",
+        },
+        "member": [
+            {"ref": 6908, "role": "outer", "type": "way"},
+            {"ref": 6352, "role": "outer", "type": "way"},
+            {"ref": 5669, "role": "outer", "type": "way"},
+            {"ref": 5682, "role": "outer", "type": "way"},
+            {"ref": 6909, "role": "outer", "type": "way"},
+            {"ref": 6355, "role": "outer", "type": "way"},
+            {"ref": 6910, "role": "outer", "type": "way"},
+            {"ref": 6911, "role": "outer", "type": "way"},
+            {"ref": 6912, "role": "outer", "type": "way"},
+        ],
+    }
 
-    def test_relation_delete(self):
-        self._session_mock(auth=True)
-        self.api.changeset_create = mock.Mock(return_value=3333)
-        self.api._current_changeset_id = 3333
-        test_relation = {"id": 8989}
-        cs = self.api.changeset_create({"comment": "This is a test relation"})
-        self.assertEqual(cs, 3333)
-        result = self.api.relation_delete(test_relation)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "DELETE")
-        self.assertEqual(args[1], self.api_base + "/api/0.6/relation/8989")
-        self.assertEqual(result["id"], 8989)
-        self.assertEqual(result["version"], 43)
 
-    def test_relation_history(self):
-        self._session_mock()
-        result = self.api.relation_history(2470397)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], f"{self.api_base}/api/0.6/relation/2470397/history")
-        self.assertEqual(len(result), 2)
-        self.assertEqual(result[1]["id"], 2470397)
-        self.assertEqual(result[1]["version"], 1)
-        self.assertEqual(
-            result[1]["tag"],
-            {
-                "restriction": "only_straight_on",
-                "type": "restriction",
-            },
-        )
-        self.assertEqual(result[2]["version"], 2)
+def test_relation_get_with_version(api, add_response):
+    resp = add_response(GET, "/relation/765/2")
 
-    def test_relation_relations(self):
-        self._session_mock()
-        result = self.api.relation_relations(1532552)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], f"{self.api_base}/api/0.6/relation/1532552/relations")
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]["id"], 1532553)
-        self.assertEqual(result[0]["version"], 85)
-        self.assertEqual(len(result[0]["member"]), 120)
-        self.assertEqual(result[0]["tag"]["type"], "network")
-        self.assertEqual(result[0]["tag"]["name"], "Aargauischer Radroutennetz")
+    result = api.relation_get(765, 2)
 
-    def test_relation_relations_unused_element(self):
-        self._session_mock()
-        result = self.api.relation_relations(1532552)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], f"{self.api_base}/api/0.6/relation/1532552/relations")
-        self.assertEqual(len(result), 0)
-        self.assertIsInstance(result, list)
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/765/2"
+    assert result["id"] == 765
+    assert result["changeset"] == 41378
+    assert result["user"] == "metaodi"
+    assert result["tag"]["source"] == "test"
 
-    def test_relation_full(self):
-        self._session_mock()
-        result = self.api.relation_full(2470397)
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(args[1], f"{self.api_base}/api/0.6/relation/2470397/full")
-        self.assertEqual(len(result), 11)
-        self.assertEqual(result[1]["data"]["id"], 101142277)
-        self.assertEqual(result[1]["data"]["version"], 8)
-        self.assertEqual(result[1]["type"], "node")
-        self.assertEqual(result[10]["data"]["id"], 2470397)
-        self.assertEqual(result[10]["data"]["version"], 2)
-        self.assertEqual(result[10]["type"], "relation")
 
-    def test_relations_get(self):
-        self._session_mock()
-        result = self.api.relations_get([1532552, 1532553])
-        args, kwargs = self.session_mock.request.call_args
-        self.assertEqual(args[0], "GET")
-        self.assertEqual(
-            args[1], f"{self.api_base}/api/0.6/relations?relations=1532552,1532553"
-        )
-        self.assertEqual(len(result), 2)
-        self.assertEqual(result[1532553]["id"], 1532553)
-        self.assertEqual(result[1532553]["version"], 85)
-        self.assertEqual(result[1532553]["user"], "SimonPoole")
-        self.assertEqual(result[1532552]["id"], 1532552)
-        self.assertEqual(result[1532552]["visible"], True)
-        self.assertEqual(result[1532552]["tag"]["route"], "bicycle")
+def test_relation_create(changeset_api, add_response, assert_request_xml):
+    resp = add_response(PUT, "/relation/create")
+    test_relation = {
+        "tag": {"type": "test"},
+        "member": [
+            {"ref": 6908, "role": "outer", "type": "way"},
+            {"ref": 6352, "role": "point", "type": "node"},
+        ],
+    }
 
-    def test_RelationFull_with_deleted_relation(self):
-        self._session_mock(filenames=[], status=410)
+    result = changeset_api.relation_create(test_relation)
 
-        with self.assertRaises(osmapi.ElementDeletedApiError) as context:
-            self.api.relation_full(2911456)
-        self.assertEqual(410, context.exception.status)
+    assert resp.calls[0].request.method == "PUT"
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/create"
+    assert_request_xml(
+        resp.calls[0].request,
+        f'<relation visible="true" changeset="{OPEN_CHANGESET_ID}">'
+        '<tag k="type" v="test"/>'
+        '<member type="way" ref="6908" role="outer"/>'
+        '<member type="node" ref="6352" role="point"/>'
+        "</relation>",
+    )
+
+    assert result["id"] == 8989
+    assert result["version"] == 1
+    assert result["member"] == test_relation["member"]
+    assert result["tag"] == test_relation["tag"]
+
+
+def test_relation_create_existing_node(changeset_api):
+    test_relation = {
+        "id": 456,
+        "tag": {"type": "test"},
+        "member": [{"ref": 6908, "role": "outer", "type": "way"}],
+    }
+
+    with pytest.raises(
+        osmapi.OsmTypeAlreadyExistsError, match="This relation already exists"
+    ):
+        changeset_api.relation_create(test_relation)
+
+
+def test_relation_update(changeset_api, add_response, assert_request_xml):
+    resp = add_response(PUT, "/relation/8989")
+    test_relation = {
+        "id": 8989,
+        "tag": {"type": "test update"},
+        "member": [{"ref": 6908, "role": "outer", "type": "way"}],
+    }
+
+    result = changeset_api.relation_update(test_relation)
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/8989"
+    assert_request_xml(
+        resp.calls[0].request,
+        f'<relation id="8989" visible="true" changeset="{OPEN_CHANGESET_ID}">'
+        '<tag k="type" v="test update"/>'
+        '<member type="way" ref="6908" role="outer"/>'
+        "</relation>",
+    )
+
+    assert result["id"] == 8989
+    assert result["version"] == 42
+    assert result["member"] == test_relation["member"]
+    assert result["tag"] == test_relation["tag"]
+
+
+def test_relation_delete(changeset_api, add_response, assert_request_xml):
+    resp = add_response(DELETE, "/relation/8989")
+
+    result = changeset_api.relation_delete({"id": 8989})
+
+    assert resp.calls[0].request.method == "DELETE"
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/8989"
+    assert_request_xml(
+        resp.calls[0].request,
+        f'<relation id="8989" visible="true" changeset="{OPEN_CHANGESET_ID}"/>',
+    )
+
+    assert result["id"] == 8989
+    assert result["version"] == 43
+    assert result["visible"] is False
+
+
+def test_relation_history(api, add_response):
+    resp = add_response(GET, "/relation/2470397/history")
+
+    result = api.relation_history(2470397)
+
+    assert resp.calls[0].request.url == (f"{API_BASE}/api/0.6/relation/2470397/history")
+    assert len(result) == 2
+    assert result[1]["id"] == 2470397
+    assert result[1]["version"] == 1
+    assert result[1]["tag"] == {
+        "restriction": "only_straight_on",
+        "type": "restriction",
+    }
+    assert result[2]["version"] == 2
+
+
+def test_relation_relations(api, add_response):
+    resp = add_response(GET, "/relation/1532552/relations")
+
+    result = api.relation_relations(1532552)
+
+    assert resp.calls[0].request.url == (
+        f"{API_BASE}/api/0.6/relation/1532552/relations"
+    )
+    assert len(result) == 1
+    assert result[0]["id"] == 1532553
+    assert result[0]["version"] == 85
+    assert len(result[0]["member"]) == 120
+    assert result[0]["tag"]["type"] == "network"
+    assert result[0]["tag"]["name"] == "Aargauischer Radroutennetz"
+
+
+def test_relation_relations_unused_element(api, add_response):
+    resp = add_response(GET, "/relation/1532552/relations")
+
+    result = api.relation_relations(1532552)
+
+    assert resp.calls[0].request.url == (
+        f"{API_BASE}/api/0.6/relation/1532552/relations"
+    )
+    assert result == []
+
+
+def test_relation_full(api, add_response):
+    resp = add_response(GET, "/relation/2470397/full")
+
+    result = api.relation_full(2470397)
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/2470397/full"
+    assert len(result) == 11
+    assert result[1]["data"]["id"] == 101142277
+    assert result[1]["data"]["version"] == 8
+    assert result[1]["type"] == "node"
+    assert result[10]["data"]["id"] == 2470397
+    assert result[10]["data"]["version"] == 2
+    assert result[10]["type"] == "relation"
+
+
+def test_relation_full_with_deleted_relation(api, add_response):
+    add_response(GET, "/relation/2911456/full", body="", status=410)
+
+    with pytest.raises(osmapi.ElementDeletedApiError) as execinfo:
+        api.relation_full(2911456)
+
+    assert execinfo.value.status == 410
+
+
+def test_relation_full_recur(api, add_response):
+    """Nested relations are resolved level by level: 100 -> 200 -> 300."""
+    resp = add_response(
+        GET, "/relation/100/full", filename="test_relation_full_recur_100.xml"
+    )
+    add_response(GET, "/relation/200/full", filename="test_relation_full_recur_200.xml")
+    add_response(GET, "/relation/300/full", filename="test_relation_full_recur_300.xml")
+
+    result = api.relation_full_recur(100)
+
+    # one request per relation level, in breadth-first order
+    assert [call.request.url for call in resp.calls] == [
+        f"{API_BASE}/api/0.6/relation/100/full",
+        f"{API_BASE}/api/0.6/relation/200/full",
+        f"{API_BASE}/api/0.6/relation/300/full",
+    ]
+
+    # the concatenation of all three responses, in the order they were fetched
+    assert [(elem["type"], elem["data"]["id"]) for elem in result] == [
+        ("node", 1),
+        ("way", 10),
+        ("relation", 200),
+        ("relation", 100),
+        ("node", 2),
+        ("relation", 300),
+        ("relation", 200),
+        ("node", 3),
+        ("relation", 300),
+    ]
+
+
+def test_relation_full_recur_stops_on_cycle(api, file_content):
+    """A relation cycle terminates instead of looping forever.
+
+    Uses an ordered registry so each response can be consumed only once: if
+    the cycle guard ever regresses, the third request fails immediately
+    instead of spinning forever.
+    """
+    with responses.RequestsMock(registry=OrderedRegistry) as rsps:
+        for relation_id in (400, 401):
+            rsps.add(
+                GET,
+                f"{API_BASE}/api/0.6/relation/{relation_id}/full",
+                body=file_content(f"test_relation_full_recur_cycle_{relation_id}.xml"),
+            )
+
+        result = api.relation_full_recur(400)
+
+        # each relation in the cycle is fetched exactly once
+        assert [call.request.url for call in rsps.calls] == [
+            f"{API_BASE}/api/0.6/relation/400/full",
+            f"{API_BASE}/api/0.6/relation/401/full",
+        ]
+
+    assert [(elem["type"], elem["data"]["id"]) for elem in result] == [
+        ("relation", 401),
+        ("relation", 400),
+        ("relation", 400),
+        ("relation", 401),
+    ]
+
+
+def test_relation_full_recur_single_level(api, add_response):
+    """A relation without relation members needs a single request."""
+    resp = add_response(
+        GET, "/relation/300/full", filename="test_relation_full_recur_300.xml"
+    )
+
+    result = api.relation_full_recur(300)
+
+    assert len(resp.calls) == 1
+    assert [(elem["type"], elem["data"]["id"]) for elem in result] == [
+        ("node", 3),
+        ("relation", 300),
+    ]
+
+
+def test_relation_full_recur_deleted_relation(api, add_response):
+    """A deleted relation on any level surfaces as ElementDeletedApiError."""
+    add_response(GET, "/relation/100/full", filename="test_relation_full_recur_100.xml")
+    add_response(GET, "/relation/200/full", body="", status=410)
+
+    with pytest.raises(osmapi.ElementDeletedApiError) as execinfo:
+        api.relation_full_recur(100)
+
+    assert execinfo.value.status == 410
+
+
+def test_relations_get(api, add_response):
+    resp = add_response(GET, "/relations")
+
+    result = api.relations_get([1532552, 1532553])
+
+    assert resp.calls[0].request.url == (
+        f"{API_BASE}/api/0.6/relations?relations=1532552,1532553"
+    )
+    assert len(result) == 2
+    assert result[1532553]["id"] == 1532553
+    assert result[1532553]["version"] == 85
+    assert result[1532553]["user"] == "SimonPoole"
+    assert result[1532552]["id"] == 1532552
+    assert result[1532552]["visible"] is True
+    assert result[1532552]["tag"]["route"] == "bicycle"

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+ <node id="3" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7" lat="47.3" lon="8.3"/>
+ <relation id="300" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7">
+  <member type="node" ref="3" role="point"/>
+  <tag k="name" v="relation 300"/>
+ </relation>
+</osm>

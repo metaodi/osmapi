@@ -135,19 +135,29 @@ prefer refactoring, but the marker is accepted for the big dispatch functions.
 
 ## Tests
 
-- Framework: **pytest**, run from the repo root so `tests/fixtures` resolves.
-- Two coexisting styles:
-  - Legacy `unittest` classes inheriting `tests/osmapi_test.TestOsmApi` (node, way, relation, notes,
-    capabilities, dom, helper tests). `self._session_mock(auth=..., filenames=..., status=...)` swaps in a
-    mocked `requests` session; with no `filenames` it loads `tests/fixtures/<test_method_name>.xml`.
-  - Modern pytest fixtures in `tests/conftest.py` (`api`, `auth_api`, `prod_api`, `add_response`,
-    `mocked_responses`, `file_content`) built on the `responses` library — used by `tests/changeset_test.py`.
-    **Prefer this style for new tests.** `add_response(method, path=..., filename=...)` defaults to the
-    fixture named after the test function.
-- Tests never hit the network; every HTTP interaction is backed by an XML fixture in `tests/fixtures/`.
-  When adding a test that needs a new response, add the fixture file named after the test.
-- Assert on the request too (method, URL, and body where relevant), not just the parsed result — that is what
-  catches URI regressions.
+- Framework: **pytest**, run from the repo root so `tests/fixtures` resolves. Plain test functions plus
+  fixtures — there are no `unittest` classes left, don't add any.
+- Fixtures live in `tests/conftest.py` and are built on the `responses` library:
+  - `api`, `auth_api`, `prod_api` — an `OsmApi` against the dev/prod base URL, with `_sleep` mocked out.
+  - `changeset_api` — `auth_api` with changeset `OPEN_CHANGESET_ID` (1111) already open, for element writes.
+  - `add_response(method, path=..., filename=..., body=..., status=..., url=...)` — registers a mocked
+    response. `path` is relative to `/api/0.6`; pass `url` for anything outside it (e.g. `/api/capabilities`).
+    `filename` defaults to the fixture named after the test function. Naming a `path`/`url` is what makes
+    `responses` assert the request URL, so prefer it over the catch-all.
+  - `assert_request_xml(request, payload)` — compares a request body against `payload` wrapped in the
+    `<osm>` envelope. Use this rather than spelling out the prolog and generator string, which would
+    otherwise hardcode the version number and break on every release.
+  - `mock_api(...)` — an `OsmApi` backed by a `unittest.mock` session, returning `(api, session_mock)`.
+    Only for tests about the HTTP layer itself (status-code mapping, the retry loop); it does **not**
+    match on URL, so prefer the `responses` fixtures for everything else.
+- Tests never hit the network; every HTTP interaction is backed by a fixture in `tests/fixtures/`
+  (XML for parsed responses, plain text for error payloads). Add one named after the test.
+- Assert on the request too (method, URL, query params, and body where relevant), not just the parsed
+  result — that is what catches URI regressions.
+- Error payloads are `bytes` (that is what `requests` gives you). Assert on `payload_str` for the decoded
+  text, or compare against a `b"..."` literal.
+- Line coverage alone over-reports here; when adding tests for a behaviour, check it actually fails when
+  the behaviour is broken.
 
 ## Branches and releases
 

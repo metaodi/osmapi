@@ -213,8 +213,13 @@ class ChangesetMixin:
                 forceAuth=True,
             )
         except errors.ApiError as e:
+            payload_str = (
+                e.payload.decode("utf-8", errors="replace")
+                if isinstance(e.payload, bytes)
+                else str(e.payload)
+            )
             if e.status == 409 and re.search(
-                r"The changeset .* was closed at .*", e.payload
+                r"The changeset .* was closed at .*", payload_str
             ):
                 raise errors.ChangesetClosedApiError(
                     e.status, e.reason, e.payload

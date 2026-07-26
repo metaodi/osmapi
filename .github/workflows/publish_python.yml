@@ -27,7 +27,7 @@ jobs:
         ref: ${{ inputs.tag || github.ref }}
 
     - name: Set up uv and Python ${{ matrix.python-version }}
-      uses: astral-sh/setup-uv@v6
+      uses: astral-sh/setup-uv@v9.0.0
       with:
         enable-cache: true
         python-version: ${{ matrix.python-version }}

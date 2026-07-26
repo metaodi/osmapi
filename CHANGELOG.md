@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+* Bump pygments from 2.15.0 to 2.20.0 by @dependabot[bot] in https://github.com/metaodi/osmapi/pull/193
+
+### Added
+* Add support for PEP 517. by @sebastic in https://github.com/metaodi/osmapi/pull/197
+
+### Fixed
+* Fix TypeError in changeset_upload when handling HTTP 409 responses by @hagatopaxi in https://github.com/metaodi/osmapi/pull/196
 
 ## [5.0.0] - 2026-02-18
 ### Changed

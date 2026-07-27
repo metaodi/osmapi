@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Responses are now parsed with `xml.etree.ElementTree` instead of `xml.dom.minidom`, one element at a time (see issue #114). minidom needed roughly 40 times the size of a response for its element tree, and that tree — being full of parent/child cycles — was only reclaimed by the cycle collector. Every method that parses a response benefits; for the history of a large relation (6.7 MB of XML, 300 versions) `relation_history` went from 295 MB peak memory and 11.8s to 27 MB and 2.2s, and `relation_history_iter` does the same work in 0.7 MB
 - Repeated strings in a response (attribute names, tag keys, member roles and types, user names) are now deduplicated while parsing, which roughly halves the memory a parsed result occupies
 - The `Element` objects handed around internally are now `xml.etree.ElementTree.Element` rather than `xml.dom.minidom.Element`. This is only visible to code calling the internal `dom.*`/`parser.*` helpers directly, the dicts returned by the `OsmApi` methods are unchanged
+- Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
+
+### Fixed
+- Fix tag values and member roles containing a newline, a tab or a carriage return being silently corrupted on write (`node_update`, `way_create`, `relation_delete`, `changeset_create`, `changeset_upload`, …). Those characters were written literally into an XML attribute, where the parser on the other end normalizes them to a space, so `{"note": "first\nsecond"}` arrived at the API as `"first second"`. They are now written as character references and round-trip unchanged. Member `type` was not escaped at all (see issue #216)
 
 ## [6.0.0] - 2026-07-27
 ### Changed

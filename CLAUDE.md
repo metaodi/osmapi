@@ -38,8 +38,8 @@ osmapi/            the package
   note.py          NoteMixin        (notes_get, note_create, note_close, ...)
   capabilities.py  CapabilitiesMixin (capabilities, map)
   http.py          OsmApiSession — requests session, retries, HTTP-status -> error mapping
-  dom.py           minidom parsing helpers (dom_parse_node/way/relation/changeset/note)
-  parser.py        parse_osm / parse_osc / parse_notes (whole-document parsers)
+  dom.py           ElementTree parsing helpers (_iter_elements, dom_parse_node/way/...)
+  parser.py        parse_osm / parse_osc / parse_notes + their iter_* variants
   xmlbuilder.py    _xml_build / _xml_encode — request XML generation
   errors.py        exception hierarchy
 tests/             pytest suite + tests/fixtures/*.xml recorded API responses
@@ -78,6 +78,22 @@ Request/response flow for a typical call:
 4. Writes go through `OsmApi._do(action, osm_type, osm_data)`, which requires an open changeset
    (`self._current_changeset_id`), serializes via `xmlbuilder._xml_build`, and translates 409/412 into
    `ChangesetClosedApiError` / `VersionMismatchApiError` / `PreconditionFailedApiError`.
+
+### Parsing and memory
+
+Responses are parsed incrementally with `xml.etree.ElementTree.iterparse`, never as a complete tree
+(issue #114 — `xml.dom.minidom` needed ~40x the size of a response and left cyclic garbage behind).
+`dom._iter_elements` is the single entry point: it yields `(parent tag, element)` pairs and **empties each
+element and detaches it from its parent as soon as iteration continues**, which is what keeps memory
+independent of the response size. A yielded element therefore has to be consumed before the next one is
+requested — never collect them in a list. `dom._dedupe` (`sys.intern`) is applied to attribute names, tag
+keys/values and other repeated strings while parsing.
+
+Every method that can return an unbounded response has an `_iter` variant (`relation_history_iter`,
+`map_iter`, `changeset_download_iter`, ...) that streams the response body via
+`OsmApiSession._get_stream` — a context manager, so the generator has to keep the `with` block open
+around its `yield`s. The non-`_iter` method is then just `list(...)`/`dict(...)` over the iterator; keep it
+that way rather than writing the parsing twice. Any new bulk-read endpoint should follow the same shape.
 
 Data is plain `dict`s throughout — there are no model classes. Conventions (documented in the `OsmApi.py`
 module docstring, keep it in sync): keys are unicode, `changeset`/`version`/`uid` are ints, `tag` is a dict,

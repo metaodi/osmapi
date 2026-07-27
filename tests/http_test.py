@@ -1,10 +1,12 @@
-"""Tests for the HTTP layer: status-code mapping and the retry loop."""
+"""Tests for the HTTP layer: status-code mapping, the retry loop and streaming."""
 
+import io
 from unittest import mock
 
 import osmapi
 import pytest
 import requests
+from responses import GET
 
 from .conftest import API_BASE, make_http_response
 
@@ -15,7 +17,12 @@ def test_http_request_get(mock_api):
     response = api._session._http_request("GET", "/api/0.6/test", False, None)
 
     session.request.assert_called_with(
-        "GET", f"{API_BASE}/api/0.6/test", data=None, timeout=30, params=None
+        "GET",
+        f"{API_BASE}/api/0.6/test",
+        data=None,
+        timeout=30,
+        params=None,
+        stream=False,
     )
     assert response == "test response"
     assert session.request.call_count == 1
@@ -27,7 +34,12 @@ def test_http_request_put(mock_api):
     response = api._session._http_request("PUT", "/api/0.6/testput", False, "data")
 
     session.request.assert_called_with(
-        "PUT", f"{API_BASE}/api/0.6/testput", data="data", timeout=30, params=None
+        "PUT",
+        f"{API_BASE}/api/0.6/testput",
+        data="data",
+        timeout=30,
+        params=None,
+        stream=False,
     )
     assert response == "test response"
 
@@ -45,6 +57,7 @@ def test_http_request_delete(mock_api):
         data="delete data",
         timeout=30,
         params=None,
+        stream=False,
     )
     assert response == "test response"
 
@@ -55,7 +68,12 @@ def test_http_request_auth(mock_api):
     response = api._session._http_request("PUT", "/api/0.6/testauth", True, None)
 
     session.request.assert_called_with(
-        "PUT", f"{API_BASE}/api/0.6/testauth", data=None, timeout=30, params=None
+        "PUT",
+        f"{API_BASE}/api/0.6/testauth",
+        data=None,
+        timeout=30,
+        params=None,
+        stream=False,
     )
     assert session.auth == ("testuser", "testpassword")
     assert response == "test response"
@@ -268,3 +286,53 @@ def test_sleep_waits_five_seconds():
 
     sleep.assert_called_once_with(5)
     session.close()
+
+
+def test_get_stream_returns_the_whole_body(api, add_response):
+    """The peeked first byte is put back in front of the rest of the body."""
+    body = b'<osm version="0.6"><node id="1"/></osm>'
+    add_response(GET, "/streamed", body=body)
+
+    with api._session._get_stream("/api/0.6/streamed") as stream:
+        # read in pieces to cross the boundary between the peeked byte and
+        # the remaining response
+        chunks = iter(lambda: stream.read(7), b"")
+        assert b"".join(chunks) == body
+
+
+def test_get_stream_of_an_empty_response(api, add_response):
+    add_response(GET, "/streamed", body=b"")
+
+    with pytest.raises(osmapi.ResponseEmptyApiError):
+        with api._session._get_stream("/api/0.6/streamed"):
+            pass  # pragma: no cover
+
+
+def test_get_stream_releases_the_response(api, add_response):
+    add_response(GET, "/streamed", body=b"<osm/>")
+
+    with (
+        mock.patch.object(requests.Response, "close", autospec=True) as close,
+        api._session._get_stream("/api/0.6/streamed"),
+    ):
+        assert close.call_count == 0
+
+    assert close.call_count == 1
+
+
+def test_get_stream_maps_the_status_code(api, add_response):
+    add_response(GET, "/streamed", body=b"not found", status=404)
+
+    with pytest.raises(osmapi.ElementNotFoundApiError) as execinfo:
+        with api._session._get_stream("/api/0.6/streamed"):
+            pass  # pragma: no cover
+
+    assert execinfo.value.payload == b"not found"
+
+
+def test_response_stream_hands_out_the_head_before_the_tail():
+    """Reads are served from the peeked bytes first, in whatever size."""
+    stream = osmapi.http._ResponseStream(b"head", io.BytesIO(b"tail"))
+
+    assert [stream.read(3) for _ in range(4)] == [b"hea", b"d", b"tai", b"l"]
+    assert stream.read(3) == b""

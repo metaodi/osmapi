@@ -3,7 +3,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New iterator variants of the methods that can return an arbitrarily large response: `node_history_iter`, `way_history_iter`, `relation_history_iter`, `way_full_iter`, `relation_full_iter`, `map_iter` and `changeset_download_iter` (see issue #114). They yield the same dicts as their non-`_iter` counterparts, but parse the response while it is being downloaded and only hold one element at a time, so the memory they need does not grow with the size of the response:
+  ```python
+  # reads the whole history into memory
+  for version in api.relation_history(2771761).values():
+      print(version["version"], len(version["member"]))
+
+  # holds one version at a time
+  for version in api.relation_history_iter(2771761):
+      print(version["version"], len(version["member"]))
+  ```
+  The connection stays open while such an iterator is alive, so it should be consumed (or closed) promptly.
+- `parser.iter_osm`, `parser.iter_osc` and `parser.iter_notes`, the streaming equivalents of `parser.parse_osm`, `parser.parse_osc` and `parser.parse_notes`
+
 ### Changed
+- Responses are now parsed with `xml.etree.ElementTree` instead of `xml.dom.minidom`, one element at a time (see issue #114). minidom needed roughly 40 times the size of a response for its element tree, and that tree — being full of parent/child cycles — was only reclaimed by the cycle collector. Every method that parses a response benefits; for the history of a large relation (6.7 MB of XML, 300 versions) `relation_history` went from 295 MB peak memory and 11.8s to 27 MB and 2.2s, and `relation_history_iter` does the same work in 0.7 MB
+- Repeated strings in a response (attribute names, tag keys, member roles and types, user names) are now deduplicated while parsing, which roughly halves the memory a parsed result occupies
+- The `Element` objects handed around internally are now `xml.etree.ElementTree.Element` rather than `xml.dom.minidom.Element`. This is only visible to code calling the internal `dom.*`/`parser.*` helpers directly, the dicts returned by the `OsmApi` methods are unchanged
 - Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
 
 ### Fixed

@@ -11,7 +11,7 @@ character references (see issue #216).
 
 import xml.etree.ElementTree as ET
 from typing import Any, TYPE_CHECKING
-from xml.dom.minidom import Element
+from xml.etree.ElementTree import Element
 
 if TYPE_CHECKING:
     from .OsmApi import OsmApi
@@ -80,8 +80,7 @@ def _xml_element(
 
 
 def _get_xml_value(dom_element: Element, tag: str) -> str | None:
-    try:
-        elem = dom_element.getElementsByTagName(tag)[0]
-        return elem.firstChild.nodeValue  # type: ignore[union-attr]
-    except Exception:
+    elem = dom_element.find(tag)
+    if elem is None:
         return None
+    return elem.text

@@ -3,6 +3,7 @@ HTTP session management for the OpenStreetMap API.
 """
 
 import datetime
+import email.utils
 import itertools as it
 import logging
 import requests
@@ -13,10 +14,71 @@ from . import errors
 
 logger = logging.getLogger(__name__)
 
+ERROR_BY_STATUS: dict[int, type[errors.ApiError]] = {
+    401: errors.UnauthorizedApiError,
+    404: errors.ElementNotFoundApiError,
+    410: errors.ElementDeletedApiError,
+    429: errors.RateLimitApiError,
+    500: errors.InternalServerApiError,
+    502: errors.BadGatewayApiError,
+    503: errors.ServiceUnavailableApiError,
+    504: errors.GatewayTimeoutApiError,
+    509: errors.RateLimitApiError,
+}
+"""
+Error class raised for a given HTTP status code.
+
+Any other status >= 500 becomes a generic `OsmApi.ServerApiError`, anything
+else a plain `OsmApi.ApiError`. Note that 509 (bandwidth limit exceeded) is a
+rate limit rather than a server failure, hence it is not a `ServerApiError`.
+"""
+
+RETRY_ON = (errors.ServerApiError, errors.RateLimitApiError)
+"""
+Errors that make `OsmApiSession._http` try the request again.
+
+This is osmapi's own retry policy, which is narrower than
+`OsmApi.RetriableApiError`: a timeout or a connection error is worth
+retrying for a caller, but retrying it here would block for several times the
+configured timeout before reporting a server that is simply unreachable.
+"""
+
+
+def _parse_retry_after(value: str | None) -> float | None:
+    """
+    Convert a `Retry-After` header into a number of seconds.
+
+    The header comes either as delay-seconds (`"120"`) or as an HTTP-date
+    (`"Wed, 21 Oct 2015 07:28:00 GMT"`), see RFC 9110. Returns `None` if the
+    header is missing or cannot be parsed, and never returns a negative delay
+    (a date in the past means "retry now").
+    """
+    if value is None:
+        return None
+    value = value.strip()
+    # RFC 9110 defines delay-seconds as digits only; parsing this with float()
+    # would also accept "inf" and "nan", which `time.sleep` chokes on
+    if value.isdigit():
+        return float(value)
+    try:
+        retry_at = email.utils.parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        return None
+    if retry_at.tzinfo is None:
+        retry_at = retry_at.replace(tzinfo=datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    return max((retry_at - now).total_seconds(), 0)
+
 
 class OsmApiSession:
     MAX_RETRY_LIMIT = 5
     """Maximum retries if a call to the remote API fails (default: 5)"""
+
+    RETRY_BASE_DELAY = 5
+    """Seconds to wait before the second attempt, doubling for each further one"""
+
+    MAX_RETRY_DELAY = 60
+    """Upper bound for the wait between two attempts, including `Retry-After`"""
 
     def __init__(
         self,
@@ -86,7 +148,13 @@ class OsmApiSession:
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
 
-        If the response status code indicates an error,
+        If the API failed to handle the request (HTTP 5xx),
+        `OsmApi.ServerApiError` (or one of its subclasses) is raised.
+
+        If the API refused the request because a limit was exceeded,
+        `OsmApi.RateLimitApiError` is raised.
+
+        If the response status code indicates any other error,
         `OsmApi.ApiError` is raised.
         """
         logger.debug(f"{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {method} {path}")
@@ -116,19 +184,19 @@ class OsmApiSession:
 
         if response.status_code != 200:
             payload = response.content.strip()
-            if response.status_code == 401:
-                raise errors.UnauthorizedApiError(
-                    response.status_code, response.reason, payload
+            error_class = ERROR_BY_STATUS.get(response.status_code)
+            if error_class is None:
+                error_class = (
+                    errors.ServerApiError
+                    if response.status_code >= 500
+                    else errors.ApiError
                 )
-            if response.status_code == 404:
-                raise errors.ElementNotFoundApiError(
-                    response.status_code, response.reason, payload
-                )
-            elif response.status_code == 410:
-                raise errors.ElementDeletedApiError(
-                    response.status_code, response.reason, payload
-                )
-            raise errors.ApiError(response.status_code, response.reason, payload)
+            raise error_class(
+                response.status_code,
+                response.reason,
+                payload,
+                retry_after=_parse_retry_after(response.headers.get("Retry-After")),
+            )
         if return_value and not response.content:
             raise errors.ResponseEmptyApiError(
                 response.status_code, response.reason, ""
@@ -152,11 +220,12 @@ class OsmApiSession:
                     cmd, path, auth, send, return_value=return_value, params=params
                 )
             except errors.ApiError as e:
-                if e.status >= 500:
+                if isinstance(e, RETRY_ON):
                     if i == self.MAX_RETRY_LIMIT:
                         raise
-                    if i != 1:
-                        self._sleep()
+                    delay = self._retry_delay(i, e.retry_after)
+                    if delay:
+                        self._sleep(delay)
                     self._session = self._get_http_session()
                 else:
                     logger.debug("ApiError Exception occured")
@@ -171,8 +240,9 @@ class OsmApiSession:
                     raise errors.MaximumRetryLimitReachedError(
                         f"Give up after {i} retries"
                     ) from e
-                if i != 1:
-                    self._sleep()
+                delay = self._retry_delay(i)
+                if delay:
+                    self._sleep(delay)
                 self._session = self._get_http_session()
 
     def _get_http_session(self) -> requests.Session:
@@ -188,8 +258,28 @@ class OsmApiSession:
         session.headers.update({"user-agent": self._created_by})
         return session
 
-    def _sleep(self) -> None:
-        time.sleep(5)
+    def _retry_delay(self, attempt: int, retry_after: float | None = None) -> float:
+        """
+        Seconds to wait before attempt number `attempt` + 1.
+
+        A `Retry-After` sent by the API wins over the schedule, but is capped
+        at `MAX_RETRY_DELAY` — if the API asks for a longer break than that,
+        the remaining attempts run into the same limit and the error is
+        reported to the caller, which can wait for `ApiError.retry_after` and
+        try again itself.
+
+        Without such a header the first retry follows immediately (a single
+        failed request is often just a hiccup), and every further one waits
+        twice as long as the previous, starting at `RETRY_BASE_DELAY`.
+        """
+        if retry_after is not None:
+            return min(retry_after, self.MAX_RETRY_DELAY)
+        if attempt <= 1:
+            return 0
+        return min(self.RETRY_BASE_DELAY * 2 ** (attempt - 2), self.MAX_RETRY_DELAY)
+
+    def _sleep(self, seconds: float = 5) -> None:
+        time.sleep(seconds)
 
     def _get(self, path: str, params: dict | None = None) -> bytes:
         return self._http("GET", path, False, None, params=params)

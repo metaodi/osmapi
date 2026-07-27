@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [6.0.0] - 2026-07-27
 ### Changed
 - **BC-Break**: Remove support for Python 3.9 (EOL since October 2025), new minimum version for osmapi is Python 3.10
 - Replace `setup.py`/`setup.cfg` and the `requirements.txt` files with a PEP 621 `pyproject.toml`, dependency groups are now managed with [uv](https://docs.astral.sh/uv/)
@@ -421,7 +423,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v6.0.0...HEAD
+[6.0.0]: https://github.com/metaodi/osmapi/compare/v5.1.0...v6.0.0
 [5.1.0]: https://github.com/metaodi/osmapi/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/metaodi/osmapi/compare/v4.3.0...v5.0.0
 [4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0

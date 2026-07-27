@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
+
+### Fixed
+- Fix tag values and member roles containing a newline, a tab or a carriage return being silently corrupted on write (`node_update`, `way_create`, `relation_delete`, `changeset_create`, `changeset_upload`, …). Those characters were written literally into an XML attribute, where the parser on the other end normalizes them to a space, so `{"note": "first\nsecond"}` arrived at the API as `"first second"`. They are now written as character references and round-trip unchanged. Member `type` was not escaped at all (see issue #216)
 
 ## [6.0.0] - 2026-07-27
 ### Changed

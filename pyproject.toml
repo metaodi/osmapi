@@ -1,3 +1,92 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "osmapi"
+description = "Python wrapper for the OSM API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE.txt"]
+authors = [{ name = "Etienne Chové", email = "chove@crans.org" }]
+maintainers = [{ name = "Stefan Oderbolz", email = "odi@metaodi.ch" }]
+keywords = ["openstreetmap", "osm", "api"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Software Development :: Libraries",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+# Lower bound only: osmapi only uses the long-stable parts of the requests API
+# (Session, Session.request and the exception classes). Never add an upper bound
+# here, a cap in a library propagates into every downstream resolver.
+dependencies = ["requests>=2.25.0"]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "http://osmapi.metaodi.ch"
+Documentation = "http://osmapi.metaodi.ch"
+Repository = "https://github.com/metaodi/osmapi"
+Changelog = "https://github.com/metaodi/osmapi/blob/develop/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    { include-group = "docs" },
+    { include-group = "lint" },
+    { include-group = "test" },
+    "pre-commit>=4.6",
+]
+# pdoc and Pygments are pinned exactly: they render the published documentation,
+# a bump restyles every page of it and should be its own reviewable change.
+docs = ["pdoc==16.0.0", "Pygments==2.20.0"]
+# black is pinned exactly (and must match the rev in .pre-commit-config.yaml),
+# a bump reformats the whole code base. The flake8/mypy floors keep the local
+# tools from being older than the versions the pre-commit hooks run.
+lint = ["black==26.5.1", "flake8>=7.3", "mypy>=2.3", "types-requests>=2.33"]
+test = [
+    "pytest>=9.1",
+    "pytest-cov>=7.1",
+    "coverage>=7.15",
+    "responses>=0.26",
+    "xmltodict>=1.0",
+    "python-dotenv>=1.2",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "osmapi.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["osmapi*"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+warn_no_return = false
+strict_equality = true
+extra_checks = true
+
+[[tool.mypy.overrides]]
+module = [
+    "osmapi.node",
+    "osmapi.way",
+    "osmapi.relation",
+    "osmapi.changeset",
+    "osmapi.note",
+    "osmapi.capabilities",
+]
+disable_error_code = ["misc"]

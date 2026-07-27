@@ -2,7 +2,7 @@
 Note operations for the OpenStreetMap API.
 """
 
-from typing import Any, Optional, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
 from . import dom, errors, parser
@@ -83,29 +83,29 @@ class NoteMixin:
         return self._note_action(path, comment)
 
     def note_close(
-        self: "OsmApi", note_id: int, comment: Optional[str] = None
+        self: "OsmApi", note_id: int, comment: str | None = None
     ) -> dict[str, Any]:
         """
         Closes a note.
 
         Returns the updated note.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
         """
         path = f"/api/0.6/notes/{note_id}/close"
         return self._note_action(path, comment, optional_auth=False)
 
     def note_reopen(
-        self: "OsmApi", note_id: int, comment: Optional[str] = None
+        self: "OsmApi", note_id: int, comment: str | None = None
     ) -> dict[str, Any]:
         """
         Reopens a note.
 
         Returns the updated note.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
@@ -141,9 +141,9 @@ class NoteMixin:
     def _note_action(
         self: "OsmApi",
         path: str,
-        comment: Optional[str] = None,
+        comment: str | None = None,
         optional_auth: bool = True,
-        params: Optional[dict[str, Any]] = None,
+        params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """
         Performs an action on a Note with a comment

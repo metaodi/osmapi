@@ -94,9 +94,9 @@ try:
     api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
     with api.changeset({"comment": "My first test"}) as changeset_id:
         node1 = api.node_create({"lon": 1, "lat": 1, "tag": {}})
-except osmapi.UsernamePasswordMissingError as e:
+except osmapi.AuthenticationMissingError as e:
     log.exception(e)
-    log.debug("Username/Password or authorization missing")
+    log.debug("No authenticated session provided for this request")
 input("Press Enter to continue...")
 clear_screen()
 

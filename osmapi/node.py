@@ -2,7 +2,7 @@
 Node operations for the OpenStreetMap API.
 """
 
-from typing import Any, Optional, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
 from . import dom
@@ -52,9 +52,7 @@ class NodeMixin:
         )
         return dom.dom_parse_node(node_element)
 
-    def node_create(
-        self: "OsmApi", node_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def node_create(self: "OsmApi", node_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Creates a node based on the supplied `node_data` dict:
 
@@ -80,8 +78,8 @@ class NodeMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -94,9 +92,7 @@ class NodeMixin:
         """
         return self._do("create", "node", node_data)
 
-    def node_update(
-        self: "OsmApi", node_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def node_update(self: "OsmApi", node_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Updates node with the supplied `node_data` dict:
 
@@ -124,8 +120,8 @@ class NodeMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -138,9 +134,7 @@ class NodeMixin:
         """
         return self._do("modify", "node", node_data)
 
-    def node_delete(
-        self: "OsmApi", node_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def node_delete(self: "OsmApi", node_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Delete node with `node_data`:
 
@@ -168,8 +162,8 @@ class NodeMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.

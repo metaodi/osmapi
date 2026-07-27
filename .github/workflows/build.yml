@@ -10,23 +10,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - name: Set up uv and Python ${{ matrix.python-version }}
+      uses: astral-sh/setup-uv@v9.0.0
       with:
+        enable-cache: true
         python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
-      run: |
-        sudo apt-get install pandoc
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r test-requirements.txt
-        pip install -e .
+      run: uv sync
 
-    - name: Test the package 
+    - name: Test the package
       run: ./test.sh

@@ -4,6 +4,38 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [6.0.0] - 2026-07-27
+### Changed
+- **BC-Break**: Remove support for Python 3.9 (EOL since October 2025), new minimum version for osmapi is Python 3.10
+- Replace `setup.py`/`setup.cfg` and the `requirements.txt` files with a PEP 621 `pyproject.toml`, dependency groups are now managed with [uv](https://docs.astral.sh/uv/)
+- Modernize the type hints: `Optional[X]`/`Union[X, Y]` are now written as `X | None`/`X | Y` (PEP 604)
+- `changesets_get` now requires either all four or none of `min_lon`, `min_lat`, `max_lon` and `max_lat`; a partial bounding box raises `ValueError` instead of sending `None` values to the API
+- osmapi no longer guesses whether a session passed via `session=` is authenticated: `AuthenticationMissingError` is now only raised when no session was provided at all, i.e. when there is no way for the request to be authenticated. This makes every OAuth 2.0 setup work, including those that osmapi cannot inspect — a bearer token in an `Authorization` header, a custom transport adapter, or a `requests.Session` subclass that adds the token per request (e.g. `requests_oauthlib.OAuth2Session`, which only sets `session.auth` to a no-op lambda). A missing or invalid authorization on such a session is reported by the API as `UnauthorizedApiError` (HTTP 401)
+- **BC-Break**: `UsernamePasswordMissingError` has been renamed to `AuthenticationMissingError`, as there is no username/password anymore (see issue #192). The old name still resolves to the new class (so existing `except osmapi.UsernamePasswordMissingError` clauses keep working), but it raises a `DeprecationWarning` and will be removed in version 7.0
+- The `changeset()` context manager now closes the changeset with `try`/`finally`, so an exception inside the `with` block no longer leaves the changeset open
+- The documentation is no longer committed to the repository: the generated `docs/` folder has been removed and git-ignored, a new `publish_docs.yml` GitHub Action builds it with `pdoc` and deploys it to GitHub Pages whenever a release is published
+
+### Added
+- Test against Python 3.13 and 3.14 in CI
+- Add a Dependabot config (`.github/dependabot.yml`) with weekly updates for the `uv`, `github-actions` and `pre-commit` ecosystems
+- Declare a minimum version for the `requests` dependency (`requests>=2.25.0`), no upper bound is set
+- `ApiError.payload_str`, the response payload decoded as text (the raw `payload` stays `bytes`)
+
+### Removed
+- **BC-Break**: Removed the `username`, `password` and `passwordfile` parameters of `osmapi.OsmApi` and the `auth` parameter of `osmapi.http.OsmApiSession` (see issue #192). Basic authentication was shut down by OpenStreetMap in July 2024, authentication is now provided exclusively by passing an authenticated session (OAuth 2.0) via the `session` parameter:
+  ```python
+  # before
+  api = osmapi.OsmApi(username="user", password="pass")
+  # now
+  api = osmapi.OsmApi(session=oauth_session)
+  ```
+- **BC-Break**: Removed all deprecated `CamelCase` methods (e.g. `NodeGet`, `ChangesetCreate`, `NotesGet`, `Map`, `Capabilities`), they have been deprecated since 5.0. Use the `snake_case` equivalents instead (e.g. `node_get`, `changeset_create`, `notes_get`, `map`, `capabilities`).
+
+### Fixed
+- Fix release trigger for Upload Python Package workflow by @metaodi in https://github.com/metaodi/osmapi/pull/202
+- Fix `TypeError` when an element write (`node_create`/`way_update`/`relation_delete`, …) received an HTTP 409: the payload was matched as text against `bytes`, so `ChangesetClosedApiError`/`VersionMismatchApiError` were never raised. This is the same bug that was fixed for `changeset_upload` in 5.1.0, now fixed for all element writes
+- Fix `changesets_get` silently dropping a bounding box whose values are all `0`
+
 ## [5.1.0] - 2026-07-26
 ### Changed
 * Bump pygments from 2.15.0 to 2.20.0 by @dependabot[bot] in https://github.com/metaodi/osmapi/pull/193
@@ -13,6 +45,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 * Fix TypeError in changeset_upload when handling HTTP 409 responses by @hagatopaxi in https://github.com/metaodi/osmapi/pull/196
+* fix/update example oauth code in readme by @tyrasd in https://github.com/metaodi/osmapi/pull/195
+
 
 ## [5.0.0] - 2026-02-18
 ### Changed
@@ -389,7 +423,8 @@ Miroslav Šedivý
 - `Fixed` for any bug fixes.
 - `Security` to invite users to upgrade in case of vulnerabilities.
 
-[Unreleased]: https://github.com/metaodi/osmapi/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/metaodi/osmapi/compare/v6.0.0...HEAD
+[6.0.0]: https://github.com/metaodi/osmapi/compare/v5.1.0...v6.0.0
 [5.1.0]: https://github.com/metaodi/osmapi/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/metaodi/osmapi/compare/v4.3.0...v5.0.0
 [4.3.0]: https://github.com/metaodi/osmapi/compare/v4.2.0...v4.3.0

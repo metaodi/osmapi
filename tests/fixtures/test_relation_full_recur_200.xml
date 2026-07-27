@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server">
+ <node id="2" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7" lat="47.2" lon="8.2"/>
+ <relation id="300" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7">
+  <member type="node" ref="3" role="point"/>
+  <tag k="name" v="relation 300"/>
+ </relation>
+ <relation id="200" visible="true" version="1" changeset="900" timestamp="2024-03-01T10:00:00Z" user="tester" uid="7">
+  <member type="node" ref="2" role="point"/>
+  <member type="relation" ref="300" role="subarea"/>
+  <tag k="name" v="relation 200"/>
+ </relation>
+</osm>

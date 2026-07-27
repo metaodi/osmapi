@@ -9,9 +9,11 @@ osmapi
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
-Python wrapper for the OSM API (requires Python >= 3.9).
+Python wrapper for the OSM API (requires Python >= 3.10).
 
-**NOTE**: Since version 5.0 of this library, all method names are in `snake_case`, the `CamelCase` versions are deprecated and will be removed in version 6.0.
+**NOTE**: All method names of this library are in `snake_case` (e.g. `api.node_get(123)`).
+The deprecated `CamelCase` versions (e.g. `api.NodeGet(123)`) were removed in version 6.0,
+they have been deprecated since version 5.0.
 
 ## Installation
 
@@ -27,8 +29,11 @@ The build the documentation locally, you can use
 
     make docs
 
+This writes the HTML to `docs/`, which is *not* committed to the repository (it is git-ignored).
+
 This project uses GitHub Pages to publish its documentation.
-To update the online documentation, you need to re-generate the documentation with the above command and update the `main` branch of this repository.
+The online documentation is built and deployed by the [`publish_docs.yml` GitHub Action](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml) whenever a new release is published, so it always describes the latest released version.
+The workflow can also be started manually from the Actions tab, optionally with a tag to build the documentation from.
 
 ## Examples
 
@@ -52,10 +57,13 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### Write to OpenStreetMap
 
+Writing requires an authenticated session, see [OAuth authentication](#oauth-authentication) below
+for how to create one (`auth.session` in this example):
+
 
 ```python
 >>> import osmapi
->>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", username = "metaodi", password = "*******")
+>>> api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org", session=auth.session)
 >>> api.changeset_create({"comment": "My first test"})
 >>> print(api.node_create({"lon":1, "lat":1, "tag": {}}))
 {'changeset': 532907, 'lon': 1, 'version': 1, 'lat': 1, 'tag': {}, 'id': 164684}
@@ -64,16 +72,15 @@ Check the [examples directory](https://github.com/metaodi/osmapi/tree/develop/ex
 
 ### OAuth authentication
 
-Username/Password authentication is deprecated since July 2024
-(see [official OWG announcemnt](https://blog.openstreetmap.org/2024/04/17/oauth-1-0a-and-http-basic-auth-shutdown-on-openstreetmap-org/) for details).
+Username/Password authentication was shut down by OpenStreetMap in July 2024
+(see [official OWG announcemnt](https://blog.openstreetmap.org/2024/04/17/oauth-1-0a-and-http-basic-auth-shutdown-on-openstreetmap-org/) for details),
+the `username`, `password` and `passwordfile` parameters of `osmapi.OsmApi` were removed in version 6.0.
 In order to use this library, you need to use OAuth 2.0.
 
 To use OAuth 2.0, you must register an application with an OpenStreetMap account, either on the
 [development server](https://master.apis.dev.openstreetmap.org/oauth2/applications)
 or on the [production server](https://www.openstreetmap.org/oauth2/applications).
 Once this registration is done, you'll get a `client_id` and a `client_secret` that you can use to authenticate users.
-
-auth = OpenStreetMapDevAuth(
 
 Example code using [`cli-oauth2`](https://github.com/Zverik/cli-oauth2) on the development server, replace `OpenStreetMapDevAuth` with `OpenStreetMapAuth` to use the production server:
 
@@ -129,11 +136,14 @@ See the [Import/Guidelines](http://wiki.openstreetmap.org/wiki/Import/Guidelines
 
 ## Development
 
-If you want to help with the development of `osmapi`, you should clone this repository and install the requirements:
+This project uses [uv](https://docs.astral.sh/uv/) to manage its virtual env and dependencies, see the [installation instructions](https://docs.astral.sh/uv/getting-started/installation/) to get it.
+
+If you want to help with the development of `osmapi`, you should clone this repository and install the dependencies:
 
     make deps
 
-Better yet use the provided [`setup.sh`](https://github.com/metaodi/osmapi/blob/develop/setup.sh) script to create a virtual env and install this package in it. 
+This creates a virtual env in `.venv` with `osmapi` and all its dev dependencies installed (the provided [`setup.sh`](https://github.com/metaodi/osmapi/blob/develop/setup.sh) script does the same thing).
+All the commands below run inside that env, there is no need to activate it manually.
 
 You can lint the source code using this command:
 
@@ -147,16 +157,20 @@ To run the tests use the following command:
 
     make test
 
+To build the wheel and the source distribution locally:
+
+    make build
+
 ## Release
 
 To create a new release, follow these steps (please respect [Semantic Versioning](http://semver.org/)):
 
 1. Adapt the version number in `osmapi/__init__.py`
 1. Update the CHANGELOG with the version
-1. Re-build the documentation (`make docs`)
 1. Create a [pull request to merge develop into main](https://github.com/metaodi/osmapi/compare/main...develop) (make sure the tests pass!)
 1. Create a [new release/tag on GitHub](https://github.com/metaodi/osmapi/releases) (on the main branch)
 1. The [publication on PyPI](https://pypi.python.org/pypi/osmapi) happens via [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_python.yml) on every tagged commit
+1. The [documentation](http://osmapi.metaodi.ch) is re-generated from the tag and published to GitHub Pages by [GitHub Actions](https://github.com/metaodi/osmapi/actions/workflows/publish_docs.yml), triggered by the same release
 
 ## Attribution
 

@@ -4,7 +4,7 @@ Way operations for the OpenStreetMap API.
 This module provides pythonic (snake_case) methods for working with OSM ways.
 """
 
-from typing import Any, Optional, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
 from . import dom, parser
@@ -49,9 +49,7 @@ class WayMixin:
         way = cast(Element, dom.OsmResponseToDom(data, tag="way", single=True))
         return dom.dom_parse_way(way)
 
-    def way_create(
-        self: "OsmApi", way_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def way_create(self: "OsmApi", way_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Creates a way based on the supplied `way_data` dict:
 
@@ -75,8 +73,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the supplied information contain an existing node,
         `OsmApi.OsmTypeAlreadyExistsError` is raised.
@@ -92,9 +90,7 @@ class WayMixin:
         """
         return self._do("create", "way", way_data)
 
-    def way_update(
-        self: "OsmApi", way_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def way_update(self: "OsmApi", way_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Updates way with the supplied `way_data` dict:
 
@@ -120,8 +116,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -134,9 +130,7 @@ class WayMixin:
         """
         return self._do("modify", "way", way_data)
 
-    def way_delete(
-        self: "OsmApi", way_data: dict[str, Any]
-    ) -> Optional[dict[str, Any]]:
+    def way_delete(self: "OsmApi", way_data: dict[str, Any]) -> dict[str, Any] | None:
         """
         Delete way with `way_data`:
 
@@ -162,8 +156,8 @@ class WayMixin:
                 'visible': True|False
             }
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.

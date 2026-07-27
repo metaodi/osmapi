@@ -1,7 +1,6 @@
 import osmapi
 from pprint import pprint
 
-
 api = osmapi.OsmApi(api="https://api06.dev.openstreetmap.org")
 
 

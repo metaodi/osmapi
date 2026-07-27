@@ -7,7 +7,8 @@ import urllib.parse
 import xml.dom.minidom
 import xml.parsers.expat
 from contextlib import contextmanager
-from typing import Any, Optional, TYPE_CHECKING, Generator, cast
+from collections.abc import Generator
+from typing import Any, TYPE_CHECKING, cast
 from xml.dom.minidom import Element
 
 from . import dom, errors, xmlbuilder, parser
@@ -21,7 +22,7 @@ class ChangesetMixin:
 
     @contextmanager
     def changeset(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> Generator[int, None, None]:
         """
         Context manager for a Changeset.
@@ -40,8 +41,12 @@ class ChangesetMixin:
 
         Returns `changeset_id`
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        The changeset is closed on the way out even if the body raises, so
+        that an error does not leave a changeset dangling and block the next
+        one with an `OsmApi.ChangesetAlreadyOpenError`.
+
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
@@ -50,8 +55,10 @@ class ChangesetMixin:
             changeset_tags = {}
         # Create a new changeset
         changeset_id = self.changeset_create(changeset_tags)
-        yield changeset_id
-        self.changeset_close()
+        try:
+            yield changeset_id
+        finally:
+            self.changeset_close()
 
     def changeset_get(
         self: "OsmApi", changeset_id: int, include_discussion: bool = False
@@ -74,13 +81,13 @@ class ChangesetMixin:
         return dom.dom_parse_changeset(changeset, include_discussion=include_discussion)
 
     def changeset_update(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> int:
         """
         Updates current changeset with `changeset_tags`.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -110,7 +117,7 @@ class ChangesetMixin:
         return self._current_changeset_id
 
     def changeset_create(
-        self: "OsmApi", changeset_tags: Optional[dict[str, str]] = None
+        self: "OsmApi", changeset_tags: dict[str, str] | None = None
     ) -> int:
         """
         Opens a changeset.
@@ -119,8 +126,8 @@ class ChangesetMixin:
 
         Returns `changeset_id`
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is already an open changeset,
         `OsmApi.ChangesetAlreadyOpenError` is raised.
@@ -154,8 +161,8 @@ class ChangesetMixin:
 
         Returns `changeset_id`.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If there is no open changeset,
         `OsmApi.NoChangesetOpenError` is raised.
@@ -190,8 +197,8 @@ class ChangesetMixin:
 
         Returns list with updated ids.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
@@ -213,13 +220,8 @@ class ChangesetMixin:
                 forceAuth=True,
             )
         except errors.ApiError as e:
-            payload_str = (
-                e.payload.decode("utf-8", errors="replace")
-                if isinstance(e.payload, bytes)
-                else str(e.payload)
-            )
             if e.status == 409 and re.search(
-                r"The changeset .* was closed at .*", payload_str
+                r"The changeset .* was closed at .*", e.payload_str
             ):
                 raise errors.ChangesetClosedApiError(
                     e.status, e.reason, e.payload
@@ -258,26 +260,38 @@ class ChangesetMixin:
 
     def changesets_get(  # noqa: C901
         self: "OsmApi",
-        min_lon: Optional[float] = None,
-        min_lat: Optional[float] = None,
-        max_lon: Optional[float] = None,
-        max_lat: Optional[float] = None,
-        userid: Optional[int] = None,
-        username: Optional[str] = None,
-        closed_after: Optional[str] = None,
-        created_before: Optional[str] = None,
+        min_lon: float | None = None,
+        min_lat: float | None = None,
+        max_lon: float | None = None,
+        max_lat: float | None = None,
+        userid: int | None = None,
+        username: str | None = None,
+        closed_after: str | None = None,
+        created_before: str | None = None,
         only_open: bool = False,
         only_closed: bool = False,
     ) -> dict[int, dict[str, Any]]:
         """
         Returns a dict with the id of the changeset as key matching all criteria.
 
-        All parameters are optional.
+        All parameters are optional. The bounding box is only applied if all
+        four of `min_lon`, `min_lat`, `max_lon` and `max_lat` are given.
+
+        If only some of the bounding box values are given,
+        `ValueError` is raised.
         """
         uri = "/api/0.6/changesets"
         params: dict[str, Any] = {}
-        if min_lon or min_lat or max_lon or max_lat:
-            params["bbox"] = f"{min_lon},{min_lat},{max_lon},{max_lat}"
+        bbox = (min_lon, min_lat, max_lon, max_lat)
+        if any(coord is not None for coord in bbox):
+            if any(coord is None for coord in bbox):
+                raise ValueError(
+                    "A bounding box needs all of min_lon, min_lat, max_lon "
+                    "and max_lat, got "
+                    f"min_lon={min_lon}, min_lat={min_lat}, "
+                    f"max_lon={max_lon}, max_lat={max_lat}"
+                )
+            params["bbox"] = ",".join(str(coord) for coord in bbox)
         if userid:
             params["user"] = userid
         if username:
@@ -314,8 +328,8 @@ class ChangesetMixin:
 
         Returns the updated changeset data dict.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If the changeset is already closed,
         `OsmApi.ChangesetClosedApiError` is raised.
@@ -346,8 +360,8 @@ class ChangesetMixin:
 
         Returns the updated changeset data dict.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If already subscribed to this changeset,
         `OsmApi.AlreadySubscribedApiError` is raised.
@@ -377,8 +391,8 @@ class ChangesetMixin:
 
         Returns the updated changeset data dict.
 
-        If no authentication information are provided,
-        `OsmApi.UsernamePasswordMissingError` is raised.
+        If no session is provided to authenticate the request,
+        `OsmApi.AuthenticationMissingError` is raised.
 
         If not subscribed to this changeset,
         `OsmApi.NotSubscribedApiError` is raised.

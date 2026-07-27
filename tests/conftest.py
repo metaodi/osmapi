@@ -164,12 +164,19 @@ def assert_request_xml(xml_dict):
     return _assert_request_xml
 
 
-def make_http_response(status=200, content="test response", reason="test reason"):
-    """Build a minimal stand-in for a `requests` response."""
+def make_http_response(
+    status=200, content="test response", reason="test reason", headers=None
+):
+    """Build a minimal stand-in for a `requests` response.
+
+    `headers` has to be a real dict rather than a `Mock` attribute, otherwise
+    `response.headers.get(...)` answers with a `Mock` instead of `None`.
+    """
     response = mock.Mock()
     response.status_code = status
     response.reason = reason
     response.content = content
+    response.headers = headers if headers is not None else {}
     return response
 
 
@@ -200,6 +207,7 @@ def mock_api():
         auth=True,
         responses=None,
         side_effect=None,
+        headers=None,
     ):
         session = mock.Mock()
         session.close = mock.Mock()
@@ -211,7 +219,7 @@ def mock_api():
             session.request = mock.Mock(side_effect=list(responses))
         else:
             session.request = mock.Mock(
-                return_value=make_http_response(status, content, reason)
+                return_value=make_http_response(status, content, reason, headers)
             )
 
         api = osmapi.OsmApi(api=API_BASE, session=session)

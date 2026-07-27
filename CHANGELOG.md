@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Dedicated error classes for failures that are not caused by the request itself (see issue #194). Previously an HTTP 500 from the OSM API — like any other unmapped status — was raised as a plain `ApiError`, so telling "OpenStreetMap is having a bad day" apart from "my request was wrong" meant inspecting `ApiError.status` by hand:
+  - `ServerApiError` for any 5xx, with `InternalServerApiError` (500), `BadGatewayApiError` (502), `ServiceUnavailableApiError` (503) and `GatewayTimeoutApiError` (504) for the specific cases
+  - `RateLimitApiError` when the API refuses the request because a limit was exceeded (429 too many requests, 509 bandwidth limit exceeded)
+  - `RetriableApiError`, the common superclass of all of the above and of `TimeoutApiError`/`ConnectionApiError`, to catch every transient failure in one place:
+    ```python
+    try:
+        node = api.node_get(123)
+    except osmapi.RetriableApiError as e:
+        wait_and_try_again(e.retry_after)
+    ```
+  All of these are subclasses of `ApiError`, so existing `except osmapi.ApiError` clauses keep working unchanged
+- `ApiError.retry_after`, the number of seconds the API asked to wait before retrying (its `Retry-After` header, both the delay-seconds and the HTTP-date form are supported), or `None` if it did not send one
+
+### Changed
+- Requests that ran into a rate limit (HTTP 429 and 509) are now retried instead of raising immediately, like server errors already were. Such a call now takes longer before it eventually fails
+- The wait between two retries doubles after every attempt (5s, 10s, 20s, capped at 60s) instead of being a constant 5s, since these errors happen more often when the OSM servers are under load. The first retry still follows immediately. A `Retry-After` sent by the API takes precedence over this schedule
 
 ## [6.0.0] - 2026-07-27
 ### Changed

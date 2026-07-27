@@ -79,7 +79,13 @@ class ApiError(OsmApiError):
     Error class, is thrown when an API request fails
     """
 
-    def __init__(self, status: int, reason: str, payload: Any) -> None:
+    def __init__(
+        self,
+        status: int,
+        reason: str,
+        payload: Any,
+        retry_after: float | None = None,
+    ) -> None:
         self.status = status
         """HTTP error code"""
 
@@ -88,6 +94,17 @@ class ApiError(OsmApiError):
 
         self.payload = payload
         """Payload of API when this error occured"""
+
+        self.retry_after = retry_after
+        """
+        Number of seconds the server asked to wait before retrying, or `None`.
+
+        This is the `Retry-After` header of the response, which the API sends
+        with rate limits (HTTP 429) and when it is temporarily unavailable
+        (HTTP 503). Both the delay-seconds and the HTTP-date form of the
+        header are resolved to a number of seconds; a missing or unparseable
+        header results in `None`.
+        """
 
     @property
     def payload_str(self) -> str:
@@ -103,6 +120,88 @@ class ApiError(OsmApiError):
 
     def __str__(self) -> str:
         return f"Request failed: {self.status} - {self.reason} - {self.payload}"
+
+
+class RetriableApiError(ApiError):
+    """
+    Error that is worth trying again later.
+
+    Superclass of every error that does not indicate a problem with the
+    request itself: the server failed (`OsmApi.ServerApiError`), it refused
+    because of a rate limit (`OsmApi.RateLimitApiError`), or it could not be
+    reached at all (`OsmApi.TimeoutApiError`, `OsmApi.ConnectionApiError`).
+    Catch this to handle all transient failures in one place:
+
+        #!python
+        try:
+            api.node_get(123)
+        except osmapi.RetriableApiError as e:
+            wait_and_try_again(e.retry_after)
+
+    osmapi already retries some of these itself (see
+    `OsmApi.http.OsmApiSession.MAX_RETRY_LIMIT`) — an error of this class
+    reaching the caller means those retries were exhausted, or that the error
+    is one osmapi does not retry on its own. Timeouts and connection errors
+    are never retried automatically, as a request that never gets an answer
+    would otherwise block for several times the configured timeout.
+    """
+
+
+class ServerApiError(RetriableApiError):
+    """
+    Error when the API failed to handle the request (HTTP 5xx).
+
+    The fault is on the OpenStreetMap side rather than with the request, and
+    such errors are usually transient — they happen more often when the OSM
+    servers are under load. `OsmApi.InternalServerApiError`,
+    `OsmApi.BadGatewayApiError`, `OsmApi.ServiceUnavailableApiError` and
+    `OsmApi.GatewayTimeoutApiError` are the specific cases; any other 5xx
+    status is raised as `OsmApi.ServerApiError` itself.
+
+    Note that HTTP 509 (bandwidth limit exceeded) is _not_ part of this
+    group, even though it is numerically a 5xx: it is a quota, not a server
+    failure, and is raised as `OsmApi.RateLimitApiError`.
+    """
+
+
+class InternalServerApiError(ServerApiError):
+    """
+    Error when the API encountered an unexpected condition (HTTP 500)
+    """
+
+
+class BadGatewayApiError(ServerApiError):
+    """
+    Error when the API is unreachable behind its proxy (HTTP 502)
+    """
+
+
+class ServiceUnavailableApiError(ServerApiError):
+    """
+    Error when the API is temporarily unavailable (HTTP 503),
+    e.g. while the OpenStreetMap database is in maintenance or read-only mode
+    """
+
+
+class GatewayTimeoutApiError(ServerApiError):
+    """
+    Error when the API did not answer its proxy in time (HTTP 504)
+    """
+
+
+class RateLimitApiError(RetriableApiError):
+    """
+    Error when the API refused the request because a limit was exceeded:
+    too many requests (HTTP 429) or too much data downloaded
+    (HTTP 509, bandwidth limit exceeded).
+
+    Unlike `OsmApi.ServerApiError` this is not a failure of the API, so it is
+    not a subclass of it — despite HTTP 509 being a 5xx status. Use
+    `OsmApi.RetriableApiError` to catch both.
+
+    `retry_after` carries the number of seconds the API asked to wait, if it
+    sent a `Retry-After` header.
+    """
 
 
 class UnauthorizedApiError(ApiError):
@@ -182,13 +281,13 @@ class PreconditionFailedApiError(ApiError):
     """
 
 
-class TimeoutApiError(ApiError):
+class TimeoutApiError(RetriableApiError):
     """
     Error if the http request ran into a timeout
     """
 
 
-class ConnectionApiError(ApiError):
+class ConnectionApiError(RetriableApiError):
     """
     Error if there was a network error (e.g. DNS failure, refused connection)
     while connecting to the remote server.

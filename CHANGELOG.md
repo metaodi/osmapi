@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New method `changeset_comments_search` to search the comments of *all* changesets by author (`userid`/`username`) and by creation time (`created_after`/`created_before`), with an optional `limit` (see issue #220). It wraps `GET /api/0.6/changeset_comments`, which OpenStreetMap added in February 2025
+
 ### Changed
 - Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
 

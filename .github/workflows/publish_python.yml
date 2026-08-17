@@ -27,7 +27,7 @@ jobs:
         ref: ${{ inputs.tag || github.ref }}
 
     - name: Set up uv and Python ${{ matrix.python-version }}
-      uses: astral-sh/setup-uv@v9.0.0
+      uses: astral-sh/setup-uv@v10.0.1
       with:
         enable-cache: true
         python-version: ${{ matrix.python-version }}
@@ -49,7 +49,7 @@ jobs:
       with:
         ref: ${{ inputs.tag || github.ref }}
     - name: Set up uv
-      uses: astral-sh/setup-uv@v9.0.0
+      uses: astral-sh/setup-uv@v10.0.1
       with:
         enable-cache: true
     - name: Build

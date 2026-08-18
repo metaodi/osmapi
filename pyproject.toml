@@ -26,7 +26,9 @@ classifiers = [
 # Lower bound only: osmapi only uses the long-stable parts of the requests API
 # (Session, Session.request and the exception classes). Never add an upper bound
 # here, a cap in a library propagates into every downstream resolver.
-dependencies = ["requests>=2.25.0"]
+# >=2.33.0 for GHSA-9hjg-9r4m-mvj7 (predictable temp file in extract_zipped_paths,
+# not used by osmapi, but the floor is what Dependabot tracks).
+dependencies = ["requests>=2.33.0"]
 dynamic = ["version"]
 
 [project.urls]

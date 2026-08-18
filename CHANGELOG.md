@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Changed
 - Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
+- Raise the minimum `requests` version from `2.25.0` to `2.33.0`, which fixes [GHSA-9hjg-9r4m-mvj7](https://github.com/psf/requests/security/advisories/GHSA-9hjg-9r4m-mvj7) (a predictable temp file name in `requests.utils.extract_zipped_paths`, a function osmapi does not call, but the old floor still let Dependabot flag the declared range)
 
 ### Fixed
 - Fix tag values and member roles containing a newline, a tab or a carriage return being silently corrupted on write (`node_update`, `way_create`, `relation_delete`, `changeset_create`, `changeset_upload`, …). Those characters were written literally into an XML attribute, where the parser on the other end normalizes them to a space, so `{"note": "first\nsecond"}` arrived at the API as `"first second"`. They are now written as character references and round-trip unchanged. Member `type` was not escaped at all (see issue #216)

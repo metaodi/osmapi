@@ -318,6 +318,76 @@ class ChangesetMixin:
             result[tmp_cs["id"]] = tmp_cs
         return result
 
+    def changeset_comments_search(
+        self: "OsmApi",
+        userid: int | None = None,
+        username: str | None = None,
+        created_after: str | None = None,
+        created_before: str | None = None,
+        limit: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Returns a list of changeset comments matching all criteria, most
+        recent first.
+
+        Unlike `OsmApi.OsmApi.changeset_get` with `include_discussion=True`,
+        which returns the discussion of a single changeset, this searches the
+        comments of *all* changesets.
+
+        All parameters are optional; without any of them the most recent
+        comments are returned.
+
+        `userid` (the numeric id) and `username` (the display name) restrict
+        the result to the comments written by that user.
+
+        `created_after` and `created_before` restrict the result to the
+        comments created in that time period. Both are strings, e.g.
+        `2025-02-01T00:00:00Z`. The API only supports an upper bound together
+        with a lower one, so `created_after` defaults to the epoch if only
+        `created_before` is given.
+
+        `limit` is the maximum number of comments to return; the API applies
+        its own default and maximum if it is not given.
+
+        Each comment is a dict:
+
+            #!python
+            {
+                'id': id of the comment,
+                'date': datetime of the comment,
+                'visible': True if the comment has not been hidden,
+                'uid': id of the author,
+                'user': display name of the author,
+                'text': text of the comment,
+            }
+
+        `uid` and `user` are omitted for authors whose data is not public.
+
+        If the user is unknown, or `limit` is outside of the range accepted by
+        the API, `OsmApi.ApiError` is raised.
+        """
+        uri = "/api/0.6/changeset_comments"
+        params: dict[str, Any] = {}
+        if userid:
+            params["user"] = userid
+        if username:
+            params["display_name"] = username
+        if created_after:
+            params["from"] = created_after
+        if created_before:
+            if not created_after:
+                params["from"] = "1970-01-01T00:00:00Z"
+            params["to"] = created_before
+        if limit is not None:
+            params["limit"] = limit
+
+        data = self._session._get(uri, params=params)
+        comments = cast(
+            list[Element],
+            dom.OsmResponseToDom(data, tag="comment", allow_empty=True),
+        )
+        return [dom.dom_parse_comment(comment) for comment in comments]
+
     def changeset_comment(
         self: "OsmApi", changeset_id: int, comment: str
     ) -> dict[str, Any]:

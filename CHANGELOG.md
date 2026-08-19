@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project follows [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New method `changeset_comments_search` to search the comments of *all* changesets by author (`userid`/`username`) and by creation time (`created_after`/`created_before`), with an optional `limit` (see issue #220). It wraps `GET /api/0.6/changeset_comments`, which OpenStreetMap added in February 2025
+
 ### Changed
 - Request bodies are now assembled with `xml.etree.ElementTree` instead of by concatenating strings, so escaping is handled by the standard library (see issue #56). The generated XML is unchanged apart from formatting
 - Raise the minimum `requests` version from `2.25.0` to `2.33.0`, which fixes [GHSA-9hjg-9r4m-mvj7](https://github.com/psf/requests/security/advisories/GHSA-9hjg-9r4m-mvj7) (a predictable temp file name in `requests.utils.extract_zipped_paths`, a function osmapi does not call, but the old floor still let Dependabot flag the declared range)

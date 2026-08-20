@@ -4,8 +4,8 @@ Relation operations for the OpenStreetMap API.
 This module provides pythonic (snake_case) methods for working with OSM relations.
 """
 
-from typing import Any, TYPE_CHECKING, cast
-from xml.dom.minidom import Element
+from collections.abc import Iterator
+from typing import Any, TYPE_CHECKING
 
 from . import dom, parser
 
@@ -35,9 +35,7 @@ class RelationMixin:
         if relation_version != -1:
             uri += f"/{relation_version}"
         data = self._session._get(uri)
-        relation = cast(
-            Element, dom.OsmResponseToDom(data, tag="relation", single=True)
-        )
+        relation = dom.OsmResponseToDom(data, tag="relation", single=True)
         return dom.dom_parse_relation(relation)
 
     def relation_create(
@@ -98,17 +96,39 @@ class RelationMixin:
         """
         Returns dict with version as key.
 
+        The whole history is held in memory at once, which for a large
+        relation with many versions can be a lot — use
+        `relation_history_iter` to work through the versions one by one
+        instead.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+        """
+        return {
+            relation["version"]: relation
+            for relation in self.relation_history_iter(relation_id)
+        }
+
+    def relation_history_iter(
+        self: "OsmApi", relation_id: int
+    ) -> Iterator[dict[str, Any]]:
+        """
+        Yields every version of the relation with `relation_id`, oldest first.
+
+        Same data as `relation_history`, but the response is parsed while it
+        is being read and only one version is held in memory at a time. The
+        version number of each dict is available as its `version` key.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
+
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = f"/api/0.6/relation/{relation_id}/history"
-        data = self._session._get(uri)
-        relations = cast(list[Element], dom.OsmResponseToDom(data, tag="relation"))
-        result: dict[int, dict[str, Any]] = {}
-        for relation in relations:
-            relation_data = dom.dom_parse_relation(relation)
-            result[relation_data["version"]] = relation_data
-        return result
+        with self._session._get_stream(uri) as data:
+            for relation in dom.OsmResponseToDom(data, tag="relation"):
+                yield dom.dom_parse_relation(relation)
 
     def relation_relations(self: "OsmApi", relation_id: int) -> list[dict[str, Any]]:
         """
@@ -119,9 +139,7 @@ class RelationMixin:
         """
         uri = f"/api/0.6/relation/{relation_id}/relations"
         data = self._session._get(uri)
-        relations = cast(
-            list[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
-        )
+        relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result: list[dict[str, Any]] = []
         for relation in relations:
             relation_data = dom.dom_parse_relation(relation)
@@ -165,6 +183,30 @@ class RelationMixin:
 
         If you need all levels, use `relation_full_recur`.
 
+        The whole response is held in memory at once; use
+        `relation_full_iter` to work through the elements one by one instead.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+        """
+        return list(self.relation_full_iter(relation_id))
+
+    def relation_full_iter(
+        self: "OsmApi", relation_id: int
+    ) -> Iterator[dict[str, Any]]:
+        """
+        Yields the full data (two levels) for relation `relation_id`,
+        one element at a time.
+
+        Same data as `relation_full`, but the response is parsed while it is
+        being read and only one element is held in memory at a time.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
+
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
 
@@ -172,8 +214,8 @@ class RelationMixin:
         `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = f"/api/0.6/relation/{relation_id}/full"
-        data = self._session._get(uri)
-        return parser.parse_osm(data)
+        with self._session._get_stream(uri) as data:
+            yield from parser.iter_osm(data)
 
     def relations_get(
         self: "OsmApi", relation_id_list: list[int]
@@ -188,7 +230,7 @@ class RelationMixin:
         relation_list = ",".join([str(x) for x in relation_id_list])
         uri = f"/api/0.6/relations?relations={relation_list}"
         data = self._session._get(uri)
-        relations = cast(list[Element], dom.OsmResponseToDom(data, tag="relation"))
+        relations = dom.OsmResponseToDom(data, tag="relation")
         result: dict[int, dict[str, Any]] = {}
         for relation in relations:
             relation_data = dom.dom_parse_relation(relation)

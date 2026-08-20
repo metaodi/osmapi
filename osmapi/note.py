@@ -2,8 +2,7 @@
 Note operations for the OpenStreetMap API.
 """
 
-from typing import Any, TYPE_CHECKING, cast
-from xml.dom.minidom import Element
+from typing import Any, TYPE_CHECKING
 
 from . import dom, errors, parser
 
@@ -52,9 +51,7 @@ class NoteMixin:
         """
         uri = f"/api/0.6/notes/{note_id}"
         data = self._session._get(uri)
-        note_element = cast(
-            Element, dom.OsmResponseToDom(data, tag="note", single=True)
-        )
+        note_element = dom.OsmResponseToDom(data, tag="note", single=True)
         return dom.dom_parse_note(note_element)
 
     def note_create(self: "OsmApi", note_data: dict[str, Any]) -> dict[str, Any]:
@@ -170,7 +167,5 @@ class NoteMixin:
                 raise
 
         # parse the result
-        note_element = cast(
-            Element, dom.OsmResponseToDom(result, tag="note", single=True)
-        )
+        note_element = dom.OsmResponseToDom(result, tag="note", single=True)
         return dom.dom_parse_note(note_element)

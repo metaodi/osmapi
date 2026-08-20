@@ -4,17 +4,37 @@ Changeset operations for the OpenStreetMap API.
 
 import re
 import urllib.parse
-import xml.dom.minidom
-import xml.parsers.expat
+import xml.etree.ElementTree as ET
 from contextlib import contextmanager
-from collections.abc import Generator
-from typing import Any, TYPE_CHECKING, cast
-from xml.dom.minidom import Element
+from collections.abc import Generator, Iterator
+from typing import Any, TYPE_CHECKING
+from xml.etree.ElementTree import Element
 
 from . import dom, errors, xmlbuilder, parser
 
 if TYPE_CHECKING:
     from .OsmApi import OsmApi
+
+
+def _parse_diff_result(response_data: bytes) -> list[Element]:
+    """
+    Returns the elements of the `<diffResult>` answer to a changeset upload.
+
+    If the response is not a valid `<diffResult>` document,
+    `OsmApi.XmlResponseInvalidError` is raised.
+    """
+    try:
+        diff_result = ET.fromstring(response_data)
+    except ET.ParseError as e:
+        raise errors.XmlResponseInvalidError(
+            f"The XML response from the OSM API is invalid: {e!r}"
+        ) from e
+    if diff_result.tag != "diffResult":
+        raise errors.XmlResponseInvalidError(
+            "The XML response from the OSM API is invalid: expected a "
+            f"<diffResult> element, got <{diff_result.tag}>"
+        )
+    return list(diff_result)
 
 
 class ChangesetMixin:
@@ -75,9 +95,7 @@ class ChangesetMixin:
         if include_discussion:
             path = f"{path}?include_discussion=true"
         data = self._session._get(path)
-        changeset = cast(
-            Element, dom.OsmResponseToDom(data, tag="changeset", single=True)
-        )
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.dom_parse_changeset(changeset, include_discussion=include_discussion)
 
     def changeset_update(
@@ -228,16 +246,7 @@ class ChangesetMixin:
                 ) from e
             else:
                 raise
-        try:
-            result_dom = xml.dom.minidom.parseString(response_data)
-            diff_result = result_dom.getElementsByTagName("diffResult")[0]
-            result_elements = [
-                x for x in diff_result.childNodes if x.nodeType == x.ELEMENT_NODE
-            ]
-        except (xml.parsers.expat.ExpatError, IndexError) as e:
-            raise errors.XmlResponseInvalidError(
-                f"The XML response from the OSM API is invalid: {e!r}"
-            ) from e
+        result_elements = _parse_diff_result(response_data)
 
         for change in changes_data:
             if change["action"] == "delete":
@@ -253,10 +262,28 @@ class ChangesetMixin:
         Download data from changeset `changeset_id`.
 
         Returns list of dict with type, action, and data.
+
+        The whole changeset is held in memory at once; use
+        `changeset_download_iter` to work through the changes one by one
+        instead.
+        """
+        return list(self.changeset_download_iter(changeset_id))
+
+    def changeset_download_iter(
+        self: "OsmApi", changeset_id: int
+    ) -> Iterator[dict[str, Any]]:
+        """
+        Yields the changes of changeset `changeset_id`, one at a time.
+
+        Same data as `changeset_download`, but the response is parsed while it
+        is being read and only one change is held in memory at a time.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
         """
         uri = f"/api/0.6/changeset/{changeset_id}/download"
-        data = self._session._get(uri)
-        return parser.parse_osc(data)
+        with self._session._get_stream(uri) as data:
+            yield from parser.iter_osc(data)
 
     def changesets_get(  # noqa: C901
         self: "OsmApi",
@@ -311,7 +338,7 @@ class ChangesetMixin:
             uri += "?" + urllib.parse.urlencode(params)
 
         data = self._session._get(uri)
-        changesets = cast(list[Element], dom.OsmResponseToDom(data, tag="changeset"))
+        changesets = dom.OsmResponseToDom(data, tag="changeset")
         result: dict[int, dict[str, Any]] = {}
         for cur_changeset in changesets:
             tmp_cs = dom.dom_parse_changeset(cur_changeset)
@@ -348,10 +375,7 @@ class ChangesetMixin:
                 ) from e
             else:
                 raise
-        changeset = cast(
-            Element,
-            dom.OsmResponseToDom(data, tag="changeset", single=True),
-        )
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.dom_parse_changeset(changeset, include_discussion=False)
 
     def changeset_subscribe(self: "OsmApi", changeset_id: int) -> dict[str, Any]:
@@ -379,10 +403,7 @@ class ChangesetMixin:
                 ) from e
             else:
                 raise
-        changeset = cast(
-            Element,
-            dom.OsmResponseToDom(data, tag="changeset", single=True),
-        )
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.dom_parse_changeset(changeset, include_discussion=False)
 
     def changeset_unsubscribe(self: "OsmApi", changeset_id: int) -> dict[str, Any]:
@@ -408,8 +429,5 @@ class ChangesetMixin:
                 raise errors.NotSubscribedApiError(e.status, e.reason, e.payload) from e
             else:
                 raise
-        changeset = cast(
-            Element,
-            dom.OsmResponseToDom(data, tag="changeset", single=True),
-        )
+        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
         return dom.dom_parse_changeset(changeset, include_discussion=False)

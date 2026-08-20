@@ -180,6 +180,20 @@ def test_way_history(api, add_response):
     }
 
 
+def test_way_history_iter(api, add_response):
+    resp = add_response(GET, "/way/4294967296/history", filename="test_way_history.xml")
+
+    result = list(api.way_history_iter(4294967296))
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/way/4294967296/history"
+    assert [way["version"] for way in result] == [1, 2]
+    assert result[0]["id"] == 4294967296
+    assert result[0]["tag"] == {
+        "highway": "unclassified",
+        "name": "Stansted Road",
+    }
+
+
 def test_way_relations(api, add_response):
     resp = add_response(GET, "/way/4295032193/relations")
 
@@ -217,11 +231,31 @@ def test_way_full(api, add_response):
     assert result[16]["type"] == "way"
 
 
+def test_way_full_iter(api, add_response):
+    resp = add_response(GET, "/way/321/full", filename="test_way_full.xml")
+
+    result = list(api.way_full_iter(321))
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/way/321/full"
+    assert len(result) == 17
+    assert result[0]["type"] == "node"
+    assert result[0]["data"]["id"] == 11949
+    assert result[16]["type"] == "way"
+    assert result[16]["data"]["id"] == 321
+
+
 def test_way_full_invalid_response(api, add_response):
     add_response(GET, "/way/321/full")
 
     with pytest.raises(osmapi.XmlResponseInvalidError):
         api.way_full(321)
+
+
+def test_way_full_iter_invalid_response(api, add_response):
+    add_response(GET, "/way/321/full", filename="test_way_full_invalid_response.xml")
+
+    with pytest.raises(osmapi.XmlResponseInvalidError):
+        list(api.way_full_iter(321))
 
 
 def test_ways_get(api, add_response):

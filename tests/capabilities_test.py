@@ -41,6 +41,21 @@ def test_map(api, add_response):
     assert result[3]["data"]["member"] == [{"ref": 321, "role": "outer", "type": "way"}]
 
 
+def test_map_iter(api, add_response):
+    resp = add_response(GET, "/map", filename="test_map.xml")
+
+    result = list(api.map_iter(8.765, 47.287, 8.767, 47.289))
+
+    assert resp.calls[0].request.url == (
+        "http://api06.dev.openstreetmap.org/api/0.6/map"
+        "?bbox=8.765000,47.287000,8.767000,47.289000"
+    )
+    assert [elem["type"] for elem in result] == ["node", "node", "way", "relation"]
+    assert result[0]["data"]["id"] == 11949
+    assert result[2]["data"]["nd"] == [11949, 11950]
+    assert result[3]["data"]["member"] == [{"ref": 321, "role": "outer", "type": "way"}]
+
+
 def test_map_negative_bbox(api, add_response):
     resp = add_response(GET, "/map", filename="test_map.xml")
 

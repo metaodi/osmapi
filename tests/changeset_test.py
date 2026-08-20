@@ -463,6 +463,25 @@ def test_changeset_upload_invalid_response(auth_api, add_response):
     assert "The XML response from the OSM API is invalid" in str(execinfo.value)
 
 
+def test_changeset_upload_response_that_is_not_a_diff_result(auth_api, add_response):
+    add_response(PUT, "/changeset/create", body="4444")
+    add_response(POST, "/changeset/4444/upload", body="<osm version='0.6'/>")
+
+    changesdata = [
+        {
+            "type": "node",
+            "action": "create",
+            "data": [{"lat": 47.123, "lon": 8.555, "tag": {}}],
+        }
+    ]
+
+    auth_api.changeset_create()
+    with pytest.raises(
+        osmapi.XmlResponseInvalidError, match="expected a <diffResult> element"
+    ):
+        auth_api.changeset_upload(changesdata)
+
+
 def test_changeset_upload_no_auth(api):
     changesdata = [
         {
@@ -539,6 +558,37 @@ def test_changeset_download(api, add_response):
     result = api.changeset_download(23123)
 
     # Assertion
+    assert len(result) == 16
+    assert result[1] == (
+        {
+            "action": "create",
+            "type": "node",
+            "data": {
+                "changeset": 23123,
+                "id": 4295668171,
+                "lat": 46.4909781,
+                "lon": 11.2743295,
+                "tag": {"highway": "traffic_signals"},
+                "timestamp": datetime.datetime(2013, 5, 14, 10, 33, 4),
+                "uid": 1178,
+                "user": "tyrTester06",
+                "version": 1,
+                "visible": True,
+            },
+        }
+    )
+
+
+def test_changeset_download_iter(api, add_response):
+    resp = add_response(
+        GET, "/changeset/23123/download", filename="test_changeset_download.xml"
+    )
+
+    result = list(api.changeset_download_iter(23123))
+
+    assert resp.calls[0].request.url == (
+        "http://api06.dev.openstreetmap.org/api/0.6/changeset/23123/download"
+    )
     assert len(result) == 16
     assert result[1] == (
         {

@@ -51,6 +51,13 @@ def test_api_error_str():
         osmapi.TimeoutApiError,
         osmapi.ConnectionApiError,
         osmapi.ResponseEmptyApiError,
+        osmapi.RetriableApiError,
+        osmapi.ServerApiError,
+        osmapi.InternalServerApiError,
+        osmapi.BadGatewayApiError,
+        osmapi.ServiceUnavailableApiError,
+        osmapi.GatewayTimeoutApiError,
+        osmapi.RateLimitApiError,
     ],
 )
 def test_api_errors_are_catchable_as_api_error(error_class):
@@ -60,6 +67,80 @@ def test_api_errors_are_catchable_as_api_error(error_class):
     assert isinstance(error, osmapi.ApiError)
     assert isinstance(error, osmapi.OsmApiError)
     assert error.payload_str == "payload"
+
+
+##################################################
+# Retriable errors (server failures, rate limits)#
+##################################################
+
+
+@pytest.mark.parametrize(
+    "error_class",
+    [
+        osmapi.ServerApiError,
+        osmapi.InternalServerApiError,
+        osmapi.BadGatewayApiError,
+        osmapi.ServiceUnavailableApiError,
+        osmapi.GatewayTimeoutApiError,
+        osmapi.RateLimitApiError,
+        osmapi.TimeoutApiError,
+        osmapi.ConnectionApiError,
+    ],
+)
+def test_transient_errors_are_catchable_as_retriable(error_class):
+    """One `except` clause covers every failure that is worth trying again."""
+    error = error_class(503, "Service Unavailable", b"try later")
+
+    assert isinstance(error, osmapi.RetriableApiError)
+
+
+@pytest.mark.parametrize(
+    "error_class",
+    [
+        osmapi.InternalServerApiError,
+        osmapi.BadGatewayApiError,
+        osmapi.ServiceUnavailableApiError,
+        osmapi.GatewayTimeoutApiError,
+    ],
+)
+def test_server_errors_are_catchable_as_server_error(error_class):
+    error = error_class(500, "Internal Server Error", b"boom")
+
+    assert isinstance(error, osmapi.ServerApiError)
+
+
+def test_rate_limit_error_is_not_a_server_error():
+    """A quota is not a failure of the API, even though HTTP 509 is a 5xx."""
+    error = osmapi.RateLimitApiError(509, "Bandwidth Limit Exceeded", b"too much")
+
+    assert not isinstance(error, osmapi.ServerApiError)
+    assert isinstance(error, osmapi.RetriableApiError)
+
+
+def test_errors_that_are_not_retriable():
+    """A request the API rejected is not retried, retrying would fail again."""
+    for error_class in (
+        osmapi.UnauthorizedApiError,
+        osmapi.ElementNotFoundApiError,
+        osmapi.ElementDeletedApiError,
+        osmapi.VersionMismatchApiError,
+        osmapi.PreconditionFailedApiError,
+    ):
+        assert not isinstance(
+            error_class(400, "reason", b"payload"), osmapi.RetriableApiError
+        )
+
+
+def test_retry_after_defaults_to_none():
+    error = osmapi.ApiError(500, "Internal Server Error", b"boom")
+
+    assert error.retry_after is None
+
+
+def test_retry_after_is_kept():
+    error = osmapi.RateLimitApiError(429, "Too Many Requests", b"slow down", 120)
+
+    assert error.retry_after == 120
 
 
 ##################################################

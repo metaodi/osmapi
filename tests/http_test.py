@@ -1,5 +1,7 @@
 """Tests for the HTTP layer: status-code mapping and the retry loop."""
 
+import datetime
+from email.utils import format_datetime
 from unittest import mock
 
 import osmapi
@@ -110,7 +112,12 @@ def test_http_request_auth_with_authorization_header():
         (401, osmapi.UnauthorizedApiError),
         (404, osmapi.ElementNotFoundApiError),
         (410, osmapi.ElementDeletedApiError),
-        (500, osmapi.ApiError),
+        (429, osmapi.RateLimitApiError),
+        (500, osmapi.InternalServerApiError),
+        (502, osmapi.BadGatewayApiError),
+        (503, osmapi.ServiceUnavailableApiError),
+        (504, osmapi.GatewayTimeoutApiError),
+        (509, osmapi.RateLimitApiError),
     ],
 )
 def test_http_request_error_status_mapping(mock_api, status, expected):
@@ -119,9 +126,96 @@ def test_http_request_error_status_mapping(mock_api, status, expected):
     with pytest.raises(expected) as execinfo:
         api._session._http_request("GET", f"/api/0.6/test{status}", False, None)
 
+    assert type(execinfo.value) is expected
     assert execinfo.value.status == status
     assert execinfo.value.reason == "test reason"
     assert execinfo.value.payload == "test response"
+
+
+def test_http_request_unmapped_server_error(mock_api):
+    """Any other 5xx is still recognisable as a failure on the OSM side."""
+    api, _ = mock_api(status=507)
+
+    with pytest.raises(osmapi.ServerApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    assert type(execinfo.value) is osmapi.ServerApiError
+    assert execinfo.value.status == 507
+
+
+def test_http_request_unmapped_client_error(mock_api):
+    """A 4xx without its own class stays a plain, non-retriable ApiError."""
+    api, _ = mock_api(status=405)
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    assert type(execinfo.value) is osmapi.ApiError
+    assert not isinstance(execinfo.value, osmapi.RetriableApiError)
+
+
+##################################################
+# The Retry-After header                         #
+##################################################
+
+
+def test_http_request_retry_after_seconds(mock_api):
+    api, _ = mock_api(status=429, headers={"Retry-After": "120"})
+
+    with pytest.raises(osmapi.RateLimitApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    assert execinfo.value.retry_after == 120
+
+
+def test_http_request_retry_after_http_date(mock_api):
+    """The other form RFC 9110 allows: an absolute date instead of a delay."""
+    retry_at = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        seconds=90
+    )
+    api, _ = mock_api(
+        status=503, headers={"Retry-After": format_datetime(retry_at, usegmt=True)}
+    )
+
+    with pytest.raises(osmapi.ServiceUnavailableApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    # the header has a resolution of one second, so allow for the rounding
+    assert 88 <= execinfo.value.retry_after <= 90
+
+
+def test_http_request_retry_after_in_the_past(mock_api):
+    """A date that has already passed means "retry now", not a negative wait."""
+    retry_at = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+        seconds=90
+    )
+    api, _ = mock_api(
+        status=503, headers={"Retry-After": format_datetime(retry_at, usegmt=True)}
+    )
+
+    with pytest.raises(osmapi.ServiceUnavailableApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    assert execinfo.value.retry_after == 0
+
+
+@pytest.mark.parametrize(
+    "header",
+    [
+        {},
+        {"Retry-After": "later please"},
+        # float() would accept these, and time.sleep() would then fail
+        {"Retry-After": "inf"},
+        {"Retry-After": "nan"},
+    ],
+)
+def test_http_request_without_usable_retry_after(mock_api, header):
+    api, _ = mock_api(status=503, headers=header)
+
+    with pytest.raises(osmapi.ServiceUnavailableApiError) as execinfo:
+        api._session._http_request("GET", "/api/0.6/test", False, None)
+
+    assert execinfo.value.retry_after is None
 
 
 def test_http_request_empty_response(mock_api):
@@ -210,6 +304,77 @@ def test_http_does_not_retry_client_error(mock_api):
     api, session = mock_api(status=404)
 
     with pytest.raises(osmapi.ElementNotFoundApiError):
+        api._session._http("GET", "/api/0.6/test", False, None)
+
+    assert session.request.call_count == 1
+    assert api._session._sleep.call_count == 0
+
+
+def test_http_waits_longer_after_every_attempt(mock_api):
+    """Retrying an overloaded server immediately only adds to the load."""
+    api, session = mock_api(status=500)
+
+    with pytest.raises(osmapi.InternalServerApiError):
+        api._session._http("GET", "/api/0.6/test", False, None)
+
+    assert session.request.call_count == 5
+    # the first retry is immediate, the waits then double
+    assert api._session._sleep.call_args_list == [
+        mock.call(5),
+        mock.call(10),
+        mock.call(20),
+    ]
+
+
+def test_http_retries_rate_limit(mock_api):
+    """A rate limit used to raise right away, now it is waited out."""
+    api, session = mock_api(
+        responses=[
+            make_http_response(status=429, headers={"Retry-After": "30"}),
+            make_http_response(status=200, content="ok"),
+        ]
+    )
+
+    result = api._session._http("GET", "/api/0.6/test", False, None)
+
+    assert result == "ok"
+    assert session.request.call_count == 2
+    # even the first retry waits when the API asked us to
+    api._session._sleep.assert_called_once_with(30)
+
+
+def test_http_gives_up_after_max_retries_on_rate_limit(mock_api):
+    api, session = mock_api(status=429)
+
+    with pytest.raises(osmapi.RateLimitApiError) as execinfo:
+        api._session._http("GET", "/api/0.6/test", False, None)
+
+    assert execinfo.value.status == 429
+    assert session.request.call_count == api._session.MAX_RETRY_LIMIT
+
+
+def test_http_caps_the_requested_delay(mock_api):
+    """A break of an hour is the caller's decision to make, not ours."""
+    api, _ = mock_api(status=503, headers={"Retry-After": "3600"})
+
+    with pytest.raises(osmapi.ServiceUnavailableApiError) as execinfo:
+        api._session._http("GET", "/api/0.6/test", False, None)
+
+    assert api._session._sleep.call_args_list == [mock.call(60)] * 4
+    # the caller can still wait out the full delay the API asked for
+    assert execinfo.value.retry_after == 3600
+
+
+@pytest.mark.parametrize(
+    "error",
+    [requests.exceptions.Timeout(), requests.exceptions.ConnectionError("boom")],
+    ids=["timeout", "connection"],
+)
+def test_http_does_not_retry_unreachable_server(mock_api, error):
+    """Retrying a timeout would block for a multiple of the timeout itself."""
+    api, session = mock_api(side_effect=error)
+
+    with pytest.raises(osmapi.RetriableApiError):
         api._session._http("GET", "/api/0.6/test", False, None)
 
     assert session.request.call_count == 1

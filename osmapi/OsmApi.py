@@ -24,6 +24,32 @@ Find all information about changes of the different versions of this module
 `{"role": "", "ref":123, "type": "node"}`
 * All method names are in snake_case. The deprecated CamelCase versions
 (e.g. `NodeGet`) were removed in version 6.0.
+
+## Error handling:
+
+All errors raised by this module are subclasses of `OsmApi.OsmApiError`,
+those that come from a request to the API are subclasses of
+`OsmApi.ApiError`. Catch the specific error you want to handle first, and a
+more general one after it.
+
+Failures that are not caused by the request itself — the API failed
+(`OsmApi.ServerApiError`), refused because a limit was exceeded
+(`OsmApi.RateLimitApiError`), or could not be reached
+(`OsmApi.TimeoutApiError`, `OsmApi.ConnectionApiError`) — share the common
+superclass `OsmApi.RetriableApiError` and are worth trying again later:
+
+    #!python
+    try:
+        node = api.node_get(123)
+    except osmapi.RetriableApiError as e:
+        # e.retry_after is the delay the API asked for, if it sent one
+        wait_and_try_again(e.retry_after)
+    except osmapi.ElementNotFoundApiError:
+        ...
+
+osmapi already retries server errors and rate limits a number of times on
+its own (see `OsmApi.http.OsmApiSession.MAX_RETRY_LIMIT`), waiting longer
+after every attempt and respecting the `Retry-After` header of the response.
 """
 
 import re

@@ -959,7 +959,7 @@ def test_changeset_update_server_error(auth_api, add_response):
     with pytest.raises(osmapi.ApiError) as execinfo:
         auth_api.changeset_update({"test": "foobar"})
 
-    assert type(execinfo.value) is osmapi.ApiError
+    assert type(execinfo.value) is osmapi.InternalServerApiError
     assert execinfo.value.status == 500
 
 
@@ -1103,7 +1103,7 @@ def test_changeset_close_server_error(auth_api, add_response):
     with pytest.raises(osmapi.ApiError) as execinfo:
         auth_api.changeset_close()
 
-    assert type(execinfo.value) is osmapi.ApiError
+    assert type(execinfo.value) is osmapi.InternalServerApiError
     assert execinfo.value.status == 500
     # the changeset is still considered open, since closing it failed
     assert auth_api._current_changeset_id == 1414

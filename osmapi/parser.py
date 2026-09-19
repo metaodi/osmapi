@@ -1,13 +1,27 @@
-import xml.dom.minidom
-import xml.parsers.expat
-from typing import Any, cast
-from xml.dom.minidom import Element
+"""
+Parsers for whole OSM documents.
 
-from . import errors
+Each parser comes in two flavours: a function returning a list, and an
+`iter_*` variant returning an iterator. The iterator parses the document as it
+is read and never holds more than one element at a time, which is what makes
+it possible to work through a response that does not fit in memory (see
+`dom` for the details).
+"""
+
+from collections.abc import Callable, Iterator
+from typing import Any
+from xml.etree.ElementTree import Element
+
 from . import dom
 
+_OSM_ELEMENTS: dict[str, Callable[[Element], dict[str, Any]]] = {
+    "node": dom.dom_parse_node,
+    "way": dom.dom_parse_way,
+    "relation": dom.dom_parse_relation,
+}
 
-def parse_osm(data: bytes) -> list[dict[str, Any]]:
+
+def parse_osm(data: dom.XmlSource) -> list[dict[str, Any]]:
     """
     Parse osm data.
 
@@ -19,26 +33,21 @@ def parse_osm(data: bytes) -> list[dict[str, Any]]:
             data: {}
         }
     """
-    try:
-        data_parsed = xml.dom.minidom.parseString(data)
-        data_parsed = data_parsed.getElementsByTagName("osm")[0]  # type: ignore[assignment]  # noqa: E501
-    except (xml.parsers.expat.ExpatError, IndexError) as e:
-        raise errors.XmlResponseInvalidError(
-            f"The XML response from the OSM API is invalid: {e!r}"
-        ) from e
-
-    result: list[dict[str, Any]] = []
-    for elem in data_parsed.childNodes:
-        if elem.nodeName == "node":
-            result.append({"type": elem.nodeName, "data": dom.dom_parse_node(elem)})  # type: ignore[arg-type]  # noqa: E501
-        elif elem.nodeName == "way":
-            result.append({"type": elem.nodeName, "data": dom.dom_parse_way(elem)})  # type: ignore[arg-type]  # noqa: E501
-        elif elem.nodeName == "relation":
-            result.append({"type": elem.nodeName, "data": dom.dom_parse_relation(elem)})  # type: ignore[arg-type]  # noqa: E501
-    return result
+    return list(iter_osm(data))
 
 
-def parse_osc(data: bytes) -> list[dict[str, Any]]:
+def iter_osm(data: dom.XmlSource) -> Iterator[dict[str, Any]]:
+    """
+    Parse osm data, yielding one element at a time.
+
+    Yields the same dicts as `parse_osm`, but without building the list of all
+    of them.
+    """
+    for _, element in dom._iter_elements(data, _OSM_ELEMENTS, root_tag="osm"):
+        yield {"type": element.tag, "data": _OSM_ELEMENTS[element.tag](element)}
+
+
+def parse_osc(data: dom.XmlSource) -> list[dict[str, Any]]:
     """
     Parse osc data.
 
@@ -51,47 +60,27 @@ def parse_osc(data: bytes) -> list[dict[str, Any]]:
             data: {}
         }
     """
-    try:
-        data_parsed = xml.dom.minidom.parseString(data)
-        data_parsed = data_parsed.getElementsByTagName("osmChange")[0]  # type: ignore[assignment]  # noqa: E501
-    except (xml.parsers.expat.ExpatError, IndexError) as e:
-        raise errors.XmlResponseInvalidError(
-            f"The XML response from the OSM API is invalid: {e!r}"
-        ) from e
-
-    result: list[dict[str, Any]] = []
-    for action in data_parsed.childNodes:
-        if action.nodeName == "#text":
-            continue
-        for elem in action.childNodes:
-            if elem.nodeName == "node":
-                result.append(
-                    {
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": dom.dom_parse_node(elem),  # type: ignore[arg-type]
-                    }
-                )
-            elif elem.nodeName == "way":
-                result.append(
-                    {
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": dom.dom_parse_way(elem),  # type: ignore[arg-type]
-                    }
-                )
-            elif elem.nodeName == "relation":
-                result.append(
-                    {
-                        "action": action.nodeName,
-                        "type": elem.nodeName,
-                        "data": dom.dom_parse_relation(elem),  # type: ignore[arg-type]
-                    }
-                )
-    return result
+    return list(iter_osc(data))
 
 
-def parse_notes(data: bytes) -> list[dict[str, Any]]:
+def iter_osc(data: dom.XmlSource) -> Iterator[dict[str, Any]]:
+    """
+    Parse osc data, yielding one change at a time.
+
+    Yields the same dicts as `parse_osc`, but without building the list of all
+    of them.
+    """
+    for action, element in dom._iter_elements(
+        data, _OSM_ELEMENTS, root_tag="osmChange"
+    ):
+        yield {
+            "action": action,
+            "type": element.tag,
+            "data": _OSM_ELEMENTS[element.tag](element),
+        }
+
+
+def parse_notes(data: dom.XmlSource) -> list[dict[str, Any]]:
     """
     Parse notes data.
 
@@ -112,11 +101,15 @@ def parse_notes(data: bytes) -> list[dict[str, Any]]:
             { ... }
         ]
     """
-    noteElements = cast(
-        list[Element], dom.OsmResponseToDom(data, tag="note", allow_empty=True)
-    )
-    result: list[dict[str, Any]] = []
-    for noteElement in noteElements:
-        note = dom.dom_parse_note(noteElement)
-        result.append(note)
-    return result
+    return list(iter_notes(data))
+
+
+def iter_notes(data: dom.XmlSource) -> Iterator[dict[str, Any]]:
+    """
+    Parse notes data, yielding one note at a time.
+
+    Yields the same dicts as `parse_notes`, but without building the list of
+    all of them.
+    """
+    for element in dom.OsmResponseToDom(data, tag="note", allow_empty=True):
+        yield dom.dom_parse_note(element)

@@ -4,8 +4,8 @@ Way operations for the OpenStreetMap API.
 This module provides pythonic (snake_case) methods for working with OSM ways.
 """
 
-from typing import Any, TYPE_CHECKING, cast
-from xml.dom.minidom import Element
+from collections.abc import Iterator
+from typing import Any, TYPE_CHECKING
 
 from . import dom, parser
 
@@ -46,7 +46,7 @@ class WayMixin:
         if way_version != -1:
             uri += f"/{way_version}"
         data = self._session._get(uri)
-        way = cast(Element, dom.OsmResponseToDom(data, tag="way", single=True))
+        way = dom.OsmResponseToDom(data, tag="way", single=True)
         return dom.dom_parse_way(way)
 
     def way_create(self: "OsmApi", way_data: dict[str, Any]) -> dict[str, Any] | None:
@@ -178,17 +178,32 @@ class WayMixin:
                 ...
             }
 
+        The whole history is held in memory at once; use `way_history_iter`
+        to work through the versions one by one instead.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+        """
+        return {way["version"]: way for way in self.way_history_iter(way_id)}
+
+    def way_history_iter(self: "OsmApi", way_id: int) -> Iterator[dict[str, Any]]:
+        """
+        Yields every version of the way with `way_id`, oldest first.
+
+        Same data as `way_history`, but the response is parsed while it is
+        being read and only one version is held in memory at a time. The
+        version number of each dict is available as its `version` key.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
+
         If the requested element can not be found,
         `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = f"/api/0.6/way/{way_id}/history"
-        data = self._session._get(uri)
-        ways = cast(list[Element], dom.OsmResponseToDom(data, tag="way"))
-        result: dict[int, dict[str, Any]] = {}
-        for way in ways:
-            way_data = dom.dom_parse_way(way)
-            result[way_data["version"]] = way_data
-        return result
+        with self._session._get_stream(uri) as data:
+            for way in dom.OsmResponseToDom(data, tag="way"):
+                yield dom.dom_parse_way(way)
 
     def way_relations(self: "OsmApi", way_id: int) -> list[dict[str, Any]]:
         """
@@ -224,9 +239,7 @@ class WayMixin:
         """
         uri = f"/api/0.6/way/{way_id}/relations"
         data = self._session._get(uri)
-        relations = cast(
-            list[Element], dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
-        )
+        relations = dom.OsmResponseToDom(data, tag="relation", allow_empty=True)
         result: list[dict[str, Any]] = []
         for relation in relations:
             relation_data = dom.dom_parse_relation(relation)
@@ -248,6 +261,27 @@ class WayMixin:
 
         The `way_id` is a unique identifier for a way.
 
+        The whole response is held in memory at once; use `way_full_iter` to
+        work through the elements one by one instead.
+
+        If the requested element has been deleted,
+        `OsmApi.ElementDeletedApiError` is raised.
+
+        If the requested element can not be found,
+        `OsmApi.ElementNotFoundApiError` is raised.
+        """
+        return list(self.way_full_iter(way_id))
+
+    def way_full_iter(self: "OsmApi", way_id: int) -> Iterator[dict[str, Any]]:
+        """
+        Yields the full data for way `way_id`, one element at a time.
+
+        Same data as `way_full`, but the response is parsed while it is being
+        read and only one element is held in memory at a time.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
+
         If the requested element has been deleted,
         `OsmApi.ElementDeletedApiError` is raised.
 
@@ -255,8 +289,8 @@ class WayMixin:
         `OsmApi.ElementNotFoundApiError` is raised.
         """
         uri = f"/api/0.6/way/{way_id}/full"
-        data = self._session._get(uri)
-        return parser.parse_osm(data)
+        with self._session._get_stream(uri) as data:
+            yield from parser.iter_osm(data)
 
     def ways_get(self: "OsmApi", way_id_list: list[int]) -> dict[int, dict[str, Any]]:
         """
@@ -275,7 +309,7 @@ class WayMixin:
         way_list = ",".join([str(x) for x in way_id_list])
         uri = f"/api/0.6/ways?ways={way_list}"
         data = self._session._get(uri)
-        ways = cast(list[Element], dom.OsmResponseToDom(data, tag="way"))
+        ways = dom.OsmResponseToDom(data, tag="way")
         result: dict[int, dict[str, Any]] = {}
         for way in ways:
             way_data = dom.dom_parse_way(way)

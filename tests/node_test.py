@@ -318,6 +318,30 @@ def test_node_history(api, add_response):
     assert result[4]["tag"] == {"empty": "", "foo": "bar"}
 
 
+def test_node_history_iter(api, add_response):
+    resp = add_response(GET, "/node/123/history", filename="test_node_history.xml")
+
+    result = list(api.node_history_iter(123))
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/node/123/history"
+    assert [node["version"] for node in result] == [1, 2, 3, 4, 5, 6, 7, 8]
+    assert result[3]["id"] == 123
+    assert result[3]["lat"] == 51.8753146
+    assert result[3]["lon"] == -1.4857118
+    assert result[3]["tag"] == {"empty": "", "foo": "bar"}
+
+
+def test_node_history_iter_can_be_abandoned(api, add_response):
+    """Stopping early releases the response instead of reading it to the end."""
+    add_response(GET, "/node/123/history", filename="test_node_history.xml")
+
+    versions = api.node_history_iter(123)
+    first = next(versions)
+    versions.close()
+
+    assert first["version"] == 1
+
+
 def test_node_ways(api, add_response):
     resp = add_response(GET, "/node/234/ways")
 

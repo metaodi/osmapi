@@ -155,6 +155,22 @@ def test_relation_history(api, add_response):
     assert result[2]["version"] == 2
 
 
+def test_relation_history_iter(api, add_response):
+    resp = add_response(
+        GET, "/relation/2470397/history", filename="test_relation_history.xml"
+    )
+
+    result = list(api.relation_history_iter(2470397))
+
+    assert resp.calls[0].request.url == (f"{API_BASE}/api/0.6/relation/2470397/history")
+    assert [relation["version"] for relation in result] == [1, 2]
+    assert result[0]["id"] == 2470397
+    assert result[0]["tag"] == {
+        "restriction": "only_straight_on",
+        "type": "restriction",
+    }
+
+
 def test_relation_relations(api, add_response):
     resp = add_response(GET, "/relation/1532552/relations")
 
@@ -195,6 +211,30 @@ def test_relation_full(api, add_response):
     assert result[10]["data"]["id"] == 2470397
     assert result[10]["data"]["version"] == 2
     assert result[10]["type"] == "relation"
+
+
+def test_relation_full_iter(api, add_response):
+    resp = add_response(
+        GET, "/relation/2470397/full", filename="test_relation_full.xml"
+    )
+
+    result = list(api.relation_full_iter(2470397))
+
+    assert resp.calls[0].request.url == f"{API_BASE}/api/0.6/relation/2470397/full"
+    assert len(result) == 11
+    assert result[1]["type"] == "node"
+    assert result[1]["data"]["id"] == 101142277
+    assert result[10]["type"] == "relation"
+    assert result[10]["data"]["id"] == 2470397
+
+
+def test_relation_full_iter_with_deleted_relation(api, add_response):
+    add_response(GET, "/relation/2911456/full", body="", status=410)
+
+    with pytest.raises(osmapi.ElementDeletedApiError) as execinfo:
+        list(api.relation_full_iter(2911456))
+
+    assert execinfo.value.status == 410
 
 
 def test_relation_full_with_deleted_relation(api, add_response):

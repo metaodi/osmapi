@@ -2,8 +2,8 @@
 Capabilities and miscellaneous operations for the OpenStreetMap API.
 """
 
-from typing import Any, TYPE_CHECKING, cast
-from xml.dom.minidom import Element
+from collections.abc import Iterator
+from typing import Any, TYPE_CHECKING
 
 from . import dom, parser
 
@@ -24,17 +24,15 @@ class CapabilitiesMixin:
         uri = "/api/capabilities"
         data = self._session._get(uri)
 
-        api_element = cast(Element, dom.OsmResponseToDom(data, tag="api", single=True))
+        api_element = dom.OsmResponseToDom(data, tag="api", single=True)
         result: dict[str, Any] = {}
-        for elem in api_element.childNodes:
-            if elem.nodeType != elem.ELEMENT_NODE:
-                continue
-            result[elem.nodeName] = {}
-            for k, v in elem.attributes.items():
+        for elem in api_element:
+            result[elem.tag] = {}
+            for k, v in elem.attrib.items():
                 try:
-                    result[elem.nodeName][k] = float(v)
-                except Exception:
-                    result[elem.nodeName][k] = v
+                    result[elem.tag][k] = float(v)
+                except ValueError:
+                    result[elem.tag][k] = v
         return result
 
     def map(
@@ -44,7 +42,24 @@ class CapabilitiesMixin:
         Download data in bounding box.
 
         Returns list of dict with type and data.
+
+        The whole bounding box is held in memory at once; use `map_iter` to
+        work through the elements one by one instead.
+        """
+        return list(self.map_iter(min_lon, min_lat, max_lon, max_lat))
+
+    def map_iter(
+        self: "OsmApi", min_lon: float, min_lat: float, max_lon: float, max_lat: float
+    ) -> Iterator[dict[str, Any]]:
+        """
+        Download data in bounding box, yielding one element at a time.
+
+        Same data as `map`, but the response is parsed while it is being read
+        and only one element is held in memory at a time.
+
+        The connection stays open until the iterator is exhausted, so consume
+        it (or close it) promptly.
         """
         uri = f"/api/0.6/map?bbox={min_lon:f},{min_lat:f},{max_lon:f},{max_lat:f}"
-        data = self._session._get(uri)
-        return parser.parse_osm(data)
+        with self._session._get_stream(uri) as data:
+            yield from parser.iter_osm(data)

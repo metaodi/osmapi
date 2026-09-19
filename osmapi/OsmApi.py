@@ -29,7 +29,7 @@ Find all information about changes of the different versions of this module
 import re
 import logging
 from typing import Any, NoReturn
-from xml.dom.minidom import Element
+from xml.etree.ElementTree import Element
 import requests
 
 from osmapi import __version__
@@ -234,5 +234,5 @@ class OsmApi(
         self, response_data: list[Element], request_data: list[dict[str, Any]]
     ) -> None:
         for response, element in zip(response_data, request_data):
-            element["id"] = int(response.getAttribute("new_id"))
-            element["version"] = int(response.getAttribute("new_version"))
+            element["id"] = int(response.attrib["new_id"])
+            element["version"] = int(response.attrib["new_version"])

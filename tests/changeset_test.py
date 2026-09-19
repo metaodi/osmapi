@@ -927,6 +927,144 @@ def test_changesets_get_all_filters(api, add_response):
 
 
 ##################################################
+# changeset_comments_search                      #
+##################################################
+
+
+def test_changeset_comments_search(api, add_response):
+    resp = add_response(GET, "/changeset_comments")
+
+    result = api.changeset_comments_search()
+
+    assert resp.calls[0].request.url == (
+        "http://api06.dev.openstreetmap.org/api/0.6/changeset_comments"
+    )
+    assert result == [
+        {
+            "id": 3011,
+            "date": datetime.datetime(2025, 2, 14, 9, 12, 33),
+            "visible": True,
+            "uid": 1841,
+            "user": "metaodi",
+            "text": "Thanks for the fix!",
+        },
+        {
+            "id": 2984,
+            "date": datetime.datetime(2025, 2, 13, 17, 4, 10),
+            "visible": True,
+            "uid": 1841,
+            "user": "metaodi",
+            "text": "Did you verify those street names?",
+        },
+        {
+            # an author whose data is not public has no uid/user
+            "id": 2971,
+            "date": datetime.datetime(2025, 2, 12, 8, 45, 59),
+            "visible": True,
+            "text": "Comment of an author without public data",
+        },
+    ]
+
+
+def test_changeset_comments_search_by_userid(api, add_response):
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(userid=1841)
+
+    assert resp.calls[0].request.params == {"user": "1841"}
+
+
+def test_changeset_comments_search_by_username(api, add_response):
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(username="metaodi")
+
+    assert resp.calls[0].request.params == {"display_name": "metaodi"}
+
+
+def test_changeset_comments_search_created_after(api, add_response):
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(created_after="2025-02-01T00:00:00Z")
+
+    assert resp.calls[0].request.params == {"from": "2025-02-01T00:00:00Z"}
+
+
+def test_changeset_comments_search_created_before(api, add_response):
+    """The API ignores an upper bound without a lower one, so one is added."""
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(created_before="2025-03-01T00:00:00Z")
+
+    assert resp.calls[0].request.params == {
+        "from": "1970-01-01T00:00:00Z",
+        "to": "2025-03-01T00:00:00Z",
+    }
+
+
+def test_changeset_comments_search_time_range(api, add_response):
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(
+        created_after="2025-02-01T00:00:00Z",
+        created_before="2025-03-01T00:00:00Z",
+    )
+
+    assert resp.calls[0].request.params == {
+        "from": "2025-02-01T00:00:00Z",
+        "to": "2025-03-01T00:00:00Z",
+    }
+
+
+def test_changeset_comments_search_all_params(api, add_response):
+    resp = add_response(
+        GET, "/changeset_comments", filename="test_changeset_comments_search.xml"
+    )
+
+    api.changeset_comments_search(
+        userid=1841,
+        username="metaodi",
+        created_after="2025-02-01T00:00:00Z",
+        created_before="2025-03-01T00:00:00Z",
+        limit=10,
+    )
+
+    assert resp.calls[0].request.params == {
+        "user": "1841",
+        "display_name": "metaodi",
+        "from": "2025-02-01T00:00:00Z",
+        "to": "2025-03-01T00:00:00Z",
+        "limit": "10",
+    }
+
+
+def test_changeset_comments_search_empty_result(api, add_response):
+    add_response(GET, "/changeset_comments")
+
+    assert api.changeset_comments_search(username="metaodi") == []
+
+
+def test_changeset_comments_search_unknown_user(api, add_response):
+    add_response(GET, "/changeset_comments", status=400)
+
+    with pytest.raises(osmapi.ApiError) as execinfo:
+        api.changeset_comments_search(username="doesnotexist")
+
+    assert execinfo.value.status == 400
+    assert execinfo.value.payload_str == "User doesnotexist not known"
+
+
+##################################################
 # Error paths of the changeset operations        #
 ##################################################
 

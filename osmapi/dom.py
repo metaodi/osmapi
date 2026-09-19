@@ -85,6 +85,15 @@ def dom_parse_changeset(
     return result
 
 
+def dom_parse_comment(dom_element: Element) -> dict[str, Any]:
+    """
+    Returns CommentData for a changeset comment.
+    """
+    result = _dom_get_attributes(dom_element)
+    result["text"] = xmlbuilder._get_xml_value(dom_element, "text")
+    return result
+
+
 def dom_parse_note(dom_element: Element) -> dict[str, Any]:
     """
     Returns NoteData for the note.
@@ -167,9 +176,7 @@ def _dom_get_discussion(dom_element: Element) -> list[dict[str, Any]]:
     try:
         discussion = dom_element.getElementsByTagName("discussion")[0]
         for t in discussion.getElementsByTagName("comment"):
-            comment = _dom_get_attributes(t)
-            comment["text"] = xmlbuilder._get_xml_value(t, "text")
-            result.append(comment)
+            result.append(dom_parse_comment(t))
     except IndexError:
         pass
     return result

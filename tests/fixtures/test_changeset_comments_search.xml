@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+  <comment id="3011" date="2025-02-14T09:12:33Z" visible="true" uid="1841" user="metaodi">
+    <text>Thanks for the fix!</text>
+  </comment>
+  <comment id="2984" date="2025-02-13T17:04:10Z" visible="true" uid="1841" user="metaodi">
+    <text>Did you verify those street names?</text>
+  </comment>
+  <comment id="2971" date="2025-02-12T08:45:59Z" visible="true">
+    <text>Comment of an author without public data</text>
+  </comment>
+</osm>

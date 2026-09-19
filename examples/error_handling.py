@@ -36,6 +36,9 @@ def clear_screen():
 # - All osmapi excepctions are child classes of osmapi.OsmApiError
 # - Errors that result from the communication with the OSM server osmapi.ApiError
 # - There are a number of subclasses to differantiate the different errors
+# - Errors that are not caused by the request itself (the server failed, a rate
+#   limit was hit, the server could not be reached) are subclasses of
+#   osmapi.RetriableApiError and are worth trying again later
 # - catch more specific errors first, then use more general error classes
 
 # Upload data to OSM without a changeset
@@ -131,6 +134,15 @@ except osmapi.ConnectionApiError as e:
     # display error for user, try again?
 except osmapi.ElementNotFoundApiError as e:
     log.debug(f"Changeset not found: {str(e)}")
+    exit_code = 1
+except osmapi.RateLimitApiError as e:
+    # the API asks us to slow down, e.retry_after tells us for how long
+    log.debug(f"Rate limited, retry in {e.retry_after} seconds: {str(e)}")
+    exit_code = 1
+except osmapi.ServerApiError as e:
+    # osmapi already retried this a couple of times, the OSM servers are
+    # having a bad day - try again later
+    log.debug(f"The OSM server failed to handle the request: {str(e)}")
     exit_code = 1
 except osmapi.ApiError as e:
     log.debug(f"Error on the API side: {str(e)}")
